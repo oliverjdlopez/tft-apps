@@ -3,7 +3,7 @@
 To create a separately named assistant dataset, use the
 [dataset registration command](langfuse-content.md#create-another-assistant-dataset).
 
-1. Open Langfuse at `http://localhost:15500`, choose **Datasets**, and open
+1. Open Langfuse at `http://localhost:15510`, choose **Datasets**, and open
    **end-to-end**, **data-analysis**, or **context-response**. The last suite
    uses deterministic response checks rather than native answer-quality grading.
 2. Add a case with application input and a readable expected result. A chat

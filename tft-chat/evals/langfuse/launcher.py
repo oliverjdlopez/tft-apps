@@ -14,8 +14,8 @@ import webbrowser
 from domain.assistants.constants import AssistantName
 
 PLATFORM_ROOT = Path(__file__).resolve().parent
-SNAPSHOT_ROOT = PLATFORM_ROOT / "snapshots"
-PUBLIC_URL = "http://localhost:15500"
+SNAPSHOT_ROOT = Path(os.environ.get("LANGFUSE_SNAPSHOT_DIR", str(PLATFORM_ROOT / "snapshots")))
+PUBLIC_URL = "http://localhost:15510"
 
 
 def prepare_environment(root: Path = PLATFORM_ROOT) -> Path:
@@ -94,7 +94,7 @@ def compose(arguments: list[str], root: Path = PLATFORM_ROOT) -> None:
     if environment.get("LANGFUSE_TEST_DEPLOYMENT") == "1":
         environment["LANGFUSE_LLM_CONNECTION_WHITELISTED_HOST"] = "mock-model"
     subprocess.run([
-        "docker", "compose", "--project-directory", str(root),
+        "docker", "compose", "--project-name", "tft-apps-evals", "--project-directory", str(root),
         "--env-file", str(root / ".env"), "-f", str(root / "compose.yaml"),
         *(["-f", str(root / "compose.test.yaml")] if environment.get("LANGFUSE_TEST_DEPLOYMENT") == "1" else []),
         *arguments,

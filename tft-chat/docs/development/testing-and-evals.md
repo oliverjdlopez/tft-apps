@@ -72,16 +72,15 @@ public unit, item, or trait names used to verify the response.
 ## Langfuse evaluations
 
 Langfuse is the separate evaluation workspace. Start it with
-`uv run --extra evals python -m evals up` and open <http://localhost:15500>.
+`uv run --extra evals python -m evals up` and open <http://localhost:15510>.
 Workflow datasets, prompt versions, native evaluators, and annotations are edited
 in its UI. See the [browser walkthrough](langfuse-onboarding.md). Native Custom Experiment buttons call the local Python service, which
 runs the real assistant graph and publishes traces, scores, and comparisons.
 
-The hosted workspace contains `end-to-end` (28 cases, including seven unscored
-intake prompts) and `data-analysis` (seven cases), with string-only inputs. The
-local catalog retains nine suites and 84 cases including historical offline
-regressions. The retained benchmark corpus has 86 deterministic assistant checks
-and 13 rubrics. Reusable trace, selector, worker,
+The copied live workspace has six datasets and 56 cases, including 11 archived
+cases; active workflow inputs retain their authored schemas. The local catalog
+retains immutable historical snapshots plus registered workflows. See the suite
+[migration record](../../../docs/migration.md) for exact inventory and verification. Reusable trace, selector, worker,
 and database logic lives
 in `evals/`; platform integration and exported definitions live in
 `evals/langfuse/`. Every run exports its frozen inputs into content-addressed
@@ -136,7 +135,7 @@ completeness.
 ## Flowchart checks
 
 Run `uv run pytest -q tests/test_flowchart_api.py tests/test_flowchart_persistence.py tests/test_entity_assets.py`,
-`npm --prefix app/frontend test`, and `npm --prefix desktop test`. The API tests
+`npm --prefix app/frontend test`, and `npm --prefix ../desktop test`. The API tests
 use a disposable SQLite table and a temporary `gameplans/` directory; the
 persistence test uses the isolated `RDS_TEST_*` target and skips when it is
 unavailable. `app/frontend/src/flowchart/Flowchart.test.jsx` stubs `fetch` and
@@ -148,7 +147,7 @@ autosave revisions, conflicts, and read-only JSON import. See
 
 Run `uv run --extra compositions pytest -q tests/compositions`,
 `npm --prefix app/frontend test`, `npm --prefix app/frontend run build`, and
-`npm --prefix desktop test`. Shared JSON fixtures validate Pydantic/Zod acceptance,
+`npm --prefix ../desktop test`. Shared JSON fixtures validate Pydantic/Zod acceptance,
 unknown-field rejection, duplicates, null outcomes, score semantics, and denominators.
 Regenerate exported JSON schemas/fixtures with
 `uv run python scripts/export_composition_contracts.py`.
@@ -160,3 +159,6 @@ They verify immutable reruns, separate full-population results, interruption rec
 worker failure, cancellation, and unchanged source analytics. The opt-in native
 Electron workspace smoke additionally checks Compositions visibility, retention,
 renderer isolation, and cleanup. See [the adapter contract](../architecture/compositions/adapter.md).
+
+Suite CI lives at `../.github/workflows/ci.yml`. Desktop Python tests have their
+own `../desktop/pytest.ini` with the suite root on the import path.

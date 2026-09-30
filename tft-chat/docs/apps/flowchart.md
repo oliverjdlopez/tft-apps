@@ -255,12 +255,12 @@ Missing workspaces or groups return 404. Edits against the JSON source return
 | --- | --- |
 | `app/backend/src/services/flowchart/` | Models, service operations, and storage helpers. |
 | `app/frontend/src/flowchart/` | `Flowchart.jsx` (rail and save loop), `EntitySidebar.jsx`, `FlowchartPanel.jsx` (React Flow canvas), `nodes.jsx`, `edges.jsx`, `api.js`, `models.js` (Zod mirrors), `flowchart.css`. |
-| `desktop/workspace.mjs`, `desktop/main.mjs` | The `flowchart` view and **Ctrl+4** menu entry. |
+| `../desktop/workspace.mjs`, `../desktop/main.mjs` | The `flowchart` view and **Ctrl+4** menu entry. |
 
 ```bash
 uv run pytest -q tests/test_flowchart_api.py tests/test_flowchart_persistence.py tests/test_entity_assets.py
 npm --prefix app/frontend test
-npm --prefix desktop test
+npm --prefix ../desktop test
 ```
 
 `tests/test_flowchart_persistence.py` runs against the isolated `RDS_TEST_*`

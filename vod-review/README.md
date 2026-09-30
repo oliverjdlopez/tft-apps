@@ -1,5 +1,10 @@
 # Framewise Video Analysis and Annotation
 
+Normal entry point: run `python3 scripts/setup.py` from the suite root, then
+`npm start` or `npm run dev` from `../desktop/`. See [suite setup](../docs/desktop.md).
+Standalone commands below remain available for testing and troubleshooting.
+
+
 Local app for uploading a video—or downloading one from a Twitch or YouTube URL—drawing one fixed analysis region, and classifying the round shown in that crop at a configurable snapshot interval.
 
 The **Annotate** workspace reuses each upload across five independent tasks:
@@ -257,7 +262,7 @@ records generation settings; `frontend/src/components/ui` owns primitives and
 in [`../tft-chat/docs/development/shared-ui.md`](../tft-chat/docs/development/shared-ui.md).
 
 Keep this build independent. Copy theme updates and port shared primitive changes
-from ChatTFT, then apply the same changes to the other video checkout. Preserve
+from ChatTFT, then validate both VOD Review and Wisps views in this application. Preserve
 each branch's App, API, annotation, and upload features. Do not overwrite application
 files from the other checkout. Keep video/canvas layout together; retain PTS seeking,
 frame stepping, OCR, normalized boxes, and panel resizing. General controls use

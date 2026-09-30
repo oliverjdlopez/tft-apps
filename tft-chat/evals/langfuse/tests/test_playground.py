@@ -61,7 +61,7 @@ def test_backend_completion_and_trace_link(stream, monkeypatch):
     observation = Mock(trace_id='abc', id='root-span')
     service.client.start_as_current_observation.return_value.__enter__ = Mock(return_value=observation)
     service.client.start_as_current_observation.return_value.__exit__ = Mock(return_value=False)
-    service.client.get_trace_url.return_value = 'http://localhost:15500/project/chattft-evals/traces/abc'
+    service.client.get_trace_url.return_value = 'http://localhost:15510/project/tft-apps-evals/traces/abc'
     with TestClient(create_app(service=service, token='secret')) as http:
         assert http.get('/v1/models').status_code == 401
         result = http.post('/v1/chat/completions', json=request_body(stream=stream, stream_options={'include_usage': True}),
@@ -102,7 +102,7 @@ def test_worker_failure_is_inspectable_and_releases_capacity(stream, monkeypatch
     observation = Mock(trace_id='failed')
     service.client.start_as_current_observation.return_value.__enter__ = Mock(return_value=observation)
     service.client.start_as_current_observation.return_value.__exit__ = Mock(return_value=False)
-    service.client.get_trace_url.return_value = 'http://localhost:15500/failed-trace'
+    service.client.get_trace_url.return_value = 'http://localhost:15510/failed-trace'
     with TestClient(create_app(service=service, token='secret')) as http:
         for _ in range(5):
             response = http.post('/v1/chat/completions', json=request_body(stream=stream),

@@ -34,9 +34,9 @@ def migrate_workspace(destination: Path, *, apply: bool = False) -> dict:
         if not apply:
             return {'plan': str(plan_path), 'datasets': len(plan['datasets']), 'assertions': len(plan['assertions'])}
         local = {**dotenv_values(root / '.env'), **os.environ}
-        native = NativeWorkspace(local.get('LANGFUSE_BASE_URL', 'http://localhost:15500'),
+        native = NativeWorkspace(local.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
                                  local['LANGFUSE_INIT_USER_EMAIL'], local['LANGFUSE_INIT_USER_PASSWORD'],
-                                 local.get('LANGFUSE_PROJECT_ID', 'chattft-evals'))
+                                 local.get('LANGFUSE_PROJECT_ID', 'tft-apps-evals'))
         try:
             result = apply_migration(workspace, native, plan, destination / 'natural-migration-journal.json')
             # Preserve the explicitly production-labelled prompt definition as the

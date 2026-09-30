@@ -1,5 +1,10 @@
 # ChatTFT
 
+Normal entry point: run `python3 scripts/setup.py` from the suite root, then
+`npm start` or `npm run dev` from `../desktop/`. See [suite setup](../docs/desktop.md).
+Standalone commands below remain available for testing and troubleshooting.
+
+
 A Teamfight Tactics chat app backed by a scoped Postgres match store and native
 OpenAI Agents SDK tools.
 

@@ -23,7 +23,7 @@ uv run --extra evals chat-tft-evals up
 uv run --extra evals chat-tft-evals down
 ```
 
-The UI opens at <http://localhost:15500>. First startup downloads images, builds
+The UI opens at <http://localhost:15510>. First startup downloads images, builds
 the forwarding image, waits for schema migrations, seeds missing evaluation content
 from the host interpreter, and starts the detached host experiment listener. Later startup preserves content edited in
 Langfuse. `up --no-browser` starts the same services without opening a browser.
@@ -79,7 +79,7 @@ docker compose --env-file evals/langfuse/.env -f evals/langfuse/compose.yaml log
 ```
 
 Validation and the offline fixture need no Docker or model credentials. A missing
-Docker executable, daemon permission failure, occupied port 15500, failed image
+Docker executable, daemon permission failure, occupied port 15510, failed image
 pull, or unhealthy migration stops startup with the underlying command error.
 Stop an older Promptfoo viewer before starting this stack on the same port.
 
@@ -109,7 +109,7 @@ when preparing a new online experiment.
 `down` preserves all named volumes. Back up the generated `.env`, exported
 snapshots, `.runtime`, and the Compose volumes together. Stop the stack first so
 PostgreSQL, ClickHouse, Redis, and object storage form a consistent local backup.
-Docker volume names use the `chattft-evals_` prefix. Restore those volumes and the
+Docker volume names use the `tft-apps-evals_` prefix. Restore those volumes and the
 same credentials before running `up` again. Do not use `down --volumes` unless
 intentionally deleting platform history; Git snapshots restore definitions but
 cannot restore results, annotations, or UI edit history.
@@ -131,7 +131,7 @@ warnings, including references to removed skills.
 An explicit CLI `run` executes the selected definition even when its catalog
 entry came from the UI's export-only action. It records `action: run` in the
 new effective snapshot. Runner-generated result links use the public
-`LANGFUSE_PUBLIC_URL` (`http://localhost:15500`) rather than the Compose hostname.
+`LANGFUSE_PUBLIC_URL` (`http://localhost:15510`) rather than the Compose hostname.
 
 ## Upgrade an existing workspace
 

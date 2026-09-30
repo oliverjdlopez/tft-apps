@@ -259,7 +259,7 @@ def configured_workspace():
     from dotenv import dotenv_values
     from .workspace import Workspace
     local = dotenv_values(Path(__file__).parent / '.env')
-    return Workspace(os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15500'),
+    return Workspace(os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
                      os.environ.get('LANGFUSE_PUBLIC_KEY') or local['LANGFUSE_PUBLIC_KEY'],
                      os.environ.get('LANGFUSE_SECRET_KEY') or local['LANGFUSE_SECRET_KEY'])
 
@@ -275,9 +275,9 @@ def configured_native_workspace():
     from dotenv import dotenv_values
     from .native import NativeWorkspace
     values = {**dotenv_values(Path(__file__).parent / '.env'), **os.environ}
-    return NativeWorkspace(values.get('LANGFUSE_BASE_URL', 'http://localhost:15500'),
+    return NativeWorkspace(values.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
                            values['LANGFUSE_INIT_USER_EMAIL'], values['LANGFUSE_INIT_USER_PASSWORD'],
-                           values.get('LANGFUSE_PROJECT_ID', 'chattft-evals'))
+                           values.get('LANGFUSE_PROJECT_ID', 'tft-apps-evals'))
 
 
 def native_score_name(name: str) -> str:
@@ -306,8 +306,8 @@ def host_runner_environment(root: Path) -> dict[str, str]:
                    **os.environ}
     environment.update({k: v for k, v in dotenv_values(root / '.env').items()
                         if v is not None and k.startswith('LANGFUSE_')})
-    environment.update(LANGFUSE_BASE_URL='http://localhost:15500',
-                       LANGFUSE_PUBLIC_URL='http://localhost:15500',
+    environment.update(LANGFUSE_BASE_URL='http://localhost:15510',
+                       LANGFUSE_PUBLIC_URL='http://localhost:15510',
                        LANGFUSE_RUNTIME_DIR=str(root / '.runtime'),
                        LANGFUSE_SNAPSHOT_DIR=str(root / 'snapshots'),
                        PYTHONDONTWRITEBYTECODE='1')

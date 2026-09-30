@@ -44,7 +44,7 @@ class ExperimentService:
         self.client = self.client_factory()
         if os.environ.get("LANGFUSE_PUBLIC_KEY") and os.environ.get("LANGFUSE_SECRET_KEY"):
             from .workspace import Workspace
-            self.workspace = Workspace(os.environ.get("LANGFUSE_BASE_URL", "http://localhost:15500"),
+            self.workspace = Workspace(os.environ.get("LANGFUSE_BASE_URL", "http://localhost:15510"),
                                        os.environ["LANGFUSE_PUBLIC_KEY"], os.environ["LANGFUSE_SECRET_KEY"])
         for job_id in self.jobs.recover():
             self.publish_status(job_id, "interrupted", {"reason": "Service restarted during execution"})

@@ -25,10 +25,10 @@ function OverviewTab() {
       <h3>Connected workspaces</h3>
       <p>Open the <a href="/rolldown" target="_blank" rel="noreferrer">Rolldown</a> simulator in its own page, or use the desktop Rolldown tab.</p>
       <p>Browse tables and run SQL in the desktop Database tab, or open{" "}
-        <a href="http://localhost:8978" target="_blank" rel="noreferrer">CloudBeaver</a>.
+        <a href="http://localhost:8979" target="_blank" rel="noreferrer">CloudBeaver</a>.
         Manage evaluation datasets, prompt candidates, and experiments in the desktop
         Langfuse tab, or open{" "}
-        <a href="http://localhost:15500/project/chattft-evals" target="_blank" rel="noreferrer">Langfuse</a>.
+        <a href="http://localhost:15510/project/tft-apps-evals" target="_blank" rel="noreferrer">Langfuse</a>.
       </p>
       <p className="muted small">Both services must be started separately. Production assistant definitions remain in Specs.</p>
     </div>

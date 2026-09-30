@@ -17,7 +17,7 @@ from evals.langfuse.server import ExperimentService, create_app
 def test_native_payload_and_invalid_settings():
     """The actual pinned server body parses; invalid run controls are rejected."""
     trigger = ExperimentTrigger.model_validate({
-        "projectId": "chattft-evals", "datasetId": "dataset", "datasetName": "chattft/dummy_assistant",
+        "projectId": "tft-apps-evals", "datasetId": "dataset", "datasetName": "chattft/dummy_assistant",
         "payload": json.dumps({"repetitions": 2}),
     })
     assert trigger.config.repetitions == 2

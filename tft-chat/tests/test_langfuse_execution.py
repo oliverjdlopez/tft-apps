@@ -114,7 +114,7 @@ def test_native_sdk_receives_frozen_hosted_items(fixture_bundle):
             """Provide the SDK flushing contract."""
     report = run_bundle(fixture_bundle, Client())
     assert report["passed"] and report["experiments"][0]["dataset_run_id"] == "run"
-    assert report["experiments"][0]["url"] == "http://localhost:15500/run"
+    assert report["experiments"][0]["url"] == "http://localhost:15510/run"
     assert fixture_bundle == original
     exported_item = report["experiments"][0]["items"][0]
     assert exported_item["result"]["output"]

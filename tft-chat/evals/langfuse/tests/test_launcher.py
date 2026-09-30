@@ -112,7 +112,7 @@ def test_host_environment_preserves_local_database_and_credentials(tmp_path, mon
     environment = host_runner_environment(root)
     assert environment['RDS_HOST'] == '127.0.0.1'
     assert environment['RDS_PASSWORD'] == 'private'
-    assert environment['LANGFUSE_BASE_URL'] == 'http://localhost:15500'
+    assert environment['LANGFUSE_BASE_URL'] == 'http://localhost:15510'
     assert environment['LANGFUSE_SECRET_KEY'] == 'platform-secret'
 
 

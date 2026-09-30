@@ -27,7 +27,7 @@ def configure_triggers(client: Any, snapshots: Path, *, base_url: str, email: st
     from .content import load_catalog, load_snapshot
 
     configured = 0
-    project = os.environ.get("LANGFUSE_PROJECT_ID", "chattft-evals")
+    project = os.environ.get("LANGFUSE_PROJECT_ID", "tft-apps-evals")
     native = NativeWorkspace(base_url, email, password, project)
     try:
         from .contracts import ACTIVE_WORKFLOW_SUITES, DATASET_NAMES
@@ -89,7 +89,7 @@ def main() -> None:
         finally:
             workspace.close()
         configured = configure_triggers(
-            client, root, base_url=os.environ.get("LANGFUSE_BASE_URL", "http://localhost:15500"),
+            client, root, base_url=os.environ.get("LANGFUSE_BASE_URL", "http://localhost:15510"),
             email=os.environ.get("LANGFUSE_INIT_USER_EMAIL", "evals@chattft.local"),
             password=os.environ["LANGFUSE_INIT_USER_PASSWORD"], token=os.environ["LANGFUSE_EXPERIMENT_TOKEN"],
         )

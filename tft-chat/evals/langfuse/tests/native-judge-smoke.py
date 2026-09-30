@@ -32,7 +32,7 @@ def main():
     grading = freeze_grading(workspace, registry)
     from dotenv import dotenv_values
     local = dotenv_values(Path(__file__).parents[1] / '.env')
-    client = Langfuse(base_url=os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15500'),
+    client = Langfuse(base_url=os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
                      public_key=os.environ.get('LANGFUSE_PUBLIC_KEY') or local['LANGFUSE_PUBLIC_KEY'],
                      secret_key=os.environ.get('LANGFUSE_SECRET_KEY') or local['LANGFUSE_SECRET_KEY'])
     dataset = client.get_dataset('end-to-end')

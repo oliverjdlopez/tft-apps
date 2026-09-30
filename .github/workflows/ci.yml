@@ -2,12 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [dev, main]
   pull_request:
-    branches: [main]
+    branches: [dev, main]
 
 jobs:
   test:
+    defaults:
+      run:
+        working-directory: tft-chat
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -36,9 +39,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: app/frontend/package-lock.json
+          cache-dependency-path: tft-chat/app/frontend/package-lock.json
       - name: Test and build frontend
-        working-directory: app/frontend
+        working-directory: tft-chat/app/frontend
         run: |
           npm ci
           npm test
@@ -63,6 +66,9 @@ jobs:
   langfuse-browser:
     env:
       LANGFUSE_TEST_DEPLOYMENT: "1"
+    defaults:
+      run:
+        working-directory: tft-chat
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -113,7 +119,39 @@ jobs:
             /tmp/chattft-timeout-trace.json
             /tmp/chattft-workspace.json
             /tmp/chattft-langfuse-*.png
-            evals/langfuse/snapshots/*.json
+            tft-chat/evals/langfuse/snapshots/*.json
       - name: Stop evaluation services
         if: always()
         run: uv run --locked --extra evals python -m evals down
+
+  desktop:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+      - run: npm ci
+      - run: npm --prefix ../tft-chat/app/frontend ci
+      - run: npm test
+      - run: uv run --project ../tft-chat --locked --extra evals pytest -c ../tft-chat/pyproject.toml -q tests
+
+  vod-review:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vod-review
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+      - run: npm --prefix frontend ci
+      - run: npm --prefix frontend test
+      - run: npm --prefix frontend run build
+      - run: uv run --locked pytest --import-mode=importlib -q

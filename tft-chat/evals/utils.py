@@ -591,7 +591,7 @@ def isolated_operation(payload: dict[str, Any], timeout: float) -> dict[str, Any
                 for key in ('LANGFUSE_PUBLIC_KEY', 'LANGFUSE_SECRET_KEY'):
                     if key not in worker_environment and local.get(key):
                         worker_environment[key] = local[key]
-                worker_environment.setdefault('LANGFUSE_BASE_URL', 'http://localhost:15500')
+                worker_environment.setdefault('LANGFUSE_BASE_URL', 'http://localhost:15510')
         except ImportError:
             pass
     process = subprocess.Popen(
@@ -803,7 +803,7 @@ def public_experiment_url(url: str | None) -> str | None:
     if not url:
         return None
     from urllib.parse import urlsplit, urlunsplit
-    public = urlsplit(os.environ.get("LANGFUSE_PUBLIC_URL", "http://localhost:15500"))
+    public = urlsplit(os.environ.get("LANGFUSE_PUBLIC_URL", "http://localhost:15510"))
     internal = urlsplit(url)
     return urlunsplit((public.scheme, public.netloc, public.path.rstrip("/") + internal.path,
                        internal.query, internal.fragment))

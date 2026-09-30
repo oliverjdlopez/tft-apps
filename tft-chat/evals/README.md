@@ -15,7 +15,7 @@ uv sync --locked --extra evals
 uv run --extra evals python -m evals up
 ```
 
-Open <http://localhost:15500>. The initial login is `evals@chattft.local`; its
+Open <http://localhost:15510>. The initial login is `evals@chattft.local`; its
 password is the `LANGFUSE_INIT_USER_PASSWORD` value in the private
 `evals/langfuse/.env` file. Keep that file with the persistent volumes. Startup
 creates missing datasets/prompts/evaluators/review resources and native experiment buttons; repeating startup
