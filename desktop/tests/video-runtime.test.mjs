@@ -5,7 +5,6 @@ import { once } from "node:events";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { VideoRuntime } from "../video-runtime.mjs";
-import { probeVideoService } from "../utils.mjs";
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const fixture = fileURLToPath(new URL("./fixtures/video-service.mjs", import.meta.url));
 const schema = { info: { title: "Framewise Video Analysis and Annotation" }, paths: {

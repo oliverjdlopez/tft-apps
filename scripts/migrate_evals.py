@@ -106,6 +106,9 @@ def authored(value: dict, keys: tuple[str, ...]) -> dict:
 
 def verify_cases(content: dict, public: Workspace, native: NativeWorkspace) -> dict:
     """Compare destination case content and archived status with the immutable export."""
+    actual_names = {row["name"] for row in public.list("v2/datasets")}
+    if actual_names != {row["name"] for row in content["datasets"]}:
+        raise ValueError("Destination dataset inventory differs from the export")
     total = 0
     for dataset in content["datasets"]:
         target = public.request("GET", "v2/datasets/" + quote(dataset["name"], safe=""))
@@ -252,7 +255,11 @@ def main() -> None:
         public, native = connection()
         try:
             content = json.loads(EXPORT.read_bytes())
-            print(json.dumps({**verify_cases(content, public, native), **verify_definitions(content, public)}))
+            result = {**verify_cases(content, public, native), **verify_definitions(content, public),
+                "archived_cases": sum(item["status"] == "ARCHIVED" for dataset in content["datasets"] for item in dataset["items"]),
+                "export_sha256": hashlib.sha256(EXPORT.read_bytes()).hexdigest()}
+            (ROOT / ".migration/langfuse-verification.json").write_bytes(canonical_json(result))
+            print(json.dumps(result))
         finally:
             native.close()
             public.close()

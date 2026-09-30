@@ -93,7 +93,9 @@ export class DesktopRuntime extends EventEmitter {
     this.controller.signal.throwIfAborted();
     const service = { command, args, cwd: this.cwd, env: { ...serviceEnvironment(this.wsl?.env ?? process.env, this.roots, this.cwd, this.paths), CHATTFT_DESKTOP_IDENTITY: this.identity } };
     const invocation = this.wsl ? wslCommand(this.wsl) : { command, args, cwd: this.cwd };
-    const handle = ownedProcess(invocation.command, invocation.args, { cwd: invocation.cwd, env: service.env, label, onExit: (child) => {
+    // The Windows wrapper needs its native PATH to find wsl.exe; the Linux
+    // service environment travels only through the guardian pipe below.
+    const handle = ownedProcess(invocation.command, invocation.args, { cwd: invocation.cwd, env: this.wsl ? process.env : service.env, label, onExit: (child) => {
       if (child.stopping || this.state === "stopping" || this.state === "stopped" || finite) return;
       const error = processFailure(child);
       this.controller.abort(error);

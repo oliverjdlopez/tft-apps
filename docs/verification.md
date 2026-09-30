@@ -34,7 +34,7 @@ copies, fresh runtime storage, and lists every intentional destination file edit
 
 | Check | Result |
 | --- | --- |
-| Desktop Node lifecycle/path tests | 55 passed |
+| Desktop Node lifecycle/path tests | 56 passed |
 | Desktop Python ownership tests | 12 passed |
 | ChatTFT frontend | 108 tests passed; production build passed |
 | VOD frontend | 43 tests passed, 1 existing test failed; production build passed |
@@ -48,6 +48,8 @@ copies, fresh runtime storage, and lists every intentional destination file edit
 | Real Electron/WSLg application smoke | All six product views loaded on disposable ports; owned processes stopped on close |
 | Normal-port startup smoke | Rejected occupied port 8000 without adopting/stopping its service |
 | WSL automated checks | Passed root/path, distribution/user, private env/cwd forwarding, identity and pipe shutdown |
+| Native Windows-to-WSL bridge | Both production/dev modes, parent EOF, abrupt wrapper loss and occupied-port rejection passed |
+| Native Windows Electron fixture | IPC isolation, retained views, offline/retry and cleanup passed with a disposable profile |
 | CloudBeaver | Separate project/volume and 8979→8978 mapping checked; explicit startup retained |
 
 The ChatTFT collection blockers are missing `assistant_reachable_names` and
@@ -69,8 +71,9 @@ its opt-in ephemeral ports and a disposable destination VOD directory; normal
 desktop defaults remain unchanged and require free ports. RDS was disabled for
 renderer smoke, so database-backed product actions were not exercised. A fresh Windows Electron cache was installed successfully with
 `npm run setup:wsl` under the independent `tft-apps` application-data identity.
-Windows native product GUI behavior was not exercised; native Linux Electron
-under WSLg passed. Native bridge results are recorded separately below. No ingestion, projection
+Native Windows Electron fixture behavior and the real Windows-to-WSL bridge
+passed. The six real product renderers were tested under Linux Electron/WSLg;
+full Windows product GUI behavior remains unverified. No ingestion, projection
 rebuild, paid eval run, production mutation, push or publication was performed.
 
 Fresh Langfuse and its destination-local host runner remain available at

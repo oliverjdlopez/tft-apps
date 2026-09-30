@@ -64,3 +64,7 @@ If original services occupy the normal application ports, add
 `--disposable-ports` to the smoke command. This test uses ephemeral ports for its
 owned services and view URLs; normal desktop launch retains the fixed defaults
 and rejects occupied ports.
+
+The native Windows wrapper keeps its Windows environment for locating
+`wsl.exe`; the selected Linux application environment is sent exclusively over
+the private worker pipe, including its process working directory.

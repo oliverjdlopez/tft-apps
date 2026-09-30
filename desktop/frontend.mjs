@@ -1,6 +1,6 @@
 /** Run the checkout's Vite build or development server with native Node. */
 import { createRequire } from "node:module";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { pathToFileURL } from "node:url";
 import path from "node:path";
 import { launcherPaths } from "./paths.mjs";
 import { emitEvent, watchParent } from "./utils.mjs";
