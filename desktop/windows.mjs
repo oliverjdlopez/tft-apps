@@ -40,7 +40,7 @@ async function main(context) {
   const source = path.dirname(fileURLToPath(import.meta.url));
   const lock = await readFile(path.join(source, "package-lock.json"));
   const version = createHash("sha256").update(lock).digest("hex").slice(0, 16);
-  const cache = path.join(process.env.LOCALAPPDATA, "ChatTFT Desktop", "runtime", `${process.arch}-${version}`);
+  const cache = path.join(process.env.LOCALAPPDATA, "tft-apps", "runtime", `${process.arch}-${version}`);
   if (context.setup) {
     const npm = path.join(path.dirname(process.execPath), "node_modules/npm/bin/npm-cli.js");
     try { await access(npm); } catch { throw new Error("Windows Node must include npm. Install the standard Windows Node 22 distribution."); }

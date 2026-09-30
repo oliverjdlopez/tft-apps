@@ -4,6 +4,7 @@ import { once } from "node:events";
 import http from "node:http";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { abortable, ownedProcess, stopProcess, waitForHttp, waitForIdentity, waitForRecord } from "../utils.mjs";
@@ -12,11 +13,11 @@ const root = fileURLToPath(new URL("../../", import.meta.url));
 const worker = path.join(root, "desktop/frontend.mjs");
 
 test("production worker builds the existing frontend without application edits", async (t) => {
-  const child = ownedProcess(process.execPath, [worker, "production"], { cwd: root, label: "Vite build" });
+  const child = ownedProcess(process.execPath, [worker, "production"], { cwd: os.tmpdir(), label: "Vite build" });
   t.after(() => stopProcess(child, 100));
   const result = await abortable(child.finished, AbortSignal.timeout(30000));
   assert.equal(result.code, 0);
-  const html = await readFile(path.join(root, "app/frontend/dist/index.html"), "utf8");
+  const html = await readFile(path.join(root, "tft-chat/app/frontend/dist/index.html"), "utf8");
   assert.match(html, /\/assets\//);
   assert.doesNotMatch(html, /\/@vite\/client/);
 });

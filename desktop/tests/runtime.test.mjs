@@ -24,6 +24,7 @@ class FixtureRuntime extends DesktopRuntime {
 async function checkout(t) {
   const root = await mkdtemp(path.join(os.tmpdir(), "chattft desktop test "));
   await mkdir(path.join(root, "desktop"));
+  await mkdir(path.join(root, "tft-chat"));
   await copyFile(fixture, path.join(root, "desktop/frontend.mjs"));
   t.after(() => rm(root, { recursive: true, force: true }));
   return root;
@@ -56,13 +57,13 @@ for (const mode of ["production", "dev"]) {
 
 test("build failure prevents backend launch and permits a fresh retry", async (t) => {
   const root = await checkout(t);
-  await writeFile(path.join(root, "fail-build"), "");
+  await writeFile(path.join(root, "tft-chat/fail-build"), "");
   const options = { mode: "production", startupTimeout: 5000 };
   const failed = new FixtureRuntime(root, process.execPath, options);
   await assert.rejects(failed.start(), /Frontend build/);
   assert.equal(failed.children.length, 1);
   assert(failed.children.every((child) => child.ended));
-  await rm(path.join(root, "fail-build"));
+  await rm(path.join(root, "tft-chat/fail-build"));
   const retry = new FixtureRuntime(root, process.execPath, options);
   t.after(() => retry.stop());
   await retry.start();

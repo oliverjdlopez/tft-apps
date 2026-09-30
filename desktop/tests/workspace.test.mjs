@@ -70,7 +70,7 @@ test("switching retains loaded pages; errors and retries remain independent of C
     workspace.select("langfuse");
     assert.equal(workspace.pages.get("langfuse").view.webContents.loads.length, 1);
     assert.deepEqual(workspace.pages.get("langfuse").view.bounds, { x: 0, y: 48, width: 1000, height: 652 });
-    workspace.pages.get("langfuse").view.webContents.emit("did-fail-load", {}, -102, "refused", "http://localhost:15500", true);
+    workspace.pages.get("langfuse").view.webContents.emit("did-fail-load", {}, -102, "refused", "http://localhost:15510", true);
     assert.equal(workspace.state, "error");
     assert.equal(workspace.pages.get("langfuse").view.visible, false);
     assert.equal(workspace.chat.webContents.destroyed, undefined);
@@ -110,7 +110,7 @@ test("only the exact shell main frame can send a fixed desktop action", () => {
   assert.equal(workspaceCommandAllowed(event, contents, contents.mainFrame.url, "execute"), false);
   assert.equal(workspaceCommandAllowed({ ...event, sender: new Contents() }, contents, contents.mainFrame.url, "chat"), false);
   assert.equal(workspaceCommandAllowed({ ...event, senderFrame: { url: contents.mainFrame.url } }, contents, contents.mainFrame.url, "chat"), false);
-  assert.equal(workspaceCommandAllowed(event, contents, "http://localhost:15500", "retry"), false);
+  assert.equal(workspaceCommandAllowed(event, contents, "http://localhost:15510", "retry"), false);
 });
 
 test("three views retain state and retries target only the selected external page", (t) => {
@@ -126,7 +126,7 @@ test("three views retain state and retries target only the selected external pag
     workspace.select("database");
     assert.equal(workspace.currentContents(), database.view.webContents);
     assert.equal(workspace.state, "loading");
-    assert.equal(database.view.webContents.loads[0], "http://localhost:8978");
+    assert.equal(database.view.webContents.loads[0], "http://localhost:8979");
     database.view.webContents.emit("did-finish-load");
     workspace.select("chat");
     workspace.select("database");
@@ -170,13 +170,13 @@ test("CloudBeaver uses a separate sandbox and cannot navigate to privileged sche
     assert.equal(view.options.webPreferences.nodeIntegration, false);
     assert.equal(view.options.webPreferences.sandbox, true);
     assert.equal(view.options.webPreferences.contextIsolation, true);
-    for (const url of ["file:///secrets", "javascript:alert(1)", "http://localhost:15500", "https://example.com"]) {
+    for (const url of ["file:///secrets", "javascript:alert(1)", "http://localhost:15510", "https://example.com"]) {
       let prevented = false;
       view.webContents.emit("will-redirect", { url, preventDefault() { prevented = true; } });
       assert.equal(prevented, true);
     }
     let prevented = false;
-    view.webContents.emit("will-navigate", { url: "http://localhost:8978/#editor", preventDefault() { prevented = true; } });
+    view.webContents.emit("will-navigate", { url: "http://localhost:8979/#editor", preventDefault() { prevented = true; } });
     assert.equal(prevented, false);
     assert.deepEqual(view.webContents.popup({ url: "file:///secrets" }), { action: "deny" });
     view.webContents.popup({ url: "https://dbeaver.com/docs" });
@@ -237,7 +237,7 @@ test("Flowchart retains its own local view and is reachable from the shell bridg
 test("VOD Review and Wisps load separate checkouts and retain independent recovery state", async () => {
   const workspace = new DesktopWorkspace(windowFixture(), () => {});
   try {
-    for (const [tab, url] of [["vod", "http://localhost:5174"], ["wisps", "http://localhost:5175/wisp_classifier"]]) {
+    for (const [tab, url] of [["vod", "http://localhost:5174"], ["wisps", "http://localhost:5174/wisp_classifier"]]) {
       workspace.select(tab);
       await Promise.resolve();
       const page = workspace.pages.get(tab);

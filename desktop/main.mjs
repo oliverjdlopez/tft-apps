@@ -29,11 +29,11 @@ let restarting = false;
 const videoRuntimes = new Map();
 const videoStarts = new Map();
 
-app.setName("ChatTFT Desktop");
+app.setName("tft-apps");
 // Different checkouts may run independently, but each retains a stable profile
 // and single-instance lock across launches and frontend rebuilds.
 const checkoutId = createHash("sha256").update(wsl ? `${wsl.distro}/${wsl.user}:${root}` : root).digest("hex").slice(0, 12);
-const profilePath = path.join(app.getPath("appData"), "ChatTFT Desktop", checkoutId);
+const profilePath = path.join(app.getPath("appData"), "tft-apps", checkoutId);
 mkdirSync(profilePath, { recursive: true });
 app.setPath("userData", profilePath);
 app.setPath("sessionData", profilePath);
@@ -129,18 +129,19 @@ async function loadApplicationViews() {
  */
 function ensureVideoWorkspace(tab) {
   if (quitting) return Promise.reject(new Error("Desktop is quitting."));
-  if (videoStarts.has(tab)) return videoStarts.get(tab);
+  const key = "vod";
+  if (videoStarts.has(key)) return videoStarts.get(key);
   const pending = (async () => {
-    const previous = videoRuntimes.get(tab);
+    const previous = videoRuntimes.get(key);
     if (previous?.state === "running") return;
     await previous?.stop();
     if (quitting) return;
-    const service = new VideoRuntime(root, node, options, wsl, tab);
-    videoRuntimes.set(tab, service);
-    service.on("failure", () => { service.state = "failed"; workspace?.fail(tab); });
+    const service = new VideoRuntime(root, node, options, wsl);
+    videoRuntimes.set(key, service);
+    service.on("failure", () => { service.state = "failed"; workspace?.fail("vod"); workspace?.fail("wisps"); });
     await service.start();
-  })().finally(() => videoStarts.delete(tab));
-  videoStarts.set(tab, pending);
+  })().finally(() => videoStarts.delete(key));
+  videoStarts.set(key, pending);
   return pending;
 }
 

@@ -27,7 +27,7 @@ test("unavailable Langfuse starts through the checkout launcher and waits for co
       spawnProcess: (command, args, options) => {
         assert.equal(command, "/custom env/python");
         assert.deepEqual(args, ["-m", "evals", "up", "--no-browser"]);
-        assert.equal(options.cwd, "/checkout with spaces");
+        assert.equal(options.cwd, "/checkout with spaces/tft-chat");
         assert.equal(options.shell, false);
         assert.equal(options.stdio, "inherit");
         setImmediate(() => child.emit("close", 0));

@@ -57,8 +57,8 @@ eval graphs; normal conversations continue using repository specs. See
 `scripts/start.py` launches the configured UI service. Installed command names
 are declared in `pyproject.toml`.
 
-The optional [Electron desktop application](../apps/desktop.md) lives under
-`desktop/` and starts this same FastAPI application from the checkout. Normal
+The [Electron desktop application](../apps/desktop.md) lives at the suite root under
+`../desktop/` and starts this same FastAPI application from the checkout. Normal
 launch rebuilds and loads the production UI; development launch starts Vite
 with hot reload and proxies to the managed backend. Desktop owns its service
 processes, binds them to loopback, and stops them on Quit. Frontend components,
@@ -110,7 +110,7 @@ CloudBeaver and Langfuse services. The global database availability warning
 remains visible across destinations.
 
 The embedded database row browser has been removed. Use the desktop Database
-tab or [local CloudBeaver](http://localhost:8978) from a browser; see
+tab or [local CloudBeaver](http://localhost:8979) from a browser; see
 [database workspace setup](../apps/desktop.md#database-workspace-cloudbeaver).
 The existing database HTTP endpoints remain available. Langfuse owns evaluation
 work; production spec editing, application tool invocation, upstream API probes,
@@ -127,7 +127,7 @@ ChatTFT, Compositions, Rolldown, and Flowchart use locally installed shadcn/ui c
 (New York, Radix, neutral light), Tailwind CSS 4, and Lucide icons. ChatTFT owns the
 canonical light theme with distinct pastel panels and dialogs; the desktop shell
 mirrors its palette. The independent
-VOD Review and Wisps checkouts retain their own themes.
+VOD Review and Wisps views share the sibling VOD application and its own theme.
 Navigation, tool payloads, streaming, specialist renderers, and revision checking
 retain their existing contracts. See [shared UI conventions](../development/shared-ui.md)
 for component provenance, CSS layering, and the update procedure.
@@ -245,38 +245,36 @@ Electron adds application and external-service tabs outside the React applicatio
 using independent `WebContentsView` instances. ChatTFT, Rolldown, and the configurable
 Compositions workspace share one backend; Force Reload on any of them restarts
 that backend and reloads all enabled application views. Switching
-tabs preserves each view’s in-memory state. `desktop/workspace.mjs` owns view selection, isolated
+tabs preserves each view’s in-memory state. `../desktop/workspace.mjs` owns view selection, isolated
 Langfuse navigation and login storage, retry state, and child-renderer cleanup.
 The local shell alone receives a fixed-action preload; hosted pages remain
-unprivileged. The desktop bootstrap checks Langfuse health on localhost port 15500 and
+unprivileged. The desktop bootstrap checks Langfuse health on localhost port 15510 and
 starts an unavailable Docker stack through the existing evaluation launcher.
 A failed attempt reports recovery instructions and continues ChatTFT startup.
 Quitting Electron leaves the Docker stack running. See the
-[desktop guide](../apps/desktop.md#desktop-workspace-tabs) for controls and setup.
+[desktop guide](../../../docs/desktop.md) for controls and setup.
 
 ### Desktop database workspace
 
 Electron's Database tab hosts CloudBeaver Community in its own sandboxed,
 persistent browser session alongside ChatTFT and Langfuse. This desktop-only
-view connects to a separately started loopback Docker service at port 8978;
+view connects to a separately started loopback Docker service at port 8979;
 CloudBeaver owns its login, saved connections, and direct database operations.
 Each external view loads lazily and retains its state while hidden, with an
 independent loading deadline and Retry screen. No React routes, FastAPI APIs,
 assistant tools, or RDS configuration imports participate. See
 [Desktop database setup](../apps/desktop.md#database-workspace-cloudbeaver).
 
-### Video service discovery and ownership
+### Shared video service ownership
 
-`desktop/video-runtime.mjs` supervises VOD Review and Wisps independently of the
-ChatTFT runtime. It checks both configured endpoints before starting missing
-services. API-compatible existing backends and identified proxy frontends remain
-externally owned; only new child processes participate in desktop shutdown.
-`desktop/vod_backend.py` runs the selected checkout in its own interpreter with
-the existing parent-pipe shutdown and socket ownership helpers.
-`desktop/vod-frontend.mjs` serves the frontend with a same-origin API proxy and
-workspace identity endpoint. Video startup runs in the background; Retry shares
-an in-flight startup attempt and never creates a second process generation.
-See [automatic video startup](../apps/desktop.md#automatic-vod-review-and-wisps-startup).
+`../desktop/video-runtime.mjs` owns one suite-local VOD backend/frontend pair,
+independently of ChatTFT. VOD Review and Wisps have separate persistent views
+on frontend port 5174; Wisps loads `/wisp_classifier`. Occupied ports fail,
+including compatible servers from original checkouts. A shared readiness promise
+coalesces tab startup and retries, and quit stops the owned pair once.
+`../desktop/vod_backend.py` uses VOD's own interpreter and parent-pipe lifetime;
+`../desktop/vod-frontend.mjs` uses VOD's Vite config with a same-origin API proxy.
+See [suite lifecycle](../../../docs/desktop.md).
 
 ## Private composition workspace
 

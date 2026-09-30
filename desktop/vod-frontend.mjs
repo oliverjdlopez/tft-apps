@@ -1,14 +1,16 @@
 /** Run an independently installed VOD frontend with a same-origin backend proxy. */
 import path from "node:path";
-import os from "node:os";
+import { launcherPaths } from "./paths.mjs";
 import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
-import { emitEvent, watchParent } from "./utils.mjs";
+import { emitEvent, watchParent, integerOption } from "./utils.mjs";
 
 /**
  * Start the selected checkout's Vite server without changing its configuration.
  * Args:
- *   args: CLI arguments; --wisps selects the Wisps worktree and --repo overrides its path.
+ *   args: CLI arguments; --repo selects an installed VOD application, and
+ *     optional --port/--backend-port isolate smoke services. --wisps is retained
+ *     for compatibility and uses the same service ports.
  * Returns:
  *   The listening Vite server, owned by this foreground command.
  */
@@ -17,11 +19,13 @@ export async function startVodFrontend(args = process.argv.slice(2)) {
     wisps: { type: "boolean", default: false },
     managed: { type: "boolean", default: false },
     repo: { type: "string" },
+    port: { type: "string", default: "5174" },
+    "backend-port": { type: "string", default: "8000" },
   } });
-  const root = path.resolve(values.repo ?? path.join(os.homedir(), values.wisps ? "vod-review-wt2" : "vod-review"));
+  const root = path.resolve(values.repo ?? launcherPaths().vod);
   const frontend = path.join(root, "frontend");
-  const port = values.wisps ? 5175 : 5174;
-  const backendPort = values.wisps ? 8001 : 8000;
+  const port = integerOption(values.port, "--port", 65535);
+  const backendPort = integerOption(values["backend-port"], "--backend-port", 65535);
   // The existing clients accept an empty base URL. Proxying avoids widening
   // backend CORS rules and keeps video playback and uploads on the same origin.
   process.env.VITE_API_BASE = "";
@@ -30,6 +34,7 @@ export async function startVodFrontend(args = process.argv.slice(2)) {
   if (values.managed) watchParent(async () => { await server?.close(); });
   server = await createServer({
     root: frontend,
+    configFile: path.join(frontend, "vite.config.ts"),
     plugins: [{
       name: "desktop-video-identity",
       /** Identify the proxy destination before Vite's HTML fallback. */
@@ -38,7 +43,7 @@ export async function startVodFrontend(args = process.argv.slice(2)) {
           if (request.url === "/__chattft_video__/identity") {
             response.setHeader("content-type", "application/json");
             response.setHeader("cache-control", "no-store");
-            response.end(JSON.stringify({ app: values.wisps ? "wisps" : "vod", backendPort }));
+            response.end(JSON.stringify({ app: "vod", backendPort }));
           } else if (request.url === "/__chattft_desktop__/identity" && process.env.CHATTFT_DESKTOP_IDENTITY) {
             response.setHeader("x-chattft-desktop-identity", process.env.CHATTFT_DESKTOP_IDENTITY);
             response.end();

@@ -6,7 +6,7 @@ import path from "node:path";
 import test from "node:test";
 import { startVodFrontend } from "../vod-frontend.mjs";
 
-test("VOD and Wisps launch with separate ports and same-origin API requests", async (t) => {
+test("VOD and Wisps use the shared ports and same-origin API requests", async (t) => {
   const root = await mkdtemp(path.join(os.tmpdir(), "vod frontend "));
   t.after(() => rm(root, { recursive: true, force: true }));
   const previousBase = process.env.VITE_API_BASE;
@@ -22,7 +22,7 @@ test("VOD and Wisps launch with separate ports and same-origin API requests", as
       return { options, async listen() { this.listening = true; }, printUrls() {} };
     }
   `);
-  for (const [args, port, backend] of [[[], 5174, 8000], [["--wisps"], 5175, 8001]]) {
+  for (const [args, port, backend] of [[[], 5174, 8000], [["--wisps"], 5174, 8000]]) {
     process.env.VITE_API_BASE = "http://wrong-server:9999";
     const server = await startVodFrontend(["--repo", root, ...args]);
     assert.equal(server.listening, true);

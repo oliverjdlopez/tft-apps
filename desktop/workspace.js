@@ -1,9 +1,9 @@
 /** Reflect main-process workspace state in desktop-only navigation. */
 const services = {
-  vod: { name: "VOD Review", address: "localhost:5174", command: "Backend: cd ~/vod-review && uv run start --reload --port 8000\nFrontend (from ChatTFT): node desktop/vod-frontend.mjs", note: "Desktop reuses compatible running services and starts missing ones automatically. If startup fails, check the launch terminal and installed dependencies, then Retry." },
-  wisps: { name: "Wisps", address: "localhost:5175", command: "Backend: cd ~/vod-review-wt2 && uv run start --reload --port 8001\nFrontend (from ChatTFT): node desktop/vod-frontend.mjs --wisps", note: "Uses the wisps checkout in ~/vod-review-wt2. Desktop starts missing services automatically. Check the launch terminal if startup fails, then Retry." },
-  langfuse: { name: "Langfuse", address: "localhost:15500", command: "uv run --extra evals chat-tft-evals up --no-browser" },
-  database: { name: "CloudBeaver", address: "localhost:8978", command: "docker compose -f desktop/cloudbeaver/compose.yaml up -d" },
+  vod: { name: "VOD Review", address: "localhost:5174", command: "From tft-apps: python3 scripts/setup.py", note: "Desktop starts the suite's shared video services. If startup fails, check the launch terminal, resolve occupied ports, then Retry." },
+  wisps: { name: "Wisps", address: "localhost:5174/wisp_classifier", command: "From tft-apps: python3 scripts/setup.py", note: "Wisps shares the VOD Review backend and frontend. Retry starts one shared pair of services." },
+  langfuse: { name: "Langfuse", address: "localhost:15510", command: "From tft-apps/tft-chat: uv run --extra evals chat-tft-evals up --no-browser" },
+  database: { name: "CloudBeaver", address: "localhost:8979", command: "From tft-apps: docker compose -f desktop/cloudbeaver/compose.yaml up -d" },
 };
 for (const action of ["chat", "rolldown", "flowchart", "compositions", "vod", "wisps", "langfuse", "database", "retry"]) {
   document.getElementById(action).addEventListener("click", () => window.desktopWorkspace.select(action));

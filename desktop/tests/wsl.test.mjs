@@ -108,3 +108,18 @@ test("Linux guardian bounds shutdown when a service ignores stdin", { skip: proc
   handle.child.stdin.end();
   assert.equal((await abortable(handle.finished, AbortSignal.timeout(15000))).code, 1);
 });
+
+test("Linux guardian forwards the selected application cwd and private environment", { skip: process.platform === "win32" }, async (t) => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), "suite WSL cwd "));
+  t.after(() => rm(cwd, { recursive: true, force: true }));
+  const handle = ownedProcess(process.execPath, [worker], { cwd: root, label: "WSL environment fixture" });
+  t.after(() => stopProcess(handle));
+  const script = 'console.log("CHAT_TFT_DESKTOP " + JSON.stringify({type:"context",cwd:process.cwd(),value:process.env.SUITE_FIXTURE_VALUE})); process.stdin.on("end",()=>process.exit(0)); process.stdin.resume();';
+  handle.child.stdin.write(`${JSON.stringify({ command: process.execPath, args: ["-e", script], cwd,
+    env: { ...process.env, SUITE_FIXTURE_VALUE: "literal $value ' with spaces" } })}\n`);
+  const context = await waitForRecord(handle, "context", AbortSignal.timeout(5000));
+  assert.equal(context.cwd, cwd);
+  assert.equal(context.value, "literal $value ' with spaces");
+  handle.child.stdin.end();
+  assert.equal((await abortable(handle.finished, AbortSignal.timeout(5000))).code, 0);
+});

@@ -1,61 +1,56 @@
-/** Attach to compatible video services or own the missing processes. */
-import os from "node:os";
+/** Own one VOD backend and frontend shared by the VOD Review and Wisps views. */
 import { DesktopRuntime } from "./runtime.mjs";
-import { probeVideoService, waitForHttp, waitForIdentity, waitForRecord } from "./utils.mjs";
+import { assertPortAvailable, waitForHttp, waitForIdentity, waitForRecord } from "./utils.mjs";
 
-/** Manage one VOD checkout independently of ChatTFT and the other video workspace. */
+/** Manage the suite-local video application without adopting external services. */
 export class VideoRuntime extends DesktopRuntime {
   /**
-   * Select fixed workspace ports and a checkout-specific Python environment.
+   * Select the independent VOD environment and shared fixed application ports.
    * Args:
-   *   root: ChatTFT checkout; node: service Node; options: launcher options;
-   *   wsl: Optional original Linux environment; tab: vod or wisps.
+   *   root: Suite root; node: service Node; options: validated launcher options.
+   *   wsl: Optional original Linux launch context.
    */
-  constructor(root, node, options, wsl, tab) {
+  constructor(root, node, options, wsl) {
     super(root, node, options, wsl);
-    this.tab = tab;
-    const env = wsl?.env ?? process.env;
-    const home = wsl ? env.HOME : os.homedir();
-    const override = env[tab === "wisps" ? "CHATTFT_WISPS_REPO" : "CHATTFT_VOD_REPO"];
-    if (!home && !override) throw new Error("Video checkout home directory is unavailable.");
-    this.repo = override ?? this.paths.join(home, tab === "wisps" ? "vod-review-wt2" : "vod-review");
-    this.backendPort = tab === "wisps" ? 8001 : 8000;
-    this.frontendPort = tab === "wisps" ? 5175 : 5174;
+    this.repo = this.roots.vod;
+    this.cwd = this.repo;
+    this.backendPort = 8000;
+    this.frontendPort = 5174;
     this.python = this.paths.join(this.repo, ".venv", !wsl && process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
   }
 
-  /**
-   * Reuse verified services, starting only absent ones with existing ownership rules.
-   * Returns:
-   *   The ready frontend URL; rejects after cleaning up only newly owned children.
-   */
-  async start() {
+  /** Return one readiness promise so concurrent requests cannot spawn duplicates. */
+  start() {
+    this.startPromise ??= this.startServices();
+    return this.startPromise;
+  }
+
+  /** Start both owned services, verify identity and readiness, and clean up failure. */
+  async startServices() {
     this.state = "starting";
     const signal = this.controller.signal;
     const timer = setTimeout(() => this.controller.abort(new Error("Video workspace startup timed out.")), this.options.startupTimeout);
     const backendUrl = `http://127.0.0.1:${this.backendPort}`;
     const frontendUrl = `http://127.0.0.1:${this.frontendPort}`;
     try {
-      // Probe both ports before spawning anything. An occupied incompatible port
-      // is an error, never a reason to stop another application's process.
-      const backend = await probeVideoService(backendUrl, "backend", this.tab, signal);
-      const frontend = await probeVideoService(frontendUrl, "frontend", this.tab, signal);
-      if (!backend) {
-        const child = this.spawn(this.python, ["-u", this.paths.join(this.root, "desktop/vod_backend.py"),
-          "--repo", this.repo, "--port", String(this.backendPort)], `${this.tab} backend`);
-        await waitForRecord(child, "bound", signal);
-        if (this.wsl) await waitForIdentity(backendUrl, this.identity, signal);
-        await waitForHttp(`${backendUrl}/api/health`, signal);
-        if (!await probeVideoService(backendUrl, "backend", this.tab, signal)) throw new Error("Video backend disappeared during startup.");
+      // On WSL the Linux workers bind strictly; Windows readiness also checks
+      // the per-launch identity. Neither side can adopt an original checkout.
+      if (!this.wsl) {
+        await assertPortAvailable(this.backendPort);
+        await assertPortAvailable(this.frontendPort);
       }
-      if (!frontend) {
-        const args = [this.paths.join(this.root, "desktop/vod-frontend.mjs"), "--repo", this.repo, "--managed"];
-        if (this.tab === "wisps") args.push("--wisps");
-        const child = this.spawn(this.node, args, `${this.tab} frontend`);
-        await waitForRecord(child, "listening", signal);
-        if (this.wsl) await waitForIdentity(frontendUrl, this.identity, signal);
-        if (!await probeVideoService(frontendUrl, "frontend", this.tab, signal)) throw new Error("Video frontend disappeared during startup.");
-      }
+      signal.throwIfAborted();
+      const backend = this.spawn(this.python, ["-u", this.paths.join(this.roots.desktop, "vod_backend.py"),
+        "--repo", this.repo, "--port", String(this.backendPort)], "VOD backend");
+      await waitForRecord(backend, "bound", signal);
+      await waitForIdentity(backendUrl, this.identity, signal);
+      await waitForHttp(`${backendUrl}/api/health`, signal);
+      const frontend = this.spawn(this.node, [this.paths.join(this.roots.desktop, "vod-frontend.mjs"),
+        "--repo", this.repo, "--managed", "--port", String(this.frontendPort),
+        "--backend-port", String(this.backendPort)], "VOD frontend");
+      await waitForRecord(frontend, "listening", signal);
+      await waitForIdentity(frontendUrl, this.identity, signal);
+      await waitForHttp(frontendUrl, signal);
       signal.throwIfAborted();
       this.state = "running";
       return frontendUrl;

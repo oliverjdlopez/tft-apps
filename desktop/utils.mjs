@@ -11,6 +11,8 @@ import net from "node:net";
 import http from "node:http";
 import { tmpdir } from "node:os";
 
+import { launcherPaths } from "./paths.mjs";
+
 export const EVENT_PREFIX = "CHAT_TFT_DESKTOP ";
 
 // ---------------------------------------------------------------------------
@@ -53,7 +55,7 @@ export function launchOptions(args, root) {
   const port = values.port === undefined ? undefined : integerOption(values.port, "--port", 65535);
   const devPort = integerOption(values["dev-port"], "--dev-port", 65535);
   return {
-    mode: values.mode, python: pythonExecutable(root, values.python), port, devPort,
+    mode: values.mode, python: pythonExecutable(launcherPaths(root).chat, values.python), port, devPort,
     startupTimeout: integerOption(values["startup-timeout"], "--startup-timeout", 3600) * 1000,
     help: values.help,
   };
@@ -86,12 +88,12 @@ export async function ensureLangfuse(root, python, {
   runnerReady = hostExperimentReady,
 } = {}) {
   try {
-    const response = await request("http://127.0.0.1:15500/api/public/health", {
+    const response = await request("http://127.0.0.1:15510/api/public/health", {
       redirect: "manual", signal: AbortSignal.timeout(1500),
     });
     await response.body?.cancel();
     if (response.ok && await runnerReady(root)) {
-      log("[Langfuse] Already running at http://localhost:15500");
+      log("[Langfuse] Already running at http://localhost:15510");
       return true;
     }
   } catch { /* A stopped stack is the normal reason to invoke the launcher. */ }
@@ -102,7 +104,7 @@ export async function ensureLangfuse(root, python, {
     // repository launcher rather than bringing up an incomplete Compose stack.
     await new Promise((resolve, reject) => {
       const child = spawnProcess(python, ["-m", "evals", "up", "--no-browser"], {
-        cwd: root, shell: false, stdio: "inherit", timeout: 900000,
+        cwd: launcherPaths(root).chat, shell: false, stdio: "inherit", timeout: 900000,
       });
       child.once("error", reject);
       child.once("close", (code, signal) => {
@@ -120,7 +122,7 @@ export async function ensureLangfuse(root, python, {
 /** Check the host evaluation queue over its private socket before desktop reuse. */
 export function hostExperimentReady(root) {
   return new Promise((resolve) => {
-    const request = http.get({ socketPath: path.join(root, "evals/langfuse/.runtime/runner.sock"), path: "/health" }, (response) => {
+    const request = http.get({ socketPath: path.join(launcherPaths(root).chat, "evals/langfuse/.runtime/runner.sock"), path: "/health" }, (response) => {
       response.resume();
       resolve(response.statusCode === 200);
     });
@@ -447,7 +449,7 @@ export async function electronExecutable(cache) {
  *   Shell directory keyed by its content, leaving running launches untouched.
  */
 export async function stageWindowsShell(source, cache) {
-  const names = ["package.json", "main.mjs", "runtime.mjs", "video-runtime.mjs", "utils.mjs", "status.html", "status.js", "status.css", "workspace.mjs", "workspace-preload.cjs", "workspace.html", "workspace.js", "workspace.css"];
+  const names = ["package.json", "paths.mjs", "main.mjs", "runtime.mjs", "video-runtime.mjs", "utils.mjs", "status.html", "status.js", "status.css", "workspace.mjs", "workspace-preload.cjs", "workspace.html", "workspace.js", "workspace.css"];
   const files = await Promise.all(names.map(async (name) => [name, await readFile(path.join(source, name))]));
   const hash = createHash("sha256");
   for (const [name, content] of files) hash.update(name).update(content);
@@ -547,4 +549,56 @@ export async function probeVideoService(origin, kind, tab, signal) {
       && data.backendPort === (tab === "wisps" ? 8001 : 8000)) return true;
   } catch { /* A non-JSON response is an occupied, incompatible service. */ }
   throw new Error(`Port at ${origin} is not a compatible ${tab} ${kind}. For an older frontend, stop it and retry with the updated desktop launcher.`);
+}
+
+/**
+ * Reject any occupied video port before starting either suite-owned service.
+ * Args:
+ *   port: Fixed loopback application port.
+ * Returns:
+ *   Promise resolved when the reservation is released; rejects for occupied ports.
+ */
+export function assertPortAvailable(port) {
+  return new Promise((resolve, reject) => {
+    const reservation = net.createServer();
+    reservation.once("error", () => reject(new Error(`Port ${port} is occupied. Stop the other server before launching tft-apps.`)));
+    reservation.listen(port, "127.0.0.1", () => reservation.close(resolve));
+  });
+}
+
+/**
+ * Scope inherited runtime paths and tracing to the selected destination app.
+ * Args:
+ *   inherited: Native or original WSL environment; roots: resolved suite roots.
+ *   app: Selected process working directory; paths: native or Linux path module.
+ * Returns:
+ *   Private child environment preserving external RDS and credential references.
+ */
+export function serviceEnvironment(inherited, roots, app, paths = path) {
+  const environment = { ...inherited };
+  // Destination dotenv/platform files own tracing; exported source keys must
+  // never direct a relocated application into the original Langfuse project.
+  for (const name of Object.keys(environment)) {
+    if (name.startsWith("LANGFUSE_")) delete environment[name];
+  }
+  environment.LANGFUSE_BASE_URL = "http://localhost:15510";
+  environment.LANGFUSE_PUBLIC_URL = "http://localhost:15510";
+  environment.LANGFUSE_PROJECT_ID = "tft-apps-evals";
+  if (environment.TFT_MEDIA_DIR) environment.TFT_MEDIA_DIR = paths.join(app, "data/media");
+  if (app === roots.vod) {
+    const requested = environment.VOD_DATA_DIR && paths.resolve(environment.VOD_DATA_DIR);
+    const relative = requested && paths.relative(roots.suite, requested);
+    // Permit a deliberately selected disposable destination directory while
+    // rejecting source-checkout or external runtime state inherited from WSL.
+    const data = requested && relative !== ".." && !relative.startsWith(`..${paths.sep}`) && !paths.isAbsolute(relative)
+      ? requested : paths.join(app, "data");
+    Object.assign(environment, {
+      VOD_DATA_DIR: data,
+      VOD_FRAMES_DIR: paths.join(data, "frames"),
+      VOD_BOXES_DIR: paths.join(data, "boxes"),
+      VOD_OCR_CACHE_DIR: paths.join(data, "ocr_cache"),
+      VOD_GDRIVE_TOKEN_FILE: paths.join(data, "gdrive/token.json"),
+    });
+  }
+  return environment;
 }

@@ -1,8 +1,9 @@
 /** Own the checkout services for one Electron application lifetime. */
 import { EventEmitter } from "node:events";
 import path from "node:path";
+import { launcherPaths } from "./paths.mjs";
 import { randomUUID } from "node:crypto";
-import { abortable, ownedProcess, processFailure, stopProcess, waitForHttp, waitForRecord, wslCommand, waitForIdentity } from "./utils.mjs";
+import { abortable, ownedProcess, processFailure, stopProcess, waitForHttp, waitForRecord, wslCommand, waitForIdentity, serviceEnvironment } from "./utils.mjs";
 
 /** Coordinate frontend builds, service readiness, cancellation, and shutdown. */
 export class DesktopRuntime extends EventEmitter {
@@ -19,7 +20,9 @@ export class DesktopRuntime extends EventEmitter {
     this.options = options;
     this.wsl = wsl;
     this.paths = wsl ? path.posix : path;
-    this.identity = wsl ? randomUUID() : undefined;
+    this.roots = launcherPaths(root, this.paths);
+    this.cwd = this.roots.chat;
+    this.identity = randomUUID();
     this.children = [];
     this.controller = new AbortController();
     this.state = "idle";
@@ -41,13 +44,13 @@ export class DesktopRuntime extends EventEmitter {
     try {
       if (this.options.mode === "production") {
         this.emit("progress", "Building the current frontend…");
-        const build = this.spawn(this.node, [this.paths.join(this.root, "desktop/frontend.mjs"), "production"], "Frontend build", true);
+        const build = this.spawn(this.node, [this.paths.join(this.roots.desktop, "frontend.mjs"), "production"], "Frontend build", true);
         const result = await abortable(build.finished, signal);
         if (result.code !== 0 || result.error) throw processFailure(build);
       }
       signal.throwIfAborted();
       this.emit("progress", "Starting the Python backend…");
-      const args = ["-u", this.paths.join(this.root, "desktop/backend.py")];
+      const args = ["-u", this.paths.join(this.roots.desktop, "backend.py")];
       if (this.options.port !== undefined) args.push("--port", String(this.options.port));
       const backend = this.spawn(this.options.python, args, "Python backend");
       const bound = await waitForRecord(backend, "bound", signal);
@@ -60,7 +63,7 @@ export class DesktopRuntime extends EventEmitter {
       let frontendUrl = backendUrl;
       if (this.options.mode === "dev") {
         this.emit("progress", "Starting frontend hot reload…");
-        const frontend = this.spawn(this.node, [this.paths.join(this.root, "desktop/frontend.mjs"), "dev", String(this.options.devPort), String(bound.port)], "Vite development server");
+        const frontend = this.spawn(this.node, [this.paths.join(this.roots.desktop, "frontend.mjs"), "dev", String(this.options.devPort), String(bound.port)], "Vite development server");
         await waitForRecord(frontend, "listening", signal);
         frontendUrl = `http://127.0.0.1:${this.options.devPort}`;
         if (this.wsl) await waitForIdentity(frontendUrl, this.identity, signal);
@@ -88,9 +91,9 @@ export class DesktopRuntime extends EventEmitter {
     // Quit may have occurred while the previous readiness response was settling.
     // Never create a child after stop() has snapshotted the owned processes.
     this.controller.signal.throwIfAborted();
-    const service = { command, args, env: { ...this.wsl?.env, CHATTFT_DESKTOP_IDENTITY: this.identity } };
-    const invocation = this.wsl ? wslCommand(this.wsl) : { command, args, cwd: this.root };
-    const handle = ownedProcess(invocation.command, invocation.args, { cwd: invocation.cwd, label, onExit: (child) => {
+    const service = { command, args, cwd: this.cwd, env: { ...serviceEnvironment(this.wsl?.env ?? process.env, this.roots, this.cwd, this.paths), CHATTFT_DESKTOP_IDENTITY: this.identity } };
+    const invocation = this.wsl ? wslCommand(this.wsl) : { command, args, cwd: this.cwd };
+    const handle = ownedProcess(invocation.command, invocation.args, { cwd: invocation.cwd, env: service.env, label, onExit: (child) => {
       if (child.stopping || this.state === "stopping" || this.state === "stopped" || finite) return;
       const error = processFailure(child);
       this.controller.abort(error);

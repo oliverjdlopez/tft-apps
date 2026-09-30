@@ -51,7 +51,9 @@ class Runtime extends EventEmitter {
 /** Provide independent hosted pages to the native menu. */
 class Workspace {
   /** Create separate page counters and expose the active fixture. */
-  constructor() {
+  constructor(_window, _openExternal, ensureVideo) {
+    this.ensureVideo = ensureVideo;
+    this.failed = [];
     Workspace.current = this;
     this.active = "chat";
     this.state = "ready";
@@ -69,6 +71,8 @@ class Workspace {
   select(name) { this.active = name; }
   /** Record retry of an unavailable external page. */
   loadExternal() { this.retried = true; }
+  /** Record shared-service failure in both persistent video views. */
+  fail(tab) { this.failed.push(tab); }
 }
 
 /** Supply the window events used by the application lifecycle. */
@@ -93,11 +97,13 @@ test("Force Reload restarts ChatTFT once, preserves external tabs, and handles f
     whenReady: async () => {},
     quit: () => { quitCalls++; },
   });
+  const videos = [];
   globalThis.reloadFixture = {
     app, BrowserWindow: Window, Runtime, Workspace,
     VideoRuntime: class extends EventEmitter {
-      async start() { this.state = "running"; }
-      async stop() { this.state = "stopped"; }
+      constructor() { super(); this.starts = 0; this.stops = 0; videos.push(this); }
+      async start() { this.starts++; this.state = "running"; }
+      async stop() { this.stops++; await this.gate; this.state = "stopped"; }
     },
     createInterface: () => new EventEmitter(),
     dialog: { showMessageBox: async (options) => { dialogs.push(options); return { response: 0 }; } },
@@ -132,6 +138,20 @@ test("Force Reload restarts ChatTFT once, preserves external tabs, and handles f
   const force = commands.find((item) => item.label === "Force Reload").click;
   const workspace = Workspace.current;
   const initial = Runtime.instances[0];
+  assert.equal(videos.length, 1, "startup of both tabs creates one runtime");
+  assert.equal(videos[0].starts, 1);
+  videos[0].emit("failure", new Error("Video failed"));
+  assert.deepEqual(workspace.failed, ["vod", "wisps"]);
+  let stopped;
+  videos[0].gate = new Promise((resolve) => { stopped = resolve; });
+  const vodRetry = workspace.ensureVideo("vod");
+  const wispsRetry = workspace.ensureVideo("wisps");
+  assert.equal(vodRetry, wispsRetry);
+  assert.equal(videos[0].stops, 1);
+  stopped();
+  await Promise.all([vodRetry, wispsRetry]);
+  assert.equal(videos.length, 2);
+  assert.equal(videos[1].starts, 1);
 
   reload();
   assert.equal(workspace.chat.webContents.reloads, 1);
@@ -178,4 +198,8 @@ test("Force Reload restarts ChatTFT once, preserves external tabs, and handles f
   assert.equal(Runtime.instances.length, 4);
   assert.deepEqual(dialogs[1].buttons, ["Quit"]);
   assert.equal(quitCalls, 1);
+  app.emit("before-quit", { preventDefault() {} });
+  app.emit("before-quit", { preventDefault() {} });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(videos[1].stops, 1, "quit stops shared VOD runtime once");
 });

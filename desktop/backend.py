@@ -10,13 +10,17 @@ import threading
 import os
 
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from desktop.paths import CHAT_ROOT, DESKTOP_ROOT, SUITE_ROOT
+
+REPO_ROOT = CHAT_ROOT
 # Python adds the script directory to sys.path. Its utils.py would otherwise
 # override the backend's namespace package utils, even with src inserted first.
-sys.path[:] = [entry for entry in sys.path if Path(entry).resolve() != REPO_ROOT / "desktop"]
+sys.path[:] = [entry for entry in sys.path if Path(entry).resolve() != DESKTOP_ROOT]
 # Direct script execution must resolve the same repository modules as the
 # installed CLI, even when npm was invoked from a different working directory.
-sys.path[:0] = [str(REPO_ROOT), str(REPO_ROOT / "app/backend"), str(REPO_ROOT / "app/backend/src")]
+sys.path[:0] = [str(SUITE_ROOT), str(REPO_ROOT), str(REPO_ROOT / "app/backend"), str(REPO_ROOT / "app/backend/src")]
+os.chdir(REPO_ROOT)
 
 from desktop.utils import bind_loopback, control_shutdown, emit_event, watch_parent, with_desktop_identity
 

@@ -6,9 +6,9 @@ import { navigationPolicy, permissionAllowed, workspaceCommandAllowed } from "./
 const shellPath = fileURLToPath(new URL("./workspace.html", import.meta.url));
 const externalPages = {
   vod: { url: "http://localhost:5174", partition: "persist:vod-review" },
-  wisps: { url: "http://localhost:5175/wisp_classifier", partition: "persist:wisps" },
-  langfuse: { url: "http://localhost:15500/project/chattft-evals", partition: "persist:langfuse" },
-  database: { url: "http://localhost:8978", partition: "persist:cloudbeaver" },
+  wisps: { url: "http://localhost:5174/wisp_classifier", partition: "persist:wisps" },
+  langfuse: { url: "http://localhost:15510/project/tft-apps-evals", partition: "persist:langfuse" },
+  database: { url: "http://localhost:8979", partition: "persist:cloudbeaver" },
 };
 const preferences = { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true };
 
