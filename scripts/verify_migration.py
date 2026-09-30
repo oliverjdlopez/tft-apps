@@ -42,6 +42,9 @@ def main() -> None:
             snapshots += 1
             if changed:
                 raise ValueError(f"Immutable snapshot changed: {destination}")
+            committed = subprocess.check_output(["git", "show", "HEAD:" + entry["destination"]], cwd=ROOT)
+            if hashlib.sha256(committed).hexdigest() != entry["sha256"]:
+                raise ValueError(f"Committed snapshot bytes differ: {destination}")
         if entry["source"] == "vod-review" and entry["path"].startswith("data/datasets/"):
             dataset_count += 1
             if changed and destination.name != "data.yaml":
@@ -63,10 +66,10 @@ def main() -> None:
     changes = subprocess.check_output(["git", "diff", "--name-status", baseline], cwd=ROOT, text=True).splitlines()
     introduced = subprocess.check_output(["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT, text=True).splitlines()
     report = {"reviewable_changes": changes + ["A\t" + name for name in introduced], "source_identities_unchanged": True, "copied_files": len(inventory["files"]),
-        "immutable_snapshot_files": snapshots, "vod_dataset_files": dataset_count,
+        "immutable_snapshot_files": snapshots, "committed_snapshot_bytes_match": True, "vod_dataset_files": dataset_count,
         "intentional_destination_edits": sorted(edits), "runtime_storage_fresh": True}
     (ROOT / ".migration/verification.json").write_text(json.dumps(report, indent=2) + "\n")
-    print(json.dumps({key: value for key, value in report.items() if key != "intentional_destination_edits"}))
+    print(json.dumps({key: value for key, value in report.items() if key not in {"intentional_destination_edits", "reviewable_changes"}}))
 
 
 if __name__ == "__main__":

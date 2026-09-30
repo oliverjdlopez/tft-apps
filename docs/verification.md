@@ -12,7 +12,10 @@ were performed. Remote RDS data was neither copied nor rebuilt.
 - 1,376 files copied independently, with SHA-256 and inode comparisons.
 - All 382 VOD dataset files retained; only two `data.yaml` absolute roots changed.
 - All 58 evaluation snapshot/catalog files retain their original bytes. Git marks
-  snapshot JSON as binary text-disabled so future checkout does not alter hashes.
+  snapshot JSON as text-disabled so future checkout does not alter hashes.
+  The final byte-preservation commit corrects Git's import-time index normalization;
+  working files stayed unchanged. Its apparent snapshot diffs contain only line
+  endings, and all committed blobs were compared with the original SHA-256 hashes.
 - Ordinary `agent_configs` files retained; submodule metadata omitted.
 - Evaluation export/import: 6 datasets, 56 cases, including 11 archived cases,
   23 prompt versions, 5 current evaluators and 5 rules. No source resources were
