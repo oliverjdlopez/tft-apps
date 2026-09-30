@@ -1,0 +1,28 @@
+@layer legacy {
+.entity-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  vertical-align: middle;
+}
+.entity-icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+.entity-icon-unit { object-fit: cover; }
+.entity-icon-placeholder {
+  box-sizing: border-box;
+  background: var(--muted);
+  border: 1px solid var(--border);
+}
+.entity-asset-status { color: var(--muted-foreground); font-size: 0.85rem; }
+
+/* CDragon trait glyphs are white; a neutral plate keeps them legible on light UI. */
+.entity-icon-trait {
+  box-sizing: border-box;
+  padding: 2px;
+  background: var(--foreground);
+}
+}

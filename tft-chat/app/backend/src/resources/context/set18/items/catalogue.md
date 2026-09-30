@@ -1,0 +1,126 @@
+---
+name: set-18-item-catalogue
+description: Set 18 completed and Radiant equipment, Artifacts and Tactician items with direct effects and live-pool removals. Use for item identity and effect questions. Excludes build rankings, Support-item pool coverage and complete numerical tooltips.
+kind: item
+sets: 18
+---
+
+# Core Item Catalogue
+
+Set 18, Enchanted Wilds, patch 18.1.
+
+Entries describe mechanical identity, not complete tooltips or recommended builds.
+
+### Standard completed items
+
+- **Adaptive Helm** — amplifies Mana gains; Tanks/Fighters receive resists and other roles receive AD/AP.
+- **Archangel's Staff** — AP increases every five seconds.
+- **Bloodthirster** — Omnivamp and a shield triggered at low Health.
+- **Blue Buff** — Mana Regen and increased AD/AP gained from all sources.
+- **Bramble Vest** — Armor, max Health, attack-damage reduction and periodic retaliation against adjacent enemies.
+- **Crownguard** — opening shield followed by AP when it expires.
+- **Deathblade** — large AD bonus and Damage Amp.
+- **Dragon's Claw** — MR and periodic max-Health healing.
+- **Edge of Night** — low-Health untargetability, cleansing and missing-Health recovery.
+- **Evenshroud** — nearby Sunder; temporary Armor and MR for the holder.
+- **Gargoyle Stoneplate** — Armor and MR increase with the number of enemies targeting the holder.
+- **Giant Slayer** — additional Damage Amp against Tank-role units.
+- **Guinsoo's Rageblade** — AS accumulates every second, independently of attack count.
+- **Hand Of Justice** — AD/AP and Omnivamp; the offensive bonus doubles above half Health, Omnivamp doubles below half.
+- **Hextech Gunblade** — holder damage heals the ally with the lowest percentage Health.
+- **Infinity Edge** — AD, critical chance and Precision for ability critical strikes.
+- **Ionic Spark** — nearby Shred and magic damage when enemies cast.
+- **Jeweled Gauntlet** — AP, critical chance and Precision for ability critical strikes.
+- **Kraken's Fury** — attacks stack AD; reaching the attack threshold grants AS.
+- **Last Whisper** — attack and ability damage apply Sunder.
+- **Morellonomicon** — attacks and abilities apply Burn and Wound.
+- **Nashor's Tooth** — attacks grant extra Mana, increased on critical strikes.
+- **Protector's Vow** — starting Mana plus a low-Health Mana-and-shield trigger.
+- **Quicksilver** — opening Unstoppable period and AS gained each second.
+- **Rabadon's Deathcap** — large AP bonus and Damage Amp.
+- **Red Buff** — AS plus Burn and Wound through attacks and abilities.
+- **Spear of Shojin** — extra Mana from attacks.
+- **Spirit Visage** — regenerates a fraction of missing Health every second.
+- **Steadfast Heart** — Durability increases while above half Health.
+- **Sterak's Gage** — large low-Health shield that decays.
+- **Striker's Flail** — critical strikes accumulate temporary Damage Amp.
+- **Sunfire Cape** — periodic nearby Burn and Wound plus max Health.
+- **Tactician's Cape** — one extra team slot; chance of gold after ten combat seconds.
+- **Tactician's Crown** — one extra team slot; chance of gold on a win.
+- **Tactician's Shield** — one extra team slot; chance of gold on holder death.
+- **Thief's Gloves** — two random items each round while consuming three equipment slots.
+- **Titan's Resolve** — attacking or receiving damage stacks AD/AP; full stacks grant Damage Amp and Unstoppable.
+- **Void Staff** — attack and ability damage apply Shred.
+- **Warmog's Armor** — flat Health and percentage max Health.
+
+### Artifacts
+
+- **Aegis of Dawn** — periodically steals nearby Armor and heals based on holder Armor; pairing with Aegis of Dusk accelerates triggers.
+- **Aegis of Dusk** — periodically steals nearby MR and deals MR-based magic damage; pairing with Aegis of Dawn accelerates triggers.
+- **Blighting Jewel** — magic damage reduces target MR; hitting zero-MR targets restores Mana.
+- **Dawncore** — reduces maximum Mana initially and after subsequent casts, with a minimum of 15.
+- **Eternal Pact** — links the highest-Health ally, shielding it periodically and gaining Mana from its casts; its death grants AP and Mana Regen.
+- **Fishbones** — random attack targets and two additional range.
+- **Flickerblades** — attacks stack AS; every third attack also grants AD/AP.
+- **Forbidden Idol** — converts part of shielding into maximum Health.
+- **Gambler's Blade** — banked gold increases AS; attacks can generate gold.
+- **Gold Collector** — executes sufficiently injured enemies; champion executions may produce gold.
+- **Hellfire Hatchet** — attacks add damage based on holder max Health; missing Health grants AS.
+- **Horizon Focus** — stuns trigger max-Health-based magic damage.
+- **Infinity Force** — combined Health, AD, AP, AS, Armor and MR.
+- **Lich Bane** — first attack after casting adds stage-scaled magic damage.
+- **Lightshield Crest** — periodically shields the lowest-percentage-Health ally using holder resists; on death shields all allies.
+- **Luden's Tempest** — overkill damage splashes as magic damage onto nearby enemies.
+- **Manazane** — first cast triggers Mana recovery over five seconds.
+- **Mittens** — movement speed and immunity to Slow, Burn and Wound.
+- **Mogul's Mail** — taking damage stacks Health and resists; full stacks unlock recurring gold.
+- **Rapid Firecannon** — extra attack range that increases with kills.
+- **Seeker's Armguard** — takedowns stack AP, Armor and MR.
+- **Silvermere Dawn** — high AD and Omnivamp; immunity to stuns, stunning attacks, and AS fixed at 0.5.
+- **Statikk Shiv** — every third attack deals AP-scaling chain-lightning damage.
+- **Talisman of Ascension** — delayed max Health, Mana Regen and Damage Amp.
+- **The Indomitable** — reduced movement speed, increased max Health, Unstoppable and a pull into melee range.
+- **Titanic Hydra** — attacks add holder-Health/AD-based physical damage to the target and adjacent enemies.
+- **Void Gauntlet** — accumulates a Health-based death explosion split among nearby enemies.
+- **Wit's End** — stage-scaled magic on-hit damage and healing from magic damage.
+- **Zhonya's Paradox** — brief invulnerability and untargetability at low Health.
+
+### Radiant items
+
+- **Radiant Adaptive Helm** — amplifies Mana gains; Tanks/Fighters receive resists and other roles receive AD/AP.
+- **Radiant Archangel's Staff** — AP increases every five seconds.
+- **Radiant Bloodthirster** — Omnivamp and a shield triggered at low Health.
+- **Radiant Blue Buff** — Mana Regen and increased AD/AP gained from all sources.
+- **Radiant Bramble Vest** — Armor, max Health, attack-damage reduction and periodic retaliation against adjacent enemies.
+- **Radiant Crownguard** — opening shield followed by AP when it expires.
+- **Radiant Deathblade** — large AD bonus and Damage Amp.
+- **Radiant Dragon's Claw** — MR and periodic max-Health healing.
+- **Radiant Edge of Night** — low-Health untargetability, cleansing and missing-Health recovery.
+- **Radiant Evenshroud** — nearby Sunder; temporary Armor and MR for the holder.
+- **Radiant Gargoyle Stoneplate** — Armor and MR increase with the number of enemies targeting the holder.
+- **Radiant Giant Slayer** — additional Damage Amp against Tank-role units.
+- **Radiant Guinsoo's Rageblade** — AS accumulates every second, independently of attack count.
+- **Radiant Hand of Justice** — AD/AP and Omnivamp; the offensive bonus doubles above half Health, Omnivamp doubles below half.
+- **Radiant Hextech Gunblade** — holder damage heals the ally with the lowest percentage Health.
+- **Radiant Infinity Edge** — AD, critical chance and Precision for ability critical strikes.
+- **Radiant Ionic Spark** — nearby Shred and magic damage when enemies cast.
+- **Radiant Jeweled Gauntlet** — AP, critical chance and Precision for ability critical strikes.
+- **Radiant Kraken's Fury** — attacks stack AD; reaching the attack threshold grants AS.
+- **Radiant Last Whisper** — attack and ability damage apply Sunder.
+- **Radiant Morellonomicon** — attacks and abilities apply Burn and Wound.
+- **Radiant Nashor's Tooth** — attacks grant extra Mana, increased on critical strikes.
+- **Radiant Protector's Vow** — starting Mana plus a low-Health Mana-and-shield trigger.
+- **Radiant Quicksilver** — opening Unstoppable period and AS gained each second.
+- **Radiant Rabadon's Deathcap** — large AP bonus and Damage Amp.
+- **Radiant Red Buff** — AS plus Burn and Wound through attacks and abilities.
+- **Radiant Spear of Shojin** — extra Mana from attacks.
+- **Radiant Spirit Visage** — regenerates a fraction of missing Health every second.
+- **Radiant Steadfast Heart** — Durability increases while above half Health.
+- **Radiant Sterak's Gage** — large low-Health shield that decays.
+- **Radiant Striker's Flail** — critical strikes accumulate temporary Damage Amp.
+- **Radiant Sunfire Cape** — periodic nearby Burn and Wound plus max Health.
+- **Radiant Thief's Gloves** — two random Radiant items each round while consuming three equipment slots.
+- **Radiant Titan's Resolve** — attacking or receiving damage stacks AD/AP; full stacks grant Damage Amp and Unstoppable.
+- **Radiant Void Staff** — attack and ability damage apply Shred.
+- **Radiant Warmog's Armor** — flat Health and percentage max Health.
+

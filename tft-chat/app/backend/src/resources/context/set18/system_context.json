@@ -1,0 +1,6 @@
+{
+  "Carousel": "returns in Set 18; may contain extra champions or higher-cost champions.",
+  "Crowd-control targeting": "recovering from CC no longer automatically forces a new target selection.",
+  "Missed PvE loot": "uncollected loot from 4-7 and subsequent PvE rounds can carry to the next PvE round.",
+  "Opening encounters": "new options are Completed Item Anvil Start, Reroll Subscription and Item Forge; removed options are Loot Subscription, Artifact Anvil and Reroll Start."
+}

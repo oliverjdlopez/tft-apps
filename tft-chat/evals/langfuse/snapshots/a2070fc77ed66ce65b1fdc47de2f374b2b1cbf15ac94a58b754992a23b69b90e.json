@@ -1,0 +1,853 @@
+{
+  "config": {
+    "action": "run",
+    "cases": [],
+    "concurrency": 4,
+    "data_snapshot_label": null,
+    "dataset_version": null,
+    "repetitions": 1,
+    "selection_live": false,
+    "snapshot": null,
+    "variants": [
+      {
+        "model": null,
+        "name": "baseline",
+        "prompts": {}
+      }
+    ]
+  },
+  "dataset_name": "context-response",
+  "items": [
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/riftbeast_roster",
+      "input": "List all the riftbeast champs",
+      "metadata": {
+        "case": "riftbeast_roster",
+        "case_id": "context_response_smoke/riftbeast_roster",
+        "coverage_area": "roster",
+        "description": "Fact-oriented response check for roster; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bcinderling\\b)(?=.*\\bpebbles\\b)(?=.*\\bgromp\\b)(?=.*\\bmurkwolf\\b)(?=.*\\bscuttlecrab\\b)(?=.*\\bkrug\\b)(?=.*\\bmama\\s+beak\\b)(?=.*\\bbrambleback\\b)(?=.*\\bsentinel\\b)(?=.*\\belder\\s+dragon\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/four_cost_adaptors",
+      "input": "What are the 4 cost adaptors",
+      "metadata": {
+        "case": "four_cost_adaptors",
+        "case_id": "context_response_smoke/four_cost_adaptors",
+        "coverage_area": "roster",
+        "description": "Fact-oriented response check for roster; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bnidalee\\b)(?=.*\\b(?:adaptor|four[-\\s]?cost|4[-\\s]?cost)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/five_cost_count",
+      "input": "How many 5 costs are in the game",
+      "metadata": {
+        "case": "five_cost_count",
+        "case_id": "context_response_smoke/five_cost_count",
+        "coverage_area": "roster",
+        "description": "Fact-oriented response check for roster; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\b(?:10|ten)\\b)(?=.*\\b(?:five[-\\s]?cost|5[-\\s]?cost|champions?)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/taric_ability",
+      "input": "What does taric do",
+      "metadata": {
+        "case": "taric_ability",
+        "case_id": "context_response_smoke/taric_ability",
+        "coverage_area": "champion",
+        "description": "Fact-oriented response check for champion; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\btaric\\b)(?=.*\\b(?:drag\\w*|pair\\w*)\\b)(?=.*\\bally\\b)(?=.*\\bstrongest\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/potion_earliest_stages",
+      "input": "What is the earliest stage I can see mana potion wisp? Is it the same for health and blast?",
+      "metadata": {
+        "case": "potion_earliest_stages",
+        "case_id": "context_response_smoke/potion_earliest_stages",
+        "coverage_area": "wisp_stage",
+        "description": "Fact-oriented response check for wisp_stage; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bmana\\s+potion\\b)(?=.*\\bhealth\\s+potion\\b)(?=.*\\bblast\\s+potion\\b)(?=.*\\b3\\s*[-–]\\s*1\\b)(?=.*\\b(?:same|all\\s+three|each)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/most_expensive_wisp",
+      "input": "What’s the most expensive wisp in the game",
+      "metadata": {
+        "case": "most_expensive_wisp",
+        "case_id": "context_response_smoke/most_expensive_wisp",
+        "coverage_area": "wisp_collection",
+        "description": "Fact-oriented response check for wisp_collection; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bcircle\\s+of\\s+elders\\b)(?=.*\\b(?:45|forty[-\\s]five)\\b)(?=.*\\bgold\\b)(?=.*\\b(?:most|highest|expensive)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/econ_wisp_uniform_odds",
+      "input": "Assuming uniform distribution what are the odds of getting an Econ charm on stage2? Assume optimal conditions such as flipping heads, killing all enemy units, etc. assume a team size of 4",
+      "metadata": {
+        "case": "econ_wisp_uniform_odds",
+        "case_id": "context_response_smoke/econ_wisp_uniform_odds",
+        "coverage_area": "wisp_probability",
+        "description": "Fact-oriented response check for wisp_probability; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\b(?:econ\\w*|gold|xp)\\b)(?=.*\\b(?:probability|odds|chance|uniform)\\b)(?=.*(?:\\b\\d+(?:\\.\\d+)?\\s*%|\\b1\\s*/\\s*\\d+\\b|\\bone\\s+in\\s+\\d+\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/blossom_roster",
+      "input": "Which champions have the Blossom trait?",
+      "metadata": {
+        "case": "blossom_roster",
+        "case_id": "context_response_smoke/blossom_roster",
+        "coverage_area": "roster",
+        "description": "Fact-oriented response check for roster; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bkarma\\b)(?=.*\\byorick\\b)(?=.*\\byunara\\b)(?=.*\\bmaster\\s+yi\\b)(?=.*\\bahri\\b)(?=.*\\bsett\\b)(?=.*\\bashe\\b)(?=.*\\blux\\b)(?=.*\\bblossom\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/one_cost_roster",
+      "input": "List the 1-cost champions in the current set.",
+      "metadata": {
+        "case": "one_cost_roster",
+        "case_id": "context_response_smoke/one_cost_roster",
+        "coverage_area": "roster",
+        "description": "Fact-oriented response check for roster; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\b(?:1[-\\s]?cost|one[-\\s]?cost)\\b)(?=.*\\bakali\\b)(?=.*\\bcamille\\b)(?=.*\\bcinderling\\b)(?=.*\\bkarma\\b)(?=.*\\bkobuko\\b)(?=.*\\bleona\\b)(?=.*\\bornn\\b)(?=.*\\bpebbles\\b)(?=.*\\brakan\\b)(?=.*\\brek['’]?sai\\b)(?=.*\\bvarus\\b)(?=.*\\bveigar\\b)(?=.*\\bxayah\\b)(?=.*\\byorick\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/riftbeast_adaptor_overlap",
+      "input": "Are any Riftbeast champions also Adaptors? Name them.",
+      "metadata": {
+        "case": "riftbeast_adaptor_overlap",
+        "case_id": "context_response_smoke/riftbeast_adaptor_overlap",
+        "coverage_area": "roster",
+        "description": "Fact-oriented response check for roster; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bgromp\\b)(?=.*\\briftbeast\\b)(?=.*\\badaptor\\b)(?=.*\\b(?:only|one)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/elder_dragon_slots",
+      "input": "How many team slots does Elder Dragon use, and how many Riftbeast counts does it contribute?",
+      "metadata": {
+        "case": "elder_dragon_slots",
+        "case_id": "context_response_smoke/elder_dragon_slots",
+        "coverage_area": "champion",
+        "description": "Fact-oriented response check for champion; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\belder\\s+dragon\\b)(?=.*(?:\\b(?:two|2)\\b[^.\\n]{0,40}\\b(?:team\\s+)?slots?\\b|\\b(?:team\\s+)?slots?\\b[^.\\n]{0,40}\\b(?:two|2)\\b))(?=.*(?:\\b(?:two|2)\\b[^.\\n]{0,50}\\briftbeasts?\\b|\\briftbeasts?\\b[^.\\n]{0,50}\\b(?:two|2)\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/adaptor_mechanic",
+      "input": "How does Adaptor decide whether a champion uses its AD or AP form?",
+      "metadata": {
+        "case": "adaptor_mechanic",
+        "case_id": "context_response_smoke/adaptor_mechanic",
+        "coverage_area": "trait",
+        "description": "Fact-oriented response check for trait; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\badaptor\\b)(?=.*\\bAD\\b)(?=.*\\bAP\\b)(?=.*\\b(?:higher|greater|dominant)\\b)(?=.*\\b(?:stat|form)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/taric_pairing",
+      "input": "How do I pair an ally with Taric for Emerald Aspect?",
+      "metadata": {
+        "case": "taric_pairing",
+        "case_id": "context_response_smoke/taric_pairing",
+        "coverage_area": "trait",
+        "description": "Fact-oriented response check for trait; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\btaric\\b)(?=.*\\bemerald\\s+aspect\\b)(?=.*\\b(?:drag\\w*|pair\\w*)\\b)(?=.*\\bally\\b)(?=.*\\bstrongest\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/blossom_wisp_thresholds",
+      "input": "What changes about Wisps at 3, 5, and 7 Blossom?",
+      "metadata": {
+        "case": "blossom_wisp_thresholds",
+        "case_id": "context_response_smoke/blossom_wisp_thresholds",
+        "coverage_area": "trait",
+        "description": "Fact-oriented response check for trait; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bblossom\\b)(?=.*\\b3\\b[^.\\n]{0,100}\\b(?:upgrade|upgraded)\\b)(?=.*\\b5\\b[^.\\n]{0,100}\\b(?:every\\s+shop|each\\s+shop)\\b)(?=.*\\b7\\b[^.\\n]{0,120}(?:(?:4\\s*gold|four\\s+gold)[^.\\n]{0,60}(?:refund|return)|(?:refund|return)[^.\\n]{0,60}(?:4\\s*gold|four\\s+gold)))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/stage2_goldxp_pool",
+      "input": "List every Gold/XP Wisp whose offer window includes Stage 2. Keep base and upgraded variants separate.",
+      "metadata": {
+        "case": "stage2_goldxp_pool",
+        "case_id": "context_response_smoke/stage2_goldxp_pool",
+        "coverage_area": "wisp_stage",
+        "description": "Fact-oriented response check for wisp_stage; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bbeggar['’]?s?\\s+wisp\\b)(?=.*\\bbronze\\s+spoon\\b)(?=.*\\bcoin\\s+flip\\b)(?=.*\\bexperienced\\b)(?=.*\\btruce\\b)(?=.*\\b(?:base|upgraded)\\b)(?=.*(?:\\b2\\s*[-–]\\s*1\\b|\\bstage\\s*2\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/stage3_goldxp_pool",
+      "input": "Which Gold/XP Wisps can be offered during Stage 3?",
+      "metadata": {
+        "case": "stage3_goldxp_pool",
+        "case_id": "context_response_smoke/stage3_goldxp_pool",
+        "coverage_area": "wisp_stage",
+        "description": "Fact-oriented response check for wisp_stage; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bbeggar['’]?s?\\s+wisp\\b)(?=.*\\bblood\\s+money\\b)(?=.*\\bbronze\\s+spoon\\b)(?=.*\\bdie\\s+roll\\b)(?=.*\\bgrow\\s+up\\b)(?=.*\\bpocket\\s+change\\b)(?=.*\\bbarter\\b)(?=.*\\bslow\\s+study\\b)(?=.*\\b(?:base|upgraded)\\b)(?=.*(?:\\bstage\\s*3\\b|\\b3\\s*[-–]\\s*[15]\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/stage2_item_pool",
+      "input": "Which item Wisps have an offer window that includes Stage 2?",
+      "metadata": {
+        "case": "stage2_item_pool",
+        "case_id": "context_response_smoke/stage2_item_pool",
+        "coverage_area": "wisp_stage",
+        "description": "Fact-oriented response check for wisp_stage; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bartifactinate\\b)(?=.*\\bblood\\s+and\\s+iron\\b)(?=.*\\bbase\\b)(?=.*\\bupgraded\\b)(?=.*(?:\\b2\\s*[-–]\\s*1\\b|\\bstage\\s*2\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/stage3_stage4_overlap",
+      "input": "Does an offer window of 3-5 through 4-1 include both Stage 3 and Stage 4?",
+      "metadata": {
+        "case": "stage3_stage4_overlap",
+        "case_id": "context_response_smoke/stage3_stage4_overlap",
+        "coverage_area": "wisp_stage",
+        "description": "Fact-oriented response check for wisp_stage; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*(?:\\byes\\b|\\bit\\s+(?:does|includes?|spans?|covers?)\\b|\\b(?:the\\s+)?(?:offer\\s+)?window\\s+(?:includes?|spans?|covers?)\\b))(?=.*(?:\\bstage\\s*3\\b|\\b3\\s*[-–]\\s*5\\b))(?=.*(?:\\bstage\\s*4\\b|\\b4\\s*[-–]\\s*1\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/all_band_variants",
+      "input": "If a prismatic Wisp says All bands, does that mean I can buy it as a normal base Wisp in Stage 2?",
+      "metadata": {
+        "case": "all_band_variants",
+        "case_id": "context_response_smoke/all_band_variants",
+        "coverage_area": "wisp_eligibility",
+        "description": "Fact-oriented response check for wisp_eligibility; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bprismatic\\b)(?=.*\\ball\\s+bands\\b)(?=.*(?:\\b(?:no|not|cannot|can['’]?t|doesn['’]?t)\\b[^.\\n]{0,100}\\b(?:base|normal)\\b|\\b(?:base|normal)\\b[^.\\n]{0,100}\\b(?:no|not|cannot|can['’]?t|doesn['’]?t)\\b))(?=.*(?:\\bstage\\s*2\\b|\\b2\\s*[-–]\\s*1\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/beggars_fallback",
+      "input": "Is Beggar’s Wisp a normal competing offer or a fallback?",
+      "metadata": {
+        "case": "beggars_fallback",
+        "case_id": "context_response_smoke/beggars_fallback",
+        "coverage_area": "wisp_eligibility",
+        "description": "Fact-oriented response check for wisp_eligibility; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bbeggar['’]?s?\\s+wisp\\b)(?=.*\\bfallback\\b)(?=.*(?:\\b(?:not|no|rather\\s+than|instead\\s+of)\\b[^.\\n]{0,120}\\b(?:normal|competing)\\b|\\b(?:normal|competing)\\b[^.\\n]{0,120}\\b(?:not|no|rather\\s+than|instead\\s+of)\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/wisp_offer_cadence",
+      "input": "Does a Wisp appearing in the 2-1 to 2-7 window mean I get an offer every round?",
+      "metadata": {
+        "case": "wisp_offer_cadence",
+        "case_id": "context_response_smoke/wisp_offer_cadence",
+        "coverage_area": "wisp_rules",
+        "description": "Fact-oriented response check for wisp_rules; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*(?:\\b(?:not|no|doesn['’]?t)\\b[^.\\n]{0,100}\\bevery\\s+round\\b|\\bevery\\s+round\\b[^.\\n]{0,100}\\b(?:not|no)\\b))(?=.*\\b(?:every\\s+other\\s+shop|eligibility\\s+window|guarantee)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/wisp_cooldown_units",
+      "input": "Are Wisp re-offer cooldowns measured in rounds or Wisp shops?",
+      "metadata": {
+        "case": "wisp_cooldown_units",
+        "case_id": "context_response_smoke/wisp_cooldown_units",
+        "coverage_area": "wisp_rules",
+        "description": "Fact-oriented response check for wisp_rules; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bwisp\\s+shops?\\b)(?=.*(?:\\b(?:not|rather\\s+than)\\b[^.\\n]{0,100}\\brounds?\\b|\\brounds?\\b[^.\\n]{0,100}\\b(?:not|rather\\s+than)\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/wisp_purchase_phase",
+      "input": "Can I buy a Wisp during combat, or only during planning?",
+      "metadata": {
+        "case": "wisp_purchase_phase",
+        "case_id": "context_response_smoke/wisp_purchase_phase",
+        "coverage_area": "wisp_rules",
+        "description": "Fact-oriented response check for wisp_rules; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bplanning\\b)(?=.*\\bcombat\\b)(?=.*\\b(?:not|cannot|can['’]t)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/late_combat_guarantee",
+      "input": "What is the Combat Wisp guarantee after Stage 5?",
+      "metadata": {
+        "case": "late_combat_guarantee",
+        "case_id": "context_response_smoke/late_combat_guarantee",
+        "coverage_area": "wisp_rules",
+        "description": "Fact-oriented response check for wisp_rules; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*(?:after[^.\\n]{0,30}\\bstage\\s*5\\b|after\\s*5\\s*[-–]\\s*1))(?=.*\\bevery\\s+other\\b)(?=.*\\bcombat\\b)(?=.*\\bwisp\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/coin_flip_cost",
+      "input": "How much does Coin Flip cost, and what decides whether it gives gold?",
+      "metadata": {
+        "case": "coin_flip_cost",
+        "case_id": "context_response_smoke/coin_flip_cost",
+        "coverage_area": "wisp_effect",
+        "description": "Fact-oriented response check for wisp_effect; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bcoin\\s+flip\\b)(?=.*(?:\\b0\\s*gold\\b|\\bfree\\b))(?=.*\\b(?:coin\\s+toss|heads|tails|flip)\\b)(?=.*\\b(?:gold|pays?)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/bronze_spoon_variants",
+      "input": "Compare base and upgraded Bronze Spoon: what are their costs and earliest offer windows?",
+      "metadata": {
+        "case": "bronze_spoon_variants",
+        "case_id": "context_response_smoke/bronze_spoon_variants",
+        "coverage_area": "wisp_effect",
+        "description": "Fact-oriented response check for wisp_effect; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bbronze\\s+spoon\\b)(?=.*\\bbase\\b)(?=.*\\bupgraded\\b)(?=.*\\b3\\s*gold\\b)(?=.*\\b2\\s*gold\\b)(?=.*(?:\\b2\\s*[-–]\\s*1\\b|\\bstage\\s*2\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/artifactinate_conditions",
+      "input": "What conditions do I need to satisfy before Artifactinate can appear?",
+      "metadata": {
+        "case": "artifactinate_conditions",
+        "case_id": "context_response_smoke/artifactinate_conditions",
+        "coverage_area": "wisp_eligibility",
+        "description": "Fact-oriented response check for wisp_eligibility; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bartifactinate\\b)(?=.*\\b(?:at\\s+least|minimum|min)\\b[^.\\n]{0,60}\\b3\\b)(?=.*\\bcomponents?\\b)(?=.*\\b(?:completed|equipped)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/hand_of_baron_condition",
+      "input": "Does Hand Of Baron require Riftbeast to be active?",
+      "metadata": {
+        "case": "hand_of_baron_condition",
+        "case_id": "context_response_smoke/hand_of_baron_condition",
+        "coverage_area": "wisp_eligibility",
+        "description": "Fact-oriented response check for wisp_eligibility; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bhand\\s+of\\s+baron\\b)(?=.*\\briftbeast\\b)(?=.*\\bactive\\b)(?=.*(?:\\byes\\b|\\bdoes\\s+require\\b|\\bmust\\b|\\bneeds?\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/artifact_lookup",
+      "input": "What does Zhonya’s Paradox do, and is it an Artifact?",
+      "metadata": {
+        "case": "artifact_lookup",
+        "case_id": "context_response_smoke/artifact_lookup",
+        "coverage_area": "item",
+        "description": "Fact-oriented response check for item; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bzhonya['’]?s\\s+paradox\\b)(?=.*\\b(?:artifact|artifact\\s+item)\\b)(?=.*\\b(?:invulnerable|invulnerability)\\b)(?=.*\\b(?:untargetable|untargetability)\\b)(?=.*(?:\\blow\\s+health\\b|\\bat\\s+low\\b))"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    },
+    {
+      "expected_output": "",
+      "id": "context_response_smoke/forest_mage_shop",
+      "input": "What happens to the shop when Forest Mage creates a Wisp-filled shop?",
+      "metadata": {
+        "case": "forest_mage_shop",
+        "case_id": "context_response_smoke/forest_mage_shop",
+        "coverage_area": "wisp_rules",
+        "description": "Fact-oriented response check for wisp_rules; requires key answer facts and is not a full correctness grade.",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "regex",
+              "value": "(?is)(?=.*\\bforest\\s+mage\\b)(?=.*\\bwisp[-\\s]only\\b)(?=.*\\bshop\\b)(?=.*\\b(?:one|1)\\s+purchase\\b)(?=.*\\b(?:first\\s+8\\s+seconds|8\\s+seconds)\\b)"
+            },
+            "kind": "trace",
+            "name": "reasonable_response",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "placeholder_checks": false,
+        "quality_profile": null,
+        "set_number": 18,
+        "suite": "context_response_smoke"
+      }
+    }
+  ],
+  "prompts": {},
+  "provenance": {
+    "checks": "One regex per case. No tool, exact-match, reference-answer, or judge checks.",
+    "purpose": "Repository-authored seed; first hosted experiment resolves and freezes current prompt versions."
+  },
+  "schema_version": 3,
+  "schemas": {
+    "expected_output": null,
+    "input": {
+      "type": "string"
+    }
+  },
+  "suite": {
+    "assistant": "chat",
+    "database": null,
+    "description": "30 Set 18 context and answer checks. Exactly one fact-oriented response regex per case; no quality judge.",
+    "execution": "live",
+    "family": "assistant",
+    "max_turns": 12,
+    "name": "context_response_smoke"
+  }
+}

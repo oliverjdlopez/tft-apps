@@ -1,0 +1,339 @@
+{
+  "lane": "CO4-2",
+  "stage": "case-drafting",
+  "case_ids": [
+    "CO4-2-C01",
+    "CO4-2-C02",
+    "CO4-2-C03",
+    "CO4-2-C04",
+    "CO4-2-C05",
+    "CO4-2-C06"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wgymmj/help_i_dont_understand_the_endgame_at_all/",
+      "title": "Help: I do not understand the endgame at all",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened post and extensive replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-2-C01"
+      ],
+      "observations": [
+        "Replies nominate Sentinel/Taric and Kennen/Amumu; another corrects a supposed reroll-only opponent into a legendary-augmented final board."
+      ],
+      "limitations": [
+        "Unverified personal history; relative dates do not establish patch; no board cohort."
+      ],
+      "patch_scope": "Set 18 live ranked context; exact patch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S2",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1wh8iqn/hey_guys_i_made_a_guide_on_the_new_kr_veigar_tech/",
+      "title": "KR Veigar / Elderwood Veigar",
+      "source_date": "2026-09-15",
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened post and visible replies; absolute date from indexed extraction",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-2-C02"
+      ],
+      "observations": [
+        "Ornn/Alistar alternatives, itemized LeBlanc and special-item conditionality; ceiling objection partly conceded."
+      ],
+      "limitations": [
+        "Guide and promotion are one evidence family. Anecdotes are not measured current outcomes."
+      ],
+      "patch_scope": "Historical live Set18; linked guide 18.2b",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S3",
+      "url": "https://www.metatft.com/comps",
+      "title": "MetaTFT compositions",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened JavaScript shell; Set18 query-string attempt failed",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-2-C01",
+        "CO4-2-C02",
+        "CO4-2-C03",
+        "CO4-2-C05",
+        "CO4-2-C06"
+      ],
+      "observations": [
+        "No statistical rows or cohort read."
+      ],
+      "limitations": [
+        "No actual selected population, filters, counts or metrics inspectable."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S4",
+      "url": "https://www.metatft.com/explorer",
+      "title": "MetaTFT Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-2-C01",
+        "CO4-2-C05",
+        "CO4-2-C06"
+      ],
+      "observations": [
+        "No statistical rows or cohort read."
+      ],
+      "limitations": [
+        "No actual selected population, filters, counts or metrics inspectable."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S5",
+      "url": "https://tactics.tools/team-compositions",
+      "title": "Tactics.tools team compositions",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened filters, example rosters and metrics",
+      "roles": [
+        "workflow",
+        "limited descriptive lead"
+      ],
+      "case_ids": [
+        "CO4-2-C02",
+        "CO4-2-C03",
+        "CO4-2-C04"
+      ],
+      "observations": [
+        "Ranked, Diamond+,18.3b visible.",
+        "Veigar/Ornn example includes Ornn, Rek'Sai, Veigar, Alistar, LeBlanc, Fiddlesticks, Cassiopeia, Soraka.",
+        "Amumu/Aphelios example includes Aphelios and Nidalee with a Ravager Emblem image.",
+        "Zyra/Amumu example includes Yorick, Scuttlecrab, Vi, Zyra, Amumu, Rakan, Sejuani, Nidalee; no Soraka."
+      ],
+      "limitations": [
+        "Displayed rosters are illustrative site examples, not inspected individual matches or proven exact recurring sets.",
+        "No sample count, region, period, exact core/flex partition or cluster definition.",
+        "No filters changed or subcomps expanded; no matched comparison."
+      ],
+      "patch_scope": "UI18.3b; Set15 title versus Set18 navigation unresolved",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "play_rate_denominator": null,
+        "matched_comparison": false,
+        "rows": [
+          {
+            "label": "Spellweaver Veigar & Ornn",
+            "place": 4.3,
+            "top_four_percent": 53.3,
+            "win_percent": 15.7,
+            "play_rate": 0.5
+          },
+          {
+            "label": "Riftbeast Amumu & Aphelios",
+            "place": 4.3,
+            "top_four_percent": 54.4,
+            "win_percent": 12.4,
+            "play_rate": 0.72
+          },
+          {
+            "label": "Juggernaut Zyra & Amumu",
+            "place": 4.33,
+            "top_four_percent": 52.6,
+            "win_percent": 14.3,
+            "play_rate": 0.49
+          }
+        ]
+      }
+    },
+    {
+      "id": "S6",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Teamfight Tactics patch18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened official article with September24 and28 updates",
+      "roles": [
+        "rules-window context"
+      ],
+      "case_ids": [
+        "CO4-2-C01",
+        "CO4-2-C02",
+        "CO4-2-C03",
+        "CO4-2-C04",
+        "CO4-2-C05",
+        "CO4-2-C06"
+      ],
+      "observations": [
+        "Veigar, Ornn, Alistar, LeBlanc and Teemo changes limit historical anecdote relevance.",
+        "September28 polymorph disablement affects upgraded five-cost access.",
+        "Text identifies Warwick/Murkwolf reroll and distinguishes Riftbeast carry setups."
+      ],
+      "limitations": [
+        "Rules reference is not a statistical dataset.",
+        "Greater/Major Polymorph naming differs between prose/bullet; no exact identifier assumed."
+      ],
+      "patch_scope": "18.3 plus B and September28 update",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S7",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1w7tpur/september_05_2026_daily_discussion_thread/",
+      "title": "September05 daily discussion",
+      "source_date": "2026-09-05",
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened partial replies; richer indexed extraction inspected; more-replies and sorted URLs failed",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-2-C03",
+        "CO4-2-C04"
+      ],
+      "observations": [
+        "AD-flex question and indexed replies reject mandatory Aphelios/Bramble or Sivir/Nidalee pairs.",
+        "Malphite-lottery complaint and indexed Sett/Amumu alternative for Zyra."
+      ],
+      "limitations": [
+        "Decisive later replies absent from partial opened tree.",
+        "Historical opinions, no verified games or outcome cohort."
+      ],
+      "patch_scope": "Historical live Set18; exact subpatch not used",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S8",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1w6x81e/september_04_2026_daily_discussion_thread/",
+      "title": "September04 daily discussion",
+      "source_date": "2026-09-04",
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened partial replies; Teemo exchange in indexed extraction; sorted URL failed",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-2-C05"
+      ],
+      "observations": [
+        "Comment describes several top-four Teemo boards but distinguishes Veigar/Invoker identities and Teemo's role."
+      ],
+      "limitations": [
+        "Decisive comment absent from partial opened tree.",
+        "Single-lobby anecdote, not population frequency."
+      ],
+      "patch_scope": "Historical live Set18; exact subpatch not used",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S9",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "title": "18.3 patch discussion",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened extensive replies; later seven-Riftbeast reply in indexed extraction only",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-2-C06"
+      ],
+      "observations": [
+        "Warwick/Murkwolf described as reroll idea; skeptical replies dispute strength.",
+        "Later indexed reply reports poor seven-Riftbeast Murkwolf game, potentially a different board family."
+      ],
+      "limitations": [
+        "Predictions and individual results are not a scoped comparison.",
+        "Later reply absent from partial opened tree; match not inspected."
+      ],
+      "patch_scope": "18.3 announcement and later replies; no measured outcome window",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S10",
+      "url": "https://mobalytics.gg/tft/guides/sprykin-veigar-reroll-set18",
+      "title": "New Veigar reroll comp for Patch18.2b",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened guide prose; board images not inspected",
+      "roles": [
+        "guide lead"
+      ],
+      "case_ids": [
+        "CO4-2-C02"
+      ],
+      "observations": [
+        "Guide mentions Ornn, Alistar, LeBlanc and Rek'Sai, ordinary items and special-item conditions."
+      ],
+      "limitations": [
+        "Illustrative guide, no counted observed cohort; same family as S2.",
+        "Images not used to infer full roster; positioning, transition and sacrifice instructions excluded."
+      ],
+      "patch_scope": "Title18.2b; updated September22",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S11",
+      "url": "https://www.metatft.com/traits/executioner/comps",
+      "title": "MetaTFT Executioner comps",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-2-C04"
+      ],
+      "observations": [
+        "Search extraction exposed Ranked/18.3/Last3Days/Platinum+ controls; open yielded only shell."
+      ],
+      "limitations": [
+        "Controls and search labels are not loaded query results; no data rows."
+      ],
+      "patch_scope": "Unknown actual dataset",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S12",
+      "url": "https://www.metatft.com/units/Veigar",
+      "title": "MetaTFT Veigar",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:43Z",
+      "access_status": "Opened JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-2-C02"
+      ],
+      "observations": [
+        "No readable data."
+      ],
+      "limitations": [
+        "No cohort, values or selected filters inspectable."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    }
+  ]
+}

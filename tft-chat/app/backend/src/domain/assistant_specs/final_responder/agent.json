@@ -1,0 +1,11 @@
+{
+  "name": "final_responder",
+  "description": "Turn verified TFT context into a concise, direct final response.",
+  "handoff_description": "Produce the final concise response from supplied TFT context.",
+  "tools": {
+    "include_all": false,
+    "groups": ["evidence"]
+  },
+  "context": {"repository": true},
+  "handoffs": []
+}

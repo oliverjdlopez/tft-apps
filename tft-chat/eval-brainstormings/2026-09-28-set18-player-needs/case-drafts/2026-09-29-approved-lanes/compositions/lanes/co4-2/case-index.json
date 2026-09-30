@@ -1,0 +1,144 @@
+{
+  "lane": "CO4-2",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "title": "Five-cost soup families",
+      "question": "People keep calling the level-nine boards “five-cost soup,” but they don't all look alike. What recurring cores show up in those endgame boards, and which units are actually flexible around them?",
+      "proposal_lineage": [
+        "CO4-2-R2-P1"
+      ],
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S6"
+      ],
+      "origin": "Discussion-motivated synthesis of a ranked player's confusion and replies about coherent endgame packages.",
+      "comparison": "Discovery across an informal broad label, preserving hybrid reroll/legendary families.",
+      "id": "CO4-2-C01",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ]
+    },
+    {
+      "title": "Elderwood Veigar core and flex",
+      "question": "When I look up Elderwood Veigar, the finished boards aren't all the same. Which units keep showing up together, and what are the main ways people fill the remaining slots?",
+      "proposal_lineage": [
+        "CO4-2-R2-P2"
+      ],
+      "source_ids": [
+        "S2",
+        "S3",
+        "S5",
+        "S6",
+        "S10",
+        "S12"
+      ],
+      "origin": "Adaptation of the accepted KR Veigar conditionality discussion; guide and promotion are one evidence family.",
+      "comparison": "Within-family stability across frontline upgrades, board sizes and inventory contexts.",
+      "id": "CO4-2-C02",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ]
+    },
+    {
+      "title": "AD pairs beyond fixed templates",
+      "question": "In finished AD boards, are Aphelios–Brambleback and Sivir–Nidalee really two fixed pairs, or do the carries recombine into other recurring boards? Which support units stay together when they do?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S7",
+        "S5",
+        "S6",
+        "S3"
+      ],
+      "origin": "Adaptation of September 5's AD-flex question and replies disputing mandatory pairs. Some reply context was readable in indexed extraction but absent from the partial opened page.",
+      "comparison": "Carry-pair recombination and accompanying support cores.",
+      "id": "CO4-2-C03",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": true,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ]
+    },
+    {
+      "title": "AP frontline packages",
+      "question": "For finished Zyra/Soraka boards, what does the rest of the team look like when Malphite and Sentinel aren't the frontline? Are there recurring alternatives, or just scattered emergency boards?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S7",
+        "S5",
+        "S6",
+        "S11"
+      ],
+      "origin": "Adaptation of the September 5 Malphite-lottery complaint and an indexed reply suggesting Sett/Amumu; a current site example provides a further lead.",
+      "comparison": "Coordinated frontline-shell changes and accompanying carry membership.",
+      "id": "CO4-2-C04",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ]
+    },
+    {
+      "title": "Teemo presence versus Teemo composition",
+      "question": "When Teemo shows up in several top-four endgame boards, are those actually the same composition? What recurring cores separate Teemo carry boards from boards that just keep him alongside another carry?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S8",
+        "S6",
+        "S3",
+        "S4"
+      ],
+      "origin": "Adaptation of September 4's indexed Teemo exchange; opened page was partial and sorted follow-up URLs failed.",
+      "comparison": "Shared-unit presence across composition identities and final itemization roles.",
+      "id": "CO4-2-C05",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ]
+    },
+    {
+      "title": "Two meanings of Murkwolf boards",
+      "question": "Are the finished boards people call Warwick–Murkwolf reroll actually the same family as vertical Riftbeast boards that carry Murkwolf? Which units define each core, and where do they overlap?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S9",
+        "S6",
+        "S3",
+        "S4"
+      ],
+      "origin": "New synthesis of a Warwick–Murkwolf reroll claim and a seven-Riftbeast counterexample in the 18.3 discussion.",
+      "comparison": "Overlapping trait-defined versus carry-pair-defined families; whether an anecdotal counterexample belongs to the claimed family.",
+      "id": "CO4-2-C06",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": true,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ]
+    }
+  ]
+}

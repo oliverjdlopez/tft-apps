@@ -1,0 +1,5 @@
+# IT-3 evidence notes
+
+D1 contains several distinct item/board discussions, including Gunblade with Juggernauts, Elise with or without an emblem, Inferno and Red Buff, Morgana utility, and Mama Beak itemization. D2 asks whether Seeker's is redundant when traits already grant the relevant stats. They motivate the questions but supply no measured comparisons. Tactics.tools provides overall unit outcomes and visible item/context controls for Zyra, Elise, Ashe, Morgana, Mama Beak, and Fiddlesticks (S1–S6); no crossed item/trait result was retrieved. NoxuTFT's Zyra, Elise, and Morgana tables show named build rows, but not the requested trait-conditioned cohorts (N1–N3). SeeMeta's Morellonomicon table is a historical 18.2 marginal (M1).
+
+Riot's 18.3 notes establish the Inferno nerf and Dark Ritual disablement (R1). The trait reference's Inferno values conflict with those notes, and its Alpha Mark selection cannot be inferred from final trait tier (R2); the item reference verifies artifact identities only (R3). Patch, population, and matched board information remain incomplete. No marginal outcome or anecdote ranks a requested item package.

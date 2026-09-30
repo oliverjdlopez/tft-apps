@@ -1,0 +1,44 @@
+---
+name: set-18-wisps
+description: Wisps set mechanic rules including shop cadence, purchase limits, planning phase, Combat guarantees, Blossom, stage windows, cooldowns and eligibility restrictions. Use for Wisp odds systems and offer timing. Excludes selection probabilities.
+kind: mechanic
+sets: 18
+---
+
+# Set Mechanic: Wisps
+
+Set 18, Enchanted Wilds, patch 18.1.
+
+## Shop and purchase rules
+
+- **Wisps** — single-use shop purchases in the rightmost slot; normally one purchase per round, with an offer in every other shop.
+- **Planning phase** — Wisps can only be bought during planning. Buying one, or ending planning, exposes the champion underneath.
+- **Late combat guarantee** — after Stage 5, every other Wisp is guaranteed Combat. This is an alternating guarantee among Wisp offers, not a claim that all late-game Wisps are Combat.
+- **Categories** — Champion, Combat, Gold/XP, Item, Misc, Risky and Shop; distinct colors/icons identify them, and a purchased Wisp icon appears beside player Health.
+
+## Blossom exceptions
+
+- **Blossom Wisps** — after combat, 3 Blossom upgrades Wisps; 5 offers them every shop; 7 returns 4 gold on purchase; 9 permits two purchases per round; 11 unlocks prismatic empowerment. Base, upgraded and prismatic Wisp records are distinct variants.
+- **Forest Mage** — creates a Wisp-filled shop with one purchase allowed.
+
+## Offer windows and cooldowns
+
+| Stage band | Round window |
+| --- | --- |
+| Early | 2-1–2-7 |
+| EarlyMid | 3-1–3-4 |
+| Mid | 3-5–4-1 |
+| MidLate | 4-2–4-7 |
+| Late | 5-1–5-7 |
+| VeryLate | 6-1–10-1 |
+
+Eligibility windows do not guarantee an offer on every round in the window.
+
+- **Re-offer cooldown** — after an offer, the same Wisp is unavailable for its listed count of Wisp shops. Cooldowns are 5, 10, 20 and 200; these are not combat-round cooldowns.
+- **Wisp eligibility** — requirements include active or inactive traits, champion costs/stars/roles/items, bench contents, gold, player Health, streaks, time remaining in planning, game mode, and mutually exclusive augments. The category files retain the per-variant requirements.
+
+## Related augment mechanics
+
+- **Residual Magic / + / ++** — starting team Health differs by variant; each Wisp purchase adds 10 to the bonus.
+- **Wisp Rebate / +** — grants 2 gold for each Wisp purchased; variants differ in immediate gold.
+- **Blossom's Call** — purchases grant a Blossom champion based on Wisp cost.

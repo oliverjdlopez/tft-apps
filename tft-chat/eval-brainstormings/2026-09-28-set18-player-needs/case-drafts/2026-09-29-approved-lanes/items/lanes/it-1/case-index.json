@@ -1,0 +1,73 @@
+{
+  "lane": "IT-1",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "IT-1-C01",
+      "title": "Aphelios without Rageblade",
+      "question": "How do Kraken's Fury and Guinsoo's Rageblade builds compare on Aphelios? Are there good builds without Rageblade?",
+      "status": "provisional",
+      "origin": "Discussion-motivated adaptation; exact Kraken comparison constructed.",
+      "proposal_lineage": [
+        "IT-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "N1",
+        "M1",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "T1",
+        "T2",
+        "T3",
+        "R1",
+        "S2"
+      ],
+      "comparison": "Two-star, exactly three ordinary completed items: Kraken-only versus Rageblade-only within shared remaining pairs and comparable cores; both-items separate.",
+      "unresolved_evidence": [
+        "Fully specified current population",
+        "Matched shared-pair outcomes and counts",
+        "Whole-board comparability",
+        "Placement uncertainty"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "IT-1-C02",
+      "title": "Brambleback's third fighter item",
+      "question": "With Bloodthirster and Infinity Edge on Brambleback, how does Titan's Resolve compare with Edge of Night for the last slot?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of itemization disagreement and official scaling context; fixed pair prevalence unverified.",
+      "proposal_lineage": [
+        "IT-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "S1",
+        "N2",
+        "M2",
+        "M3",
+        "M4",
+        "M6",
+        "T1",
+        "T2",
+        "T3",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Two-star Brambleback with Bloodthirster/Infinity Edge plus Titans versus Edge, exactly three ordinary items, comparable boards.",
+      "unresolved_evidence": [
+        "Existence and counts of exact triplets",
+        "Compatible subpatch/date bounds, rank and region",
+        "Matched outcomes and uncertainty",
+        "Unverified special choices"
+      ],
+      "priority_verification": true
+    }
+  ]
+}

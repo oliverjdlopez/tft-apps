@@ -1,0 +1,742 @@
+{
+  "lane": "IT-4",
+  "stage": "case-drafting",
+  "case_ids": [
+    "IT-4-C01",
+    "IT-4-C02",
+    "IT-4-C03",
+    "IT-4-C04",
+    "IT-4-C05",
+    "IT-4-C06"
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "title": "18.3 patch discussion",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C03"
+      ],
+      "observations": [
+        "Opened Kayle artifact-access disagreement and specialist-artifact criticism."
+      ],
+      "limitations": [
+        "One thread; mostly anticipatory opinions. Later Silvermere/Alistar search excerpt absent from opened snapshot and not relied on."
+      ],
+      "patch_scope": "18.3 announcement",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S02",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wdpeq4/removed_by_moderator/",
+      "title": "Removed post surviving replies",
+      "source_date": "2026-09-11",
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "IT-4-C02",
+        "IT-4-C03"
+      ],
+      "observations": [
+        "Opened special-item misallocation/tank-investment criticism, author acknowledgement, differing carry proposals."
+      ],
+      "limitations": [
+        "Parent/screenshot unavailable. No board reconstructed; mandatory tank-item advice not adopted. Date from index/prior record."
+      ],
+      "patch_scope": "Set 18; subpatch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S03",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Riot 18.3 notes",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "rules",
+        "patch reconciliation"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "Collector AD 40 to 35; Shiv AP 15 to 25; Pact mana per tank cast 15 to 10. September 24 and 28 updates readable."
+      ],
+      "limitations": [
+        "Rules do not define outcome cohort."
+      ],
+      "patch_scope": "18.3 with September 24 and 28 updates",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S04",
+      "url": "https://tactics.tools/info/items",
+      "title": "Set 18 items",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "identity",
+        "mechanics context"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "Named ordinary/radiant/artifact identities readable."
+      ],
+      "limitations": [
+        "Collector 40 AD, Shiv 15 AP, Pact 15 mana conflict with official changes; do not use these stale numbers."
+      ],
+      "patch_scope": "Set 18 mutable reference",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S05",
+      "url": "https://tactics.tools/info/units",
+      "title": "Set 18 units",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "identity"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "Named units verified."
+      ],
+      "limitations": [
+        "Some values stale; no combat calculation adopted."
+      ],
+      "patch_scope": "Set 18",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S06",
+      "url": "https://www.littlebuddybot.com/tft-expedition",
+      "title": "LBB Expedition",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "page opened; images failed",
+      "roles": [
+        "resource access"
+      ],
+      "case_ids": [
+        "IT-4-C02",
+        "IT-4-C04"
+      ],
+      "observations": [
+        "18.3 heading; both image links and direct original URL tried."
+      ],
+      "limitations": [
+        "Images failed. Image filename says 18.1 but contents unread. No loot or offer inference."
+      ],
+      "patch_scope": "Heading 18.3; image unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S07",
+      "url": "https://www.littlebuddybot.com/tft-frontline-foundation",
+      "title": "LBB Frontline Foundation",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "page opened; images failed",
+      "roles": [
+        "resource access"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "18.3 heading; image link and direct original URL tried."
+      ],
+      "limitations": [
+        "Images failed; no content or placement evidence read."
+      ],
+      "patch_scope": "Heading 18.3",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S08",
+      "url": "https://tftcodex.com/about/index.html",
+      "title": "TFT Codex methodology",
+      "source_date": "2026-09-29",
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "methodology"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "Ranked match-v1 final boards; default Diamond+; discovery-player rank fallback. Champion windows at most 14 days. Current methodology says six days; early patch windows may include preceding patch."
+      ],
+      "limitations": [
+        "Regions unspecified. September 29 method page cannot assign exact windows to earlier snapshots. Header and holder totals use different labels."
+      ],
+      "patch_scope": "Methodology",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S09",
+      "url": "https://tftcodex.com/champions/kayle.html",
+      "title": "Kayle marginal outcomes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "IT-4-C01"
+      ],
+      "observations": [
+        "Readable named holder-item rows; no matched allocation query."
+      ],
+      "limitations": [
+        "No dual-holder/frontline restriction; blank Collector is not zero."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "set": 18,
+        "patch_label": "18.3",
+        "subpatch": null,
+        "mode": "ranked per methodology",
+        "rank": "default Diamond+ with possible discovery-player rank fallback",
+        "regions": null,
+        "period_start": null,
+        "period_end": null,
+        "page_updated_at_utc": "2026-09-27T18:27:00Z",
+        "filters": "named item on holder; no fixed stars/co-items/frontline",
+        "holder_games": 172240,
+        "header_sampled_games": 407753,
+        "header_total_label": "8,027,027 games",
+        "row_count_label": "Games",
+        "rows": [
+          {
+            "item": "Wit's End",
+            "average_placement": 4.05,
+            "top_four_percent": 59.6,
+            "win_percent": 15.2,
+            "games": 4458
+          },
+          {
+            "item": "Statikk Shiv",
+            "average_placement": 4.42,
+            "top_four_percent": 51.6,
+            "win_percent": 11.5,
+            "games": 3840
+          },
+          {
+            "item": "Infinity Force",
+            "average_placement": 4.78,
+            "top_four_percent": 43.5,
+            "win_percent": 10.5,
+            "games": 398
+          },
+          {
+            "item": "Gold Collector",
+            "average_placement": null,
+            "top_four_percent": null,
+            "win_percent": null,
+            "games": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "S10",
+      "url": "https://tftcodex.com/champions/aphelios.html",
+      "title": "Aphelios marginal outcomes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "IT-4-C01"
+      ],
+      "observations": [
+        "Readable named holder-item rows; no matched allocation query."
+      ],
+      "limitations": [
+        "Snapshot differs from Kayle; no dual-holder filter."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "set": 18,
+        "patch_label": "18.3",
+        "subpatch": null,
+        "mode": "ranked per methodology",
+        "rank": "default Diamond+ with possible discovery-player rank fallback",
+        "regions": null,
+        "period_start": null,
+        "period_end": null,
+        "page_updated_at_utc": "2026-09-29T04:54:00Z",
+        "filters": "named item on holder; no fixed stars/co-items/frontline",
+        "holder_games": 278951,
+        "header_sampled_games": 469635,
+        "header_total_label": "2,866,020 boards",
+        "row_count_label": "Games",
+        "rows": [
+          {
+            "item": "Gold Collector",
+            "average_placement": 4.17,
+            "top_four_percent": 58,
+            "win_percent": 10.5,
+            "games": 3538
+          }
+        ]
+      }
+    },
+    {
+      "id": "S11",
+      "url": "https://tftcodex.com/champions/zyra.html",
+      "title": "Zyra marginal outcomes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "IT-4-C02"
+      ],
+      "observations": [
+        "Readable named holder-item rows; no matched allocation query."
+      ],
+      "limitations": [
+        "No radiant budget or Malphite filter."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "set": 18,
+        "patch_label": "18.3",
+        "subpatch": null,
+        "mode": "ranked per methodology",
+        "rank": "default Diamond+ with possible discovery-player rank fallback",
+        "regions": null,
+        "period_start": null,
+        "period_end": null,
+        "page_updated_at_utc": "2026-09-28T16:21:00Z",
+        "filters": "named item on holder; no fixed stars/co-items/frontline",
+        "holder_games": 276966,
+        "header_sampled_games": 441713,
+        "header_total_label": "2,578,500 boards",
+        "row_count_label": "Games",
+        "rows": [
+          {
+            "item": "Radiant Archangel's Staff",
+            "average_placement": 4.2,
+            "top_four_percent": 55.8,
+            "win_percent": 14.2,
+            "games": 1446
+          }
+        ]
+      }
+    },
+    {
+      "id": "S12",
+      "url": "https://tftcodex.com/champions/malphite.html",
+      "title": "Malphite marginal outcomes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "IT-4-C02"
+      ],
+      "observations": [
+        "Readable named holder-item rows; no matched allocation query."
+      ],
+      "limitations": [
+        "Older than Zyra; no matched allocation."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "set": 18,
+        "patch_label": "18.3",
+        "subpatch": null,
+        "mode": "ranked per methodology",
+        "rank": "default Diamond+ with possible discovery-player rank fallback",
+        "regions": null,
+        "period_start": null,
+        "period_end": null,
+        "page_updated_at_utc": "2026-09-25T18:52:00Z",
+        "filters": "named item on holder; no fixed stars/co-items/frontline",
+        "holder_games": 585781,
+        "header_sampled_games": 1178582,
+        "header_total_label": "8,408,508 games",
+        "row_count_label": "Games",
+        "rows": [
+          {
+            "item": "Radiant Bramble Vest",
+            "average_placement": 4.34,
+            "top_four_percent": 53.9,
+            "win_percent": 9.1,
+            "games": 549
+          },
+          {
+            "item": "Radiant Dragon's Claw",
+            "average_placement": 4.4,
+            "top_four_percent": 54.2,
+            "win_percent": 10.7,
+            "games": 413
+          }
+        ]
+      }
+    },
+    {
+      "id": "S13",
+      "url": "https://tftcodex.com/champions/veigar.html",
+      "title": "Veigar marginal outcomes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "IT-4-C03",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "Readable named holder-item rows; no matched allocation query."
+      ],
+      "limitations": [
+        "Item rows can overlap; no joint builds, tank or family filter. Earlier search snapshot differed; opened 15:19 values used."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "set": 18,
+        "patch_label": "18.3",
+        "subpatch": null,
+        "mode": "ranked per methodology",
+        "rank": "default Diamond+ with possible discovery-player rank fallback",
+        "regions": null,
+        "period_start": null,
+        "period_end": null,
+        "page_updated_at_utc": "2026-09-28T15:19:00Z",
+        "filters": "named item on holder; no fixed stars/co-items/frontline",
+        "holder_games": 168029,
+        "header_sampled_games": 296999,
+        "header_total_label": "2,547,252 boards",
+        "row_count_label": "Games",
+        "rows": [
+          {
+            "item": "Dawncore",
+            "average_placement": 2.93,
+            "top_four_percent": 78.1,
+            "win_percent": 33.4,
+            "games": 16262
+          },
+          {
+            "item": "Luden's Tempest",
+            "average_placement": 3.21,
+            "top_four_percent": 73.5,
+            "win_percent": 27.5,
+            "games": 13159
+          },
+          {
+            "item": "Eternal Pact",
+            "average_placement": 3.8,
+            "top_four_percent": 63.5,
+            "win_percent": 17.3,
+            "games": 8867
+          }
+        ]
+      }
+    },
+    {
+      "id": "S14",
+      "url": "https://tftcodex.com/champions/caitlyn.html",
+      "title": "Caitlyn marginal outcomes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "IT-4-C04"
+      ],
+      "observations": [
+        "Readable named holder-item rows; no matched allocation query."
+      ],
+      "limitations": [
+        "Not fixed at three stars or matching frontline."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "set": 18,
+        "patch_label": "18.3",
+        "subpatch": null,
+        "mode": "ranked per methodology",
+        "rank": "default Diamond+ with possible discovery-player rank fallback",
+        "regions": null,
+        "period_start": null,
+        "period_end": null,
+        "page_updated_at_utc": "2026-09-29T06:22:00Z",
+        "filters": "named item on holder; no fixed stars/co-items/frontline",
+        "holder_games": 39711,
+        "header_sampled_games": 84958,
+        "header_total_label": "2,900,980 boards",
+        "row_count_label": "Games",
+        "rows": [
+          {
+            "item": "Radiant Guinsoo's Rageblade",
+            "average_placement": 4.27,
+            "top_four_percent": 55.5,
+            "win_percent": 14.9,
+            "games": 3263
+          },
+          {
+            "item": "Flickerblades",
+            "average_placement": 4.53,
+            "top_four_percent": 49.8,
+            "win_percent": 7.5,
+            "games": 1241
+          },
+          {
+            "item": "Guinsoo's Rageblade",
+            "average_placement": 4.71,
+            "top_four_percent": 47,
+            "win_percent": 6.7,
+            "games": 20878
+          }
+        ]
+      }
+    },
+    {
+      "id": "S15",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wm5oh1/september_21_2026_daily_discussion_thread/",
+      "title": "September 21 discussion",
+      "source_date": "2026-09-21",
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "thread opened; relevant chain search-only",
+      "roles": [
+        "access-limited lead"
+      ],
+      "case_ids": [
+        "IT-4-C04"
+      ],
+      "observations": [
+        "Search excerpt asks radiant holders; reply suggests Caitlyn Rageblade and clarifies standard Cait reroll."
+      ],
+      "limitations": [
+        "Opened page omits target comments; alternate sort and old.reddit URLs fail. Not opened motivation."
+      ],
+      "patch_scope": "Set 18 before 18.3",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S16",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1winnef/whats_your_hear_me_out_comp_this_patch/",
+      "title": "Hear-me-out comps",
+      "source_date": "2026-09-17",
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "motivation",
+        "counterargument"
+      ],
+      "case_ids": [
+        "IT-4-C05"
+      ],
+      "observations": [
+        "Opened six-Brawler Ravager Sett suggestion, item question, hypothetical Hatchet/Void answer, separate complaint about tank reliability."
+      ],
+      "limitations": [
+        "Hypothesis not artifact outcome proof; no verified rank."
+      ],
+      "patch_scope": "Set 18; precise subpatch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S17",
+      "url": "https://tftcodex.com/champions/sett.html",
+      "title": "Sett marginal outcomes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "IT-4-C05"
+      ],
+      "observations": [
+        "Readable named holder-item rows; no matched allocation query."
+      ],
+      "limitations": [
+        "No Ravager or six-Brawler filter; older snapshot and small Hatchet count."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "set": 18,
+        "patch_label": "18.3",
+        "subpatch": null,
+        "mode": "ranked per methodology",
+        "rank": "default Diamond+ with possible discovery-player rank fallback",
+        "regions": null,
+        "period_start": null,
+        "period_end": null,
+        "page_updated_at_utc": "2026-09-25T08:27:00Z",
+        "filters": "named item on holder; no fixed stars/co-items/frontline",
+        "holder_games": 752941,
+        "header_sampled_games": 1590198,
+        "header_total_label": "8,097,532 games",
+        "row_count_label": "Games",
+        "rows": [
+          {
+            "item": "Hellfire Hatchet",
+            "average_placement": 4.95,
+            "top_four_percent": 42.6,
+            "win_percent": 7.3,
+            "games": 204
+          },
+          {
+            "item": "Void Gauntlet",
+            "average_placement": 4.33,
+            "top_four_percent": 53.4,
+            "win_percent": 10.9,
+            "games": 2993
+          }
+        ]
+      }
+    },
+    {
+      "id": "S18",
+      "url": "https://seemeta.com/en/tft/set-18/items/HellfireHatchet",
+      "title": "SeeMeta Hellfire",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened",
+      "roles": [
+        "corroboration attempt"
+      ],
+      "case_ids": [
+        "IT-4-C05"
+      ],
+      "observations": [
+        "Mixed rank/region ranked sample; Sett row visible."
+      ],
+      "limitations": [
+        "No per-holder count; cannot infer it from rounded pick rate or pool with Codex."
+      ],
+      "patch_scope": "18.3; subpatch unknown",
+      "statistical_metadata": {
+        "mode": "ranked",
+        "rank": "mixed unspecified",
+        "region": "mixed unspecified",
+        "period_start": null,
+        "period_end": null,
+        "overall_games": 197,
+        "average_placement": 4.22,
+        "top_four_percent": 57.87,
+        "win_percent": 11.68,
+        "sett": {
+          "average_placement": 7,
+          "top_four_percent": 0,
+          "win_percent": 0,
+          "games": null
+        }
+      }
+    },
+    {
+      "id": "S19",
+      "url": "https://tactics.tools/explorer",
+      "title": "Tactics.tools Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "opened controls only",
+      "roles": [
+        "outcome retrieval attempt"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "18.3b Diamond+ controls; three filters and No Data; patron advanced option."
+      ],
+      "limitations": [
+        "No populated query; access controls not bypassed."
+      ],
+      "patch_scope": "visible 18.3b",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S20",
+      "url": "https://www.metatft.com/items",
+      "title": "MetaTFT items",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:44:18Z",
+      "access_status": "JavaScript shell",
+      "roles": [
+        "outcome retrieval attempt"
+      ],
+      "case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "observations": [
+        "JavaScript requirement only."
+      ],
+      "limitations": [
+        "No outcome data retrieved."
+      ],
+      "patch_scope": null,
+      "statistical_metadata": null
+    }
+  ]
+}

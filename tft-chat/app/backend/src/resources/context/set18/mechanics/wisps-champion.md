@@ -1,0 +1,44 @@
+---
+name: set-18-wisps-champion
+description: Champion Wisp reference with named effects, base/upgraded/prismatic variants, prices, stage eligibility, cooldowns and augment exclusions. Use for named Wisp offers and restrictions. Excludes exact selection weights and full effect tooltips.
+kind: mechanic
+sets: 18
+---
+
+# Wisps: Champion
+
+Set 18, Enchanted Wilds, patch 18.1.
+
+Effect strength and extra benefits can differ by variant. Re-offer cooldown counts Wisp shops after an offer, not rounds or purchases.
+
+- **Apprentice (base)** — awards a starred-up one-cost unit; 3 gold; tier 2; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Apprentice (upgraded)** — awards a starred-up one-cost unit; 2 gold; tier 2; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Big Guns (base)** — awards four-cost units; 8 gold; tier 2; offer windows 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Big Guns (upgraded)** — awards four-cost units; 7 gold; tier 2; offer windows 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Circle of Elders (base)** — awards the five-cost roster; 45 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Circle of Elders (upgraded)** — awards the five-cost roster; 40 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Field of Mice (base)** — Tiny Duplicators based on distinct one-costs fielded last round; 8 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: At least 5 1-cost champions fielded last combat, or no 1-costs fielded last combat. Modes: Standard, Double Up, Tockers.
+- **Field of Mice (upgraded)** — Tiny Duplicators based on distinct one-costs fielded last round; 8 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: At least 5 1-cost champions fielded last combat, or no 1-costs fielded last combat. Modes: Standard, Double Up, Tockers.
+- **Forest Guide (base)** — awards a four-cost unit; 5 gold; tier 3; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Forest Guide (upgraded)** — awards a four-cost unit; 4 gold; tier 3; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Forest Twins (base)** — copies of a two-cost unit not currently owned; 4 gold; tier 2; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Forest Twins (upgraded)** — copies of a two-cost unit not currently owned; 5 gold; tier 2; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Grandmaster (base)** — awards a two-star five-cost unit; 18 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Grandmaster (upgraded)** — awards a two-star five-cost unit; 14 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Heated Rivalry (base)** — awards a Rival with takedown progress; 3 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Heated Rivalry (upgraded)** — awards a Rival with takedown progress; 3 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Hero Of Prophecy (base)** — repeated copies of a five-cost champion; 35 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 200 Wisp shops. Conditions: At least 35 gold; more than 50 player health remaining; level 10 or higher. Modes: Standard, Double Up, Tockers.
+- **Hero Of Prophecy (upgraded)** — repeated copies of a five-cost champion; 33 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 200 Wisp shops. Conditions: At least 35 gold; more than 50 player health remaining; level 10 or higher. Modes: Standard, Double Up, Tockers.
+- **Journeyman (base)** — awards a two-star two-cost unit; 6 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Journeyman (upgraded)** — awards a two-star two-cost unit; 5 gold; tier 2; offer windows 3-1–3-4, 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Lost Travelers (base)** — random low-cost unit reward; 3 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Lost Travelers (upgraded)** — random low-cost unit reward; 4 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Mitosis (base)** — Tiny Champion Duplicator; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Mitosis (upgraded)** — Tiny Champion Duplicator; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Propagate (base)** — copies the first allied champion that dies; 2 gold; tier 2.Rabbit; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Propagate (upgraded)** — copies the first allied champion that dies; 1 gold; tier 2.Rabbit; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Smurfing (base)** — awards a five-cost unit; 7 gold; tier 3; offer windows 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Smurfing (upgraded)** — awards a five-cost unit; 6 gold; tier 3; offer windows 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Solar Gift (base)** — Leona, Sejuani and Kayle reward; 6 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: Solar active. Modes: Standard, Double Up, Tockers.
+- **Three Me (base)** — awards a two-star three-cost unit; 9 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Three Me (upgraded)** — awards a two-star three-cost unit; 8 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.

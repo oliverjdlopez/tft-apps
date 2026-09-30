@@ -1,0 +1,98 @@
+{
+  "lane": "TR-1",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "TR-1-C01",
+      "title": "Ahri's Invoker dependence",
+      "question": "Do Ahri endgame boards perform well without Invoker, or are the good results mostly coming from boards where she has an Invoker emblem?",
+      "status": "provisional",
+      "origin": "Constructed adaptation of indexed Ahri dependence debate",
+      "proposal_lineage": [
+        "TR-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D01",
+        "D03",
+        "D04",
+        "O01",
+        "R01",
+        "R02",
+        "L01",
+        "L02",
+        "N01",
+        "W01",
+        "W02",
+        "W03",
+        "W04"
+      ],
+      "comparison": "Ahri carry boards by observed Invoker activation, tier and Ahri emblem holder",
+      "unresolved_evidence": [
+        "Matched cohorts and population shares",
+        "Exact comparable period/rank/region",
+        "Support-core and item overlap",
+        "Fully opened specific replies"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-1-C02",
+      "title": "Soraka's fourth Executioner versus Kennen",
+      "question": "Do Soraka boards with four Executioners actually finish better than the three-Executioner versions, or is that mostly because those boards also have Kennen?",
+      "status": "provisional",
+      "origin": "Constructed Soraka adaptation of Executioner/Kennen debate",
+      "proposal_lineage": [
+        "TR-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D02",
+        "D03",
+        "O01",
+        "R01",
+        "R02",
+        "L01",
+        "N02",
+        "W01",
+        "W02",
+        "W04"
+      ],
+      "comparison": "Soraka carry boards: three/four Executioners crossed with Kennen absent/present",
+      "unresolved_evidence": [
+        "Four conditional outcome cells",
+        "Exact comparable period/rank/region",
+        "Other fourth-unit routes and overlapping investment",
+        "Fully opened correction chain"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-1-C03",
+      "title": "Did Cassiopeia become less tied to six Defender?",
+      "question": "After the 18.3 buffs to Cassiopeia and her tanks, did her endgame boards get better outside six Defender, or is six Defender still carrying her results?",
+      "status": "provisional",
+      "origin": "New synthesis of opened dependence and patch-response debates",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D03",
+        "D05",
+        "O01",
+        "R01",
+        "L01",
+        "N03",
+        "W01",
+        "W02",
+        "W04"
+      ],
+      "comparison": "Cassio carry boards: within-Defender-tier pre/post 18.3 outcomes and package shares",
+      "unresolved_evidence": [
+        "Compatible pre/post tier outcomes",
+        "Matched carry and frontline investment",
+        "Package shares and uncertainty"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

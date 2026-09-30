@@ -1,0 +1,107 @@
+[project]
+name = "chat_tft"
+version = "0.1.0"
+description = "A ChatTFT ecosystem: OpenAI SDK tools, RDS-backed meta analysis, Riot API ingestion, and a unified UI."
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "MIT" }
+authors = [{ name = "ChatTFT contributors" }]
+keywords = ["tft", "teamfight-tactics", "riot", "league-of-legends", "chat", "openai-tools"]
+dependencies = [
+    "openai>=2.39.0",
+    "openai-agents[litellm]>=0.4.0",
+    "httpx>=0.27.0",
+    "pulsefire>=2.0.30",
+    "psycopg[binary]>=3.2",
+    "sqlalchemy>=2.0",
+    "fastapi>=0.110",
+    "pydantic>=2.0.0",
+    "jsonschema>=4.26.0",
+    "python-dotenv>=1.0.0",
+    "uvicorn>=0.29",
+    "imageio-ffmpeg>=0.5.1",
+    "yt-dlp>=2025.1.15",
+    "boto3>=1.43.19",
+    "pytest>=9.0.3",
+    "botocore[crt]>=1.43.19",
+]
+
+# The web stack is a base dependency because the UI console script is installed
+# by default.
+[project.optional-dependencies]
+evals = ["langfuse==4.15.2", "openinference-instrumentation-openai-agents==2.4.1"]
+explorer = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+chat = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+transcription = [
+    "faster-whisper>=1.1.0",
+]
+docs = [
+    "sphinx>=8.0",
+    "myst-parser>=4.0",
+    "furo>=2024.8.6",
+    "sphinx-autobuild>=2024.10.3",
+    "sphinx-copybutton>=0.5.2",
+]
+refactor = [
+    "rope>=1.14,<2",
+]
+compositions-gpu = [
+    "cupy-cuda12x>=14.0.1,<15",
+    "cuml-cu12>=26.8,<26.9; sys_platform == 'linux' and (platform_machine == 'x86_64' or platform_machine == 'aarch64')",
+]
+compositions = [
+    "hdbscan>=0.8.40,<1",
+    "numpy>=2,<3",
+    "scipy>=1.15,<2",
+]
+
+[project.scripts]
+chat-tft-ui = "api.__main__:main"
+chat-tft-start = "scripts.start:main"
+chat-tft-transcribe-vod = "scripts.transcription.main:main"
+chat-tft-ingest = "scripts.ingestion.main:main"
+chat-tft-rebuild-tables = "scripts.rebuild_tables.main:main"
+chat-tft-rds-upgrade = "scripts.rds_upgrade:main"
+chat-tft-freeze-patch-db = "scripts.freeze_patch_db:main"
+chat-tft-update-tables = "scripts.update_tables.main:main"
+chat-tft-add-analysis-indexes = "scripts.add_analysis_indexes:main"
+chat-tft-migrate-relational-v2 = "scripts.migrate_relational_v2:main"
+chat-tft-evals = "evals.__main__:main"
+chat-tft-assistants = "domain.assistants.__main__:main"
+chat-tft-specs = "scripts.assistant_specs.main:main"
+chat-tft-docs = "scripts.docs.main:main"
+chat-tft-copy-rds = "scripts.copy_rds:main"
+chat-tft-download-rds = "scripts.download_rds:main"
+chat-tft-db-stats = "scripts.db_stats:main"
+chat-tft-benchmarks = "scripts.benchmarks.main:main"
+chat-tft-sync-rds-ip = "scripts.sync_rds_ip:main"
+chat-tft-refactor-move = "scripts.refactor_move:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "app/backend/api",
+    "app/backend/src/core",
+    "app/backend/src/db",
+    "app/backend/src/domain",
+    "app/backend/src/services",
+    "app/backend/src/common",
+    "scripts",
+    "evals",
+]
+dev-mode-dirs = [".", "app/backend", "app/backend/src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["app/backend", "app/backend/src", "."]
+markers = [
+    "timeout(seconds): override the repository's per-test call timeout; use 0 to disable",
+]

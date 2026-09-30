@@ -1,0 +1,122 @@
+{
+  "lane": "CO4-3",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "CO4-3-C01",
+      "title": "Nidalee and Sivir without Malphite",
+      "question": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.",
+      "status": "provisional",
+      "origin": "Adapted opened September 16 discussion need and approved fixed-carry question; guide and measured-family leads.",
+      "proposal_lineage": [
+        "CO4-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S03",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09"
+      ],
+      "comparison": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.",
+      "unresolved_evidence": [
+        "Exact filtered package outcomes",
+        "AD-form classification",
+        "No-emblem versus hidden trait-grant distinction"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "CO4-3-C02",
+      "title": "Yi and Kog without Rengar",
+      "question": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.",
+      "status": "provisional",
+      "origin": "Adapted opened 18.2 discussion distinguishing Yi–Kog without Rengar; guide supplies Vi/Krug interest.",
+      "proposal_lineage": [
+        "CO4-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S10"
+      ],
+      "comparison": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.",
+      "unresolved_evidence": [
+        "Tank-role-specific outcomes",
+        "Variation denominator reconciliation",
+        "Yi form and artifact conditioning"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "CO4-3-C03",
+      "title": "Ahri and Sett: Blossom or Executioner partners",
+      "question": "With Ahri and Sett on my final board, how does keeping Yorick and Karma for the Blossom package compare with using Alune and Amumu for an Executioner package? Are the results different at level eight and level nine?",
+      "status": "provisional",
+      "origin": "Adapted opened September 18 rant with explicit two-unit contrast; fixed-core and final-level wording authored.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S11",
+        "S12",
+        "S07"
+      ],
+      "comparison": "With Ahri and Sett on my final board, how does keeping Yorick and Karma for the Blossom package compare with using Alune and Amumu for an Executioner package? Are the results different at level eight and level nine?",
+      "unresolved_evidence": [
+        "Complete packages at each level",
+        "Matched outcome comparison",
+        "Trait-grant and carry-role conditioning"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "CO4-3-C04",
+      "title": "Akali and Camille: Solar or Adaptor partners",
+      "question": "With Akali and Camille both three-star, how do Solar-heavy end boards compare with Adaptor-focused support packages? Which supporting units change together, and does the comparison hold when the other three-stars and artifacts are similar?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of opened Akali/Camille conditional-strength discussion and measured-resource alternative-family lead.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S13",
+        "S14",
+        "S15",
+        "S07"
+      ],
+      "comparison": "With Akali and Camille both three-star, how do Solar-heavy end boards compare with Adaptor-focused support packages? Which supporting units change together, and does the comparison hold when the other three-stars and artifacts are similar?",
+      "unresolved_evidence": [
+        "Full Adaptor supporting board",
+        "Matched stars/artifacts and form classification",
+        "Compatible outcome window"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "CO4-3-C05",
+      "title": "Ahri and Morgana: alternative support packages",
+      "question": "For Ahri–Morgana end boards, is there actually a payoff to the Alune/Lux/Taric support package compared with versions using Kog'Maw or Hecarim? I'd like a comparison at the same final level, including what fills the remaining slots.",
+      "status": "provisional",
+      "origin": "Constructed resource-workflow need from opened whole-variation table, not a verbatim player post.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S16",
+        "S07"
+      ],
+      "comparison": "For Ahri–Morgana end boards, is there actually a payoff to the Alune/Lux/Taric support package compared with versions using Kog'Maw or Hecarim? I'd like a comparison at the same final level, including what fills the remaining slots.",
+      "unresolved_evidence": [
+        "Complete remaining slots",
+        "Variation rank/period/membership semantics",
+        "Same-level outcome comparison"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

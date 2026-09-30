@@ -1,0 +1,103 @@
+{
+  "lane": "TR-3",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "TR-3-C01",
+      "title": "Defender Cassiopeia: competing emblem holders",
+      "question": "In Defender Cassiopeia boards, do Rengar or Kha’Zix versions actually finish better when they hold the Defender emblem?",
+      "status": "disputed",
+      "origin": "Approved discussion-and-guide synthesis; conflicting holder experiences.",
+      "proposal_lineage": [
+        "TR-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S02",
+        "S03",
+        "S12"
+      ],
+      "comparison": "Six-Defender Cassiopeia/Fiddlesticks endgames with one Defender emblem on Rengar versus Kha’Zix.",
+      "unresolved_evidence": [
+        "Matched final-board outcomes and counts",
+        "Holder and carry stars, other holder items and tank investment",
+        "Kha’Zix evolution coverage",
+        "Single verified post-change ranked window"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-3-C02",
+      "title": "Hunter Camille and Caitlyn as an alternative",
+      "question": "Is Hunter-emblem Camille with Caitlyn a real alternative to Nidalee/Sivir, or does that board mostly fall short?",
+      "status": "provisional",
+      "origin": "Approved adaptation; exact motivating Hunter reply remains search-visible only.",
+      "proposal_lineage": [
+        "TR-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S12"
+      ],
+      "comparison": "Hunter emblem on Camille with Caitlyn, initially four Vanguard/three Coven, versus Hunter emblem on Nidalee with Sivir.",
+      "unresolved_evidence": [
+        "Independently opened exact motivating reply",
+        "Camille+Caitlyn and Nidalee+Sivir board-linked outcomes",
+        "Matched Hunter tier, stars, investment and recent subpatch",
+        "Named servers and rank for TopMeta"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-3-C04",
+      "title": "Brawler Yi without artifact dependence",
+      "question": "Can Brawler-emblem Master Yi boards finish reliably with normal items, or is their reputation mostly coming from artifact games?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of opened conditional-line discussion and a named Brawler Yi build row.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S07",
+        "S11",
+        "S13",
+        "S03"
+      ],
+      "comparison": "Brawler emblem on Master Yi with two ordinary items versus artifact-supported Brawler Yi, plus comparable no-emblem Yi packages.",
+      "unresolved_evidence": [
+        "Artifact-free whole-board cohorts",
+        "Comparable Yi/Vi/Rengar and Nidalee support variants",
+        "Exact patch, rank and region for Noxu",
+        "Count and star-label reliability"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "TR-3-C05",
+      "title": "Inferno Kha’Zix and the freed Akali slot",
+      "question": "In five-Inferno Kha’Zix endgames, does putting Inferno emblem on Kha’Zix and replacing Akali actually improve the final board?",
+      "status": "provisional",
+      "origin": "Adaptation of an opened explicit roster-compression suggestion, recast as endgame analysis.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S07",
+        "S03",
+        "S14"
+      ],
+      "comparison": "Equal-size five-Inferno Kha’Zix/Fiddlesticks endgames: Akali plus an ordinary Kha’Zix third item versus Inferno-emblem Kha’Zix plus an observed replacement.",
+      "unresolved_evidence": [
+        "Complete legal fixed-size rosters and exact replacement identity",
+        "Five-Inferno holder-linked outcomes",
+        "Lost third-item value versus replacement value",
+        "Kha’Zix choices and subpatch"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

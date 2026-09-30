@@ -1,0 +1,11 @@
+{
+  "name": "meta_expert",
+  "description": "Interpret TFT match statistics into expert meta reads, comp recommendations, and patch-level strategic takeaways.",
+  "handoff_description": "Give expert TFT meta reads from the data, including strongest comps, itemization patterns, patch shifts, and traps.",
+  "tools": {
+    "include_all": false,
+    "groups": ["ranking", "query_cohorts"]
+  },
+  "context": {"repository": true},
+  "handoffs": ["data_analyst"]
+}

@@ -1,0 +1,53 @@
+# Non-secret application behavior. Copy this file to the ignored
+# `chat_tft.ini` and edit the values for the local deployment.
+
+[models]
+openai_model = gpt-5
+anthropic_model = claude-sonnet-5
+
+[chat]
+# Private composition experiment workspace (enabled by default).
+composition_workbench = true
+# Use checked-in eligible boards and an automatic local experiment store.
+composition_offline = false
+# Default flowchart workspace source: database (editable) or json (checked-in gameplans/).
+flowchart_source = database
+max_tool_rounds = 6
+mcp_url = http://127.0.0.1:8000/mcp
+mcp_name = chat_tft_mcp
+mcp_timeout = 30
+# mcp_headers = {"X-Workspace":"example"}
+ui_host = 127.0.0.1
+ui_port = 8300
+patch =
+set_number =
+rebuild_query_tables_on_startup = false
+# Opt-in Langfuse conversation export; requires evals dependencies and LANGFUSE_* credentials.
+langfuse_tracing = false
+local_tracing = true
+# trace_dir = data/traces
+
+[rds-upgrade]
+# RDS DB instance identifier used when --rds-instance-id is omitted.
+instance_id =
+
+[ingest]
+platform = na1
+# Optional comma-separated shards; when set, this takes precedence over platform.
+# platforms = na1,euw1,kr
+queue = RANKED_TFT
+max_new_matches = 50
+matches_per_player = 10
+player_batch_size =
+tiers = challenger,grandmaster,master
+# Optional normalized patch to store instead of the patch derived from Riot's game_version.
+patch_override =
+fetch_concurrency = 10
+insert_to_db = true
+commit_every = 25
+analysis_every = 500
+endless = false
+cycle_delay = 60
+endless_matches_per_player = 5
+endless_player_batch_size = 50
+log_level = INFO

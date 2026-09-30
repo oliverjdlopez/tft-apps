@@ -1,0 +1,146 @@
+{
+  "lane": "TR-2",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "TR-2-C01",
+      "title": "Does Elderwood seven earn two slots?",
+      "question": "For an Ezreal board, what am I really getting by going from 5 to 7 Elderwood? Is the extra plant worth replacing Shen and Taric with Xayah and LeBlanc, or am I giving up too much useful frontline?",
+      "status": "provisional",
+      "origin": "Adapted Ezreal discussion need; exact package retained from approved proposal.",
+      "proposal_lineage": [
+        "TR-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "R1",
+        "O1",
+        "W1",
+        "W2",
+        "W3"
+      ],
+      "comparison": "Eight units: Ornn, Alistar, Hecarim, Ezreal, Gnar, Kennen plus Shen/Taric versus Xayah/LeBlanc.",
+      "unresolved_evidence": [
+        "Matched exact-package counts/outcomes",
+        "Comparable Elderwood stars and item allocation",
+        "Emblem exclusion and population scope"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-2-C02",
+      "title": "Inferno splash versus Executioner",
+      "question": "Can Inferno Lux be worth a slot just for the 2 Inferno splash? On this Ezreal board I'd have to drop Kennen and lose Executioner.",
+      "status": "provisional",
+      "origin": "Approved constructed Ezreal substitution motivated by Lux slot-value discussion.",
+      "proposal_lineage": [
+        "TR-2-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "D3",
+        "R1",
+        "W1",
+        "W4"
+      ],
+      "comparison": "Eight units: Ornn, Alistar, Hecarim, Ezreal, Gnar, Alune, Taric plus Kennen1 versus confirmed Inferno Lux1.",
+      "unresolved_evidence": [
+        "Validated historical Lux-form encoding",
+        "Matched support-star and carry-item cohorts",
+        "Player roster ambiguity and counts"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-2-C03",
+      "title": "Solar compression after five three-stars",
+      "question": "For finished Akali\u2013Camille reroll boards with Akali, Camille, Varus, Leona and Ornn all three-star, do Solar Lux plus Maokai outperform keeping two-star Kayle and Sejuani, or is the apparent upgrade just richer boards doing better?",
+      "status": "provisional",
+      "origin": "New adaptation of independently opened Solar rebuttals and Avatar replies.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "D4",
+        "R1",
+        "O1",
+        "W1"
+      ],
+      "comparison": "Eight units share Akali3, Camille3, Varus3, Leona3, Ornn3, Taric1; Kayle2/Sejuani2 versus Solar Lux1/Maokai1.",
+      "unresolved_evidence": [
+        "Form-resolved package outcomes",
+        "Artifact and item overlap",
+        "Persistent stacks and survivorship"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "TR-2-C04",
+      "title": "Eclipse without reroll investment",
+      "question": "On nine-unit Lunar endboards with no three-star units, does spending two slots on Solar Lux and Sejuani for Eclipse beat using Taric and Maokai instead?",
+      "status": "provisional",
+      "origin": "New adaptation of Eclipse-versus-Solar disagreement; exact packages constructed.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "D4",
+        "R1",
+        "W1"
+      ],
+      "comparison": "Nine units share Alune1, Aphelios2, Diana2, Amumu2, Shen2, Kennen1, Gnar2; Solar Lux1/Sejuani2 versus Taric1/Maokai1.",
+      "unresolved_evidence": [
+        "Verified Eclipse and Solar Lux representation",
+        "Matched nine-unit outcomes",
+        "Persistent Maokai investment"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "TR-2-C05",
+      "title": "Keeping seven Inferno on finished boards",
+      "question": "For completed nine-unit Inferno Lux boards, is keeping seven Inferno actually better than five with Taric and Maokai, when the units removed are unitemized two-star Akali and Varus?",
+      "status": "provisional",
+      "origin": "New adaptation of seven-to-five reply and disagreement about vertical strength.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "R1",
+        "O1",
+        "W1",
+        "W2"
+      ],
+      "comparison": "Nine units share Shen2, Amumu2, Kennen2, Inferno Lux2, Alune1, Ezreal2, Gnar2; Akali2/Varus2 versus Taric1/Maokai1.",
+      "unresolved_evidence": [
+        "Post-change matched samples",
+        "Lux2 carry/support-item strata",
+        "Prior economic value is not recoverable from endboards"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "TR-2-C06",
+      "title": "Fae four with compressed support slots",
+      "question": "For three-star Tristana endboards with a Fae emblem on Sett, does replacing two-star Rakan and Xayah with one-star Fae Lux and Taric improve results while keeping four Fae? Does that still hold when Rakan and Xayah are both three-star?",
+      "status": "provisional",
+      "origin": "New adaptation of Fae compression claim and its three-star exception; Sett anchor constructed.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "R1",
+        "W1"
+      ],
+      "comparison": "Eight units share Tristana3, Rammus2, Kobuko2, Veigar2, Gnar2, Sett2 with Fae emblem; Rakan2/Xayah2 versus Fae Lux1/Taric1. Separate Rakan3/Xayah3 retention stratum.",
+      "unresolved_evidence": [
+        "Form/emblem-resolved outcomes",
+        "Separate support-star cohorts",
+        "Unknown Pixie stacks and duration"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

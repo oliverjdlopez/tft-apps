@@ -1,0 +1,512 @@
+/*
+ * ChatTFT documentation theme
+ *
+ * Furo supplies the accessible navigation and responsive shell. These styles
+ * establish the product's visual language without changing generated markup.
+ */
+
+:root {
+  --tft-ink: #17142a;
+  --tft-muted: #625d76;
+  --tft-violet: #7158e8;
+  --tft-violet-deep: #4f35be;
+  --tft-cyan: #31c5d9;
+  --tft-gold: #e5b84b;
+  --tft-surface: rgba(255, 255, 255, 0.82);
+  --tft-surface-strong: #ffffff;
+  --tft-border: rgba(79, 53, 190, 0.14);
+  --tft-shadow: 0 18px 48px rgba(47, 37, 91, 0.1);
+  --tft-radius-lg: 22px;
+  --tft-radius-md: 14px;
+}
+
+body[data-theme="dark"] {
+  --tft-ink: #f5f1ff;
+  --tft-muted: #b9b2cd;
+  --tft-violet: #b7a6ff;
+  --tft-violet-deep: #8c75f4;
+  --tft-cyan: #62dbea;
+  --tft-gold: #f3ca68;
+  --tft-surface: rgba(24, 21, 43, 0.86);
+  --tft-surface-strong: #1c1831;
+  --tft-border: rgba(183, 166, 255, 0.18);
+  --tft-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not([data-theme="light"]) {
+    --tft-ink: #f5f1ff;
+    --tft-muted: #b9b2cd;
+    --tft-violet: #b7a6ff;
+    --tft-violet-deep: #8c75f4;
+    --tft-cyan: #62dbea;
+    --tft-gold: #f3ca68;
+    --tft-surface: rgba(24, 21, 43, 0.86);
+    --tft-surface-strong: #1c1831;
+    --tft-border: rgba(183, 166, 255, 0.18);
+    --tft-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+  }
+}
+
+body {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(113, 88, 232, 0.09), transparent 30rem),
+    radial-gradient(circle at 88% 12%, rgba(49, 197, 217, 0.07), transparent 26rem),
+    var(--color-background-primary);
+  color: var(--tft-ink);
+  font-feature-settings: "kern", "liga", "calt";
+  letter-spacing: -0.005em;
+}
+
+.page {
+  background: transparent;
+}
+
+.content {
+  padding-top: 2.4rem;
+}
+
+.content-icon-container {
+  margin-bottom: 0.75rem;
+}
+
+article[role="main"] {
+  line-height: 1.72;
+}
+
+article[role="main"] > section > h1 {
+  color: var(--tft-ink);
+  font-size: clamp(2.2rem, 5vw, 3.45rem);
+  font-weight: 780;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+  margin-bottom: 1.4rem;
+  max-width: 17ch;
+}
+
+article[role="main"] h2 {
+  border-top: 1px solid var(--tft-border);
+  color: var(--tft-ink);
+  font-size: 1.45rem;
+  font-weight: 720;
+  letter-spacing: -0.025em;
+  margin-top: 3.2rem;
+  padding-top: 1.25rem;
+}
+
+article[role="main"] h3 {
+  color: var(--tft-ink);
+  font-size: 1.08rem;
+  font-weight: 720;
+  letter-spacing: -0.012em;
+}
+
+article[role="main"] p,
+article[role="main"] li {
+  color: var(--tft-muted);
+}
+
+article[role="main"] strong {
+  color: var(--tft-ink);
+  font-weight: 680;
+}
+
+article[role="main"] a:not(.headerlink):not(.docs-button) {
+  text-decoration-color: color-mix(in srgb, var(--tft-violet) 40%, transparent);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+article[role="main"] a:not(.headerlink):not(.docs-button):hover {
+  text-decoration-color: currentcolor;
+}
+
+/* Navigation */
+
+.sidebar-drawer {
+  background:
+    linear-gradient(180deg, rgba(113, 88, 232, 0.08), transparent 14rem),
+    var(--color-sidebar-background);
+  border-right: 1px solid var(--tft-border);
+}
+
+.sidebar-brand {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-bottom: 1rem;
+}
+
+.sidebar-brand::before {
+  align-items: center;
+  background: linear-gradient(135deg, var(--tft-violet), var(--tft-cyan));
+  border-radius: 11px;
+  box-shadow: 0 8px 24px rgba(79, 53, 190, 0.24);
+  color: #fff;
+  content: "T";
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-weight: 800;
+  height: 2.1rem;
+  justify-content: center;
+  margin-right: 0.7rem;
+  width: 2.1rem;
+}
+
+.sidebar-brand-text,
+.mobile-header .brand {
+  color: var(--tft-ink);
+  font-size: 0.98rem;
+  font-weight: 760;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-search {
+  background: var(--tft-surface);
+  border: 1px solid var(--tft-border);
+  border-radius: 11px;
+  box-shadow: none;
+}
+
+.sidebar-search:focus {
+  border-color: var(--tft-violet);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tft-violet) 18%, transparent);
+}
+
+.sidebar-tree .caption {
+  color: var(--tft-muted);
+  font-size: 0.68rem;
+  font-weight: 780;
+  letter-spacing: 0.13em;
+  margin-top: 1.35rem;
+  text-transform: uppercase;
+}
+
+.sidebar-tree a {
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin: 0.08rem 0;
+  padding-bottom: 0.35rem;
+  padding-top: 0.35rem;
+}
+
+.sidebar-tree a.current,
+.sidebar-tree a:hover {
+  background: color-mix(in srgb, var(--tft-violet) 10%, transparent);
+}
+
+.sidebar-tree a.current {
+  box-shadow: inset 3px 0 var(--tft-violet);
+  color: var(--tft-violet-deep);
+  font-weight: 670;
+}
+
+/* Landing page */
+
+#tft-intelligence-documented > h1 {
+  background: linear-gradient(115deg, var(--tft-ink) 12%, var(--tft-violet-deep) 66%, var(--tft-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  margin-bottom: 1.2rem;
+  max-width: 12ch;
+}
+
+.docs-hero {
+  background:
+    linear-gradient(125deg, color-mix(in srgb, var(--tft-violet) 13%, transparent), transparent 55%),
+    var(--tft-surface);
+  border: 1px solid var(--tft-border);
+  border-radius: var(--tft-radius-lg);
+  box-shadow: var(--tft-shadow);
+  margin-bottom: 3.4rem;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 2.6rem);
+  position: relative;
+}
+
+.docs-hero::after {
+  background: linear-gradient(135deg, var(--tft-violet), var(--tft-cyan));
+  border-radius: 999px;
+  content: "";
+  filter: blur(4px);
+  height: 10rem;
+  opacity: 0.13;
+  position: absolute;
+  right: -3rem;
+  top: -4rem;
+  transform: rotate(-18deg);
+  width: 17rem;
+}
+
+.docs-kicker {
+  color: var(--tft-violet-deep) !important;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  margin: 0 0 0.8rem;
+  text-transform: uppercase;
+}
+
+.docs-lede {
+  color: var(--tft-ink) !important;
+  font-size: clamp(1.08rem, 2vw, 1.3rem);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 44rem;
+  position: relative;
+  z-index: 1;
+}
+
+.docs-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 1.6rem 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.docs-button {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.88rem;
+  font-weight: 720;
+  gap: 0.5rem;
+  padding: 0.72rem 1.1rem;
+  text-decoration: none;
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+}
+
+.docs-button:hover {
+  transform: translateY(-2px);
+}
+
+.docs-button-primary {
+  background: linear-gradient(135deg, var(--tft-violet-deep), var(--tft-violet));
+  box-shadow: 0 10px 24px rgba(79, 53, 190, 0.22);
+  color: #fff;
+}
+
+.docs-button-primary:hover {
+  color: #fff;
+  box-shadow: 0 14px 30px rgba(79, 53, 190, 0.3);
+}
+
+.docs-button-secondary {
+  background: color-mix(in srgb, var(--tft-surface-strong) 78%, transparent);
+  border: 1px solid var(--tft-border);
+  color: var(--tft-ink);
+}
+
+.docs-signal-row {
+  border-top: 1px solid var(--tft-border);
+  display: grid;
+  gap: 0.8rem 1.4rem;
+  grid-template-columns: repeat(3, 1fr);
+  padding-top: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.docs-signal-row span {
+  color: var(--tft-muted);
+  display: grid;
+  font-size: 0.78rem;
+  gap: 0.12rem;
+}
+
+.docs-signal-row strong {
+  color: var(--tft-gold) !important;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+#start-with-the-system {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#start-with-the-system > h2 {
+  border-top: 0;
+  font-size: 1.7rem;
+  grid-column: 1 / -1;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+#start-with-the-system > h2 + p {
+  font-size: 1.02rem;
+  grid-column: 1 / -1;
+  margin-bottom: 2rem;
+  max-width: 47rem;
+}
+
+#start-with-the-system > .toctree-wrapper {
+  background: var(--tft-surface);
+  border: 1px solid var(--tft-border);
+  border-radius: var(--tft-radius-md);
+  box-shadow: 0 10px 34px rgba(47, 37, 91, 0.06);
+  margin: 0;
+  padding: 1.2rem 1.25rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+#start-with-the-system > .toctree-wrapper:hover {
+  border-color: color-mix(in srgb, var(--tft-violet) 42%, transparent);
+  box-shadow: var(--tft-shadow);
+  transform: translateY(-2px);
+}
+
+#start-with-the-system > .toctree-wrapper .caption {
+  color: var(--tft-violet-deep);
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.8rem;
+  text-transform: uppercase;
+}
+
+#start-with-the-system > .toctree-wrapper > ul {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: 1fr;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#start-with-the-system > .toctree-wrapper > ul > li {
+  margin: 0;
+}
+
+#start-with-the-system > .toctree-wrapper > ul > li > a {
+  color: var(--tft-ink);
+  display: block;
+  font-size: 0.96rem;
+  font-weight: 680;
+  text-decoration: none;
+}
+
+#start-with-the-system > .toctree-wrapper ul ul {
+  display: none;
+}
+
+/* Reading components */
+
+article[role="main"] blockquote {
+  background: color-mix(in srgb, var(--tft-violet) 7%, transparent);
+  border-left: 3px solid var(--tft-violet);
+  border-radius: 0 var(--tft-radius-md) var(--tft-radius-md) 0;
+  margin-left: 0;
+  padding: 0.7rem 1rem;
+}
+
+article[role="main"] code.literal {
+  background: color-mix(in srgb, var(--tft-violet) 9%, transparent);
+  border: 1px solid var(--tft-border);
+  border-radius: 6px;
+  color: var(--tft-violet-deep);
+  font-size: 0.86em;
+  padding: 0.14em 0.38em;
+}
+
+article[role="main"] .highlight {
+  border: 1px solid var(--tft-border);
+  border-radius: var(--tft-radius-md);
+  box-shadow: 0 10px 28px rgba(47, 37, 91, 0.07);
+  overflow: hidden;
+}
+
+article[role="main"] .highlight pre {
+  line-height: 1.6;
+  padding: 1.05rem 1.15rem;
+}
+
+.copybtn {
+  border-radius: 7px;
+  margin: 0.5rem;
+}
+
+article[role="main"] table.docutils {
+  background: var(--tft-surface);
+  border: 1px solid var(--tft-border);
+  border-collapse: separate;
+  border-radius: var(--tft-radius-md);
+  border-spacing: 0;
+  box-shadow: 0 10px 28px rgba(47, 37, 91, 0.06);
+  overflow: hidden;
+}
+
+article[role="main"] table.docutils thead {
+  background: color-mix(in srgb, var(--tft-violet) 9%, transparent);
+}
+
+article[role="main"] table.docutils th {
+  color: var(--tft-ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+article[role="main"] table.docutils td,
+article[role="main"] table.docutils th {
+  border-color: var(--tft-border);
+  padding: 0.7rem 0.85rem;
+}
+
+.admonition {
+  border: 1px solid var(--tft-border);
+  border-radius: var(--tft-radius-md);
+  box-shadow: 0 8px 24px rgba(47, 37, 91, 0.06);
+}
+
+.toc-drawer {
+  font-size: 0.88rem;
+}
+
+.toc-tree li.scroll-current > .reference {
+  color: var(--tft-violet-deep);
+  font-weight: 680;
+}
+
+.bottom-of-page {
+  border-top-color: var(--tft-border);
+  color: var(--tft-muted);
+}
+
+@media (min-width: 82rem) {
+  .content {
+    width: 54rem;
+  }
+}
+
+@media (max-width: 52rem) {
+  .content {
+    padding-top: 1.35rem;
+  }
+
+  article[role="main"] > section > h1 {
+    font-size: 2.45rem;
+  }
+
+  #tft-intelligence-documented > h1 {
+    font-size: 3.2rem;
+  }
+
+  .docs-signal-row,
+  #start-with-the-system {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .docs-button,
+  #start-with-the-system > .toctree-wrapper {
+    transition: none;
+  }
+}

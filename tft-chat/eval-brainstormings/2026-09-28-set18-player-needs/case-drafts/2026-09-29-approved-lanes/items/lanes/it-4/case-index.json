@@ -1,0 +1,176 @@
+{
+  "lane": "IT-4",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "IT-4-C01",
+      "title": "Four artifacts across two carries",
+      "question": "For Kayle\u2013Aphelios boards, how do Wit's End, Shiv, Collector and Infinity Force compare between the two carries when the frontline already has its items?",
+      "status": "provisional",
+      "origin": "Adaptation of opened specialization discussion with constructed grid",
+      "proposal_lineage": [
+        "IT-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Four artifacts across Kayle2 and Aphelios2 with fixed co-items and tank items",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "IT-4-C02",
+      "title": "Radiant scaling or radiant protection",
+      "question": "For Zyra\u2013Malphite boards, is radiant Archangel on Zyra worth more than radiant Bramble or Dragon's Claw on Malphite? I'm thinking of Zyra with Shojin and JG and Malphite with just Warmog's.",
+      "status": "provisional",
+      "origin": "Approved constructed allocation comparison adapted from opened criticism",
+      "proposal_lineage": [
+        "IT-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S11",
+        "S12",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Radiant Archangel Zyra2 versus radiant Bramble/Dragon Claw Malphite2, fixed partial builds",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "IT-4-C03",
+      "title": "Concentrate a second artifact or strengthen the tank",
+      "question": "On finished Elderwood Veigar boards that already have Dawncore on Veigar, does a second artifact do more for the board as Luden's on Veigar or as Lightshield Crest on Alistar?",
+      "status": "provisional",
+      "origin": "Constructed second-artifact concentration versus splitting synthesis",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S13",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Fixed Dawncore: second artifact Luden on Veigar3 versus Lightshield Alistar3, equal two-artifact budgets",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "IT-4-C04",
+      "title": "Radiant Rageblade's apparent Caitlyn advantage",
+      "question": "For completed three-star Caitlyn boards, how much better is radiant Rageblade than Flickerblades or ordinary Rageblade once the frontline and the rest of her build are comparable?",
+      "status": "provisional",
+      "origin": "Resource-workflow adaptation of actual marginal gap; discussion lead access-limited",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S08",
+        "S14",
+        "S15",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Caitlyn3 radiant Rageblade versus Flickerblades versus ordinary Rageblade, matched co-items/frontline",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "IT-4-C05",
+      "title": "An offensive artifact on Ravager Sett",
+      "question": "Do six-Brawler boards with Ravager Sett actually perform better with Hellfire Hatchet or Void Gauntlet on him than with a normal defensive item?",
+      "status": "provisional",
+      "origin": "Adaptation of directly opened artifact hypothesis and counterargument",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S16",
+        "S17",
+        "S18",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Ravager Sett2 six-Brawler Hatchet/Void/Gargoyle with Warmog fixed",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "IT-4-C06",
+      "title": "Eternal Pact depends on the frontline",
+      "question": "Does Eternal Pact on Veigar hold up against Dawncore when I separate completed boards by their main tank and tank itemization, or is its overall item ranking hiding a frontline dependency?",
+      "status": "provisional",
+      "origin": "Constructed paired-artifact/frontline dependency synthesis",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S13",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Veigar3 Pact/Dawncore with JG and Blue, conditional on tank package",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

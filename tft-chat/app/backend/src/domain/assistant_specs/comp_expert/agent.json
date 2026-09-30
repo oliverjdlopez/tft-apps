@@ -1,0 +1,11 @@
+{
+  "name": "comp_expert",
+  "description": "Produce rigorous, data-backed reports on TFT composition identity, strengths, dependencies, and supporting cast.",
+  "handoff_description": "Analyze a TFT comp's win conditions, traits, item demands, high-cost flex pieces, supporting units, and observable strengths and weaknesses.",
+  "tools": {
+    "include_all": false,
+    "groups": ["ranking", "query_cohorts"]
+  },
+  "context": {"repository": true},
+  "handoffs": []
+}

@@ -1,0 +1,110 @@
+{
+  "lane": "UN4-1",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "UN4-1-C01",
+      "title": "Veigar carry investment versus trait support",
+      "question": "What separates a Veigar reroll carry board from a board that just uses him for traits? How much do his items and the rest of the team change whether three-star Veigar is worth building around?",
+      "status": "provisional",
+      "origin": "Discussion-motivated synthesis, reinforced by official carry/trait distinction.",
+      "proposal_lineage": [
+        "UN4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S10"
+      ],
+      "comparison": "Veigar2/3 crossed with zero/three items, then board family and whole-board investment.",
+      "unresolved_evidence": [
+        "Crossed star/item/board outcomes and counts",
+        "Compatible patch/time/rank/region",
+        "Frontline, secondary-carry and artifact-free investment",
+        "Unobserved AP stacks"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "UN4-1-C02",
+      "title": "Exact special trio on Yi2 versus Draven1",
+      "question": "With Flickerblade, radiant Quicksilver and Edge of Night, is two-star Master Yi or one-star Draven the better carry? How much does the rest of the board change that?",
+      "status": "provisional",
+      "origin": "Adaptation of surviving removed-post replies; Draven1 alternative is constructed.",
+      "proposal_lineage": [
+        "UN4-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S2",
+        "S5",
+        "S6",
+        "S7",
+        "S11",
+        "S12",
+        "S13"
+      ],
+      "comparison": "Yi2 versus Draven1 with exactly Flickerblade, radiant Quicksilver and ordinary Edge of Night.",
+      "unresolved_evidence": [
+        "Exact trio item IDs and both holder counts",
+        "Compatible population window",
+        "Supporting board distributions",
+        "Conflicting Flickerblade effect values",
+        "Unknown Yi form"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "UN4-1-C03",
+      "title": "Is special-item Veigar a different ceiling?",
+      "question": "Does three-star Veigar with normal items still have a strong endgame, or do Dawncore and Flora Fatalis versions account for most of his top finishes?",
+      "status": "provisional",
+      "origin": "Direct player question about item dependency adapted to final-board outcome ceilings.",
+      "proposal_lineage": [
+        "UN4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S8",
+        "S10",
+        "S14",
+        "S15"
+      ],
+      "comparison": "Veigar3 craftable-only holder builds versus Dawncore and Flora Fatalis builds; separate neither/one/both special items.",
+      "unresolved_evidence": [
+        "Star3 exact special-item intersections",
+        "Share of top finishes and denominators",
+        "Whole-team artifacts and frontline matching"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "UN4-1-C04",
+      "title": "Who receives the tank investment beside Veigar?",
+      "question": "On finished three-star Veigar boards, how do Ornn-focused, Alistar-focused and split frontline investment compare?",
+      "status": "provisional",
+      "origin": "Guide explicitly identifies either tank as main tank; adapted from roll timing to end-state allocation.",
+      "proposal_lineage": [
+        "UN4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S14",
+        "S16",
+        "S17"
+      ],
+      "comparison": "Within Veigar3 boards, Ornn as main itemized/upgraded tank versus Alistar versus split allocation.",
+      "unresolved_evidence": [
+        "Veigar-conditioned tank allocation counts/outcomes",
+        "Comparable total items and frontline stars",
+        "Unobserved history and artifact generation"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "lane": "IT-3",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "IT-3-C01",
+      "title": "Gunblade behind Juggernauts",
+      "question": "Does Gunblade become a better item on Zyra when she's playing behind Juggernauts, or do those boards just do well regardless of her build?",
+      "status": "provisional",
+      "origin": "Adapted D1 synthesis of Gunblade/Juggernaut praise, a Zyra suggestion and disagreement over interchangeable backlines.",
+      "proposal_lineage": [
+        "IT-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S1",
+        "N1",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Two-star Zyra with exactly three normal completed items. Compare Gunblade trios with observed alternatives, preferably fixing the other two items, within four, six and lower Juggernaut tiers separately. Preserve Maokai presence, Summoner tier, frontline stars/items, secondary carries and total items. Other healing remains a confounder.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "IT-3-C02",
+      "title": "Elise carry pair without the emblem",
+      "question": "Is Rageblade\u2013Titan's Elise actually good in ordinary Vanguard boards, or does it only look good when she has a Ravager emblem?",
+      "status": "disputed",
+      "origin": "Constructed synthesis of conflicting D1 ordinary-carry endorsements, item-specificity objection and emblem suggestions.",
+      "proposal_lineage": [
+        "IT-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S2",
+        "N2",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Ordinary means no emblem/artifact/radiant on Elise. Start with three-star, three-item Elise, separate four/six Vanguard. Within each context compare Rageblade\u2013Titan\u2019s builds against other carry builds; require Ravager emblem on Elise and active Ravager for emblem cohort. Preserve exact third items, Coven tier, secondary carry investment and whole-board item quality. Two-star separately. Do not replace Titan\u2019s with the emblem silently or infer Coven reward history.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "IT-3-C03",
+      "title": "Red Buff inside Inferno",
+      "question": "Does Red Buff still improve Ashe's endgame results when the board already has Inferno, or is its good average mostly coming from boards without that trait?",
+      "status": "provisional",
+      "origin": "Constructed endgame adaptation of D1\u2019s explicit Inferno-emblem/Red-Buff/Shojin Ashe suggestion; redundancy wording is newly synthesized.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S3",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Fully itemized Ashe; one-star and two-star separately. Compare Red Buff against alternative third items with the same other pair, within no-Inferno and each active Inferno tier. Emblem on Ashe is a separate stratum from native Inferno allies because it consumes a slot and changes application. Preserve Hunter/Blossom, Kennen/Amumu, frontline and other burn items. No opponent burn-coverage inference.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "IT-3-C04",
+      "title": "Morgana utility and the second carry",
+      "question": "Is Morello\u2013Void Staff Morgana a good build on her own, or do its results depend on having a fully itemized Ahri beside her?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of D1 Morgana burn-support/Ahri suggestion and N3 named-comp utility-pair rows; exact Void Staff question is adapted.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S4",
+        "N3",
+        "M1",
+        "W1",
+        "R3"
+      ],
+      "comparison": "Two-star Morgana with three normal items. Compare Morello\u2013Void Staff plus explicit third against observed damage builds within matched Invoker/frontline tiers. Split three-item two-star Ahri, underitemized Ahri, another itemized AP carry, and no comparable second carry. Match total team items. \u201cOn her own\u201d means no other fully itemized AP carry, not a one-unit board. Statikk is an artifact here, not ordinary shred; do not silently equate it with Void Staff.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "IT-3-C05",
+      "title": "Mama Beak across board families",
+      "question": "Does Titan's actually beat Kraken on carry Mama Beak in Summoner boards, and does that still hold when she's played in a Riftbeast-heavy board?",
+      "status": "disputed",
+      "origin": "Adapted from D1 full-AD three-Summoner Mama Beak branch, Titan\u2019s disagreement and Riftbeast-board discussion. Family contrast constructed.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S5",
+        "W1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Three-star Mama Beak with three normal completed items first; two-star separately. Titan\u2019s Resolve versus Kraken\u2019s Fury, holding the other pair fixed where possible. Jointly tabulate actual Summoner/Riftbeast tiers rather than assume mutually exclusive families. Exclude unitemized trait fillers. Preserve secondary carry and frontline investment. Alpha Mark ownership cannot be inferred from generic unit/trait records; disclose missing ownership as residual confounding.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "IT-3-C06",
+      "title": "Seeker\u2019s and trait-provided stats",
+      "question": "Is Seeker's Armguard worse than Crownguard on Fiddlesticks when I play lots of Defenders and Spellweavers, or do the results still favor it there?",
+      "status": "disputed",
+      "origin": "Close adaptation of opened September 7\u20138 TFT Flow question/reply, extended to test its trait-context explanation with outcomes.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "S6",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Three-star Fiddlesticks holding Adaptive Helm and Titan\u2019s Resolve: Seeker\u2019s versus normal Crownguard third. Two-star separately. Cross actual Defender and Spellweaver tiers; preserve Flora Fatalis activation/Soraka, carry items, team size and total artifact count. Artifact access is a selection confounder even at equal item count. No takedown stacks, combat duration or healing inferred. A broader matched-pair sensitivity cohort is acceptable only explicitly labeled.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

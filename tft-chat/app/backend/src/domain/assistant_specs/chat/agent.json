@@ -1,0 +1,11 @@
+{
+  "name": "chat",
+  "description": "Expert-level Teamfight Tactics meta reads grounded in match statistics.",
+  "handoff_description": "Answer Teamfight Tactics meta questions like an expert player, grounded in the data and the data analyst.",
+  "tools": {
+    "include_all": false,
+    "groups": ["context", "ranking", "probability"]
+  },
+  "context": {"repository": true},
+  "handoffs": ["data_analyst", "final_responder"]
+}

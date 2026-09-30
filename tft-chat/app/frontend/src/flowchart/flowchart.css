@@ -1,0 +1,475 @@
+/* Flowchart workspace layout. Local shadcn components own control appearance;
+   these rules place the rail, entity palette, and canvas, and style the custom
+   React Flow nodes and edges. They live in the components layer so Tailwind
+   utilities still win. */
+@layer components {
+  /* ---------------------------------------------------------------------- */
+  /* Page frame: workspace rail | entity palette | canvas column.            */
+  /* ---------------------------------------------------------------------- */
+  .flowchart-view {
+    display: grid;
+    grid-template-columns: 250px 280px minmax(0, 1fr);
+    height: 100dvh;
+    background: var(--background);
+    color: var(--foreground);
+  }
+  .flowchart-view h1, .flowchart-view h2, .flowchart-view h3, .flowchart-view p { margin: 0; }
+  .flowchart-muted { color: var(--muted-foreground); font-size: 13px; }
+  .flowchart-toolbar-spacer { flex: 1; }
+
+  /* Workspace rail ------------------------------------------------------- */
+  .flowchart-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+    padding: 20px 14px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+  }
+  .flowchart-rail-title h1 { font-size: 20px; font-weight: 650; }
+  .flowchart-rail-title p { margin-top: 4px; color: var(--muted-foreground); font-size: 13px; }
+  .flowchart-source { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  /* Long labels ("Checked-in JSON") shrink inside the rail instead of spilling into the palette. */
+  .flowchart-source > * { min-width: 0; overflow: hidden; }
+  .flowchart-create { display: grid; gap: 6px; }
+  .flowchart-create-row { display: grid; grid-template-columns: 1fr 72px; gap: 6px; }
+  .flowchart-rail-heading { display: flex; align-items: center; justify-content: space-between; }
+  .flowchart-rail-heading h2 { font-size: 13px; font-weight: 600; color: var(--muted-foreground); }
+  .flowchart-rail-list { display: grid; align-content: start; gap: 4px; flex: 1; min-height: 0; overflow-y: auto; }
+  .flowchart-rail-item {
+    display: grid;
+    gap: 2px;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+  .flowchart-rail-item:hover { background: var(--accent); }
+  .flowchart-rail-item[aria-current="page"] { border-color: var(--border); background: var(--card); }
+  .flowchart-rail-item strong { font-size: 14px; font-weight: 600; }
+  .flowchart-rail-item span { font-size: 12px; color: var(--muted-foreground); }
+
+  /* Entity palette ------------------------------------------------------- */
+  .flowchart-palette {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 0;
+    padding: 16px 12px;
+    border-right: 1px solid var(--border);
+  }
+  .flowchart-palette-tabs { min-height: 0; flex: 1; }
+  .flowchart-palette-panel { min-height: 0; overflow-y: auto; }
+  .flowchart-palette-panel section + section { margin-top: 12px; }
+  .flowchart-palette-panel h3 { margin-bottom: 6px; font-size: 12px; font-weight: 600; color: var(--muted-foreground); }
+  .flowchart-palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .flowchart-palette-tile {
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    padding: 4px 2px;
+    border-radius: 6px;
+    cursor: grab;
+    user-select: none;
+  }
+  .flowchart-palette-tile:hover { background: var(--accent); }
+  .flowchart-palette-tile > span:last-child {
+    width: 100%;
+    overflow: hidden;
+    font-size: 11px;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Saved-group library cards: drag onto the canvas, or insert at center. */
+  .flowchart-groups { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .flowchart-group {
+    display: grid;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+  }
+  .flowchart-group[draggable="true"] { cursor: grab; }
+  .flowchart-group[draggable="true"]:hover { border-color: color-mix(in oklab, var(--primary) 45%, var(--border)); }
+  .flowchart-group-header { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .flowchart-group-header strong { overflow: hidden; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+  .flowchart-group-set {
+    flex: none;
+    padding: 0 6px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted-foreground);
+    font-size: 11px;
+  }
+  .flowchart-group-summary { color: var(--muted-foreground); font-size: 12px; }
+  .flowchart-group-entities { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 11px; color: var(--muted-foreground); }
+  .flowchart-group-actions { display: flex; align-items: center; gap: 2px; }
+  .flowchart-group-rename { display: flex; align-items: center; gap: 2px; }
+
+  /* Inline "Save group" form in the canvas toolbar. */
+  .flowchart-save-group { display: flex; align-items: center; gap: 6px; }
+  .flowchart-save-group input { width: 200px; height: 32px; }
+  .flowchart-save-group-error { color: var(--destructive); font-size: 12px; }
+
+  /* Entity tiles: image, or name when no image is downloaded. Unit borders
+     follow the in-game shop cost colors. */
+  .flowchart-tile {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: var(--muted);
+  }
+  .flowchart-tile img { width: 100%; height: 100%; object-fit: cover; }
+  .flowchart-tile-text {
+    padding: 2px;
+    font-size: 9px;
+    line-height: 1.1;
+    text-align: center;
+    word-break: break-word;
+  }
+  .flowchart-tile[data-category="augment"] { border-radius: 50%; }
+  .flowchart-tile[data-cost="1"] { border-color: #9aa4af; }
+  .flowchart-tile[data-cost="2"] { border-color: #2fb164; }
+  .flowchart-tile[data-cost="3"] { border-color: #2f7fd6; }
+  .flowchart-tile[data-cost="4"] { border-color: #b150d8; }
+  .flowchart-tile[data-cost="5"] { border-color: #e2a72e; }
+
+  /* Canvas column --------------------------------------------------------- */
+  .flowchart-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .flowchart-main > .empty-state { margin: auto; }
+  .flowchart-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .flowchart-name { max-width: 320px; font-weight: 600; }
+  .flowchart-badge {
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--muted-foreground);
+  }
+  .flowchart-save { font-size: 12px; color: var(--muted-foreground); }
+  .flowchart-save[data-state="error"], .flowchart-save[data-state="conflict"] { color: var(--destructive); }
+  .flowchart-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 16px 0;
+    padding: 8px 12px;
+    border: 1px solid var(--destructive);
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .flowchart-banner[data-tone="info"] { border-color: var(--border); }
+  .flowchart-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .flowchart-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 16px; }
+  .flowchart-canvas { position: relative; flex: 1; min-height: 0; }
+
+  /* ---------------------------------------------------------------------- */
+  /* Canvas visual system. Every node outline, handle, and link draws from   */
+  /* these tokens, so strokes, radii, and role colors stay consistent.       */
+  /* ---------------------------------------------------------------------- */
+  .flowchart-view {
+    --fc-stroke: 1.5px;
+    --fc-radius: 10px;
+    --fc-radius-sm: 6px;
+    --fc-text: 13px;
+    --fc-caption: 10px;
+    --fc-state: var(--primary);
+    --fc-action: var(--info);
+    --fc-decision: var(--gold);
+    --fc-flow: var(--foreground);
+    --fc-note: var(--gold);
+    --fc-link: color-mix(in oklab, var(--foreground) 62%, var(--background));
+    --fc-selected: var(--ring);
+    --fc-shadow: drop-shadow(0 1px 1.5px rgb(0 0 0 / 0.08)) drop-shadow(0 2px 6px rgb(0 0 0 / 0.04));
+  }
+  .flowchart-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+  /* Node frame --------------------------------------------------------------
+     `.flowchart-shape` fills React Flow's node box; the SVG outline sits
+     behind the HTML content and grows with it. */
+  .flowchart-shape {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    color: var(--card-foreground);
+    font-size: var(--fc-text);
+  }
+  .flowchart-shape > :not(.flowchart-outline, .react-flow__handle, .react-flow__resize-control) { position: relative; }
+  .flowchart-outline { position: absolute; inset: 0; overflow: visible; filter: var(--fc-shadow); pointer-events: none; }
+  .flowchart-outline-body { fill: var(--card); stroke: var(--fc-role, var(--border)); stroke-width: var(--fc-stroke); vector-effect: non-scaling-stroke; }
+  .flowchart-outline-halo { fill: none; stroke: var(--fc-selected); stroke-width: 5px; stroke-opacity: 0.35; stroke-linejoin: round; }
+  .flowchart-outline-fold { fill: color-mix(in oklab, var(--fc-note) 28%, var(--card)); stroke: var(--fc-note); stroke-width: var(--fc-stroke); stroke-linejoin: round; }
+  .flowchart-outline[data-kind="plan"] { --fc-role: var(--fc-state); }
+  .flowchart-outline[data-kind="action"] { --fc-role: var(--fc-action); }
+  .flowchart-outline[data-kind="decision"] { --fc-role: var(--fc-decision); }
+  .flowchart-outline[data-kind="note"] { --fc-role: var(--fc-note); }
+  .flowchart-outline[data-kind="decision"] .flowchart-outline-body { fill: color-mix(in oklab, var(--fc-decision) 10%, var(--card)); }
+  .flowchart-outline[data-kind="note"] .flowchart-outline-body { fill: color-mix(in oklab, var(--fc-note) 12%, var(--card)); }
+
+  .flowchart-role {
+    font-size: var(--fc-caption);
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fc-role-text, var(--muted-foreground));
+  }
+
+  /* Shared inline editors: borderless until focused. */
+  .flowchart-shape input, .flowchart-shape textarea, .flowchart-edge-pill input, .flowchart-edge-notes {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+  }
+  .flowchart-shape input:focus, .flowchart-shape textarea:focus,
+  .flowchart-edge-pill input:focus, textarea.flowchart-edge-notes:focus {
+    border-color: var(--fc-selected);
+    outline: none;
+  }
+  .flowchart-shape ::placeholder, .flowchart-edge-pill ::placeholder { color: var(--muted-foreground); opacity: 0.8; }
+
+  /* States and actions ------------------------------------------------------ */
+  .flowchart-card { display: flex; flex-direction: column; min-width: 176px; }
+  .flowchart-state { --fc-role-text: var(--fc-state); min-width: 208px; }
+  .flowchart-action { --fc-role-text: var(--fc-action); gap: 6px; min-width: 160px; min-height: 56px; padding: 10px 14px; justify-content: center; }
+  .flowchart-card-header {
+    display: grid;
+    gap: 4px;
+    padding: 10px 12px 8px;
+    border-radius: calc(var(--fc-radius) - 1px) calc(var(--fc-radius) - 1px) 0 0;
+    border-bottom: 1px solid color-mix(in oklab, var(--fc-state) 20%, transparent);
+    background: color-mix(in oklab, var(--fc-state) 9%, transparent);
+  }
+  .flowchart-card-body { flex: 1; padding: 10px 12px 12px; }
+  .flowchart-title-row { display: flex; align-items: center; gap: 6px; }
+  .flowchart-title { flex: 1; min-width: 0; padding: 1px 3px; margin-left: -3px; font-weight: 600; }
+  .flowchart-stage {
+    flex: none;
+    padding: 1px 8px;
+    border-color: var(--border) !important;
+    border-radius: 999px !important;
+    background: var(--card) !important;
+    color: var(--muted-foreground) !important;
+    font-size: 11px !important;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  /* An empty stage badge only appears while the node is hovered or selected. */
+  .flowchart-stage:placeholder-shown { border-style: dashed !important; opacity: 0; transition: opacity 120ms ease; }
+  .react-flow__node:hover .flowchart-stage, .react-flow__node.selected .flowchart-stage, .flowchart-stage:focus { opacity: 1; }
+  .flowchart-stage:focus { border-color: var(--fc-selected) !important; }
+  .flowchart-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .flowchart-chips-empty {
+    display: block;
+    padding: 10px;
+    border: 1px dashed var(--border);
+    border-radius: var(--fc-radius-sm);
+    color: var(--muted-foreground);
+    font-size: 12px;
+    text-align: center;
+  }
+  .flowchart-chip { position: relative; display: inline-flex; }
+  .flowchart-chip .flowchart-tile { border-width: 1.5px; border-radius: var(--fc-radius-sm); }
+  .flowchart-chip-more {
+    display: inline-grid;
+    place-items: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 6px;
+    border: 1px solid var(--border);
+    border-radius: var(--fc-radius-sm);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .flowchart-chip-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    display: none;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: var(--foreground);
+    color: var(--background);
+    cursor: pointer;
+  }
+  .flowchart-chip-remove svg { width: 10px; height: 10px; }
+  .flowchart-chip:hover .flowchart-chip-remove, .flowchart-chip-remove:focus-visible { display: grid; }
+
+  /* Decisions: the question fits the rhombus's inscribed rectangle. -------- */
+  .flowchart-decision { display: grid; place-items: center; min-width: 96px; min-height: 64px; }
+  .flowchart-decision textarea {
+    width: 62%;
+    max-height: 56%;
+    padding: 0;
+    resize: none;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    field-sizing: content;
+  }
+
+  /* Fork and join bars, start and end dots. -------------------------------- */
+  .flowchart-fork { border-radius: 3px; background: var(--fc-flow); }
+  .flowchart-terminal { border-radius: 50%; }
+  .flowchart-start { width: 24px; height: 24px; }
+  .flowchart-end { width: 28px; height: 28px; }
+  .flowchart-start { background: var(--fc-flow); }
+  .flowchart-end { border: 2px solid var(--fc-flow); background: radial-gradient(circle, var(--fc-flow) 0 42%, var(--card) 46%); }
+  .flowchart-fork[data-selected], .flowchart-terminal[data-selected] {
+    box-shadow: 0 0 0 3px var(--card), 0 0 0 5px color-mix(in oklab, var(--fc-selected) 45%, transparent);
+  }
+
+  /* Standalone entities and notes. ----------------------------------------- */
+  .flowchart-entity { display: grid; justify-items: center; align-content: center; gap: 6px; padding: 10px 12px; }
+  .flowchart-entity-name { font-size: 12px; font-weight: 500; }
+  .flowchart-note { min-width: 160px; min-height: 64px; padding: 10px 18px 10px 12px; }
+  /* Notes have a set width, so the text wraps and an unresized note grows
+     downward with it; a resized note fills its box. */
+  .flowchart-note textarea { width: 100%; height: 100%; min-height: 44px; padding: 0; resize: none; font-size: 12.5px; line-height: 1.4; field-sizing: content; }
+
+  .flowchart-edge-label {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    pointer-events: all;
+    font-size: 12px;
+  }
+  .flowchart-edge-pill {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    height: 22px;
+    padding: 0 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--card-foreground);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+    white-space: nowrap;
+  }
+  .flowchart-edge-pill > span[aria-hidden] { color: var(--muted-foreground); }
+  /* Guards size to their text (placeholder included), up to a readable limit. */
+  .flowchart-edge-pill input { min-width: 2ch; max-width: 32ch; padding: 0 2px; field-sizing: content; }
+  .flowchart-edge-pill[data-selected] { border-color: var(--fc-selected); }
+  /* A decision branch without a guard is ambiguous, so it is flagged until named. */
+  .flowchart-edge-pill[data-missing-guard] { border: 1px dashed var(--fc-decision); background: color-mix(in oklab, var(--fc-decision) 8%, var(--card)); }
+  .flowchart-edge-notes-toggle {
+    display: grid;
+    place-items: center;
+    margin: 0 -4px 0 3px;
+    padding: 3px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+  }
+  .flowchart-edge-notes-toggle:hover { background: var(--accent); }
+  .flowchart-edge-notes-toggle svg { width: 12px; height: 12px; }
+  .flowchart-edge-notes-toggle[data-has-notes] { color: var(--fc-note); }
+  /* The notes callout hangs from the pill on a short leader line. */
+  .flowchart-edge-notes {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 200px;
+    margin: 12px 0 0;
+    padding: 6px 8px;
+    border: 1px solid color-mix(in oklab, var(--fc-note) 55%, var(--border));
+    border-radius: var(--fc-radius-sm);
+    background: color-mix(in oklab, var(--fc-note) 12%, var(--card));
+    color: var(--card-foreground);
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    resize: none;
+  }
+  p.flowchart-edge-notes::before {
+    content: "";
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    height: 12px;
+    border-left: 1px dashed var(--fc-note);
+  }
+  .flowchart-edge-label:has(textarea.flowchart-edge-notes)::after {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: 50%;
+    height: 12px;
+    border-left: 1px dashed var(--fc-note);
+  }
+}
+
+/* React Flow overrides. React Flow's stylesheet is unlayered, and unlayered
+   rules beat every `@layer` rule regardless of specificity, so the rules that
+   restyle its handles, resizer, and edge paths must stay outside the layer. */
+/* Connection handles: hidden until a node is hovered or selected, or a link
+   is being drawn. They sit on the outline as small ringed dots. Handles carry
+   React Flow's `source` class, which the app's global `.source` card rule
+   pads, so padding is reset here. */
+.flowchart-canvas .react-flow__handle {
+  width: 9px;
+  height: 9px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: var(--fc-stroke) solid var(--fc-selected);
+  border-radius: 50%;
+  background: var(--card);
+  opacity: 0;
+  transition: opacity 120ms ease, scale 120ms ease;
+}
+.flowchart-canvas .react-flow__node:hover .react-flow__handle,
+.flowchart-canvas .react-flow__node.selected .react-flow__handle,
+.flowchart-canvas[data-connecting] .react-flow__handle { opacity: 1; }
+/* `scale` composes with React Flow's per-side translate, so hover never shifts a handle. */
+.flowchart-canvas .react-flow__handle:hover,
+.flowchart-canvas .react-flow__handle.connectingto { scale: 1.35; background: var(--fc-selected); }
+.flowchart-resize-line { border-color: var(--fc-selected) !important; }
+.flowchart-resize-handle { width: 7px !important; height: 7px !important; border: 1px solid var(--fc-selected) !important; border-radius: 2px !important; background: var(--card) !important; }
+
+/* Links ------------------------------------------------------------------ */
+.flowchart-canvas .react-flow__edge-path { stroke: var(--fc-link); stroke-width: var(--fc-stroke); }
+.flowchart-arrow { fill: var(--fc-link); }
+.flowchart-canvas .react-flow__edge.selected .react-flow__edge-path,
+.flowchart-canvas .react-flow__edge:hover .react-flow__edge-path { stroke: var(--fc-selected); stroke-width: 2px; }
+.flowchart-canvas .react-flow__connection-path { stroke: var(--fc-selected); stroke-width: var(--fc-stroke); stroke-dasharray: 4 3; }
+.flowchart-canvas .react-flow__edge-path.flowchart-annotation { stroke: var(--fc-note); stroke-dasharray: 5 4; }
+/* Guard pills and notes sit above nodes so short links stay readable. */
+.flowchart-canvas .react-flow__edgelabel-renderer { z-index: 5; }

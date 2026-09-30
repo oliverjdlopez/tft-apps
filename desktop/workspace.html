@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>ChatTFT Desktop</title>
+  <link rel="stylesheet" href="workspace.css">
+  <script defer src="workspace.js"></script>
+</head>
+<body>
+  <nav aria-label="Desktop workspace">
+    <span class="brand">ChatTFT Desktop</span>
+    <button id="chat" aria-pressed="true" title="ChatTFT (Ctrl/Cmd+1)">ChatTFT</button>
+    <button id="compositions" hidden aria-pressed="false" title="Compositions (Ctrl/Cmd+2)">Compositions</button>
+    <button id="rolldown" aria-pressed="false" title="Rolldown (Ctrl/Cmd+3)">Rolldown</button>
+    <button id="flowchart" aria-pressed="false" title="Flowchart (Ctrl/Cmd+4)">Flowchart</button>
+    <button id="vod" aria-pressed="false" title="VOD Review (Ctrl/Cmd+5)">VOD Review</button>
+    <button id="wisps" aria-pressed="false" title="Wisps (Ctrl/Cmd+6)">Wisps</button>
+    <button id="langfuse" aria-pressed="false" title="Langfuse (Ctrl/Cmd+7)">Langfuse</button>
+    <button id="database" aria-pressed="false" title="Database (Ctrl/Cmd+8)">Database</button>
+  </nav>
+  <main id="status" hidden>
+    <span id="service" class="eyebrow">LANGFUSE</span>
+    <h1 id="heading">Connecting to Langfuse…</h1>
+    <p id="message" role="status">Loading your local evaluation workspace.</p>
+    <section id="recovery" hidden>
+      <p id="instructions">Start the service from the repository root, then retry:</p>
+      <code id="command">uv run --extra evals chat-tft-evals up --no-browser</code>
+      <p id="service-note">For a WSL checkout, run this in your WSL terminal. Docker must be running.</p>
+      <button id="retry">Retry connection</button>
+    </section>
+  </main>
+</body>
+</html>

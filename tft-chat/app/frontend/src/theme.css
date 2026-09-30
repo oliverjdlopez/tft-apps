@@ -1,0 +1,141 @@
+/* Shared UI contract: shadcn/ui New York, light pastels, muted iris actions.
+   Canonical palette for ChatTFT and its desktop shell. */
+@layer theme, base, legacy, components, utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--primary);
+  --color-sidebar-primary-foreground: var(--primary-foreground);
+  --color-sidebar-accent: var(--accent);
+  --color-sidebar-accent-foreground: var(--foreground);
+  --color-sidebar-border: var(--border);
+  --color-sidebar-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 2px);
+}
+
+:root {
+  color-scheme: light;
+  --background: #fafafa;
+  --foreground: #292733;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #6350ac;
+  --primary-foreground: #ffffff;
+  --secondary: #e7def7;
+  --secondary-foreground: #4c3d70;
+  --muted: #f0f0f0;
+  --muted-foreground: #626262;
+  --accent: #ded1f2;
+  --accent-foreground: #4c3d70;
+  --destructive: #b91c1c;
+  --border: #dedce3;
+  --input: #a3a3a3;
+  --ring: #6350ac;
+  --sidebar: #efebf7;
+  --sidebar-foreground: #171717;
+  --radius: 0.625rem;
+  --success: #15803d;
+  --warning: #92400e;
+  --info: #4338ca;
+
+  /* Decorative washes stay separate from status and chart colors. */
+  --panel-lilac: #e9dff8;
+  --panel-sage: #dff2e9;
+  --panel-sand: #fff0d3;
+  --panel-sand-quiet: #fff7e7;
+  --panel-sky: #e0edfc;
+  --workspace-canvas: #f3f5fb;
+  --panel-edge: #c8d8ed;
+  --field-surface: #ffffff;
+  --panel-lilac-faint: #f1eafb;
+  --button-surface: #e9dff8;
+  --button-border: #c7b4e5;
+  --button-ink: #4f3775;
+  --dialog-surface: #f2eafa;
+  --dialog-overlay: #302a452e;
+
+  /* Domain renderers retain descriptive aliases while sharing one palette. */
+  --bg: var(--background);
+  --surface-1: var(--card);
+  --surface-2: var(--secondary);
+  --surface-3: #e5e5e5;
+  --surface-hover: #17171708;
+  --raised: #ffffff;
+  --line: var(--border);
+  --line-strong: var(--input);
+  --text: var(--foreground);
+  --text-dim: #404040;
+  --text-muted: var(--muted-foreground);
+  --brand-accent: var(--primary);
+  --accent-soft: #6350ac0d;
+  --accent-line: #6350ac40;
+  --gold: #926500;
+  --good: var(--success);
+  --warn: var(--warning);
+  --bad: #b91c1c;
+  --error: var(--bad);
+  --grad: var(--primary);
+  --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --radius-sm: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 1px 3px #00000014;
+  --sidebar-w: 232px;
+  --sidebar-w-collapsed: 64px;
+  --panel: var(--card);
+  --panel-soft: var(--secondary);
+  --mint: var(--primary);
+  --mint-dark: var(--secondary);
+  --orange: var(--warning);
+}
+
+@layer base {
+  * { border-color: var(--border); }
+  html, body, #root { min-height: 100%; }
+  body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--sans); font-size: 14px; line-height: 1.5; }
+  button:not(:disabled), [role="button"]:not([aria-disabled="true"]) { cursor: pointer; }
+  button, input, select, textarea { font: inherit; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+}
+
+@layer components {
+  [data-slot="table-container"] { min-width: 0; max-width: 100%; }
+  [data-slot="table-cell"] { white-space: normal; overflow-wrap: anywhere; }
+  [data-slot="native-select-wrapper"] { min-width: 0; max-width: 100%; }
+  [data-slot="dialog-content"], [data-slot="alert-dialog-content"] { max-height: calc(100dvh - 32px); overflow-y: auto; }
+  [data-slot="button"] { max-width: 100%; }
+  [data-slot="input"][type="file"] { height: auto; min-height: 36px; }
+  .ui-page-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  .ui-panel { min-width: 0; padding: 24px; }
+  .ui-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .ui-field { display: grid; min-width: 0; gap: 8px; }
+}

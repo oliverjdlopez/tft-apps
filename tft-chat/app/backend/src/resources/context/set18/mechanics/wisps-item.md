@@ -1,0 +1,23 @@
+---
+name: set-18-wisps-item
+description: Item Wisp reference with named effects, base/upgraded/prismatic variants, prices, stage eligibility, cooldowns and augment exclusions. Use for named Wisp offers and restrictions. Excludes exact selection weights and full effect tooltips.
+kind: mechanic
+sets: 18
+---
+
+# Wisps: Item
+
+Set 18, Enchanted Wilds, patch 18.1.
+
+Effect strength and extra benefits can differ by variant. Re-offer cooldown counts Wisp shops after an offer, not rounds or purchases.
+
+- **Artifactinate (base)** — exchanges components, including equipped recipes, for an Artifact choice; 2 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 20 Wisp shops. Conditions: At least 3 item components, counting completed items. Excluded by: Spirit Of Redemption, Promised Protection, Lucky Gloves, Lucky Gloves+, Solo Plate, Seraphim's Staff, Heart of Steel, Deadlier Blades, Deadlier Caps, Living Forge, Forged In Strength, Portable Forge. Modes: Standard, Double Up, Tockers.
+- **Artifactinate (upgraded)** — exchanges components, including equipped recipes, for an Artifact choice; 2 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 20 Wisp shops. Conditions: At least 3 item components, counting completed items. Excluded by: Spirit Of Redemption, Promised Protection, Lucky Gloves, Lucky Gloves+, Solo Plate, Seraphim's Staff, Heart of Steel, Deadlier Blades, Deadlier Caps, Living Forge, Forged In Strength, Portable Forge. Modes: Standard, Double Up, Tockers.
+- **Blood and Iron (base)** — component reward after enough champion deaths; 3 gold; tier 2.Rabbit; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 20 Wisp shops. Excluded by: Solo Leveling. Modes: Standard, Double Up, Tockers.
+- **Blood and Iron (upgraded)** — component reward after enough champion deaths; 3 gold; tier 2.Rabbit; offer windows 2-1–2-7; re-offer cooldown 20 Wisp shops. Excluded by: Solo Leveling. Modes: Standard, Double Up, Tockers.
+- **Curio Cart (base)** — opens a priced equipment shop; 0 gold; tier 2; offer windows 3-5–4-1, 3-1–3-4, 4-2–4-7; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.
+- **Curio Cart (upgraded)** — opens a priced equipment shop; 0 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 3-5–4-1; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.
+- **Idle Craftsman (base)** — upgrades a benched component into one of its completed recipes; 4 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 20 Wisp shops. Conditions: At least 1 item components on your bench. Modes: Standard, Double Up, Tockers.
+- **Idle Craftsman (upgraded)** — upgrades a benched component into one of its completed recipes; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 20 Wisp shops. Conditions: At least 1 item components on your bench. Modes: Standard, Double Up, Tockers.
+- **Peddler (base)** — opens a priced random equipment shop; 0 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.
+- **Peddler (upgraded)** — opens a priced random equipment shop; 0 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.

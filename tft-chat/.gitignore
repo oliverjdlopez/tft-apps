@@ -1,0 +1,55 @@
+# For local usage
+SMALLTASKS.md
+
+
+
+# Bulk and artifacts
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+app/frontend/node_modules/
+app/frontend/dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+.env
+chat_tft.ini
+*.dump
+evals/sample_results/
+tmp/eval_results.json
+tmp/benchmarks/
+cuda-keyring_*.deb
+transcription_runs/
+scripts/transcription/output/
+*.db
+evals/prompt_tuning_runs/
+*_accessKeys.csv
+.claude/settings.local.json
+.idea/
+*.pem
+docs/_build/
+docs/reference/api/generated/
+app/backend/src/domain/tools/db_tools/*_tools.log
+app/backend/src/domain/assistants/prompt_tokens.log*
+evals/promptfoo/node_modules/
+evals/.promptfoo/
+
+# Local Langfuse credentials and experiment job state
+evals/langfuse/.env
+evals/langfuse/.runtime/
+evals/langfuse/snapshots/.catalog.lock
+**/node_modules
+
+
+# Disposable offline composition history and supervisor lock
+.runtime/compositions/
+
+# Downloaded Community Dragon catalogs and images
+app/static/
+
+# Local profile info
+profiles/

@@ -1,0 +1,6220 @@
+[
+  {
+    "name": "detail",
+    "schema": "CompositionDetailResponse",
+    "valid": true,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "list",
+    "schema": "CompositionListResponse",
+    "valid": true,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "families": [
+        {
+          "family_id": "fixture-jinx",
+          "label": "Jinx investment",
+          "description": "Illustrative fixture; final-board observations do not encode positioning.",
+          "assigned_boards": 12,
+          "eligible_population_boards": 24,
+          "play_share": 0.5,
+          "variation_count": 0,
+          "preview": {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "omitted_requirements": 0,
+            "alternative_patterns": 0
+          }
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing-schema_version",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing-context",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing-profile",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing-warnings",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-()",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ],
+      "unexpected": "must reject"
+    }
+  },
+  {
+    "name": "unknown-('context',)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null,
+        "unexpected": "must reject"
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('family',)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": [],
+        "unexpected": "must reject"
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('family', 'defining_patterns', 0)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": [],
+            "unexpected": "must reject"
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('family', 'defining_patterns', 0, 'units', 0)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true,
+                "unexpected": "must reject"
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('profile',)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        },
+        "unexpected": "must reject"
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('profile', 'outcomes')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111,
+          "unexpected": "must reject"
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true,
+          "unexpected": "must reject"
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0, 'board')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ],
+            "unexpected": "must reject"
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0, 'board', 'units', 0)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ],
+                "unexpected": "must reject"
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0, 'board', 'units', 0, 'unit')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx",
+                  "unexpected": "must reject"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0, 'board', 'units', 0, 'items', 0)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    },
+                    "unexpected": "must reject"
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0, 'board', 'traits', 0)",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1,
+                "unexpected": "must reject"
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0, 'assignment')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership",
+            "unexpected": "must reject"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "unknown-('examples', 0, 'outcome')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null,
+            "unexpected": "must reject"
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('examples', 0, 'board', 'units', 1, 'occurrence_index')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('examples', 0, 'board', 'units', 0, 'items', 1, 'slot')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('examples', 0, 'board', 'units', 0, 'items', 1, 'slot')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 3,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('examples', 0, 'board', 'traits', 0, 'tier_current')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": -1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('examples', 0, 'board', 'units', 0, 'star_level')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 0,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('examples', 0, 'assignment', 'family_id')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": null,
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('profile', 'play_share')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('profile', 'outcomes', 'observed_boards')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 999,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('profile', 'outcomes', 'state')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "suppressed",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('profile', 'outcomes', 'top4_rate')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 12,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 1.2,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "invalid-('profile', 'joint_patterns', 0, 'matching_boards')",
+    "schema": "CompositionDetailResponse",
+    "valid": false,
+    "value": {
+      "schema_version": "composition.v1",
+      "context": {
+        "source_kind": "fixture",
+        "population_kind": "discovery_sample",
+        "patch": "fixture",
+        "set_number": 17,
+        "queue_id": 1100,
+        "snapshot_revision": "fixture.v1",
+        "taxonomy_revision": "fixture.v1",
+        "feature_revision": "structure.v1",
+        "algorithm_id": null,
+        "algorithm_version": null,
+        "experiment_id": null
+      },
+      "family": {
+        "family_id": "fixture-jinx",
+        "label": "Jinx investment",
+        "description": "Illustrative fixture; final-board observations do not encode positioning.",
+        "defining_patterns": [
+          {
+            "pattern_id": "jinx-leona",
+            "label": "Itemized Jinx with Leona",
+            "units": [
+              {
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "min_copies": 1,
+                "itemized": true
+              },
+              {
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "min_copies": 1,
+                "itemized": null
+              }
+            ],
+            "traits": []
+          }
+        ],
+        "representative_observation_ids": [
+          "example-000"
+        ],
+        "variations": []
+      },
+      "profile": {
+        "family_id": "fixture-jinx",
+        "assigned_boards": 12,
+        "eligible_population_boards": 24,
+        "play_share": 0.5,
+        "joint_patterns": [
+          {
+            "pattern": {
+              "pattern_id": "jinx-leona",
+              "label": "Itemized Jinx with Leona",
+              "units": [
+                {
+                  "unit": {
+                    "key": "Jinx",
+                    "name": "Jinx"
+                  },
+                  "min_copies": 1,
+                  "itemized": true
+                },
+                {
+                  "unit": {
+                    "key": "Leona",
+                    "name": "Leona"
+                  },
+                  "min_copies": 1,
+                  "itemized": null
+                }
+              ],
+              "traits": []
+            },
+            "matching_boards": 999,
+            "eligible_boards": 12
+          }
+        ],
+        "outcomes": {
+          "state": "available",
+          "observed_boards": 9,
+          "placement_counts": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            0,
+            1,
+            1
+          ],
+          "avg_placement": 4.0,
+          "top4_rate": 0.6666666666666666,
+          "win_rate": 0.1111111111111111
+        }
+      },
+      "examples": [
+        {
+          "board": {
+            "observation_id": "example-000",
+            "level": null,
+            "units": [
+              {
+                "occurrence_index": 0,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 2,
+                "items": [
+                  {
+                    "slot": 0,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  },
+                  {
+                    "slot": 1,
+                    "item": {
+                      "key": "fixture:blade",
+                      "name": "Blade"
+                    }
+                  }
+                ]
+              },
+              {
+                "occurrence_index": 1,
+                "unit": {
+                  "key": "Leona",
+                  "name": "Leona"
+                },
+                "star_level": 2,
+                "items": []
+              },
+              {
+                "occurrence_index": 2,
+                "unit": {
+                  "key": "Jinx",
+                  "name": "Jinx"
+                },
+                "star_level": 1,
+                "items": []
+              }
+            ],
+            "traits": [
+              {
+                "trait": {
+                  "key": "Bastion",
+                  "name": "Bastion"
+                },
+                "num_units": 2,
+                "tier_current": 1,
+                "style": 1
+              },
+              {
+                "trait": {
+                  "key": "Unknown",
+                  "name": "Unreported trait"
+                },
+                "num_units": null,
+                "tier_current": null,
+                "style": null
+              }
+            ]
+          },
+          "outcome": {
+            "observation_id": "example-000",
+            "placement": null
+          },
+          "assignment": {
+            "observation_id": "example-000",
+            "status": "assigned",
+            "family_id": "fixture-jinx",
+            "variation_id": null,
+            "candidates": [],
+            "explanation": "Illustrative fixture membership"
+          },
+          "is_representative": true
+        }
+      ],
+      "warnings": [
+        {
+          "code": "fixture",
+          "message": "Illustrative fixtures, not published analytics."
+        }
+      ]
+    }
+  },
+  {
+    "name": "empty",
+    "schema": "OutcomeSummary",
+    "valid": true,
+    "value": {
+      "state": "empty",
+      "observed_boards": 0,
+      "placement_counts": null,
+      "avg_placement": null,
+      "top4_rate": null,
+      "win_rate": null
+    }
+  },
+  {
+    "name": "suppressed",
+    "schema": "OutcomeSummary",
+    "valid": true,
+    "value": {
+      "state": "suppressed",
+      "observed_boards": 0,
+      "placement_counts": null,
+      "avg_placement": null,
+      "top4_rate": null,
+      "win_rate": null
+    }
+  },
+  {
+    "name": "unavailable",
+    "schema": "OutcomeSummary",
+    "valid": true,
+    "value": {
+      "state": "unavailable",
+      "observed_boards": 0,
+      "placement_counts": null,
+      "avg_placement": null,
+      "top4_rate": null,
+      "win_rate": null
+    }
+  },
+  {
+    "name": "probability--0.1",
+    "schema": "MatchScore",
+    "valid": false,
+    "value": {
+      "name": "responsibility",
+      "value": -0.1,
+      "kind": "model_probability",
+      "higher_is_better": true
+    }
+  },
+  {
+    "name": "probability-0.5",
+    "schema": "MatchScore",
+    "valid": true,
+    "value": {
+      "name": "responsibility",
+      "value": 0.5,
+      "kind": "model_probability",
+      "higher_is_better": true
+    }
+  },
+  {
+    "name": "probability-1.1",
+    "schema": "MatchScore",
+    "valid": false,
+    "value": {
+      "name": "responsibility",
+      "value": 1.1,
+      "kind": "model_probability",
+      "higher_is_better": true
+    }
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "config": {
+    "action": "run",
+    "cases": [],
+    "concurrency": 4,
+    "data_snapshot_label": null,
+    "dataset_version": null,
+    "repetitions": 1,
+    "selection_live": false,
+    "snapshot": null,
+    "variants": [
+      {
+        "model": null,
+        "name": "baseline",
+        "prompts": {}
+      }
+    ]
+  },
+  "dataset_name": "chattft/unit-expert",
+  "items": [],
+  "prompts": {},
+  "schema_version": 3,
+  "schemas": {
+    "expected_output": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "reference": {
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "input": {
+      "type": "string"
+    }
+  },
+  "suite": {
+    "assistant": "unit_expert",
+    "database": null,
+    "description": "Manual ChatTFT investigations.",
+    "execution": "live",
+    "family": "assistant",
+    "managed_workflow": true,
+    "max_turns": 10,
+    "name": "unit-expert"
+  }
+}

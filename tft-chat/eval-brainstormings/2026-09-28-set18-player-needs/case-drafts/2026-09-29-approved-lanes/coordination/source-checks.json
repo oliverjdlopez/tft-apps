@@ -1,0 +1,677 @@
+{
+  "stage": "case-drafting",
+  "sources": [
+    {
+      "id": "COORD-S01",
+      "url": "https://tactics.tools/units/da_18_azir",
+      "retrieved_at_utc": "2026-09-29T07:23:27.897023+00:00",
+      "access_status": "opened readable summary and incomplete item table",
+      "observations": [
+        "Ranked, Diamond+, 18.3b, Any stars; 136k displayed games, average 4.55. Three-star row displays 21.5% and 3.61 average. Zero-item and three-item marginals display 41.6%/4.64 and 44.5%/4.38."
+      ],
+      "limitations": [
+        "No star-by-item-count cross-tab; no role attribution, exact build cohort, period or region. Synergy icons do not identify missing item row labels."
+      ],
+      "verification_use": "Potential UN4-2 Azir and CO4-1 role-mixing cases; assign exact case IDs only after reviewing final drafts."
+    },
+    {
+      "id": "COORD-S02",
+      "url": "https://tactics.tools/units/da_nidalee18_ap",
+      "retrieved_at_utc": "2026-09-29T07:23:27.897023+00:00",
+      "access_status": "opened readable summary and incomplete item table",
+      "observations": [
+        "Displayed Ranked, Diamond+, 18.3b, Any; 213k games and 4.40 average; two-star 79.0% and 4.05."
+      ],
+      "limitations": [
+        "Route suffix does not independently validate chosen-form encoding or an AP-item cohort. Missing row labels prevent build assignments. No matched AP/AD board comparison."
+      ],
+      "verification_use": "Potential UN4-2 build cases."
+    },
+    {
+      "id": "COORD-S03",
+      "url": "https://tactics.tools/team-compositions",
+      "retrieved_at_utc": "2026-09-29T07:23:27.897023+00:00",
+      "access_status": "opened controls and composition rows",
+      "observations": [
+        "Ranked/Diamond+/18.3b body; title says Set 15 and body navigation says Set 18.",
+        "Veigar/Ornn 4.30 average, 53.4% top four, 15.7% win; Zyra/Amumu 4.33, 52.5%, 14.3%. Veigar example shows Dawncore, Ludens and radiant Blue; exact counted cohort is not established by icons."
+      ],
+      "limitations": [
+        "No exact ordinary-resource or proposed package filters applied; no counts, region or collection window. Rows are clusters, not verified strict cohorts."
+      ],
+      "verification_use": "Potential CO4-1 repertoire and future package cases."
+    },
+    {
+      "id": "COORD-S04",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "retrieved_at_utc": "2026-09-29T07:23:27.897023+00:00",
+      "access_status": "opened post and reply tree",
+      "observations": [
+        "Azir-three claim receives trait-bot explanation, explicit star-level correction, item-allocation counterclaim, and sample-size challenge. These are not verified measured conclusions."
+      ],
+      "limitations": [
+        "Commenter numerical claims are not primary statistical evidence."
+      ],
+      "verification_use": "Motivation verification; no gameplay recommendation."
+    },
+    {
+      "id": "COORD-S05",
+      "url": "https://noxutft.com/tft-champions/aphelios",
+      "retrieved_at_utc": "2026-09-29T07:24:30.374367+00:00",
+      "access_status": "opened complete named build rows",
+      "observations": [
+        "Updated September 25 2026; claims ranked dataset. IE/Kraken/Strikers Flail in Rapidfire Aphelios shows 3.96, 901 games; Deathblade/Rageblade/Kraken in Lunar Nidalee shows 3.93, 8.2k."
+      ],
+      "limitations": [
+        "Different comp labels, no rank/region/stars/period or exact subpatch. Supports existence of a displayed no-Rageblade row, not matched superiority or statistical significance."
+      ],
+      "verification_use": "IT-1-C01"
+    },
+    {
+      "id": "COORD-S06",
+      "url": "https://seemeta.com/en/tft/set-18/champions/Brambleback",
+      "retrieved_at_utc": "2026-09-29T07:24:30.374367+00:00",
+      "access_status": "opened named item marginals",
+      "observations": [
+        "September 27 update, Set18/18.3, 13082 unit games. Titan average4.11 vs Edge4.21; named marginal rows readable."
+      ],
+      "limitations": [
+        "Not fixed Bloodthirster+IE trios; no relevant per-cohort counts or full population. Source causal language is not adopted."
+      ],
+      "verification_use": "IT-1-C02"
+    },
+    {
+      "id": "COORD-S07",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-3/",
+      "retrieved_at_utc": "2026-09-29T08:33:23.511334+00:00",
+      "access_status": "opened official updates",
+      "observations": [
+        "18.3B section lists faster Brambleback cast time and changes to Blackthorn AP sacrifice and KhaZix."
+      ],
+      "limitations": [
+        "Rules changes do not establish build ranking or statistical window."
+      ],
+      "verification_use": "IT-1-C02 and CO4-1-C03"
+    },
+    {
+      "id": "COORD-S08",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-2/",
+      "retrieved_at_utc": "2026-09-29T08:33:23.511334+00:00",
+      "access_status": "opened official correction",
+      "observations": [
+        "Brambleback armor-ignore correction explicitly discusses Titan, Bloodthirster and Edge context."
+      ],
+      "limitations": [
+        "Temporal and mechanics support only; not outcome comparison."
+      ],
+      "verification_use": "IT-1-C02"
+    },
+    {
+      "id": "COORD-S09",
+      "url": "https://seemeta.com/en/tft/set-18/champion-items/Azir/singles",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened redirect to Azir champion page; September26 update; Adaptive Helm marginal 4.17 average,58.7% top4,13.77% win,0.9% pick."
+      ],
+      "limitations": [
+        "No exact trio, stars, joint Malphite allocation, item count or compatible cohort metadata."
+      ],
+      "verification_use": "IT-2-C02"
+    },
+    {
+      "id": "COORD-S10",
+      "url": "https://noxutft.com/tft-champions/ashe",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened earlier this case-stage turn: Shojin/Red Buff/Last Whisper row3.36/6.1k Juggernaut Ashe;3.12/1.1k Juggernaut Sivir,September26."
+      ],
+      "limitations": [
+        "Comp labels do not establish simultaneous two-star holders or the six-item allocation."
+      ],
+      "verification_use": "IT-2-C03"
+    },
+    {
+      "id": "COORD-S11",
+      "url": "https://tactics.tools/units/da_18_veigar",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened earlier this case-stage turn: Ranked/Diamond+/18.3b/Any;159k;Veigar3 average4.21 versus2star4.46;three-item4.18 versuszero-item4.59."
+      ],
+      "limitations": [
+        "Separate marginals, no star/item intersection or role inference;period/region unknown."
+      ],
+      "verification_use": "UN4-1-C01"
+    },
+    {
+      "id": "COORD-S12",
+      "url": "https://mobalytics.gg/tft/items/artifacts",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened Set18 artifact listing; independently read Flickerblade entry."
+      ],
+      "limitations": [
+        "Identity corroboration only; numeric effects do not rank Yi2/Draven1. Conflicting external tooltip remains unresolved."
+      ],
+      "verification_use": "UN4-1-C02"
+    },
+    {
+      "id": "COORD-S13",
+      "url": "https://noxutft.com/tft-champions/veigar",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened September23 table: Blue Buff/Gunblade/Jeweled Gauntlet Blackthorn Veigar4.23/569."
+      ],
+      "limitations": [
+        "No star level, full-board resource restrictions, exact patch/rank/region/period."
+      ],
+      "verification_use": "UN4-1-C01"
+    },
+    {
+      "id": "COORD-S14",
+      "url": "https://noxutft.com/tft-champions/ahri",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened September25 table: Invoker Emblem/JG/Deathcap3.89/4.5k in Invoker Ahri;JG/Shojin/Flail4.31/1.5k in Blossom Ahri."
+      ],
+      "limitations": [
+        "Different items and named comps; Blossom label does not imply no active Invoker. No matched population."
+      ],
+      "verification_use": "TR-1-C01"
+    },
+    {
+      "id": "COORD-S15",
+      "url": "https://noxutft.com/tft-champions/soraka",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened September25 table: Gunblade/Deathcap/Shojin Executioner Malphite3.84/608."
+      ],
+      "limitations": [
+        "No Executioner count or Kennen presence; cannot answer conditional comparison."
+      ],
+      "verification_use": "TR-1-C02"
+    },
+    {
+      "id": "COORD-S16",
+      "url": "https://tactics.tools/info/traits",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "readable",
+      "observations": [
+        "Opened Executioner rule: three introduces bleed;four increases it."
+      ],
+      "limitations": [
+        "Rules reference, not outcome evidence; unrelated trait numeric freshness conflicts remain documented."
+      ],
+      "verification_use": "TR-1-C02"
+    },
+    {
+      "id": "COORD-S17",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wpb4o0/183_bpatch_live_k6_nerf_dark_coven_disabled/",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "limited_or_failed",
+      "observations": [
+        "Opened extraction but Kennen find returned no match."
+      ],
+      "limitations": [
+        "Could not independently recover specific corrective reply in this extraction; no claim that the branch is absent from Reddit."
+      ],
+      "verification_use": "TR-1-C02"
+    },
+    {
+      "id": "COORD-S18",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wdpeq4/removed_by_moderator/",
+      "retrieved_at_utc": "2026-09-29T08:42:10.256446+00:00",
+      "access_status": "limited_or_failed",
+      "observations": [
+        "Independent coordinator fetch/find returned Internal Error."
+      ],
+      "limitations": [
+        "Exact-package reply motivation remains researcher-reported; not independently reproduced here."
+      ],
+      "verification_use": "UN4-1-C02"
+    },
+    {
+      "id": "COORD-S19",
+      "url": "https://noxutft.com/tft-champions/elise",
+      "retrieved_at_utc": "2026-09-29T08:43:22.475036+00:00",
+      "access_status": "opened named-build rows",
+      "observations": [
+        "September23: Stoneplate/Rageblade/Titan4.07/3.9k Vanguard Morgana;Ravager emblem/Rageblade/Titan4.55/2.3k Vanguard Elise."
+      ],
+      "limitations": [
+        "Different named boards and third item; no fixed stars, exact traits, collection period or subpatch."
+      ],
+      "verification_use": "IT-3-C02"
+    },
+    {
+      "id": "COORD-S20",
+      "url": "https://noxutft.com/tft-champions/morgana",
+      "retrieved_at_utc": "2026-09-29T08:43:22.475036+00:00",
+      "access_status": "opened named-build rows",
+      "observations": [
+        "September23: Morello/Deathcap/Void3.74/5.4k Invoker Ahri;Helm/Morello/Void3.85/445 Vanguard Morgana and3.95/178 Invoker Morgana."
+      ],
+      "limitations": [
+        "No Ahri item/star restriction; labels and third item differ; no matched cohort."
+      ],
+      "verification_use": "IT-3-C04"
+    },
+    {
+      "id": "COORD-S21",
+      "url": "https://tactics.tools/units/da_18_morgana",
+      "retrieved_at_utc": "2026-09-29T08:47:21.931076+00:00",
+      "access_status": "opened; indexed-only later reply where specified",
+      "observations": [
+        "Opened marginal overview:48k,4.48 average,50.6% top4,12.0% win."
+      ],
+      "limitations": [
+        "Mixed stars,roles and partners; no Ahri/Sivir cohort."
+      ],
+      "verification_use": "UN4-3-C01"
+    },
+    {
+      "id": "COORD-S22",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w6ujyg/draven_comp_what_should_i_have_done_differently/",
+      "retrieved_at_utc": "2026-09-29T08:47:21.931076+00:00",
+      "access_status": "opened; indexed-only later reply where specified",
+      "observations": [
+        "Opened explicit disagreement over Taric2 with/without Vanguard versus Amumu2 with Juggernaut;companion Alistar/Hecarim reply also visible."
+      ],
+      "limitations": [
+        "Discussion motivation only; original image not inspected; no verified ranked matched outcomes."
+      ],
+      "verification_use": "UN4-3-C05"
+    },
+    {
+      "id": "COORD-S23",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1winnef/whats_your_hear_me_out_comp_this_patch/",
+      "retrieved_at_utc": "2026-09-29T08:47:21.931076+00:00",
+      "access_status": "opened; indexed-only later reply where specified",
+      "observations": [
+        "Opened Morgana/Ahri suggestion,Sivir counter-suggestion,and later ceiling caveat. Also read Elise ordinary build and emblem replacing Titan reply."
+      ],
+      "limitations": [
+        "Anecdotes, not outcome support; same discussion is one source."
+      ],
+      "verification_use": "UN4-3-C01;IT-3-C02"
+    },
+    {
+      "id": "COORD-S24",
+      "url": "https://tactics.tools/team-compositions",
+      "retrieved_at_utc": "2026-09-29T08:47:21.931076+00:00",
+      "access_status": "opened; indexed-only later reply where specified",
+      "observations": [
+        "Opened illustrative Amumu/Aphelios lineup includes Nidalee followed by Ravager Emblem/Sterak icons."
+      ],
+      "limitations": [
+        "No recurrence frequencies, no exact observed roster cohort or no-emblem generalization;Set15-title/Set18-nav conflict."
+      ],
+      "verification_use": "CO4-2-C03"
+    },
+    {
+      "id": "COORD-S25",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "retrieved_at_utc": "2026-09-29T08:47:21.931076+00:00",
+      "access_status": "opened; indexed-only later reply where specified",
+      "observations": [
+        "Opened Warwick/Murkwolf reroll expectation and counterargument. Fresh indexed reply tree shows seven-Riftbeast Murkwolf anecdote; direct find did not recover that reply."
+      ],
+      "limitations": [
+        "Later anecdote independently read in indexed extraction only, not complete opened tree; no counted family/outcome result."
+      ],
+      "verification_use": "CO4-2-C06"
+    },
+    {
+      "id": "COORD-S26",
+      "url": "https://tftcodex.com/champions/kayle.html",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read named rows:Wits End4.05/4458;Shiv4.42/3840;Infinity Force4.78/398. Page states150-game item display floor."
+      ],
+      "limitations": [
+        "Holder marginals, no Kayle2/Aphelios2 exact builds or tank restriction."
+      ],
+      "verification_use": "IT-4-C01"
+    },
+    {
+      "id": "COORD-S27",
+      "url": "https://tftcodex.com/champions/aphelios.html",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read Gold Collector4.17/3538,58.0%top4,10.5%win."
+      ],
+      "limitations": [
+        "No simultaneous Kayle or fixed co-items/frontline;differently dated snapshot."
+      ],
+      "verification_use": "IT-4-C01"
+    },
+    {
+      "id": "COORD-S28",
+      "url": "https://tftcodex.com/champions/sett.html",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read Hellfire4.95/204 and Void Gauntlet4.33/2993."
+      ],
+      "limitations": [
+        "No six-Brawler,Ravager emblem,exact third-slot or board restrictions."
+      ],
+      "verification_use": "IT-4-C05"
+    },
+    {
+      "id": "COORD-S29",
+      "url": "https://tftcodex.com/about/index.html",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read ranked final-board methodology,default Diamond+,discovery-player fallback rank and varying rolling windows/early previous-patch inclusion."
+      ],
+      "limitations": [
+        "Method page update cannot retrospectively fix older page window;regions unspecified;source claims not independently audited."
+      ],
+      "verification_use": "IT-4-C01;IT-4-C05;later package research"
+    },
+    {
+      "id": "COORD-S30",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1winnef/whats_your_hear_me_out_comp_this_patch/",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read six-Brawler Ravager Sett comment and explicitly hypothetical Hellfire/Void suggestion."
+      ],
+      "limitations": [
+        "Motivation only, no measured outcome or known ranked cohort."
+      ],
+      "verification_use": "IT-4-C05"
+    },
+    {
+      "id": "COORD-S31",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-3/",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read Pact mana on tank cast15 to10,Collector AD40 to35,Shiv AP15 to25 official changes."
+      ],
+      "limitations": [
+        "Rules changes do not date sampled third-party matches."
+      ],
+      "verification_use": "IT-4-C06 extra check"
+    },
+    {
+      "id": "COORD-S32",
+      "url": "https://tactics.tools/info/traits",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read Elderwood5/7 additions and plant star scaling;Avatar chosen trait counts twice;Executioner2 membership previously verified in S16."
+      ],
+      "limitations": [
+        "Rules establish constructed package legality only;no outcome or historical form encoding."
+      ],
+      "verification_use": "TR-2-C01;TR-2-C02"
+    },
+    {
+      "id": "COORD-S33",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w8390h/i_cant_understand_elderwood/",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Opened Ezreal question and frontline/Executioner replies."
+      ],
+      "limitations": [
+        "Opinions motivate; no scoped Elderwood package outcomes."
+      ],
+      "verification_use": "TR-2-C01"
+    },
+    {
+      "id": "COORD-S34",
+      "url": "https://tactics.tools/info/units",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read distinct Lux form entries,including Inferno, and Taric identity."
+      ],
+      "limitations": [
+        "Identity page has stale numeric tooltips;no historical form-resolved outcome encoding verified."
+      ],
+      "verification_use": "TR-2-C02"
+    },
+    {
+      "id": "COORD-S35",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w8l16t/lux_where_is_she_good/",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Opened disagreement about Lux vertical/splash value and Inferno use."
+      ],
+      "limitations": [
+        "Constructed Ezreal roster is not supplied by this discussion;anecdotes not outcomes."
+      ],
+      "verification_use": "TR-2-C02"
+    },
+    {
+      "id": "COORD-S36",
+      "url": "https://tactics.tools/units/da_18_lillia",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read two-star marginal4.18;page18.3b."
+      ],
+      "limitations": [
+        "No Soraka/Zyra or tank-item condition."
+      ],
+      "verification_use": "UN4-4-C01"
+    },
+    {
+      "id": "COORD-S37",
+      "url": "https://tactics.tools/units/da_18_malphite",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read two-star marginal4.30;page18.3."
+      ],
+      "limitations": [
+        "Different patch label from Lillia;no requested carry/tank cohorts."
+      ],
+      "verification_use": "UN4-4-C01"
+    },
+    {
+      "id": "COORD-S38",
+      "url": "https://noxutft.com/tft-comps",
+      "retrieved_at_utc": "2026-09-29T08:52:42.996973+00:00",
+      "access_status": "opened relevant named rows or reference/replies",
+      "observations": [
+        "Read Executioner Draven4.28/51.7%top4/20.2%win/1.1M with Ezreal,Maokai and Draven emblem;Juggernaut Elder Dragon4.72/45.9%/18.1%/2.3M with Draven,Maokai and different supporting roster/items."
+      ],
+      "limitations": [
+        "Template stars not verified sample filters;no exact patch/rank/region/period or equal-investment contrast."
+      ],
+      "verification_use": "UN4-4-C03"
+    },
+    {
+      "id": "COORD-S39",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-primal-jungle-copy",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened guide tip",
+      "observations": [
+        "Guide explicitly suggests Amumu plus Vanguard instead of Blackthorn/Brawler."
+      ],
+      "limitations": [
+        "Candidate package, not measured ranking or an exact approved level-eight cohort."
+      ],
+      "verification_use": "CO4-3-C01"
+    },
+    {
+      "id": "COORD-S40",
+      "url": "https://tftcodex.com/comps/primal-nidalee-sivir-adaptor.html",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened header and variations",
+      "observations": [
+        "September 18 update, patch 18.2; Diamond+ 1,852, all ranks 2,932. Variants add Ashe/Hecarim, Tristana or Aphelios; the Aphelios row drops Sivir."
+      ],
+      "limitations": [
+        "Historical family cannot answer a current exact Nidalee/Sivir core; variation counts are not mutually exclusive matched cohorts."
+      ],
+      "verification_use": "CO4-3-C01"
+    },
+    {
+      "id": "COORD-S41",
+      "url": "https://tftcodex.com/comps/blossom-master-yi.html",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened variations",
+      "observations": [
+        "Rengar-free rows add Gromp/Taric (4.08, 28,345), Gnar (3.70, 6,644) or Zyra (3.60, 1,666)."
+      ],
+      "limitations": [
+        "No fixed Vi/Krug tank role or investment match. Do not sum overlapping cores or assign headline rank/window to every panel."
+      ],
+      "verification_use": "CO4-3-C02"
+    },
+    {
+      "id": "COORD-S42",
+      "url": "https://tftcodex.com/comps/primal-aphelios-nidalee.html",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened same-level options and scope",
+      "observations": [
+        "September 29 04:50 UTC, patch 18.3 header. Level-nine common eight reproduced. Brambleback 2.85/17%/7.9k, Ivern 2.94/17%/7.5k, Alune 3.13/13%/18k; Alune marked most played. Level-nine group 75,133. Level section says all ranks, last 14 days; option text says this patch."
+      ],
+      "limitations": [
+        "Rounded counts and unresolved exact window; headline Diamond+ does not transfer to options. No star/item matched recommendation or causal improvement."
+      ],
+      "verification_use": "CO4-4-C03"
+    },
+    {
+      "id": "COORD-S43",
+      "url": "https://tftcodex.com/comps/riftbeast-elder-dragon-draven.html",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened same-level options and scope",
+      "observations": [
+        "September 29 00:52 UTC, patch 18.3 header. Common eight champion names reproduced. Level-ten Alune 1.55/68%/1.4k, Lux 1.58/66%/3.4k, Soraka 1.59/65%/999; group 16,579. Level section says all ranks/last 14 days; option text says this patch."
+      ],
+      "limitations": [
+        "No formal significance or matched investment; selected final boards are not pursuit success probabilities. Window unresolved and Lux variant unreported."
+      ],
+      "verification_use": "CO4-4-C04"
+    },
+    {
+      "id": "COORD-S44",
+      "url": "https://tactics.tools/info/set-update",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened Elder Dragon team-slot rule",
+      "observations": [
+        "Elder Dragon occupies two team slots and contributes two to Riftbeast."
+      ],
+      "limitations": [
+        "Legality reference only, not comparative outcome evidence."
+      ],
+      "verification_use": "CO4-4-C04"
+    },
+    {
+      "id": "COORD-S45",
+      "url": "https://tftflow.com/composition/set18/defender-cassiopeia",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened variants and comments",
+      "observations": [
+        "Six-Defender Cassiopeia guide lists Defender Rengar and Defender Kha'Zix variants at level eight. September 2 and 6 comments labeled 18.1b criticize upgraded Kha'Zix. Current page header says 18.3b."
+      ],
+      "limitations": [
+        "Guide versions and older anecdotes do not establish a current matched holder winner."
+      ],
+      "verification_use": "TR-3-C01"
+    },
+    {
+      "id": "COORD-S46",
+      "url": "https://topmeta.gg/en/items/hunter-emblem/",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened holder table and scope",
+      "observations": [
+        "Patch 18.2, four unnamed servers, ranked site framing. Camille 5.45 average/31.6% top four/5.4% win/6.9K; Nidalee 4.08/59.0%/12.7%/163K."
+      ],
+      "limitations": [
+        "No specific Caitlyn/Sivir board, star or rank filter; exact dates and named servers absent. Historical unmatched marginals only."
+      ],
+      "verification_use": "TR-3-C02"
+    },
+    {
+      "id": "COORD-S47",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wqk3eq/september_26_2026_daily_discussion_thread/",
+      "recorded_at_utc": "2026-09-29T09:00:11.868322+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened canonical thread; exact branch absent",
+      "observations": [
+        "Independent Hunter and Camille searches found neither term in the extracted canonical thread."
+      ],
+      "limitations": [
+        "Does not disprove the comment; exact motivating branch remains search-only."
+      ],
+      "verification_use": "TR-3-C02"
+    },
+    {
+      "id": "COORD-S48",
+      "url": "https://www.tftcodex.com/comps/juggernaut-amumu.html",
+      "recorded_at_utc": "2026-09-29T09:01:30.739376+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened readable panels",
+      "observations": [
+        "Opened September 26 18:41 UTC / 18.3 snapshot. Ivern replaces Azir/Rakan: 3.52 average, 18,320 games. Sivir replaces Azir/Kennen/Maokai: 5.66, 13,397. Level section all ranks/last 14 days has 182,368 versus all-rank bracket 131,272."
+      ],
+      "limitations": [
+        "Not matched exactly-six-Juggernaut cohorts; different frontline and carry membership. Panel scope mismatch unresolved."
+      ],
+      "verification_use": "TR-4-C01"
+    },
+    {
+      "id": "COORD-S49",
+      "url": "https://www.tftcodex.com/comps/solar-kayle-lunar.html",
+      "recorded_at_utc": "2026-09-29T09:01:30.739376+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened readable panels",
+      "observations": [
+        "Opened September 23 10:18 UTC / 18.3 family. Core has Aphelios one-star, Kayle/Sejuani/Leona three-star, Diana two-star. Core trait listing Solar3/Lunar2. Diamond+ 4.66/5,441, all ranks 4.59/20,394."
+      ],
+      "limitations": [
+        "Family title does not identify Eclipse; no upgrade-depth interaction. Variation/item totals do not share an established denominator with headline."
+      ],
+      "verification_use": "TR-4-C02"
+    },
+    {
+      "id": "COORD-S50",
+      "url": "https://tactics.tools/team-compositions",
+      "recorded_at_utc": "2026-09-29T09:01:30.739376+00:00",
+      "retrieval_date": "2026-09-29",
+      "access_status": "opened readable panels",
+      "observations": [
+        "Fresh opened Juggernaut Zyra/Amumu row: 4.33 average, 52.6% top four, 14.3% win. Earlier coordinator snapshot recorded 52.5%; both retrieval observations retained."
+      ],
+      "limitations": [
+        "No exact-six or carry-package filter or visible denominator; title Set15/body Set18 conflict remains."
+      ],
+      "verification_use": "TR-4-C01"
+    }
+  ],
+  "additional_retained_case_support": [
+    {
+      "case_id": "IT-4-C06",
+      "source_ids": [
+        "COORD-S31"
+      ],
+      "purpose": "Official Pact item change supports the final case tooltip-conflict caveat; supplemental to the two selected independent checks in this lane."
+    }
+  ]
+}

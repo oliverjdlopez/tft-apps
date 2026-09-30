@@ -1,0 +1,85 @@
+{
+  "lane": "CO4-1",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "CO4-1-C01",
+      "title": "An AP repertoire with ordinary resources",
+      "question": "What two or three AP comps are worth learning on 18.3B without relying on an artifact, emblem, or a big reroll high roll, and what core units and item needs distinguish them?",
+      "status": "provisional",
+      "origin": "Adaptation of the opened 18.2 AP-alternatives request, narrowed to asynchronous endgame repertoire investigation.",
+      "proposal_lineage": [
+        "CO4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S5",
+        "S7",
+        "S8",
+        "S10"
+      ],
+      "comparison": "Ordinary-resource AP families: cores, item allocation and outcomes, avoiding dependence on multiple three-stars.",
+      "unresolved_evidence": [
+        "Fully scoped counts and outcome distributions for the requested cohorts",
+        "Matched ordinary-resource or investment-role comparisons",
+        "Sensitivity to final-board selection and unobserved augment/player differences"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "CO4-1-C02",
+      "title": "Does Veigar belong in a top-four repertoire?",
+      "question": "For an ordinary-item AP repertoire on 18.3B, should Veigar\u2013Ornn be on my list if I care more about top fours than firsts, or is its good placement mostly coming from specialist-item boards?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of the AP repertoire request and conflicting Veigar artifact/top-four claims; exact wording is not a quotation.",
+      "proposal_lineage": [
+        "CO4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S7",
+        "S10"
+      ],
+      "comparison": "Ordinary versus specialist Veigar\u2013Ornn boards and an ordinary Zyra\u2013Amumu alternative, emphasizing top-four membership.",
+      "unresolved_evidence": [
+        "Fully scoped counts and outcome distributions for the requested cohorts",
+        "Matched ordinary-resource or investment-role comparisons",
+        "Sensitivity to final-board selection and unobserved augment/player differences"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "CO4-1-C03",
+      "title": "What Azir-three statistics actually describe",
+      "question": "Is Azir reroll actually a reasonable comp to choose on 18.3B, or do his good three-star stats mostly come from boards where someone else is carrying? What would make the Azir version worth choosing?",
+      "status": "disputed",
+      "origin": "Directly discussion-motivated adaptation of the corrected three-star claim, role-mixing explanation and counterexample; exact wording is constructed.",
+      "proposal_lineage": [
+        "CO4-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S12"
+      ],
+      "comparison": "Azir-three investment-role shares and like-core outcomes, including three-item Azir/zero-item Kha sensitivity.",
+      "unresolved_evidence": [
+        "Fully scoped counts and outcome distributions for the requested cohorts",
+        "Matched ordinary-resource or investment-role comparisons",
+        "Sensitivity to final-board selection and unobserved augment/player differences"
+      ],
+      "priority_verification": true
+    }
+  ]
+}

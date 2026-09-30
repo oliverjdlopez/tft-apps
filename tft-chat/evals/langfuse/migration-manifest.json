@@ -1,0 +1,2750 @@
+{
+  "assertions": [
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/unrelated_abstention",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/unrelated_abstention",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/unrelated_abstention",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/unrelated_abstention",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/simple_tooltip_abstention",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/simple_tooltip_abstention",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/simple_tooltip_abstention",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/simple_tooltip_abstention",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/explicit_selection",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/explicit_selection",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/explicit_selection",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/explicit_selection",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/multipart_analysis_workflow",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/multipart_analysis_workflow",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/multipart_analysis_workflow",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/multipart_analysis_workflow",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/transition_from_current_spot",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/transition_from_current_spot",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/transition_from_current_spot",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/transition_from_current_spot",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/statistical_reasoning",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/statistical_reasoning",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/statistical_reasoning",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/statistical_reasoning",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/resource_conversion",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/resource_conversion",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/resource_conversion",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/resource_conversion",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/meta_shape",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/meta_shape",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/meta_shape",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/meta_shape",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grounded_recommendation",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grounded_recommendation",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grounded_recommendation",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grounded_recommendation",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grain_and_denominator_integrity",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grain_and_denominator_integrity",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grain_and_denominator_integrity",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/grain_and_denominator_integrity",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/decision_query_design",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/decision_query_design",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/decision_query_design",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/decision_query_design",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/bias_and_cohort_pairing",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "required_skill_recall",
+        "selector": "required_skill_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/bias_and_cohort_pairing",
+      "check": "required_skill_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_skills_excluded",
+        "selector": "forbidden_skills_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/bias_and_cohort_pairing",
+      "check": "forbidden_skills_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "selection_policy",
+        "selector": "selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "skill_selection/bias_and_cohort_pairing",
+      "check": "selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_sample_size",
+          "threshold": 1,
+          "type": "regex",
+          "value": "\\b[0-9]+ boards\\b"
+        },
+        "kind": "trace",
+        "name": "reports_sample_size",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "dummy_assistant/deterministic_trace_checks_round_trip",
+      "check": "reports_sample_size",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "min_count": 2,
+          "name": "queried_at_least_twice",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "queried_at_least_twice",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "dummy_assistant/deterministic_trace_checks_round_trip",
+      "check": "queried_at_least_twice",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "routed_to_analyst",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "data_analyst"
+        },
+        "kind": "trace",
+        "name": "routed_to_analyst",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "dummy_assistant/deterministic_trace_checks_round_trip",
+      "check": "routed_to_analyst",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "analyst_finished_the_run",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "data_analyst"
+        },
+        "kind": "trace",
+        "name": "analyst_finished_the_run",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "dummy_assistant/deterministic_trace_checks_round_trip",
+      "check": "analyst_finished_the_run",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "no_live_riot_lookup",
+          "threshold": 1,
+          "type": "tool_not_called",
+          "values": [
+            "riot_match",
+            "riot_match_ids"
+          ]
+        },
+        "kind": "trace",
+        "name": "no_live_riot_lookup",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "dummy_assistant/deterministic_trace_checks_round_trip",
+      "check": "no_live_riot_lookup",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "data_analyst",
+          "min_count": 2,
+          "name": "ranks_holder_items",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_items"
+        },
+        "kind": "trace",
+        "name": "ranks_holder_items",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/multi_part_item_and_unit_analysis",
+      "check": "ranks_holder_items",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "data_analyst",
+          "min_count": 2,
+          "name": "queries_structured_rankings",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "queries_structured_rankings",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/multi_part_item_and_unit_analysis",
+      "check": "queries_structured_rankings",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_for_synthesis",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_for_synthesis",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/multi_part_item_and_unit_analysis",
+      "check": "hands_off_for_synthesis",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/multi_part_item_and_unit_analysis",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "multi_part_analysis_quality",
+        "rubric": "Score whether the answer addresses all five numbered questions in one coherent response: it ranks artifacts specifically for Morgana, ranks emblems specifically for Riven, compares the units present at the 5- and 7-Space-Groove breakpoints to identify the dropped units, does not fabricate an exact craftable-item-pair ranking when pair-level rows are unavailable, and provides two distinct 5-cost unit tables with one ordered by average placement and one by frequency. The answer should report the relevant outcome and support metrics, keep performance and frequency rankings distinct, avoid unsupported causal claims, and finish through final_responder.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "data_analyst/multi_part_item_and_unit_analysis",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "data_analyst",
+          "name": "resolves_trait_name",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "resolve_tft_names"
+        },
+        "kind": "trace",
+        "name": "resolves_trait_name",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/unit_deltas_within_trait_shell",
+      "check": "resolves_trait_name",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "data_analyst",
+          "name": "queries_unit_deltas",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "get_cohort_unit_deltas"
+        },
+        "kind": "trace",
+        "name": "queries_unit_deltas",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/unit_deltas_within_trait_shell",
+      "check": "queries_unit_deltas",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_for_synthesis",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_for_synthesis",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/unit_deltas_within_trait_shell",
+      "check": "hands_off_for_synthesis",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/unit_deltas_within_trait_shell",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "cohort_delta_quality",
+        "rubric": "Score whether Dark Star is resolved before it defines the cohort, the answer uses a unit cohort-delta breakout rather than treating a frequency-ordered result as an effect ranking, explains that negative placement delta is better, supports claims with entity and comparator samples, treats null deltas as unavailable rather than neutral, avoids causal claims, and finishes through final_responder.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "data_analyst/unit_deltas_within_trait_shell",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "data_analyst",
+          "name": "ranks_units_with_scalar_trait",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "ranks_units_with_scalar_trait",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/units_on_named_trait_boards",
+      "check": "ranks_units_with_scalar_trait",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_for_synthesis",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_for_synthesis",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/units_on_named_trait_boards",
+      "check": "hands_off_for_synthesis",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/units_on_named_trait_boards",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "trait_unit_quality",
+        "rubric": "Score whether Dark Star is resolved before filtering, rank_units receives the resolved scalar trait condition, units are ranked from queried data on Dark Star boards with board counts and outcome metrics, the answer avoids claiming the trait or unit caused the result, and final_responder produces the user-facing response.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "data_analyst/units_on_named_trait_boards",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "ranks_emblems",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_items"
+        },
+        "kind": "trace",
+        "name": "ranks_emblems",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_emblems",
+      "check": "ranks_emblems",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_for_synthesis",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_for_synthesis",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_emblems",
+      "check": "hands_off_for_synthesis",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_emblems",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "emblem_ranking_quality",
+        "rubric": "Score whether the answer presents exactly five emblems with no non-emblem contamination, ranked by queried average placement rather than popularity. It should include board counts plus placement/top-four/win metrics, preserve lower-is-better placement ordering, avoid unsupported causal claims, and finish through final_responder. The execution should use rank_items without name-resolving the emblem category. If the scoped data returns fewer than five qualifying emblems, accept a clearly disclosed shorter table rather than invented entries.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_emblems",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "ranks_artifacts",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_items"
+        },
+        "kind": "trace",
+        "name": "ranks_artifacts",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_artifacts",
+      "check": "ranks_artifacts",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_for_synthesis",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_for_synthesis",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_artifacts",
+      "check": "hands_off_for_synthesis",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_artifacts",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "artifact_ranking_quality",
+        "rubric": "Score whether the answer presents exactly five artifact items with no non-artifact contamination, ranked by queried average placement rather than popularity. It should include board counts plus placement/top-four/win metrics, preserve lower-is-better placement ordering, avoid unsupported causal claims, and finish through final_responder. The execution should use rank_items without name-resolving the artifact category. The inline artifact-name cells should declare a valid deterministic Common holders investigation that binds the exact artifact value to rank_units.item, sorts by games, and requests only supported rank_units result fields; the click must not require a new assistant turn. If the scoped data returns fewer than five qualifying artifacts, accept a clearly disclosed shorter table rather than invented entries.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "data_analyst/top_five_artifacts",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "data_analyst",
+          "name": "ranks_items",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_items"
+        },
+        "kind": "trace",
+        "name": "ranks_items",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/radiant_item_ranking",
+      "check": "ranks_items",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_for_synthesis",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_for_synthesis",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/radiant_item_ranking",
+      "check": "hands_off_for_synthesis",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/radiant_item_ranking",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "item_family_quality",
+        "rubric": "Score whether the answer restricts the comparison to defensibly identified Radiant items, ranks queried item outcomes rather than popularity, reports boards and placement/top-four/win metrics, discloses incomplete family context if applicable, and finishes through final_responder.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "data_analyst/radiant_item_ranking",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "data_analyst",
+          "name": "ranks_units",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "ranks_units",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/strongest_four_cost_units",
+      "check": "ranks_units",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_for_synthesis",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_for_synthesis",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/strongest_four_cost_units",
+      "check": "hands_off_for_synthesis",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "data_analyst/strongest_four_cost_units",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "unit_ranking_quality",
+        "rubric": "Score whether the answer ranks 4-cost units by queried outcome performance, reports average placement, top-four rate, win rate, and games, and avoids causal claims. The trace must finish through final_responder rather than exposing a handoff notice.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "data_analyst/strongest_four_cost_units",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/unrelated_abstention",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/unrelated_abstention",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/unrelated_abstention",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/unrelated_abstention",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/unrelated_abstention",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_exclusion_not_positive_evidence",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_exclusion_not_positive_evidence",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_exclusion_not_positive_evidence",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_exclusion_not_positive_evidence",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_exclusion_not_positive_evidence",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_routing_and_part_summary",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_routing_and_part_summary",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_routing_and_part_summary",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_routing_and_part_summary",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/description_routing_and_part_summary",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/entity_item_interaction",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/entity_item_interaction",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/entity_item_interaction",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/entity_item_interaction",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/entity_item_interaction",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_unit_mechanic",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_unit_mechanic",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_unit_mechanic",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_unit_mechanic",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_unit_mechanic",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_description",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_description",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_description",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_description",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/semantic_description",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/partial_heading_category",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/partial_heading_category",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/partial_heading_category",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/partial_heading_category",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/partial_heading_category",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/numeric_heading",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/numeric_heading",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/numeric_heading",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/numeric_heading",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/numeric_heading",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/multipart_cross_document",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/multipart_cross_document",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/multipart_cross_document",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/multipart_cross_document",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/multipart_cross_document",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/compound_alias",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/compound_alias",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/compound_alias",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/compound_alias",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/compound_alias",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "offline_selection_policy",
+        "selector": "offline_selection_policy",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/exact_unit",
+      "check": "offline_selection_policy",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "shortlist_required_recall",
+        "selector": "shortlist_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/exact_unit",
+      "check": "shortlist_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "final_required_recall",
+        "selector": "final_required_recall",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/exact_unit",
+      "check": "final_required_recall",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "forbidden_context_excluded",
+        "selector": "forbidden_context_excluded",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "context_selection/exact_unit",
+      "check": "forbidden_context_excluded",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "selector",
+        "name": "payload_reduction",
+        "selector": "payload_reduction",
+        "threshold": 0.75,
+        "weight": 1
+      },
+      "case_id": "context_selection/exact_unit",
+      "check": "payload_reduction",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "signal_retention",
+        "rubric": "Score whether the compacted transcript retains the strategic facts (leveling on 4-2, rolling for frontline upgrades, and being too weak) while removing the irrelevant Little Legend visual chatter, without changing the decision or intent.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "compact_transcript/keeps_strategy_and_drops_visual_chatter",
+      "destination": "expected_output.requirements",
+      "evaluator": "signal_retention",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "terminology_preservation",
+        "rubric": "Score whether the cleaned transcript corrects the TFT terms to Edge of Night and Jax, preserves the 4-2 timing and the original strategic intent, and does not add or remove material meaning.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "clean_transcript/corrects_tft_terms_without_changing_intent",
+      "destination": "expected_output.requirements",
+      "evaluator": "terminology_preservation",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_transmute_kill_gold",
+          "type": "regex",
+          "values": [
+            "(?is)transmute.{0,120}\\b2\\s*(?:g|gold)\\b",
+            "(?is)\\b2\\s*(?:g|gold)\\b.{0,120}transmute"
+          ]
+        },
+        "kind": "trace",
+        "name": "reports_transmute_kill_gold",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_commander_transmute_rules",
+      "check": "reports_transmute_kill_gold",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_mod_persistence",
+          "type": "regex",
+          "value": "(?i)\\b2\\s+(?:player\\s+)?combats?\\b"
+        },
+        "kind": "trace",
+        "name": "reports_mod_persistence",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_commander_transmute_rules",
+      "check": "reports_mod_persistence",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_double_tap_odds",
+          "type": "regex",
+          "values": [
+            "(?is)double tap.{0,100}\\b35\\s*(?:%|percent)",
+            "(?is)\\b35\\s*(?:%|percent).{0,100}double tap"
+          ]
+        },
+        "kind": "trace",
+        "name": "reports_double_tap_odds",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_factory_new_multishot_odds",
+      "check": "reports_double_tap_odds",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_triple_tap_odds",
+          "type": "regex",
+          "values": [
+            "(?is)triple tap.{0,100}\\b18\\s*(?:%|percent)",
+            "(?is)\\b18\\s*(?:%|percent).{0,100}triple tap"
+          ]
+        },
+        "kind": "trace",
+        "name": "reports_triple_tap_odds",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_factory_new_multishot_odds",
+      "check": "reports_triple_tap_odds",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_stage_three_probability",
+          "type": "regex",
+          "value": "(?i)\\b50\\s*(?:%|percent)"
+        },
+        "kind": "trace",
+        "name": "reports_stage_three_probability",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_treasure_hunt_stage_three",
+      "check": "reports_stage_three_probability",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_thiefs_gloves_outcome",
+          "type": "regex",
+          "value": "(?i)thief[\u2019']?s gloves"
+        },
+        "kind": "trace",
+        "name": "reports_thiefs_gloves_outcome",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_treasure_hunt_stage_three",
+      "check": "reports_thiefs_gloves_outcome",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_spatula_outcome",
+          "type": "regex",
+          "value": "(?i)\\bspatula\\b"
+        },
+        "kind": "trace",
+        "name": "reports_spatula_outcome",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_treasure_hunt_stage_three",
+      "check": "reports_spatula_outcome",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_pan_outcome",
+          "type": "regex",
+          "value": "(?i)\\bpan\\b"
+        },
+        "kind": "trace",
+        "name": "reports_pan_outcome",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_treasure_hunt_stage_three",
+      "check": "reports_pan_outcome",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_five_percent_probability",
+          "type": "regex",
+          "values": [
+            "(?i)(?<![\\d.])(?:5\\s*%|(?:5|five)\\s+percents?)",
+            "(?i)\\b(?:1|one)[ -]+(?:in|out[ -]+of)[ -]+(?:20|twenty)\\b",
+            "(?i)(?<![\\d.])(?:0?\\.05)(?!\\d)"
+          ]
+        },
+        "kind": "trace",
+        "name": "reports_five_percent_probability",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_six_anima_thiefs_gloves_odds",
+      "check": "reports_five_percent_probability",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_626_probability",
+          "type": "regex",
+          "value": "(?i)\\b0\\.5\\s*(?:%|percent)"
+        },
+        "kind": "trace",
+        "name": "reports_626_probability",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_magic_roll_626_outcome",
+      "check": "reports_626_probability",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "identifies_626_roll",
+          "type": "regex",
+          "value": "\\b626\\b"
+        },
+        "kind": "trace",
+        "name": "identifies_626_roll",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_magic_roll_626_outcome",
+      "check": "identifies_626_roll",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_hatch_timer",
+          "type": "regex",
+          "value": "(?i)\\b3\\s+turns?\\b"
+        },
+        "kind": "trace",
+        "name": "reports_hatch_timer",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_magic_roll_626_outcome",
+      "check": "reports_hatch_timer",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_egg_gold",
+          "type": "regex",
+          "value": "(?i)\\b5\\s*(?:g|gold)\\b"
+        },
+        "kind": "trace",
+        "name": "reports_egg_gold",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_magic_roll_626_outcome",
+      "check": "reports_egg_gold",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_egg_champions",
+          "type": "regex",
+          "value": "(?i)\\b(?:2|two)\\s*(?:x|\u00d7)?\\s*5[- ]costs?\\b"
+        },
+        "kind": "trace",
+        "name": "reports_egg_champions",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_magic_roll_626_outcome",
+      "check": "reports_egg_champions",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "reports_egg_crown",
+          "type": "regex",
+          "value": "(?i)tactician[\u2019']?s crown"
+        },
+        "kind": "trace",
+        "name": "reports_egg_crown",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/context_magic_roll_626_outcome",
+      "check": "reports_egg_crown",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": "trait",
+          "arguments": {
+            "item_count": 2,
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_two_item_dark_star_loadouts_by_frequency",
+          "query": "dark star",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_unit_loadouts"
+        },
+        "kind": "trace",
+        "name": "ranks_two_item_dark_star_loadouts_by_frequency",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_two_item_dark_star_loadouts",
+      "check": "ranks_two_item_dark_star_loadouts_by_frequency",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": [
+            "item_1",
+            "item_2"
+          ],
+          "arguments": {
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "passes_resolved_rageblade_to_loadout_ranking",
+          "query": "rageblade",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_unit_loadouts"
+        },
+        "kind": "trace",
+        "name": "passes_resolved_rageblade_to_loadout_ranking",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_loadouts_with_two_named_items",
+      "check": "passes_resolved_rageblade_to_loadout_ranking",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": [
+            "item_1",
+            "item_2"
+          ],
+          "arguments": {
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "passes_resolved_infinity_edge_to_loadout_ranking",
+          "query": "infinity edge",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_unit_loadouts"
+        },
+        "kind": "trace",
+        "name": "passes_resolved_infinity_edge_to_loadout_ranking",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_loadouts_with_two_named_items",
+      "check": "passes_resolved_infinity_edge_to_loadout_ranking",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": "trait",
+          "arguments": {
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_dark_star_units_by_frequency",
+          "query": "dark star",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "ranks_dark_star_units_by_frequency",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_dark_star_units",
+      "check": "ranks_dark_star_units_by_frequency",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": "item",
+          "arguments": {
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_rageblade_holders_by_placement",
+          "query": "rageblade",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "ranks_rageblade_holders_by_placement",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_rageblade_units_by_placement",
+      "check": "ranks_rageblade_holders_by_placement",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": "unit",
+          "arguments": {
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_jinx_traits_by_placement",
+          "query": "jinx",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_traits"
+        },
+        "kind": "trace",
+        "name": "ranks_jinx_traits_by_placement",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_jinx_traits_by_placement",
+      "check": "ranks_jinx_traits_by_placement",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": "holder",
+          "arguments": {
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_jinx_items_by_placement",
+          "query": "jinx",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_items"
+        },
+        "kind": "trace",
+        "name": "ranks_jinx_items_by_placement",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_jinx_items_by_placement",
+      "check": "ranks_jinx_items_by_placement",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "argument": "unit",
+          "arguments": {
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_jinx_loadouts_by_frequency",
+          "query": "jinx",
+          "threshold": 1,
+          "type": "tool_argument_resolved",
+          "value": "rank_unit_loadouts"
+        },
+        "kind": "trace",
+        "name": "ranks_jinx_loadouts_by_frequency",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_top_jinx_loadouts",
+      "check": "ranks_jinx_loadouts_by_frequency",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "arguments": {
+            "range": [
+              0,
+              5
+            ],
+            "tier": 2
+          },
+          "name": "ranks_second_tier_traits_by_frequency",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_traits"
+        },
+        "kind": "trace",
+        "name": "ranks_second_tier_traits_by_frequency",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_top_second_tier_traits",
+      "check": "ranks_second_tier_traits_by_frequency",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "arguments": {
+            "item_type": "radiant",
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_radiant_items_by_frequency",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_items"
+        },
+        "kind": "trace",
+        "name": "ranks_radiant_items_by_frequency",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_top_radiant_items",
+      "check": "ranks_radiant_items_by_frequency",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "arguments": {
+            "cost": 4,
+            "range": [
+              0,
+              5
+            ]
+          },
+          "name": "ranks_four_cost_units_by_frequency",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "ranks_four_cost_units_by_frequency",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/ranks_top_four_cost_units",
+      "check": "ranks_four_cost_units_by_frequency",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "calculates_rolldown_probability",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rolldown_probabilities"
+        },
+        "kind": "trace",
+        "name": "calculates_rolldown_probability",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/rolldown_question_uses_probability_tool",
+      "check": "calculates_rolldown_probability",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "does_not_handoff_rolldown",
+          "threshold": 1,
+          "type": "no_handoff"
+        },
+        "kind": "trace",
+        "name": "does_not_handoff_rolldown",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/rolldown_question_uses_probability_tool",
+      "check": "does_not_handoff_rolldown",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_chat",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "chat"
+        },
+        "kind": "trace",
+        "name": "finishes_with_chat",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/rolldown_question_uses_probability_tool",
+      "check": "finishes_with_chat",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "rolldown_answer_quality",
+        "rubric": "The execution trace should show a direct rolldown_probabilities call with no handoff. Score whether the answer reports the calculator's numerical hit probability for the supplied level, gold budget, one additional copy, and three copies out; clearly treats 40 as a gold budget; and briefly states the normal-shop model's relevant exclusions without inventing unsupported mechanics or asking for inputs the user already supplied.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "chat/rolldown_question_uses_probability_tool",
+      "destination": "expected_output.requirements",
+      "evaluator": "rolldown_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_to_data_analyst",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "data_analyst"
+        },
+        "kind": "trace",
+        "name": "hands_off_to_data_analyst",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/advanced_stats_question_routes_to_data_analyst",
+      "check": "hands_off_to_data_analyst",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "agent": "chat",
+          "name": "searches_conditioned_slice",
+          "threshold": 1,
+          "type": "tool_called",
+          "value": "rank_units"
+        },
+        "kind": "trace",
+        "name": "searches_conditioned_slice",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/advanced_stats_question_routes_to_data_analyst",
+      "check": "searches_conditioned_slice",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_to_final_responder",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_to_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/advanced_stats_question_routes_to_data_analyst",
+      "check": "hands_off_to_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/advanced_stats_question_routes_to_data_analyst",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "deep_analysis_quality",
+        "rubric": "The execution trace should show the conversation was handed to data_analyst, a relevant search tool was called, and final_responder produced the user-facing answer. Score whether the answer is grounded in that query \u2014 reporting the requested comparison with cohort sizes \u2014 rather than fabricating a conclusion from general TFT knowledge.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "chat/advanced_stats_question_routes_to_data_analyst",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "expert_not_coach",
+        "rubric": "Score whether the answer responds like an expert player sharing current, stats-backed meta reads (specific comps, builds, and numbers from the data) and avoids fundamentals coaching such as economy management, scouting habits, flexibility, or other generic improvement advice.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "chat/expert_peer_not_coach",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "scope_honesty_quality",
+        "rubric": "Score whether the answer plainly states that live Riot lookups are unavailable to this assistant instead of fabricating profile or game details, and offers what the data can answer instead.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "chat/out_of_scope_lookup_is_declined_honestly",
+      "destination": "expected_output.requirements",
+      "evaluator": "scope_honesty",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "player_review_quality",
+        "rubric": "Score whether the answer asks for the missing player identifier or uses tools if possible, and does not fabricate recent-game details.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "chat/player_review_guides_missing_input",
+      "destination": "expected_output.requirements",
+      "evaluator": "scope_honesty",
+      "requirement_index": 0
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_to_data_analyst",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "data_analyst"
+        },
+        "kind": "trace",
+        "name": "hands_off_to_data_analyst",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/meta_snapshot_reports_sample_support",
+      "check": "hands_off_to_data_analyst",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "hands_off_to_final_responder",
+          "threshold": 1,
+          "type": "handoff_to",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "hands_off_to_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/meta_snapshot_reports_sample_support",
+      "check": "hands_off_to_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "check": {
+          "name": "finishes_with_final_responder",
+          "threshold": 1,
+          "type": "final_agent",
+          "value": "final_responder"
+        },
+        "kind": "trace",
+        "name": "finishes_with_final_responder",
+        "threshold": 1,
+        "weight": 1
+      },
+      "case_id": "chat/meta_snapshot_reports_sample_support",
+      "check": "finishes_with_final_responder",
+      "destination": "metadata.deterministic_checks"
+    },
+    {
+      "assertion": {
+        "kind": "rubric",
+        "name": "chat_product_quality",
+        "rubric": "Score whether the answer reads like an expert player's meta report \u2014 specific comps/units with placement and top-4 numbers, sample sizes, and filters from the data \u2014 rather than a generic coaching answer. When the retrieved figures form a bounded comparison or metric group, also reward use of the inline analytics components via present_inline_data instead of a Markdown table, without duplicating the full component contents in Markdown.",
+        "threshold": 0.8,
+        "weight": 1
+      },
+      "case_id": "chat/meta_snapshot_reports_sample_support",
+      "destination": "expected_output.requirements",
+      "evaluator": "answer_quality",
+      "requirement_index": 0
+    }
+  ],
+  "datasets": [
+    {
+      "id": "cmu0gexro002un807eauoax39",
+      "item_ids": [
+        "38e0dd4019549aec7a9392caca1f5a93fae46412279c468e606d2e636b11f845",
+        "1572b2d203f3732cd4ddea6056dd702888b31d7a2cb4cd05df535cb0e5a04a84",
+        "f2ac06e624e11af7b3a356ef0b1aa7cd0fa4d12f20c74db7855aa72ef6929a22",
+        "a9ea17b800eea276f40f40ffc03eadd02ea96dd36344d69c3d54ae180366b16a",
+        "5ee1cf5ebc721bbfa84b94355288dbd98a0b90be4207f71e7d4bea60d97df4d0",
+        "5ca20b8b1482006c8770f93097b8bf3f0d40f60d54ca45276c23b135bcbaaf7e",
+        "86189f92baba958f83d83ad9a0b2f70be40a2b0bdef41ef827660212582b8e32",
+        "b77edc89289a1d1c3e83a1e8c027d243e414cd3d99affb1fbbc34ca0bc619146",
+        "3ad7a67a135484a75a0a69e94dab1a4cdecaef44960ffd08866112f8ae294574",
+        "2ee44e666650a60220ef2e2efffd918eb523e22e7e5623d4e6aaa9035c371895",
+        "8d820bb3f2d6377485ce44a3da650f40580df0e07a369bee3e8391341154bc97",
+        "cea7bb3aca3d6391d713dab2b1d809b033afb098cef4bb123fcf250465c34ce2"
+      ],
+      "name": "chattft/selectors/skills",
+      "old_name": "chattft/skill_selection"
+    },
+    {
+      "id": "cmu0gexpg002nn8078tm1r3hd",
+      "item_ids": [
+        "261e550c9a23813a04348313188875e0f07305950b500abf2258113549f089d6"
+      ],
+      "name": "internal/fixtures/deterministic-trace",
+      "old_name": "chattft/dummy_assistant"
+    },
+    {
+      "id": "cmu0gexi2002an807krst2j2i",
+      "item_ids": [
+        "d37db7f37aa32b47a5a0effec201805855f3456d678eb2dcf05b40ea571addbc",
+        "020db622e0ba28b65612e2c1a6c6dba46c839bf669930dbcfe968cb964107456",
+        "1e8d0112b8c7c8d8e321226c961213d4589a6dc119e27e016718752eb9a17482",
+        "a460498450a050a5f0f659f815b959a32ea1cad8fdb336c160381f6c8f64b05d",
+        "d6d9ae42601210f5b68e071339139904b558e25710aa4b2f7b0093e38c01acfa",
+        "4b4f16bfc51c0de7b5049c826c65ce8a51be54a3150ca29ca9b4fc59c6021763",
+        "e5145e9fcc96f816c1023c94b8fcc03e522ab0bb35cc234ef558693035a705d6"
+      ],
+      "name": "chattft/chat/data-analysis",
+      "old_name": "chattft/data_analyst"
+    },
+    {
+      "id": "cmu0gex7r001tn80793srymbw",
+      "item_ids": [
+        "a549c68f824202e335293c176dd593c44d18450a915286644253e9a71c44663d",
+        "10e2ffce65f0377934a34a47843eb4bf0069fc12e363820334cf2fb28eba8d5f",
+        "2ad714c789528d6b0d2e65585c1e4e66b81b5624ac96b48bc368a54ea2cbae56",
+        "c2e8c629be6100286fd6d5717e87fe4dc89559c340d19dde6a1a913a822fd9fc",
+        "bff43147ce715bd4148ec6623482a0124ac72b2089e4f4eb948e0002db6c5b79",
+        "19c105726b0bfdfcc508c941a140c0b8e5b4e472eb4bed752447557aacc5f193",
+        "114caf2f8f75470962b273082e74b10cdb1269311553940048a9d95c130da152",
+        "d00b1da1460e6999726a91b2771cd8b21984da6068b0f32048e5262c33df577f",
+        "39b618e3dff0364f6ec1b136a2714b3f2f0be5181ba3e99e162be10efb9c42ef",
+        "0842f972d1e144ee066eca82fd84ce5968090cb26f0151ddf5bb95fe6f80b2c0",
+        "8e95142e7a63497e51699607fad6063155fa96c8142eaca73248cb893941dfc6"
+      ],
+      "name": "chattft/selectors/context",
+      "old_name": "chattft/context_selection"
+    },
+    {
+      "id": "cmu0gex5p001mn807dcd1wu7w",
+      "item_ids": [
+        "5ad9b0ef7921685f57e1c69de96fb2c56edceb60fcd33c4a34b7464801001cdb"
+      ],
+      "name": "chattft/transcripts/compaction",
+      "old_name": "chattft/compact_transcript"
+    },
+    {
+      "id": "cmu0gex3q001fn807h9btjz95",
+      "item_ids": [
+        "29d8af9a4f6ef7fc38f66db67c339f715cb74f63ce01eb89dda9adb552aed2a5"
+      ],
+      "name": "chattft/transcripts/cleanup",
+      "old_name": "chattft/clean_transcript"
+    },
+    {
+      "id": "cmu0gewk7000on807vqfzkf1q",
+      "item_ids": [
+        "3d4a8dda6328ac81561fb485411b70a27851feb6cb1bc070135f3b37db822656",
+        "5ea08fedbe255b7dd14dcd8e098755bb5c5d6160dd587c35ac1568d8a09ee22b",
+        "6e823d1a40f926c67145abd648833a8fd82cd015a9596aa6d71257edbbda7655",
+        "4c8489c9bf6c058136a32b8a2631a3fc0f406925de90d82359e3ad6a5f60e107",
+        "73ecfc69470664f937a07fbaec922a7bb0419d992a79fa88238e2cdb13ca22ff",
+        "331b54ff0608dd1a78532145cbeebbe7bbfc4609f12a1616f3f1d51a2414ba27",
+        "600722fb614162f088c0d7bc131240b5d7b2d4c7a1be072060eaf928430000b4",
+        "d29f5e0d92199bb41b27f914621ea20d30831829e3ad1b222da1e86f67070c39",
+        "614883915ed5e410f7143a5a29faaa83bc1053facac4edc8ac96f45d1f940567",
+        "50232d54ef84a50b3b92eaa786c4e8623520697ea2f3d6c19aca8303966896dd",
+        "8d7575dee8acf56850ff50ee8ba12978079062c03ecfcc2394a3ddc8772a0378",
+        "bb3e56002a9f57a80a392be66cc2a5df2b6a29ba8e11fe6a46c42cf660453090",
+        "c0d53654c7a788a3cbe16db2a7f56ac5a3e9d0d510ce98c031d779fa8aab4407",
+        "f380b7488a85eefa7ccf7fb6ef7b61e44255cb87992709defb3c93f22cae7fea",
+        "c1a085ba12904484c76efea8ca158059b10cd6384df57f8ce94783f9ccff04d1",
+        "c32396c27b8ada2a93271a6e75932eda4cc4f3e08c480b4de7ce284421395669",
+        "a2b5621c3ea9ab25bd3e0b5b06d6fa33a1c60a507a162f4be95dcf4cfd049190",
+        "8890d959b2227f74507c220ef51bf1d51c97220424dc9a8d85f9af48a9a6723c",
+        "c924237c305f9a2ac833fe0f1f0a2492e2c8bec6f4349b02e7318acd307403ec",
+        "9bac3266d2594bdd8bd080a06d7209314fdcea5c923529afed1abb7ff15fd027",
+        "6dbe6c507001d2b09ef7c88123e099a5c6caf1e0ba957be762a10403ce813c41"
+      ],
+      "name": "chattft/chat/end-to-end",
+      "old_name": "chattft/chat"
+    },
+    {
+      "id": "cmu0gewi2000in807rs0orzwa",
+      "item_ids": [],
+      "name": "archive/analyze-transcript",
+      "old_name": "chattft/analyze_transcript"
+    }
+  ],
+  "historical_comparability": "Consolidated native quality scores are not numerically equivalent to historical rubric scores.",
+  "schema_version": 1
+}

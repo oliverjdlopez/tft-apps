@@ -1,0 +1,5 @@
+# UN4-2 evidence notes
+
+S01 records surviving Nidalee replies favoring AD with one AP/Invoker suggestion; the original board is missing. S02 contains anecdotal Rapidfire-emblem Nidalee and special-staff Azir examples, not controlled comparisons. S03 documents a double-Blue simulator disagreement and acknowledged parsing errors; it is not ranked outcome evidence. Riot's 18.3 notes establish Nidalee and Azir changes but no item ranking (S04).
+
+Tactics.tools' unit shell and Explorer exposed no configured cohort (S05–S06). Its readable Nidalee, Azir, and Ahri pages provide pooled or marginal summaries, not attributable build comparisons (S07–S09). The item reference defines the relevant mana and damage items, but exact duplicate-item legality must be confirmed for the sampled patch window before evaluating Ahri double Blue Buff (S10). The four cases lack matched triplet counts, comparable boards, and complete population windows. Preserve the uncertainty about Nidalee form, Azir's Shojin slot, the Rapidfire emblem package, and double-Blue legality; no pooled average answers them.

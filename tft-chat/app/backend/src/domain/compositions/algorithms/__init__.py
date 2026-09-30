@@ -1,0 +1,1 @@
+"""Private composition discovery workspace."""

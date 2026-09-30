@@ -1,0 +1,328 @@
+{
+  "lane": "TR-3",
+  "stage": "case-drafting",
+  "case_ids": [
+    "TR-3-C01",
+    "TR-3-C02",
+    "TR-3-C04",
+    "TR-3-C05"
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1w57056/even_if_i_read_and_watch_guides_i_cant_seem_to/",
+      "title": "Ranked-improvement discussion",
+      "source_date": "2026-09-02",
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened post and replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-3-C01",
+        "TR-3-C04"
+      ],
+      "observations": [
+        "Reply recommends Defender Rengar replacing Leona/Ornn in Cassiopeia. Other replies describe Yi as conditional on Brawler emblem or artifacts."
+      ],
+      "limitations": [
+        "Advice and anecdotes; timing content excluded. No outcome cohort."
+      ],
+      "patch_scope": "Set 18 early September; not current outcome evidence",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S02",
+      "url": "https://tftflow.com/composition/set18/defender-cassiopeia",
+      "title": "Defender Cassiopeia guide and comments",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened guide and comments",
+      "roles": [
+        "motivation",
+        "variant reference"
+      ],
+      "case_ids": [
+        "TR-3-C01"
+      ],
+      "observations": [
+        "18.3b header; Defender Rengar and Defender Kha’Zix variants visible. September 2 and 6 comments criticize Kha’Zix despite upgrades."
+      ],
+      "limitations": [
+        "Comments labeled 18.1b; guide tiers are not measured matched outcomes."
+      ],
+      "patch_scope": "Guide 18.3b; comments 18.1b",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S03",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Official TFT 18.3 notes",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened",
+      "roles": [
+        "rules",
+        "patch separation"
+      ],
+      "case_ids": [
+        "TR-3-C01",
+        "TR-3-C02",
+        "TR-3-C04",
+        "TR-3-C05"
+      ],
+      "observations": [
+        "Defender/Hunter/Inferno changes, Hunter emblem reduction and Brawler emblem increase; dated updates also affect units."
+      ],
+      "limitations": [
+        "Rules do not supply outcome statistics; page date is not a dataset definition."
+      ],
+      "patch_scope": "18.3 with September updates",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S04",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wqk3eq/september_26_2026_daily_discussion_thread/",
+      "title": "September 26 Daily Discussion",
+      "source_date": "2026-09-26",
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "canonical opened; precise Hunter branch search-only; sort/limit alternate failed",
+      "roles": [
+        "motivation lead"
+      ],
+      "case_ids": [
+        "TR-3-C02"
+      ],
+      "observations": [
+        "Search again returned Caitlyn plus Hunter Camille, four Vanguard/three Coven. Canonical open showed unrelated Nidalee discussion."
+      ],
+      "limitations": [
+        "Exact exchange remains unverified in opened context; no direct rebuttal read."
+      ],
+      "patch_scope": "September 26 discussion; exact statistical scope absent",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S05",
+      "url": "https://topmeta.gg/en/items/hunter-emblem/",
+      "title": "TopMeta Hunter Emblem",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened full table",
+      "roles": [
+        "partial outcomes"
+      ],
+      "case_ids": [
+        "TR-3-C02"
+      ],
+      "observations": [
+        "Champion rows directly associated with metrics; Camille versus Nidalee shows an older broad descriptive contrast."
+      ],
+      "limitations": [
+        "No Caitlyn/Sivir/star restrictions, unknown named servers/rank, no precise dates. Do not interpret delta causally."
+      ],
+      "patch_scope": "18.2",
+      "statistical_metadata": {
+        "mode": "ranked",
+        "rank": null,
+        "region": "4 servers, unnamed",
+        "period": "7 days indicator; precise start/end unknown",
+        "total_games": 634259,
+        "aggregate": {
+          "average_placement": 4.18,
+          "top4_pct": 56.0,
+          "win_pct": 14.6
+        },
+        "rows": [
+          {
+            "holder": "Camille",
+            "games_display": "6.9K",
+            "average_placement": 5.45,
+            "top4_pct": 31.6,
+            "win_pct": 5.4
+          },
+          {
+            "holder": "Nidalee",
+            "games_display": "163K",
+            "average_placement": 4.08,
+            "top4_pct": 59.0,
+            "win_pct": 12.7
+          }
+        ]
+      }
+    },
+    {
+      "id": "S06",
+      "url": "https://tactics.tools/items/DA_18_EmblemHunter/all",
+      "title": "Tactics.tools Hunter item",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened",
+      "roles": [
+        "workflow",
+        "aggregate context"
+      ],
+      "case_ids": [
+        "TR-3-C02"
+      ],
+      "observations": [
+        "Aggregate item metrics visible; holder names separated from metric blocks."
+      ],
+      "limitations": [
+        "No safe holder metric association; no matched board query."
+      ],
+      "patch_scope": "18.2b",
+      "statistical_metadata": {
+        "rank": "Platinum+",
+        "mode": "Ranked",
+        "region": null,
+        "period": null,
+        "games_display": "419k",
+        "average_placement": 4.24,
+        "top4_pct": 54.7,
+        "win_pct": 14.5,
+        "play_rate_display": "0.26/8"
+      }
+    },
+    {
+      "id": "S07",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1winnef/whats_your_hear_me_out_comp_this_patch/",
+      "title": "What is your hear-me-out comp this patch?",
+      "source_date": "2026-09-17",
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened post and replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-3-C04",
+        "TR-3-C05"
+      ],
+      "observations": [
+        "Yi/Rengar/Vi/Nidalee comment associates power with emblem/artifacts. Inferno Kha/Fiddle comment suggests removing Akali using Inferno emblem. Also inspected Elise and Lunar-emblem discussions for candidates later withdrawn."
+      ],
+      "limitations": [
+        "Anecdotes, some explicit casual framing; rank and mode of individual anecdotes unverified. Not used as ranked outcomes. Early-hitting and leveling claims excluded."
+      ],
+      "patch_scope": "September 17; older than 18.3",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S11",
+      "url": "https://noxutft.com/tft-comps/adaptor-master-yi",
+      "title": "Noxu Adaptor Master Yi",
+      "source_date": "2026-09-26",
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened detailed page",
+      "roles": [
+        "partial outcomes",
+        "variant reference"
+      ],
+      "case_ids": [
+        "TR-3-C04"
+      ],
+      "observations": [
+        "Named Yi build contains Brawler emblem, Edge of Night and Guinsoo’s."
+      ],
+      "limitations": [
+        "Rank/region/exact patch unspecified; rounded counts. Three-star illustrations do not establish cohort filter. Whole-board artifacts not excluded. Page also contradicts itself on actual versus computed positions; those claims excluded."
+      ],
+      "patch_scope": "Set 18, this patch (number absent)",
+      "statistical_metadata": {
+        "mode": "ranked",
+        "rank": null,
+        "region": null,
+        "period": "this patch, exact dates unknown",
+        "composition_games_display": "131k",
+        "composition_average": 4.52,
+        "composition_top4_pct": 50.6,
+        "composition_win_pct": 7.0,
+        "yi_build": {
+          "items": [
+            "Brawler Emblem",
+            "Edge of Night",
+            "Guinsoo’s Rageblade"
+          ],
+          "average_placement": 4.25,
+          "games_display": "1.7k"
+        },
+        "emblem_in_comp_item_row": {
+          "average_placement": 4.19,
+          "games_display": "4.4k"
+        }
+      }
+    },
+    {
+      "id": "S12",
+      "url": "https://tactics.tools/explorer",
+      "title": "Tactics.tools Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened controls; no successful cohort",
+      "roles": [
+        "workflow limitation"
+      ],
+      "case_ids": [
+        "TR-3-C01",
+        "TR-3-C02"
+      ],
+      "observations": [
+        "Explorer opened but no holder/board cohort outcomes obtained."
+      ],
+      "limitations": [
+        "Controls or No Data are not results."
+      ],
+      "patch_scope": "18.3b controls, not a dataset result",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S13",
+      "url": "https://noxutft.com/tft-comps",
+      "title": "Noxu composition index",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "opened",
+      "roles": [
+        "cross-check"
+      ],
+      "case_ids": [
+        "TR-3-C04"
+      ],
+      "observations": [
+        "Adaptor Yi aggregate count differs from detail page while displayed headline outcome rates match."
+      ],
+      "limitations": [
+        "May be snapshot/cohort mismatch; cannot pool or select whichever count looks stronger."
+      ],
+      "patch_scope": "Set 18; exact outcome window unknown",
+      "statistical_metadata": {
+        "adaptor_yi_games_display": "214k",
+        "average_placement": 4.52,
+        "top4_pct": 50.6,
+        "win_pct": 7.0
+      }
+    },
+    {
+      "id": "S14",
+      "url": "https://www.tftcodex.com/explore/index.html?q=Inferno",
+      "title": "Codex Inferno exploration",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:52:29Z",
+      "access_status": "search preview only",
+      "roles": [
+        "rejected statistical lead"
+      ],
+      "case_ids": [
+        "TR-3-C05"
+      ],
+      "observations": [
+        "Search returned 18.2 broad Inferno/item rows."
+      ],
+      "limitations": [
+        "Not opened as a matched Kha/Akali cohort, not answer evidence."
+      ],
+      "patch_scope": "18.2 preview",
+      "statistical_metadata": null
+    }
+  ]
+}

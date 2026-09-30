@@ -1,0 +1,58 @@
+name: Live Langfuse evals
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Suite to evaluate (explicitly spends model tokens)
+        type: choice
+        options: [chat, data_analyst, clean_transcript, compact_transcript, context_selection, skill_selection]
+        required: true
+      dataset:
+        description: Non-secret dataset snapshot label for comparison
+        required: true
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: evals
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      RDS_EVAL_HOST: ${{ secrets.RDS_EVAL_HOST }}
+      RDS_EVAL_PORT: ${{ vars.RDS_EVAL_PORT || '5432' }}
+      RDS_EVAL_ADMIN: ${{ secrets.RDS_EVAL_ADMIN }}
+      RDS_EVAL_PASSWORD: ${{ secrets.RDS_EVAL_PASSWORD }}
+      RDS_EVAL_DB: ${{ vars.RDS_EVAL_DB }}
+      RDS_EVAL_SYNC_LOCAL_IP: '0'
+      EVAL_JUDGE_MODEL: ${{ vars.EVAL_JUDGE_MODEL }}
+      EVAL_SUITE: ${{ inputs.suite }}
+      EVAL_DATASET: ${{ inputs.dataset }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install and validate committed evaluation definitions
+        run: |
+          uv sync --locked --extra evals
+          uv run --no-sync python -m evals validate
+      - name: Start isolated Langfuse platform
+        run: uv run --no-sync python -m evals up --no-browser
+      - name: Run requested live suite
+        run: uv run --no-sync python -m evals run --suite "$EVAL_SUITE" --selection-live --data-snapshot-label "$EVAL_DATASET" > eval-report.json
+      - name: Export complete temporary workspace
+        if: always()
+        run: uv run --no-sync python -m evals export-workspace /tmp/chattft-live-workspace.json
+      - name: Preserve run definitions and report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: langfuse-evaluation
+          path: |
+            eval-report.json
+            /tmp/chattft-live-workspace.json
+            evals/langfuse/snapshots/*.json
+          if-no-files-found: ignore
+      - name: Stop evaluation services
+        if: always()
+        run: uv run --no-sync python -m evals down

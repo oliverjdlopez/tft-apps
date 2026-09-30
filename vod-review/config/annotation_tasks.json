@@ -1,0 +1,81 @@
+{
+  "unit_segmentation": {
+    "display_name": "Unit detection",
+    "kind": "detection",
+    "labels": [
+      { "id": "unit", "display_name": "Unit" }
+    ]
+  },
+  "text_detection": {
+    "display_name": "Text detection",
+    "kind": "detection",
+    "labels": [
+      { "id": "text", "display_name": "Text" }
+    ]
+  },
+  "round_classifier": {
+    "display_name": "Round classification",
+    "kind": "classification",
+    "labels": [
+      { "id": "11", "display_name": "11" },
+      { "id": "12", "display_name": "12" },
+      { "id": "13", "display_name": "13" },
+      { "id": "14", "display_name": "14" },
+      { "id": "15", "display_name": "15" },
+      { "id": "16", "display_name": "16" },
+      { "id": "17", "display_name": "17" },
+      { "id": "21", "display_name": "21" },
+      { "id": "22", "display_name": "22" },
+      { "id": "23", "display_name": "23" },
+      { "id": "24", "display_name": "24" },
+      { "id": "25", "display_name": "25" },
+      { "id": "26", "display_name": "26" },
+      { "id": "27", "display_name": "27" },
+      { "id": "31", "display_name": "31" },
+      { "id": "32", "display_name": "32" },
+      { "id": "33", "display_name": "33" },
+      { "id": "34", "display_name": "34" },
+      { "id": "35", "display_name": "35" },
+      { "id": "36", "display_name": "36" },
+      { "id": "37", "display_name": "37" },
+      { "id": "41", "display_name": "41" },
+      { "id": "42", "display_name": "42" },
+      { "id": "43", "display_name": "43" },
+      { "id": "44", "display_name": "44" },
+      { "id": "45", "display_name": "45" },
+      { "id": "46", "display_name": "46" },
+      { "id": "47", "display_name": "47" },
+      { "id": "51", "display_name": "51" },
+      { "id": "52", "display_name": "52" },
+      { "id": "53", "display_name": "53" },
+      { "id": "54", "display_name": "54" },
+      { "id": "55", "display_name": "55" },
+      { "id": "56", "display_name": "56" },
+      { "id": "57", "display_name": "57" },
+      { "id": "61", "display_name": "61" },
+      { "id": "62", "display_name": "62" },
+      { "id": "63", "display_name": "63" },
+      { "id": "64", "display_name": "64" },
+      { "id": "65", "display_name": "65" },
+      { "id": "66", "display_name": "66" },
+      { "id": "67", "display_name": "67" },
+      { "id": "71", "display_name": "71" },
+      { "id": "72", "display_name": "72" },
+      { "id": "73", "display_name": "73" },
+      { "id": "74", "display_name": "74" },
+      { "id": "75", "display_name": "75" },
+      { "id": "76", "display_name": "76" },
+      { "id": "77", "display_name": "77" }
+    ]
+  },
+  "unit_id": {
+    "display_name": "Unit identification",
+    "kind": "classification",
+    "labels": []
+  },
+  "augment_classifier": {
+    "display_name": "Augment templates",
+    "kind": "template",
+    "labels": []
+  }
+}

@@ -1,0 +1,13 @@
+**/.venv/
+**/node_modules/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/.runtime/
+**/dist/
+**/*.egg-info/
+**/.env
+**/.env.*.local
+.migration/
+profiles/
+*.log

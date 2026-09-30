@@ -1,0 +1,16 @@
+# Explicit, isolated CI-only model and database coordinates.
+services:
+  experiments:
+    # CI's mock model and disposable database stay inside the isolated stack.
+    command: ["python", "-m", "uvicorn", "evals.langfuse.server:app", "--host", "0.0.0.0", "--port", "80"]
+    environment:
+      LANGFUSE_TEST_DEPLOYMENT: "1"
+      OPENAI_API_KEY: mock-key
+      OPENAI_BASE_URL: http://mock-model:8000/v1
+      EVAL_JUDGE_MODEL: mock-judge
+      RDS_EVAL_HOST: postgres
+      RDS_EVAL_PORT: "5432"
+      RDS_EVAL_ADMIN: langfuse
+      RDS_EVAL_DB: chattft_test
+      RDS_EVAL_PASSWORD: ${POSTGRES_PASSWORD:?}
+      RDS_EVAL_SYNC_LOCAL_IP: "false"

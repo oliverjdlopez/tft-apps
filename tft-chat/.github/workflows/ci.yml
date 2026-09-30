@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: tft
+          POSTGRES_PASSWORD: tft
+          POSTGRES_DB: chat_tft_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tft"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      RDS_TEST_HOST: 127.0.0.1
+      RDS_TEST_PORT: 5432
+      RDS_TEST_ADMIN: tft
+      RDS_TEST_DB: chat_tft_test
+      RDS_TEST_PASSWORD: tft
+      RDS_TEST_SYNC_LOCAL_IP: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/frontend/package-lock.json
+      - name: Test and build frontend
+        working-directory: app/frontend
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Verify isolated test target
+        run: |
+          test -n "$RDS_TEST_HOST"
+          test -n "$RDS_TEST_PORT"
+          test -n "$RDS_TEST_ADMIN"
+          test "$RDS_TEST_DB" = "${RDS_TEST_DB%_test}_test"
+      - name: Run tests
+        run: uv run --locked --extra evals pytest -q
+      - name: Validate and test Langfuse content and execution
+        run: |
+          uv run --locked --extra evals python -m evals validate
+          uv run --locked --extra evals pytest -q evals/langfuse/tests tests/test_langfuse_execution.py tests/test_evaluation_catalog.py
+          uv run --locked --extra evals python -m evals run --suite dummy_assistant --offline
+
+  langfuse-browser:
+    env:
+      LANGFUSE_TEST_DEPLOYMENT: "1"
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Start isolated Langfuse platform
+        env:
+          LANGFUSE_TEST_DEPLOYMENT: "1"
+        run: uv run --locked --extra evals python -m evals up --no-browser
+      - name: Install browser test runtime
+        run: |
+          npm --prefix /tmp/chattft-browser install playwright@1.58.2
+          /tmp/chattft-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Exercise native evaluation authoring and experiments
+        env:
+          PLAYWRIGHT_MODULE: /tmp/chattft-browser/node_modules/playwright/index.mjs
+        run: node evals/langfuse/tests/browser-smoke.mjs
+      - name: Exercise native judge scheduling without paid calls
+        env:
+          LANGFUSE_TEST_DEPLOYMENT: "1"
+        run: uv run --locked --extra evals python evals/langfuse/tests/native-judge-smoke.py
+      - name: Export a real development conversation with the local mock model
+        run: |
+          docker compose --env-file evals/langfuse/.env -f evals/langfuse/compose.yaml -f evals/langfuse/compose.test.yaml exec -T experiments python evals/langfuse/tests/development-smoke.py
+          docker compose --env-file evals/langfuse/.env -f evals/langfuse/compose.yaml -f evals/langfuse/compose.test.yaml exec -T experiments cat /tmp/chattft-development-trace.json > /tmp/chattft-development-trace.json
+      - name: Exercise native review and development regression replay
+        run: node evals/langfuse/tests/browser-review.mjs
+      - name: Verify completed spans survive application timeout
+        run: |
+          docker compose --env-file evals/langfuse/.env -f evals/langfuse/compose.yaml -f evals/langfuse/compose.test.yaml exec -T experiments python evals/langfuse/tests/trace-timeout-smoke.py
+          docker compose --env-file evals/langfuse/.env -f evals/langfuse/compose.yaml -f evals/langfuse/compose.test.yaml exec -T experiments cat /tmp/chattft-timeout-trace.json > /tmp/chattft-timeout-trace.json
+      - name: Export frozen definitions and reports
+        if: always()
+        run: uv run --locked --extra evals python -m evals export-workspace /tmp/chattft-workspace.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: langfuse-browser-validation
+          path: |
+            /tmp/chattft-native-judge-report.json
+            /tmp/chattft-development-trace.json
+            /tmp/chattft-browser-review-report.json
+            /tmp/chattft-timeout-trace.json
+            /tmp/chattft-workspace.json
+            /tmp/chattft-langfuse-*.png
+            evals/langfuse/snapshots/*.json
+      - name: Stop evaluation services
+        if: always()
+        run: uv run --locked --extra evals python -m evals down

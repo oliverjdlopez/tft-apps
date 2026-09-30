@@ -1,0 +1,599 @@
+{
+  "stage": "case-drafting",
+  "lanes": {
+    "IT-1": {
+      "reviewed_case_ids": [
+        "IT-1-C01",
+        "IT-1-C02"
+      ],
+      "review": "Observed item marginals and named triplets do not establish a fixed-build recommendation.",
+      "independent_checks": [
+        {
+          "case_id": "IT-1-C01",
+          "source_ids": [
+            "COORD-S05"
+          ],
+          "finding": "Named IE/Kraken/Flail row, Rapidfire label, 3.96 and 901 reproduced; no matched Rageblade comparison."
+        },
+        {
+          "case_id": "IT-1-C02",
+          "source_ids": [
+            "COORD-S06",
+            "COORD-S07",
+            "COORD-S08"
+          ],
+          "finding": "Titan4.11/Edge4.21 are marginals, not fixed-pair trios. Official cast/scaling changes reproduced; no ranking inferred."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:33:23.511334+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "0128c13278c78c65f3138bae6c3e1d182d4c5812af3f3c6c0ea27185c0636c98",
+        "case-index.json": "ce4b4852664443393b50c98f59c249066750f200cc0ce9ee9829c0c2fee93f5f",
+        "research-report.md": "b61829b891a7d9ded286f6218102dee7e6b06288016ab887f3b3c4b83d0223fd",
+        "sources.json": "2e50a4b68966dd7b0f36261012b03e5087661d002ab9e5ba676b43fa5b2a1ed9"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "CO4-1": {
+      "reviewed_case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C02",
+        "CO4-1-C03"
+      ],
+      "review": "Ordinary-resource repertoire and carry-role distinctions survive; no aggregate Azir statistic establishes the requested role-specific result.",
+      "independent_checks": [
+        {
+          "case_id": "CO4-1-C02",
+          "source_ids": [
+            "COORD-S03"
+          ],
+          "finding": "Veigar/Ornn and Zyra/Amumu values and specialist-item example reproduced; no resource-filtered counts or superiority established."
+        },
+        {
+          "case_id": "CO4-1-C03",
+          "source_ids": [
+            "COORD-S01",
+            "COORD-S04",
+            "COORD-S07"
+          ],
+          "finding": "Azir3 marginal3.61 and all-star zero/three-item values reproduced; Reddit star correction, counterclaim and sample challenge read. Joint role claim remains unresolved."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:33:23.511334+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "2768b7e4d45d4e9ab20bd86251b7be1920f347847007ca74a06b1a7979d9fb56",
+        "case-index.json": "70dc94294fc0d3dc6a813eefa6cd141fbb8a37789a914fd1435fae0d351eed93",
+        "research-report.md": "4391ee6895a3d5a335e038b392378dd978ce6952aabf1249fb975d4987388bfa",
+        "sources.json": "d39fad59f9e5d65fd249b606bae34adda90e93eaa2cf135c9cd530a8f889ec87"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "UN4-2": {
+      "reviewed_case_ids": [
+        "UN4-2-C01",
+        "UN4-2-C02",
+        "UN4-2-C03",
+        "UN4-2-C04"
+      ],
+      "reviewed_utc": "2026-09-29T08:34:35.454620+00:00",
+      "review": "Ordinary and exceptional builds remain incomplete comparisons. Ahri double-Blue legality is still a prerequisite; identity routes do not establish Nidalee form.",
+      "independent_checks": [
+        {
+          "case_id": "UN4-2-C01",
+          "source_ids": [
+            "COORD-S02",
+            "COORD-S07"
+          ],
+          "finding": "Reproduced 18.3b two-star 4.05 summary and official AP/AD change context; route suffix/items do not establish form, no build comparison."
+        },
+        {
+          "case_id": "UN4-2-C02",
+          "source_ids": [
+            "COORD-S01"
+          ],
+          "finding": "Reproduced Azir3 3.61 marginal, not Shojin-specific evidence; exact ordinary triplets remain absent."
+        }
+      ],
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "ff591ec2498301e52922c3fcf2d64456302aae9e2fb7bdda4aa49192730b3532",
+        "case-index.json": "53d6a3e1778a9eff91307d53ca3f86c52763bb081ecf0b372d38e539dcbde041",
+        "research-report.md": "739e514a5c9578738620abe2a2f4a312e6b5cef1f7a80f2cc09174891a55c605",
+        "sources.json": "1b1ebae5bd427195889a0b8e0a5a9b994f9a0b080a2fa3f7f4aaf0cb8fb055e0"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "IT-2": {
+      "reviewed_case_ids": [
+        "IT-2-C01",
+        "IT-2-C02",
+        "IT-2-C03"
+      ],
+      "review": "Exact holder stars and whole-board fixed inventories are preserved; marginal rows do not settle joint allocation.",
+      "independent_checks": [
+        {
+          "case_id": "IT-2-C02",
+          "source_ids": [
+            "COORD-S09"
+          ],
+          "finding": "Helm4.17/58.7 reproduced as marginal, not exact Azir3/Malphite2 allocation."
+        },
+        {
+          "case_id": "IT-2-C03",
+          "source_ids": [
+            "COORD-S10"
+          ],
+          "finding": "Ashe item rows and labels reproduced; neither defines joint six-item assignment or fixed stars."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:42:10.256446+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "90d10fe53aed22162484f9e7e962a6babaf9492f05effdb3860b95f732e3f133",
+        "case-index.json": "26d92000e70ce0436042b2789ddcef8448c8d9a9fc195070a21f3fde9e4e5915",
+        "research-report.md": "4bc150e7c065a574120bc06077b3017cad907bf44f30b6322c72d6b3c5dc374c",
+        "sources.json": "74b089ee5e05c157609e8ca5b2e72a87197efc42af36d51be5c0fda5301bac5e"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "UN4-1": {
+      "reviewed_case_ids": [
+        "UN4-1-C01",
+        "UN4-1-C02",
+        "UN4-1-C03",
+        "UN4-1-C04"
+      ],
+      "review": "Carry investment, exact special builds, item dependence and tank allocation remain distinct; no role or causal result is inferred.",
+      "independent_checks": [
+        {
+          "case_id": "UN4-1-C01",
+          "source_ids": [
+            "COORD-S11",
+            "COORD-S13"
+          ],
+          "finding": "Separate star/item marginals and ordinary trio4.23/569 reproduced; no Veigar3 exact-build result."
+        },
+        {
+          "case_id": "UN4-1-C02",
+          "source_ids": [
+            "COORD-S12",
+            "COORD-S18"
+          ],
+          "finding": "Set18 Flickerblade identity corroborated; coordinator exact discussion fetch failed. Exact-trio comparative answer and some identity details remain incomplete."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:42:10.256446+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "5a0a3b79cb3638b5d5d1ab2a2679cfb71ecc53d31ff9afe007144e1f1f45f9d8",
+        "case-index.json": "4259cec7f514cb514814eb292c8e4ea437e05a2450e5593c0c06c338ddcd22d8",
+        "research-report.md": "2fdba799af7539dc65b75d8fb3666ee290a1750657b61ca82aec923d361ab731",
+        "sources.json": "c3f29f3e3a7c6fbaf0691f042fe7c9b72e8d9c89a5f9af349d705225f43a9945"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "TR-1": {
+      "reviewed_case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "review": "Invoker dependence, Executioner/Kennen confounding and temporal Defender dependence remain analytical questions with incomplete outcomes and partly recovered motivation.",
+      "independent_checks": [
+        {
+          "case_id": "TR-1-C01",
+          "source_ids": [
+            "COORD-S14"
+          ],
+          "finding": "Exact named-build rows reproduced; package contrast cannot establish inactive-Invoker comparison."
+        },
+        {
+          "case_id": "TR-1-C02",
+          "source_ids": [
+            "COORD-S15",
+            "COORD-S16",
+            "COORD-S17"
+          ],
+          "finding": "Soraka3.84/608 and three-versus-four rule independently read. Kennen branch not recovered; cross-tab absent."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:42:10.256446+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "e704ccbe2f02dd6724e62966a885debd6666445f747496b0ba1c573333eec5df",
+        "case-index.json": "95989490989d55a2a837020d4d81e02517d8b738dbc0f8789b5e6c45a841298d",
+        "research-report.md": "6393367379ca41248735e6cc96c0e29f9cdc189f3f22cc87fbaa216d3ad89f47",
+        "sources.json": "1621fe48c4ab8d60521e0d6d5ce4d2b514dbef6ecd7bb317b1a474f5426b2c1a"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "IT-3": {
+      "reviewed_case_ids": [
+        "IT-3-C01",
+        "IT-3-C02",
+        "IT-3-C03",
+        "IT-3-C04",
+        "IT-3-C05",
+        "IT-3-C06"
+      ],
+      "review": "Six distinct item-context investigations include three disputes; package observations remain separate from unmeasured conditional outcomes.",
+      "independent_checks": [
+        {
+          "case_id": "IT-3-C02",
+          "source_ids": [
+            "COORD-S19"
+          ],
+          "finding": "Both exact trios and values reproduced; no matched emblem conclusion."
+        },
+        {
+          "case_id": "IT-3-C04",
+          "source_ids": [
+            "COORD-S20"
+          ],
+          "finding": "Three rows reproduced with different third items and named board packages; no itemized-Ahri dependence established."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:43:22.475036+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "9fb60abee4f3a65b839b55f98345f8c369d9481b04e5260e10d10a49f35de115",
+        "case-index.json": "ae359675337afa950c8ef812222fbcdf632e4f7b09fb0abc38bb2a0509f3042a",
+        "research-report.md": "85f2993bb255afe5b2fdf4a7f39ee4d20a450975f1bb51ec821a35bbf724eef7",
+        "sources.json": "116466200057fe73dd11b0a72222d5b7129a80e77a22b4147ec83f00325c945b"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "UN4-3": {
+      "reviewed_case_ids": [
+        "UN4-3-C01",
+        "UN4-3-C02",
+        "UN4-3-C03",
+        "UN4-3-C04",
+        "UN4-3-C05",
+        "UN4-3-C06"
+      ],
+      "review": "Partnership, support and tank roles retain asymmetric trait/investment conditions. Unobserved link targets and incomplete outcomes remain explicit.",
+      "independent_checks": [
+        {
+          "case_id": "UN4-3-C01",
+          "source_ids": [
+            "COORD-S21",
+            "COORD-S23"
+          ],
+          "finding": "Marginal labels and competing partner suggestions independently reproduced; no best-partner conclusion."
+        },
+        {
+          "case_id": "UN4-3-C05",
+          "source_ids": [
+            "COORD-S22"
+          ],
+          "finding": "Explicit star/trait-asymmetric disagreement and companion changes verified; winner remains unresolved."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:47:21.931076+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "6eb3daa055cc16512134801c210ec699b0d0587213fa37021b22e92de545d9c1",
+        "case-index.json": "ca85e2176786fcbb561546eeae10603eff72c46b7074cb7a4b3d54ef6ebea256",
+        "research-report.md": "4f853a440452ae184ec80e3b4ab6c130448f490a2992c24f189a5f2f4e4a8a70",
+        "sources.json": "c4446b3a450626b61bbac2bdc76ea52cb823d8e264ea8b2824d7543054d6207a"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "CO4-2": {
+      "reviewed_case_ids": [
+        "CO4-2-C01",
+        "CO4-2-C02",
+        "CO4-2-C03",
+        "CO4-2-C04",
+        "CO4-2-C05",
+        "CO4-2-C06"
+      ],
+      "review": "Displayed lineups are illustrative rather than measured recurring cores. Placement subsets, hybrids, levels and deployed counts remain distinct; partial motivation access is labeled.",
+      "independent_checks": [
+        {
+          "case_id": "CO4-2-C03",
+          "source_ids": [
+            "COORD-S24"
+          ],
+          "finding": "Aphelios/Nidalee example and emblem icon association reproduced; no recurrence or ordinary-build conclusion."
+        },
+        {
+          "case_id": "CO4-2-C06",
+          "source_ids": [
+            "COORD-S25"
+          ],
+          "finding": "Reroll claim read in opened tree;seven-Riftbeast anecdote independently read only through indexed reply extraction, matching disclosed access limit."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:47:21.931076+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "5f524b60372c3d30006becf46f86f3c24f856155aaf950f9192e2399c8dbe9d1",
+        "case-index.json": "a8809b7570dd5bb32bb97142ea39fcb3a5a60cc9ac14b223df48108cfba8aa3b",
+        "research-report.md": "e479d33dfddb2b912a49264f041ee4f84dcbc8493663ec34c811af6de3da6630",
+        "sources.json": "7d2b29878be2076f0f89a4fad4cc45241fe9fd78f51b0be6399e48d9956234aa"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "IT-4": {
+      "reviewed_case_ids": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "review": "Exact stars, co-items and frontline constraints are preserved. Second-artifact allocation differs from item dependence. Named builds and marginals leave joint outcomes incomplete.",
+      "independent_checks": [
+        {
+          "case_id": "IT-4-C01",
+          "source_ids": [
+            "COORD-S26",
+            "COORD-S27",
+            "COORD-S29"
+          ],
+          "finding": "Rows reproduced;different holder/time populations cannot rank eight exact allocations."
+        },
+        {
+          "case_id": "IT-4-C05",
+          "source_ids": [
+            "COORD-S28",
+            "COORD-S30"
+          ],
+          "finding": "Hypothetical suggestion and actual marginal rows reproduced;neither proves emblem-conditioned niche."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:52:42.996973+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "8c9ddfa1cab4a9f18ac1a2ce98d850ae7ef0d0d850ea6353b92431f2f3771a21",
+        "case-index.json": "2985623e45809779ec85b1421a40b32200fdd8ea6988643574d0f0bfb44a275b",
+        "research-report.md": "75e3d3e14dbf5c85b563cc5d87c68052bf41acb04b07c0c0fc24861daf0b245e",
+        "sources.json": "9ed123baf171d20724e249b085f28dd612e879e1b7fed59d16995c4902273af3"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "TR-2": {
+      "reviewed_case_ids": [
+        "TR-2-C01",
+        "TR-2-C02",
+        "TR-2-C03",
+        "TR-2-C04",
+        "TR-2-C05",
+        "TR-2-C06"
+      ],
+      "review": "Constructed anchors retain star investment, forms and trait slot costs. No tooltip implies a performance ranking. TR-2-C04 overlaps CO4-4-C01 as a narrower no-three-star comparison.",
+      "independent_checks": [
+        {
+          "case_id": "TR-2-C01",
+          "source_ids": [
+            "COORD-S32",
+            "COORD-S33",
+            "COORD-S03"
+          ],
+          "finding": "Elderwood membership/breakpoint and player need checked;unrelated comp card cannot rank Ezreal packages."
+        },
+        {
+          "case_id": "TR-2-C02",
+          "source_ids": [
+            "COORD-S32",
+            "COORD-S34",
+            "COORD-S35",
+            "COORD-S16"
+          ],
+          "finding": "Inferno Lux counts two;Kennen removal breaks Ezreal Executioner pair in stated roster. Historical form encoding and outcomes unverified."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:52:42.996973+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "8ebf0d514d39884f156209a2edf4f90549ba9afd89a1f3959beb3db56b644634",
+        "case-index.json": "e911f15ec215d5d5bec5731dff565c4cca91adcb14d4a41353bcc0e5a186e0c5",
+        "research-report.md": "635a37f43779d49fe1f8ed781229dd08b0421854349cc8e7289e389bc7a5241f",
+        "sources.json": "24abcb1c079e7e3c5089a295b59ecd32310a624065a28744854b2b458e86f01b"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "UN4-4": {
+      "reviewed_case_ids": [
+        "UN4-4-C01",
+        "UN4-4-C02",
+        "UN4-4-C03"
+      ],
+      "review": "Dual-carry interpretation, mismatched patch labels and missing exact Lillia motivation are explicit. Supporting-roster outcomes are not equal-investment substitutions.",
+      "independent_checks": [
+        {
+          "case_id": "UN4-4-C01",
+          "source_ids": [
+            "COORD-S36",
+            "COORD-S37"
+          ],
+          "finding": "Two-star4.18/4.30 reproduced under different patch labels;no requested main-tank comparison."
+        },
+        {
+          "case_id": "UN4-4-C03",
+          "source_ids": [
+            "COORD-S38"
+          ],
+          "finding": "Both row metrics,Draven emblem and support differences reproduced;no equal-investment winner established."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T08:52:42.996973+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "e4f59f7617f13374c64511a1ff3064c488446895454b42c213bb7a1f535cffd0",
+        "case-index.json": "531f40eff1e541687ec79cb69eebce6b2dd6d5b80308250ada3acd8dcaf77198",
+        "research-report.md": "b4d6431fb6403053719f3bc156e522620087b6a99eb2d2aaad6aeeda5407e5cf",
+        "sources.json": "e970d94e6da3402da21c0c2425196307ee4af9c119f23d14e21defa0003180e0"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "CO4-3": {
+      "reviewed_case_ids": [
+        "CO4-3-C01",
+        "CO4-3-C02",
+        "CO4-3-C03",
+        "CO4-3-C04",
+        "CO4-3-C05"
+      ],
+      "review": "Historical scope and overlapping variation counts are explicit. Family averages do not establish tank-role-specific or fixed-core outcomes.",
+      "independent_checks": [
+        {
+          "case_id": "CO4-3-C01",
+          "source_ids": [
+            "COORD-S39",
+            "COORD-S40"
+          ],
+          "finding": "Guide alternative and historical variants reproduced; exact current core and outcomes remain unresolved."
+        },
+        {
+          "case_id": "CO4-3-C02",
+          "source_ids": [
+            "COORD-S41"
+          ],
+          "finding": "Rengar-free alternatives reproduced; Vi/Krug main-tank intersections unmeasured."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T09:00:11.868322+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "7d87a33670c6da79baeb4346f3756adebec128ae6faa388daf6290a4e5d99bc7",
+        "case-index.json": "28fc615cc4aa2d77f9955d1f09d1b623c2741a0823387ce542e68742bba4db9a",
+        "research-report.md": "3af4834fea20c8428fd905289bd1b7d33aa38349eca0c38c98894eb208fbac42",
+        "sources.json": "d807fc7d8217d8cb4d15d273dcdb8383ca26818d79294fa9851b7e81e437a5d1"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "CO4-4": {
+      "reviewed_case_ids": [
+        "CO4-4-C01",
+        "CO4-4-C02",
+        "CO4-4-C03",
+        "CO4-4-C04"
+      ],
+      "review": "C01/C02 remain incomplete. C03/C04 support descriptive snapshot interpretations only; shared rosters, all-rank scope, rounded counts and conflicting window labels are explicit.",
+      "independent_checks": [
+        {
+          "case_id": "CO4-4-C03",
+          "source_ids": [
+            "COORD-S42",
+            "COORD-S29"
+          ],
+          "finding": "Displayed popularity and performance ordering reproduced at level nine; no causal swap or current optimum established."
+        },
+        {
+          "case_id": "CO4-4-C04",
+          "source_ids": [
+            "COORD-S43",
+            "COORD-S44",
+            "COORD-S29"
+          ],
+          "finding": "Three level-ten rows and double-slot legality reproduced; small descriptive lead does not establish a conclusive universal ranking."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T09:00:11.868322+00:00",
+      "reference_answers_validated": 2,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "2975e98623c7c2dec08f8fc6a98bb328b4547a77305e73acb7a14eb777f934c9",
+        "case-index.json": "a394aa9f6387fe8e73c61f876046f273e23dd64366084572326bf358b7550c9e",
+        "research-report.md": "77610f432dfb229c4392f1514e99742cbf17fc42563ef16c570fac8800289a0c",
+        "sources.json": "4a3a105db79d23378d9423646c6e0f9794a9074c7da8c20f0fe8441cb01a5bab"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "TR-3": {
+      "reviewed_case_ids": [
+        "TR-3-C01",
+        "TR-3-C02",
+        "TR-3-C04",
+        "TR-3-C05"
+      ],
+      "review": "Defender disagreement, historical Hunter marginals and the missing Hunter branch are explicit. Brawler and Inferno comparisons preserve whole-board artifacts and item-slot costs.",
+      "independent_checks": [
+        {
+          "case_id": "TR-3-C01",
+          "source_ids": [
+            "COORD-S45",
+            "COORD-S07"
+          ],
+          "finding": "Named guide variants and older critical comments reproduced; neither establishes holder superiority."
+        },
+        {
+          "case_id": "TR-3-C02",
+          "source_ids": [
+            "COORD-S46",
+            "COORD-S47"
+          ],
+          "finding": "Historical holder rows reproduced; exact motivating discussion branch still not independently readable."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T09:00:11.868322+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "8d3b874d9816417af8b12699d630d2838e599b077df37ee13ec574cc3a986519",
+        "case-index.json": "62f4a993c3010edecb7f46121d2e7246ce4b0ebd8369d6dc65302095c38f5668",
+        "research-report.md": "f4fdf6e85ed5605f5af06411ca0bbc3eddf6fe5dd2ad781ab8b61f51d8144d7c",
+        "sources.json": "7482b13b84079bdef86a5ea1e32e0a0e02ddcd904123bfaad39ae12262416faf"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    },
+    "TR-4": {
+      "reviewed_case_ids": [
+        "TR-4-C01",
+        "TR-4-C02",
+        "TR-4-C03",
+        "TR-4-C04"
+      ],
+      "review": "Numeric rows retain scope restrictions. Lunar in a family title is not Eclipse activation; Mama Beak presence is not carry role.",
+      "independent_checks": [
+        {
+          "case_id": "TR-4-C01",
+          "source_ids": [
+            "COORD-S48",
+            "COORD-S50"
+          ],
+          "finding": "Both variation rows and fresh Tactics 52.6% reproduced; no exact-six matched package conclusion."
+        },
+        {
+          "case_id": "TR-4-C02",
+          "source_ids": [
+            "COORD-S49"
+          ],
+          "finding": "Lunar2 core, upgrade labels and family average/count reproduced; neither family name nor headline identifies the requested Eclipse interaction."
+        }
+      ],
+      "reviewed_utc": "2026-09-29T09:01:30.739376+00:00",
+      "reference_answers_validated": 0,
+      "matched_statistical_comparisons_validated": 0,
+      "reviewed_file_hashes": {
+        "cases.md": "3b7d1f64afcf25dbdf27664701bd65bf015706b4e5c72dee6d32e96caa7ff8d2",
+        "case-index.json": "18252cc13fbb934b8571d1f3c51b1a0e6a3fd40d08442da99ac187aab8c6ad68",
+        "research-report.md": "091bae73567dde7cd7e093a743ad3f6cdb6078c060d859019ce9ecdcc811a263",
+        "sources.json": "ddc5dcf0bcbf2f350080e905033003971fe57756b35f0114739c207e81b6e38c"
+      },
+      "evidence_cleanup_reviewed_utc": "2026-09-29T14:40:00.067261+00:00"
+    }
+  },
+  "reference_answer_scope": "Two CO4-4 answers validated only for descriptive interpretations of identified published snapshots. No fully matched current gameplay recommendation validated.",
+  "verification_scope": "Substantive coordinator review of all final cases and independent checks of two cases per lane. Cleanup integrity is recorded separately in validation.json.",
+  "hash_scope": "Hashes identify retained case and evidence files after cleanup; original case-review dates and independent research observations remain unchanged."
+}

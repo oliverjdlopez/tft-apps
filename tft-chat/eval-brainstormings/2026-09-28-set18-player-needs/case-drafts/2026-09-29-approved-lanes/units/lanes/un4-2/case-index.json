@@ -1,0 +1,103 @@
+{
+  "lane": "UN4-2",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "UN4-2-C01",
+      "title": "AP-oriented Nidalee within comparable boards",
+      "question": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?",
+      "status": "provisional",
+      "origin": "Discussion-motivated adaptation of the approved question; the Invoker suggestion is observed, the population comparison is constructed.",
+      "proposal_lineage": [
+        "UN4-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S04",
+        "S07",
+        "S10"
+      ],
+      "comparison": "Exactly two-star Nidalee with three completed ordinary items: AP-oriented versus AD-oriented exact packages, then the same comparison within recurring allied cores and observed Invoker breakpoints. Keep mixed packages separate; item families do not establish form.",
+      "unresolved_evidence": [
+        "Exact package taxonomy and matched cohort counts/outcomes",
+        "Comparable board strata and allied item allocation",
+        "Form observability",
+        "Complete period/region metadata"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "UN4-2-C02",
+      "title": "Azir’s Shojin slot",
+      "question": "Does three-star Azir need Shojin, or can I build Guinsoo’s plus two damage items? Are there boards where spending that slot on mana looks more worthwhile?",
+      "status": "provisional",
+      "origin": "User-accepted question; general mana-item discussion motivates investigation, while the exact Azir formulation is constructed.",
+      "proposal_lineage": [
+        "UN4-2-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S03",
+        "S04",
+        "S08",
+        "S10"
+      ],
+      "comparison": "Exactly three-star Azir with three completed ordinary items: Guinsoo’s plus one shared damage item plus Shojin versus Guinsoo’s plus that shared item plus a second damage item. Show exact pairs before pooling. Examine common Blackthorn, Executioner and Summoner contexts.",
+      "unresolved_evidence": [
+        "Exact triplet counts and outcomes",
+        "Damage-item definition including incidental mana regeneration",
+        "Board strata and allied items",
+        "Complete period/region metadata"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "UN4-2-C03",
+      "title": "Rapidfire-emblem Nidalee as an exceptional build",
+      "question": "Does AP Nidalee with a Rapidfire emblem actually outperform ordinary AP builds, or is it mainly showing up on much stronger endgame boards?",
+      "status": "provisional",
+      "origin": "Constructed extension of an observed special-build anecdote. Two-star restriction is supplied by this case, not stated by the commenter.",
+      "proposal_lineage": [
+        "UN4-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S07",
+        "S10"
+      ],
+      "comparison": "Exactly two-star Nidalee with three completed items: Rapidfire emblem plus two explicitly AP-oriented ordinary items versus those same two items plus an ordinary third item. Separate exact third items and observable Rapidfire breakpoints; compare board investment and common supporting cores.",
+      "unresolved_evidence": [
+        "Emblem cohort size and outcomes",
+        "Comparable ordinary third-item groups",
+        "Board investment and emblem source if observed",
+        "Form and complete period/region metadata"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "UN4-2-C04",
+      "title": "Ahri double Blue Buff outside the simulator",
+      "question": "A simulator suggested double Blue Buff for Ahri. Do two-star Ahri endgame boards with that build actually hold up against a single mana item and two damage items, and does the surrounding board change the comparison?",
+      "status": "provisional",
+      "origin": "Directly observed discussion need adapted into ranked endgame investigation. Two-star restriction and matching constraints are supplied, not verbatim.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S09",
+        "S10"
+      ],
+      "comparison": "Exactly two-star Ahri with three completed ordinary items: two Blue Buffs plus a shared damage item versus one Blue Buff plus the shared item plus a second damage item. Show Shojin alternatives separately. Examine recurring allied cores and observed Blossom, Spellweaver and Invoker context.",
+      "unresolved_evidence": [
+        "Double-Blue cohort and matched triplets",
+        "Item multiplicity legality confirmed for the chosen window",
+        "Allied item investment and trait strata",
+        "Complete period/region metadata"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

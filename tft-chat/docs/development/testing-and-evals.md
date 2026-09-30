@@ -1,0 +1,162 @@
+# Tests and Evaluations
+
+## Pytest and CI
+
+The Python CI gate is:
+
+```bash
+uv run pytest -q
+```
+
+The CI job also installs Node 22, runs the locked frontend install, executes
+Vitest/jsdom browser tests, and creates the Vite production build before the
+Python suite. Run the same frontend checks locally with:
+
+```bash
+cd app/frontend
+npm ci
+npm test
+npm run build
+```
+
+GitHub Actions supplies PostgreSQL 16 and an isolated `RDS_TEST_*` target.
+`conftest.py` checks connectivity, creates the runtime schema once, and resets
+the tables for every database-backed `conn` fixture. Those fixtures skip when
+the test database is absent or unreachable, so a local green run may cover
+less than CI; the skip count records that distinction.
+
+Most unit tests use fakes and monkeypatching and need neither network access
+nor credentials. There is currently no repository formatter, lint command,
+coverage threshold, or static type-checking CI step. Frontend tests use jsdom
+and Testing Library to exercise the stream parser, application tabs, and the
+three evidence displays. `tests/test_evidence.py` verifies pre-rounding capture,
+reference isolation, compatible specifications, suppression, bounded coverage,
+and SDK-tool-to-stream precision. Run it with the assistant and chat tests for
+changes to evidence ownership or transport. Grader execution evidence recognizes
+`present_evidence` and legacy `present_inline_data` calls from historical traces;
+frozen historical snapshots retain their original prompt and tool names.
+
+Current cohort and delta registry coverage is in `tests/test_cohort_facts.py`
+and `tests/test_openai_tools.py`.
+
+Every test has a 60-second POSIX alarm guardrail spanning fixture setup, the
+test call, and fixture teardown. A stall fails with its node ID and the active
+Python traceback instead of blocking the suite.
+Set `PYTEST_TEST_TIMEOUT_SECONDS` to change the repository default, or use
+`@pytest.mark.timeout(seconds)` for a targeted override. A marker value of `0`
+explicitly disables the guardrail for that test.
+
+## Configured database smoke tests
+
+`tests/test_configured_db_smoke.py` makes representative calls through the
+registered model-facing tools and their normal read-only database boundary. It
+checks rankings, exact-name resolution, and bounded SQL aggregate results using
+stable structural and metric invariants rather than patch-sensitive ranking
+values.
+
+The smoke suite targets the typed `RDS_*` application database and is skipped
+unless an operator explicitly opts in. It never uses the truncating
+`RDS_TEST_*` fixtures. Run it only after verifying the configured application
+target:
+
+```bash
+CHAT_TFT_RUN_CONFIGURED_DB_SMOKE_TESTS=1 \
+  uv run pytest -q --log-cli-level=INFO tests/test_configured_db_smoke.py
+```
+
+The tools enforce a read-only PostgreSQL transaction, minimum public sample
+sizes, row limits, and the aggregate-table allowlist during these calls. The
+INFO logs report each tool's elapsed time and bounded result summary, plus the
+public unit, item, or trait names used to verify the response.
+
+## Langfuse evaluations
+
+Langfuse is the separate evaluation workspace. Start it with
+`uv run --extra evals python -m evals up` and open <http://localhost:15500>.
+Workflow datasets, prompt versions, native evaluators, and annotations are edited
+in its UI. See the [browser walkthrough](langfuse-onboarding.md). Native Custom Experiment buttons call the local Python service, which
+runs the real assistant graph and publishes traces, scores, and comparisons.
+
+The hosted workspace contains `end-to-end` (28 cases, including seven unscored
+intake prompts) and `data-analysis` (seven cases), with string-only inputs. The
+local catalog retains nine suites and 84 cases including historical offline
+regressions. The retained benchmark corpus has 86 deterministic assistant checks
+and 13 rubrics. Reusable trace, selector, worker,
+and database logic lives
+in `evals/`; platform integration and exported definitions live in
+`evals/langfuse/`. Every run exports its frozen inputs into content-addressed
+snapshots for Git review. Production prompts remain repository-owned.
+
+```bash
+uv sync --locked --extra evals
+uv run --extra evals python -m evals validate
+uv run --extra evals python -m evals run --suite dummy_assistant --offline
+uv run --extra evals pytest -q tests/test_langfuse_execution.py evals/langfuse/tests
+```
+
+CI retains the Python and frontend gates, adds catalog/execution/HTTP tests and
+the credential-free fixture, and starts an isolated Compose stack for the native
+browser workflow. The live evaluation workflow remains an explicit dispatch
+using the `evals` environment. HTTP tests require local event-loop/socket access;
+Docker and browser integration checks require their corresponding runtimes.
+
+See [the evaluation guide](../../evals/README.md),
+[deployment and backups](langfuse-local.md),
+[content and snapshots](langfuse-content.md), and
+[execution and scoring](langfuse-execution.md) for the exact contracts.
+
+### Existing coverage gaps
+
+The offline context cases `numeric_heading`, `partial_heading_category`,
+`semantic_description`, and `semantic_unit_mechanic` still fail. Ten skill cases
+reference removed definitions and are archived with repair metadata and intact expectations.
+CI runs the passing fixture without weakening benchmark expectations.
+Full pytest collection currently fails because `tests/test_assistant_access.py`
+imports `assistant_reachable_names` from the registry module, which no longer
+exports it. Full eval validation also reports that `exact_unit` has required
+gold absent from the current corpus. Both failures reproduce on the `dev`
+baseline used for the display integration; the focused evidence/chat tests and
+offline fixture are independent of these blockers.
+
+Historical Promptfoo results are retained untouched. The
+[compatibility history](native-promptfoo-compatibility.md) describes the retired
+integration, not current commands. The ChatTFT in-app Evals API/editor remain removed.
+
+The [natural workspace validation record](langfuse-validation.md) documents migration identity checks, browser acceptance, native mock scheduling, timeout evidence, and existing repository test failures.
+
+## Context and response smoke checks
+
+The [30-case context/response suite](context-response-smoke.md) targets `chat`
+with one fact-oriented response regex per question and no quality judge. It is
+registered as `context_response_smoke`, with portable schema-v3 JSON and CSV
+seed copies and the native dataset name `context-response`. The regexes check
+key answer facts while trace inspection covers context selection and retrieval
+completeness.
+
+## Flowchart checks
+
+Run `uv run pytest -q tests/test_flowchart_api.py tests/test_flowchart_persistence.py tests/test_entity_assets.py`,
+`npm --prefix app/frontend test`, and `npm --prefix desktop test`. The API tests
+use a disposable SQLite table and a temporary `gameplans/` directory; the
+persistence test uses the isolated `RDS_TEST_*` target and skips when it is
+unavailable. `app/frontend/src/flowchart/Flowchart.test.jsx` stubs `fetch` and
+covers workspace creation, palette search, drops onto plans and empty canvas,
+autosave revisions, conflicts, and read-only JSON import. See
+[Flowchart](../apps/flowchart.md).
+
+## Composition workbench checks
+
+Run `uv run --extra compositions pytest -q tests/compositions`,
+`npm --prefix app/frontend test`, `npm --prefix app/frontend run build`, and
+`npm --prefix desktop test`. Shared JSON fixtures validate Pydantic/Zod acceptance,
+unknown-field rejection, duplicates, null outcomes, score semantics, and denominators.
+Regenerate exported JSON schemas/fixtures with
+`uv run python scripts/export_composition_contracts.py`.
+
+Adapter tests independently exercise the same snapshots and serialization contract.
+Persistence unit tests use disposable SQLite files; PostgreSQL integration and owned
+child-process tests use the isolated `RDS_TEST_*` target and skip when unavailable.
+They verify immutable reruns, separate full-population results, interruption recovery,
+worker failure, cancellation, and unchanged source analytics. The opt-in native
+Electron workspace smoke additionally checks Compositions visibility, retention,
+renderer isolation, and cleanup. See [the adapter contract](../architecture/compositions/adapter.md).

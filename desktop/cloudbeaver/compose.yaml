@@ -1,0 +1,11 @@
+name: chattft-cloudbeaver
+services:
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:26.2.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8978:8978"
+    volumes:
+      - workspace:/opt/cloudbeaver/workspace
+volumes:
+  workspace:

@@ -1,0 +1,370 @@
+{
+  "lane": "CO4-4",
+  "stage": "case-drafting",
+  "case_ids": [
+    "CO4-4-C01",
+    "CO4-4-C02",
+    "CO4-4-C03",
+    "CO4-4-C04"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wgymmj/help_i_dont_understand_the_endgame_at_all/",
+      "title": "Help: I do not understand the endgame at all",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened readable text and relevant visible replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-4-C01"
+      ],
+      "observations": [
+        "Visible replies dispute Solar star investment and alternative cap packages; author distinguishes earlier opponent from final board."
+      ],
+      "limitations": [
+        "Anecdotal; relative dates inconsistent; alleged 3.15 Eclipse average has no cohort metadata."
+      ],
+      "patch_scope": "Set 18 discussion; exact match date/mode unverified",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S2",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w7klse/is_eclipse_bad/",
+      "title": "Is Eclipse Bad?",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened readable text and relevant visible replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-4-C01"
+      ],
+      "observations": [
+        "Frontline opportunity cost, emblem exceptions and challenges to ambitious three-star scenarios."
+      ],
+      "limitations": [
+        "Opinions and anecdotes, not matched outcomes."
+      ],
+      "patch_scope": "Set 18 discussion; exact version unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S3",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1whnbn9/freshly_cooked_comp_2_birds_with_1_stone/",
+      "title": "Freshly Cooked Comp: 2 Birds with 1 Stone",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened readable text and relevant visible replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-4-C02"
+      ],
+      "observations": [
+        "Kennen/Amumu reply and conditional author response opened; Ezreal item role and Rapidfire-emblem context inspected; viability disagreement visible."
+      ],
+      "limitations": [
+        "Full board image unread; hidden replies uninspected; self-reported Master result unverified; 4.5 AVP speculative."
+      ],
+      "patch_scope": "Set 18; exact ranked match window unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S4",
+      "url": "https://www.metatft.com/comps",
+      "title": "MetaTFT comps",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened; one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-4-C01",
+        "CO4-4-C02"
+      ],
+      "observations": [
+        "JavaScript shell only."
+      ],
+      "limitations": [
+        "No filtered outcomes or population metadata."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S5",
+      "url": "https://www.metatft.com/explorer",
+      "title": "MetaTFT explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened; one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-4-C01",
+        "CO4-4-C02"
+      ],
+      "observations": [
+        "JavaScript shell only."
+      ],
+      "limitations": [
+        "No filtered outcomes or population metadata."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S6",
+      "url": "https://tftcodex.com/comps/solar-aphelios.html",
+      "title": "Solar Aphelios",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened readable page",
+      "roles": [
+        "historical_context"
+      ],
+      "case_ids": [
+        "CO4-4-C01"
+      ],
+      "observations": [
+        "Direct page stale relative to newer champion-index listing."
+      ],
+      "limitations": [
+        "Not level-nine or Solar-star matched; no current package answer."
+      ],
+      "patch_scope": "Displayed 18.2",
+      "statistical_metadata": {
+        "updated_at": "2026-09-21T22:18:00Z",
+        "rank": "Diamond+ headline",
+        "queue": "ranked per methodology",
+        "region": "pooled per methodology",
+        "period": null,
+        "sample_count": 1033,
+        "average_placement": 4.33,
+        "top4_percent": 52.7,
+        "win_percent": 13.7,
+        "validated_comparison": false
+      }
+    },
+    {
+      "id": "S7",
+      "url": "https://tftcodex.com/comps/primal-aphelios-nidalee.html",
+      "title": "Primal Aphelios and Nidalee",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened readable options",
+      "roles": [
+        "answer_support_outcomes"
+      ],
+      "case_ids": [
+        "CO4-4-C03"
+      ],
+      "observations": [
+        "Same-level option rows inspected; see structured values."
+      ],
+      "limitations": [
+        "Level text and methodology disagree on period; abbreviated counts; not investment matched."
+      ],
+      "patch_scope": "Displayed 18.3; exact B/disable split unknown",
+      "statistical_metadata": {
+        "updated_at": "2026-09-29T04:50:00Z",
+        "queue": "ranked per methodology",
+        "rank": "all ranks level section",
+        "region": "pooled",
+        "period": null,
+        "period_labels": [
+          "level section: last 14 days",
+          "options: this patch",
+          "methodology: six days current comp window"
+        ],
+        "final_level": 9,
+        "group_games": 75133,
+        "top4_percent": null,
+        "rows": [
+          {
+            "addition": "Brambleback",
+            "average_placement": 2.85,
+            "win_percent": 17,
+            "sample_display": "7.9k",
+            "sample_exact": null
+          },
+          {
+            "addition": "Ivern",
+            "average_placement": 2.94,
+            "win_percent": 17,
+            "sample_display": "7.5k",
+            "sample_exact": null
+          },
+          {
+            "addition": "Alune",
+            "average_placement": 3.13,
+            "win_percent": 13,
+            "sample_display": "18k",
+            "sample_exact": null,
+            "most_played": true
+          }
+        ],
+        "validated_comparison": "Displayed same-level descriptive comparison; no matching or causal validation"
+      }
+    },
+    {
+      "id": "S8",
+      "url": "https://tftcodex.com/about/index.html",
+      "title": "How TFT Codex measures Teamfight Tactics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened complete methodology",
+      "roles": [
+        "methodology"
+      ],
+      "case_ids": [
+        "CO4-4-C03",
+        "CO4-4-C04"
+      ],
+      "observations": [
+        "Ranks may inherit discovery-player tier; ranked queue and pooled regions. Options compare final boards at equal level; minimum counts and shrinkage govern ordering."
+      ],
+      "limitations": [
+        "Methodology describes six-day current comp window; page-level last-14-day wording unresolved. Does not establish item/star matching."
+      ],
+      "patch_scope": "Updated 2026-09-29; methodology",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S9",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "TFT patch 18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened official notes",
+      "roles": [
+        "answer_support_rules"
+      ],
+      "case_ids": [
+        "CO4-4-C01",
+        "CO4-4-C02",
+        "CO4-4-C03",
+        "CO4-4-C04"
+      ],
+      "observations": [
+        "September 24 balance update and September 28 Polymorph disable inspected."
+      ],
+      "limitations": [
+        "Rules reference, not a dataset or proof of which boards used a bug."
+      ],
+      "patch_scope": "18.3 with B and September 28 updates",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S10",
+      "url": "https://tftcodex.com/comps/riftbeast-elder-dragon-draven.html",
+      "title": "Riftbeast Elder Dragon and Draven",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened readable options",
+      "roles": [
+        "answer_support_outcomes"
+      ],
+      "case_ids": [
+        "CO4-4-C04"
+      ],
+      "observations": [
+        "Same-level final-option outcomes inspected."
+      ],
+      "limitations": [
+        "Rounded counts; unresolved period labels; no matched investment or Lux variants."
+      ],
+      "patch_scope": "Displayed 18.3; exact subpatch split unknown",
+      "statistical_metadata": {
+        "updated_at": "2026-09-29T00:52:00Z",
+        "queue": "ranked per methodology",
+        "rank": "all ranks level section",
+        "region": "pooled",
+        "period": null,
+        "period_labels": [
+          "level section: last 14 days",
+          "options: this patch",
+          "methodology: six days current comp window"
+        ],
+        "final_level": 10,
+        "group_games": 16579,
+        "top4_percent": null,
+        "rows": [
+          {
+            "addition": "Alune",
+            "average_placement": 1.55,
+            "win_percent": 68,
+            "sample_display": "1.4k",
+            "sample_exact": null
+          },
+          {
+            "addition": "Lux",
+            "average_placement": 1.58,
+            "win_percent": 66,
+            "sample_display": "3.4k",
+            "sample_exact": null
+          },
+          {
+            "addition": "Soraka",
+            "average_placement": 1.59,
+            "win_percent": 65,
+            "sample_display": "999",
+            "sample_exact": 999
+          }
+        ],
+        "validated_comparison": "Displayed same-level descriptive comparison; no matching or causal validation"
+      }
+    },
+    {
+      "id": "S11",
+      "url": "https://tactics.tools/info/set-update",
+      "title": "Set 18 Enchanted Wilds Information",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Opened and searched Apex Predator",
+      "roles": [
+        "answer_support_rules"
+      ],
+      "case_ids": [
+        "CO4-4-C04"
+      ],
+      "observations": [
+        "Apex Predator entry explicitly states Elder Dragon consumes two slots."
+      ],
+      "limitations": [
+        "Launch/PBE framing; only slot rule used, no live outcomes."
+      ],
+      "patch_scope": "Set 18 reference; no frozen version",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S12",
+      "url": "https://www.reddit.com/media?url=https://preview.redd.it/freshly-cooked-comp-2-birds-with-1-stone-v0-bu1mfbl1btph1.png?auto%3Dwebp%26crop%3Dsmart%26s%3Dbc8ef3abe2e132301ec1c6e82f442baf37520301%26width%3D640",
+      "title": "Azir board image attempt",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:51:39Z",
+      "access_status": "Image not readable",
+      "roles": [
+        "access_attempt"
+      ],
+      "case_ids": [
+        "CO4-4-C02"
+      ],
+      "observations": [
+        "Image click redirected to media shell; alternate bare preview URL returned error."
+      ],
+      "limitations": [
+        "No visual roster or stars read."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    }
+  ]
+}

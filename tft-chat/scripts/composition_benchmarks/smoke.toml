@@ -1,0 +1,14 @@
+name = "Composition benchmark smoke"
+sample_sizes = [24, 64]
+seeds = [42]
+repeats = 2
+warmups = 1
+
+[[sweeps]]
+kind = "distance"
+backends = ["cpu", "cuda"]
+
+[[sweeps]]
+algorithm = "hdbscan"
+[sweeps.parameters]
+min_cluster_size = [3, 5]

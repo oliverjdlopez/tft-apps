@@ -1,0 +1,9 @@
+{
+  "name": "context_selector",
+  "description": "Select complete factual reference collections with comprehensive coverage of the request.",
+  "model": "gpt-6-luna",
+  "reasoning": "low",
+  "tools": {"include_all": false},
+  "context": {"repository": false},
+  "handoffs": []
+}

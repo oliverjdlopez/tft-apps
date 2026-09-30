@@ -1,0 +1,341 @@
+{
+  "lane": "UN4-2",
+  "stage": "case-drafting",
+  "case_ids": [
+    "UN4-2-C01",
+    "UN4-2-C02",
+    "UN4-2-C03",
+    "UN4-2-C04"
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wdpeq4/removed_by_moderator/",
+      "title": "Removed post: surviving build discussion",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_surviving_replies_original_removed",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "UN4-2-C01"
+      ],
+      "observations": [
+        "Opened /removed/ redirect and read surviving replies. Several favor AD Nidalee; one suggests AP with Invoker support. Other broad advice is explicitly contested."
+      ],
+      "limitations": [
+        "Original post and board image missing; no reconstruction. Relative ages do not establish date. No controlled outcomes."
+      ],
+      "patch_scope": "Set 18; exact original patch/mode unverified",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S02",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wqoe13/183_whats_working_whats_not/",
+      "title": "18.3 What’s Working? What’s Not?",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_readable",
+      "roles": [
+        "motivation",
+        "exception_caution"
+      ],
+      "case_ids": [
+        "UN4-2-C02",
+        "UN4-2-C03"
+      ],
+      "observations": [
+        "Read AP Nidalee/Rapidfire-emblem anecdote and Azir-three/special-staff first-place anecdote. Thread warns its image may predate B patch; replies disagree about nerf impact."
+      ],
+      "limitations": [
+        "One discussion, not independent corroborating sources. Neither anecdote establishes ordinary-item comparisons. Exact stars absent for Nidalee; two-star scope is constructed."
+      ],
+      "patch_scope": "18.3 with B-patch ambiguity",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S03",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1w0rmg9/tft_set_18_mana_lock_data_for_all_champions/",
+      "title": "Set 18 Mana Lock data: replies and corrections",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_readable",
+      "roles": [
+        "motivation",
+        "methodology_caution"
+      ],
+      "case_ids": [
+        "UN4-2-C02",
+        "UN4-2-C04"
+      ],
+      "observations": [
+        "Read author acknowledgments of parsing errors and simulation-horizon critique. Ahri commenter questions double Blue Buff; author says the recommendation changes with window and surrounding traits."
+      ],
+      "limitations": [
+        "Disputed simulator discussion, not ranked placement evidence. Exact date and subpatch unknown. No simulation was run; old timings not adopted."
+      ],
+      "patch_scope": "Set 18; exact subpatch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S04",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Official TFT patch 18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_readable",
+      "roles": [
+        "rules_reference"
+      ],
+      "case_ids": [
+        "UN4-2-C01",
+        "UN4-2-C02"
+      ],
+      "observations": [
+        "Official page includes AP Nidalee buff, AD Nidalee scaling reduction and Azir ability buff. Includes mid-patch updates."
+      ],
+      "limitations": [
+        "Rules do not establish a matched statistical window or item ranking."
+      ],
+      "patch_scope": "18.3 and dated mid-patch updates",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S05",
+      "url": "https://tactics.tools/units",
+      "title": "Tactics.tools Units shell",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_controls_only",
+      "roles": [
+        "access_attempt"
+      ],
+      "case_ids": [
+        "UN4-2-C01",
+        "UN4-2-C02",
+        "UN4-2-C03",
+        "UN4-2-C04"
+      ],
+      "observations": [
+        "Ranked, Diamond+, 18.3b controls visible; no unit rows. Short /units/nidalee and /units/azir routes also returned shells."
+      ],
+      "limitations": [
+        "Control state is not a filtered query result."
+      ],
+      "patch_scope": "18.3b label",
+      "statistical_metadata": {
+        "mode_label": "Ranked",
+        "rank_label": "Diamond+",
+        "patch_label": "18.3b",
+        "region": null,
+        "period": null,
+        "sample_size": null,
+        "values": null
+      }
+    },
+    {
+      "id": "S06",
+      "url": "https://tactics.tools/explorer",
+      "title": "Tactics.tools Stats Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_unfiltered_no_data",
+      "roles": [
+        "workflow",
+        "access_attempt"
+      ],
+      "case_ids": [
+        "UN4-2-C01",
+        "UN4-2-C02",
+        "UN4-2-C03",
+        "UN4-2-C04"
+      ],
+      "observations": [
+        "Three empty filter inputs, 18.3b/Diamond+ and No Data; patron notice."
+      ],
+      "limitations": [
+        "No filters executed. No Data is not evidence of zero matches. No access controls bypassed."
+      ],
+      "patch_scope": "18.3b control",
+      "statistical_metadata": {
+        "region": null,
+        "period": null,
+        "sample_size": null,
+        "values": null
+      }
+    },
+    {
+      "id": "S07",
+      "url": "https://tactics.tools/units/da_nidalee18_ap",
+      "title": "Nidalee identity-route statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_readable",
+      "roles": [
+        "aggregate_context",
+        "access_improvement"
+      ],
+      "case_ids": [
+        "UN4-2-C01",
+        "UN4-2-C03"
+      ],
+      "observations": [
+        "Actual identity route exposes Nidalee summary and star/item-count distributions. Items table text lacks main item labels; retained icons appear beneath Synergies."
+      ],
+      "limitations": [
+        "URL suffix _ap does not verify form classification. Any-star and item-count marginals cannot be intersected. No exact packages, board strata, region or period established. Synergy icons not treated as item-trio labels."
+      ],
+      "patch_scope": "Opened page labeled 18.3b",
+      "statistical_metadata": {
+        "unit": "Nidalee",
+        "mode_label": "Ranked",
+        "rank_label": "Diamond+",
+        "patch_label": "18.3b",
+        "star_filter": "Any",
+        "region": null,
+        "observation_start": null,
+        "observation_end": null,
+        "refresh_time": null,
+        "games_display": "213k",
+        "avg_placement": 4.4,
+        "top4_percent": 53.4,
+        "win_percent": 8.22,
+        "star_summary": {
+          "star": 2,
+          "share_percent": 79,
+          "avg_placement": 4.05,
+          "exact_count": null
+        },
+        "three_item_summary": {
+          "share_percent": 83,
+          "avg_placement": 4.21,
+          "exact_count": null
+        },
+        "matched_build_rows": null
+      }
+    },
+    {
+      "id": "S08",
+      "url": "https://tactics.tools/units/da_18_azir",
+      "title": "Azir identity-route statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_readable",
+      "roles": [
+        "aggregate_context",
+        "access_improvement"
+      ],
+      "case_ids": [
+        "UN4-2-C02"
+      ],
+      "observations": [
+        "Actual identity route provides attributable Azir/star summaries. Search preview differs from opened document (151k versus 136k games)."
+      ],
+      "limitations": [
+        "Opened values retained; not blended with search preview. Item rows cannot be safely attributed from adjacent synergy icons. No star-by-triplet or board strata."
+      ],
+      "patch_scope": "Opened page labeled 18.3b",
+      "statistical_metadata": {
+        "unit": "Azir",
+        "mode_label": "Ranked",
+        "rank_label": "Diamond+",
+        "patch_label": "18.3b",
+        "star_filter": "Any",
+        "region": null,
+        "observation_start": null,
+        "observation_end": null,
+        "refresh_time": null,
+        "games_display": "136k",
+        "avg_placement": 4.55,
+        "top4_percent": 49.5,
+        "win_percent": 10.5,
+        "star_summary": {
+          "star": 3,
+          "share_percent": 21.5,
+          "avg_placement": 3.61,
+          "exact_count": null
+        },
+        "three_item_summary": {
+          "share_percent": 44.5,
+          "avg_placement": 4.38,
+          "exact_count": null
+        },
+        "matched_build_rows": null
+      }
+    },
+    {
+      "id": "S09",
+      "url": "https://tactics.tools/units/da_18_ahri",
+      "title": "Ahri identity-route statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_readable",
+      "roles": [
+        "aggregate_context"
+      ],
+      "case_ids": [
+        "UN4-2-C04"
+      ],
+      "observations": [
+        "Actual route exposes Ahri/star summaries but not attributable double-Blue triplets."
+      ],
+      "limitations": [
+        "Pooled summaries cannot establish unusual build outcomes; exact observation window unknown."
+      ],
+      "patch_scope": "Opened page labeled 18.3b",
+      "statistical_metadata": {
+        "unit": "Ahri",
+        "mode_label": "Ranked",
+        "rank_label": "Diamond+",
+        "patch_label": "18.3b",
+        "star_filter": "Any",
+        "region": null,
+        "observation_start": null,
+        "observation_end": null,
+        "refresh_time": null,
+        "games_display": "178k",
+        "avg_placement": 4.35,
+        "top4_percent": 53,
+        "win_percent": 12.5,
+        "star_summary": {
+          "star": 2,
+          "share_percent": 79.6,
+          "avg_placement": 4.09,
+          "exact_count": null
+        },
+        "three_item_summary": {
+          "share_percent": 76.5,
+          "avg_placement": 4.27,
+          "exact_count": null
+        },
+        "matched_build_rows": null
+      }
+    },
+    {
+      "id": "S10",
+      "url": "https://tactics.tools/info/items",
+      "title": "Set 18 item reference",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:26Z",
+      "access_status": "opened_readable",
+      "roles": [
+        "item_definitions"
+      ],
+      "case_ids": [
+        "UN4-2-C01",
+        "UN4-2-C02",
+        "UN4-2-C03",
+        "UN4-2-C04"
+      ],
+      "observations": [
+        "Read Shojin, Guinsoo’s, Blue Buff and damage-item entries. Shojin is an explicit mana-generation item; some damage-oriented items also carry incidental mana regeneration."
+      ],
+      "limitations": [
+        "No outcome evidence. Exact taxonomy and duplicate-item legality still require window-specific confirmation before cohort extraction; no item arithmetic answer drafted."
+      ],
+      "patch_scope": "Set 18 reference; no verified statistical period",
+      "statistical_metadata": null
+    }
+  ]
+}

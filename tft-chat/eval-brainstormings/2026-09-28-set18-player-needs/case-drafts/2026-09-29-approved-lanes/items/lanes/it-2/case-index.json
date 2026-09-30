@@ -1,0 +1,89 @@
+{
+  "lane": "IT-2",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "IT-2-C01",
+      "title": "One AD inventory across three endgame holders",
+      "question": "With Shojin, Infinity Edge and Last Whisper, how do two-star Ezreal, Sivir and Yunara compare as endgame carries? What trait support makes each worth considering?",
+      "status": "provisional",
+      "origin": "Constructed endgame comparison adapted from opened player discussion",
+      "proposal_lineage": [
+        "IT-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T1",
+        "T2",
+        "T3",
+        "T7",
+        "T8",
+        "U1",
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "comparison": "Exactly two-star Ezreal versus Sivir versus Yunara, each with ordinary Spear of Shojin, Infinity Edge and Last Whisper; compare recurring final-board trait packages.",
+      "unresolved_evidence": [
+        "Common verified statistical window for all three holders",
+        "Exact trio and two-star counts/outcomes",
+        "Trait-conditioned full-board comparisons and uncertainty"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "IT-2-C02",
+      "title": "One Helm across carry and tank",
+      "question": "On an Azir\u2013Malphite board, is Adaptive Helm better as Azir's third item or Malphite's? I'm comparing three-star Azir with Nashor's Tooth and Jeweled Gauntlet against two-star Malphite with Warmog's and Gargoyle.",
+      "status": "provisional",
+      "origin": "Constructed endgame comparison adapted from opened player discussion",
+      "proposal_lineage": [
+        "IT-2-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "D3",
+        "T4",
+        "T5",
+        "T6",
+        "N4",
+        "N5",
+        "S1",
+        "S2"
+      ],
+      "comparison": "Both units on every board: Azir 3 with Nashor/JG/Helm and Malphite 2 with Warmog/Gargoyle versus Azir 3 with Nashor/JG and Malphite 2 with Warmog/Gargoyle/Helm; ordinary variants, exactly five combined items.",
+      "unresolved_evidence": [
+        "Joint allocation counts/outcomes in one standard-ranked window",
+        "Comparable remaining board strength and active traits",
+        "Subpatch, period and uncertainty"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "IT-2-C03",
+      "title": "Damage and utility bundles across two carries",
+      "question": "On a final board with two-star Ashe and two-star Sivir, should Ashe get Shojin, Red Buff and Last Whisper while Sivir gets Blue Buff, Infinity Edge and Striker's Flail, or should those two complete builds be reversed?",
+      "status": "provisional",
+      "origin": "Constructed two-carry endgame adaptation of opened multi-carry allocation disagreement; stars and reversed bundle deliberately specified",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "T2",
+        "N2",
+        "T9",
+        "N6"
+      ],
+      "comparison": "Two-star Ashe and Sivir on every board; exchange complete Shojin/Red Buff/Last Whisper and Blue Buff/Infinity Edge/Striker's Flail bundles, preserving six ordinary items.",
+      "unresolved_evidence": [
+        "Joint six-item allocation outcomes and counts",
+        "Exact two-star restriction",
+        "Matched trait/core and rest-of-board investment",
+        "Common patch/subpatch, period, rank and region"
+      ],
+      "priority_verification": true
+    }
+  ]
+}

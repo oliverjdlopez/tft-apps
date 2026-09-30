@@ -1,0 +1,14 @@
+{
+  "Attuned": "(Alune) changes moon phase after the strongest Alune casts; the lower half of the cycle gives team Durability and the upper half gives team Damage Amp.",
+  "Avatar": "(Lux) counts her origin twice. Owning an Avatar on the board or bench converts subsequent shop Avatars to that origin.",
+  "Apex Predator": "(Elder Dragon) uses two team slots and contributes two Riftbeast counts.",
+  "Bounty Seeker": "(Draven) offers a bounty; only the strongest Draven advances it. Completing it pays its reward and offers another bounty.",
+  "Caustic": "(Kog'Maw) damage applies both Sunder and Shred, reducing Armor and MR.",
+  "Emerald Aspect": "(Taric) allows pairing an ally by dragging it onto the strongest Taric; the paired ally receives ability benefits.",
+  "Flora Fatalis": "(Fiddlesticks, Soraka) grants Mana on takedown; at two units, additionally heals the ally with the lowest Health.",
+  "Greenfather": "(Ivern) gains seeds from the strongest Ivern's casts and combat rounds, spending them to create beneficial board hexes.",
+  "Monolith": "(Malphite) gains Armor and MR for each enemy targeting it.",
+  "Old Growth": "(Maokai) permanently increases the strongest owner's max Health when enemies die within its star-dependent radius.",
+  "Rival": "(Kha'Zix, Rengar) normally functions with only one Rival fielded. Takedowns progress their distinct rewards; defeating another Rival gives three credit. Kha'Zix can permanently select Executioner, Rapidfire, Ravager or Spellweaver. Rengar earns gold and eventually team AD. Unrivaled enables both together.",
+  "Thornmaiden": "(Zyra) supplies team Durability, doubled while at least six Zyra plants are alive."
+}

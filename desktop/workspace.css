@@ -1,0 +1,22 @@
+/* Plain-HTML counterpart of app/frontend/src/theme.css; retain the 48px navigation contract. */
+:root { color-scheme: light; font: 14px system-ui, sans-serif; color: #171717; background: #fafafa; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+nav { height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #dedce3; background: #efebf7; }
+.brand { font-size: 12px; font-weight: 600; color: #626262; margin-right: 16px; }
+button { font: inherit; color: #404040; background: transparent; border: 1px solid transparent; border-radius: 6px; height: 36px; padding: 0 16px; cursor: pointer; }
+button:hover { background: #e7def7; }
+button[aria-pressed="true"] { background: #6350ac; color: #ffffff; }
+button:focus-visible { outline: 2px solid #6350ac; outline-offset: 2px; }
+main { max-width: 650px; margin: 15vh auto; padding: 32px; }
+.eyebrow { color: #626262; font-size: 12px; letter-spacing: .12em; }
+h1 { font-size: 26px; font-weight: 600; }
+p { color: #404040; line-height: 1.6; }
+code { display: block; padding: 16px; background: #e7def7; border-radius: 10px; overflow-wrap: anywhere; }
+#retry { margin-top: 14px; background: #6350ac; color: #ffffff; }
+[hidden] { display: none !important; }
+
+/* Keep all workspace destinations reachable in narrower desktop windows. */
+nav { overflow-x: auto; }
+nav > * { flex-shrink: 0; }
+code { white-space: pre-wrap; }

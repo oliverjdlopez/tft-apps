@@ -1,0 +1,59 @@
+---
+name: set-18-wisps-misc
+description: Misc Wisp reference with named effects, base/upgraded/prismatic variants, prices, stage eligibility, cooldowns and augment exclusions. Use for named Wisp offers and restrictions. Excludes exact selection weights and full effect tooltips.
+kind: mechanic
+sets: 18
+---
+
+# Wisps: Misc
+
+Set 18, Enchanted Wilds, patch 18.1.
+
+Effect strength and extra benefits can differ by variant. Re-offer cooldown counts Wisp shops after an offer, not rounds or purchases.
+
+- **Blast Potion (base)** — temporary offensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Blast Potion (upgraded)** — temporary offensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Blood Ritual (base)** — pays player Health for a Champion Duplicator; 6 gold; tier 3; offer windows 4-2–4-7; re-offer cooldown 200 Wisp shops. Conditions: More than 10 player health remaining. Modes: Standard.
+- **Blood Ritual (upgraded)** — pays player Health for a Champion Duplicator; 6 gold; tier 3; offer windows 4-2–4-7; re-offer cooldown 200 Wisp shops. Conditions: More than 8 player health remaining. Modes: Standard.
+- **Doodad Bag (base)** — multiple permanent defensive-stat consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Doodad Bag (upgraded)** — multiple permanent defensive-stat consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Doodad Jar (base)** — permanent defensive-stat consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Doodad Jar (upgraded)** — permanent defensive-stat consumable; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Doodad Sack (base)** — multiple permanent defensive-stat consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Doodad Sack (upgraded)** — multiple permanent defensive-stat consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Early Fix (base)** — item Reforger; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Early Fix (upgraded)** — item Reforger; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Forest Mage (base)** — Wisp-only shop with one purchase allowed; 1 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: During the shop phase, only in the first 8 seconds. Modes: Standard, Double Up, Tockers.
+- **Forest Mage (upgraded)** — Wisp-only shop with one purchase allowed; 1 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: During the shop phase, only in the first 8 seconds. Modes: Standard, Double Up, Tockers.
+- **Greater Chaos (base)** — triggers multiple randomly selected Wisps; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Greater Chaos (upgraded)** — triggers multiple randomly selected Wisps; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Healing Pool (base)** — restores player Health; 2 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 10 Wisp shops. Conditions: At least 10 player health missing. Modes: Standard.
+- **Healing Pool (upgraded)** — restores player Health; 2 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 10 Wisp shops. Conditions: At least 10 player health missing. Modes: Standard.
+- **Health Potion (base)** — temporary defensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Health Potion (upgraded)** — temporary defensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Knick-Knack Bag (base)** — multiple permanent AD or AS consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.
+- **Knick-Knack Bag (upgraded)** — multiple permanent AD or AS consumables; 2 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.
+- **Knick-Knack Jar (base)** — permanent AD or AS consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.
+- **Knick-Knack Jar (upgraded)** — permanent AD or AS consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.
+- **Knick-Knack Sack (base)** — multiple permanent AD or AS consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.
+- **Knick-Knack Sack (upgraded)** — multiple permanent AD or AS consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.
+- **Lesser Chaos (base)** — triggers a randomly selected Wisp; 1 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Lesser Chaos (upgraded)** — triggers a randomly selected Wisp; 1 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Mana Potion (base)** — temporary Mana potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Mana Potion (upgraded)** — temporary Mana potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Minor Blood Ritual (base)** — pays player Health for a Lesser Duplicator; 3 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 3 player health remaining. Modes: Standard.
+- **Minor Blood Ritual (upgraded)** — pays player Health for a Lesser Duplicator; 3 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 1 player health remaining. Modes: Standard.
+- **Potioncraft (base)** — temporary potion equipment bundle; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Potioncraft (upgraded)** — temporary potion equipment bundle; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.
+- **Salvager (base)** — benching units removes and disassembles equipment; 0 gold; tier 1; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Excluded by: Salvage Bin, Salvage Bin+, Crafted Crafting, NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.
+- **Salvager (upgraded)** — benching units removes and disassembles equipment; 0 gold; tier 1; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Excluded by: Salvage Bin, Salvage Bin+, Crafted Crafting, NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.
+- **Sinister Deal (base)** — pays player Health for gold; 0 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 4 player health remaining. Modes: Standard.
+- **Sinister Deal (upgraded)** — pays player Health for gold; 0 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 3 player health remaining. Modes: Standard.
+- **Terraforming (base)** — additional Greenfather seeds at combat start; 2 gold; tier 1; offer windows 4-2–4-7, 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Greenfather active. Modes: Standard, Double Up, Tockers.
+- **Terraforming (upgraded)** — additional Greenfather seeds at combat start; 2 gold; tier 1; offer windows 4-2–4-7, 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Greenfather active. Modes: Standard, Double Up, Tockers.
+- **Thingamajig Bag (base)** — multiple permanent AP or Mana Regen consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.
+- **Thingamajig Bag (upgraded)** — multiple permanent AP or Mana Regen consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.
+- **Thingamajig Jar (base)** — permanent AP or Mana Regen consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.
+- **Thingamajig Jar (upgraded)** — permanent AP or Mana Regen consumable; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.
+- **Thingamajig Sack (base)** — multiple permanent AP or Mana Regen consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.
+- **Thingamajig Sack (upgraded)** — multiple permanent AP or Mana Regen consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.

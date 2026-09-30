@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "suites": [
+    {
+      "assistant": "analyze_transcript",
+      "case_count": 0,
+      "database": null,
+      "description": "Actionability evals for transcript analysis.",
+      "execution": "live",
+      "family": "assistant",
+      "max_turns": null,
+      "name": "analyze_transcript",
+      "snapshot": "00225693788e8709c2256b7ac8016ee2d68f0b8a1b49c9ba16c9d88f027cecfb"
+    },
+    {
+      "assistant": "chat",
+      "case_count": 21,
+      "database": null,
+      "description": "Golden evals for the primary ChatTFT assistant.",
+      "execution": "live",
+      "family": "assistant",
+      "max_turns": 7,
+      "name": "chat",
+      "snapshot": "ad8e512e0c863cd51acdacdf5d992830b2a96fb15765ca4a87c50f60ed2b6961"
+    },
+    {
+      "assistant": "clean_transcript",
+      "case_count": 1,
+      "database": null,
+      "description": "Terminology-preservation evals for transcript cleanup.",
+      "execution": "live",
+      "family": "assistant",
+      "max_turns": null,
+      "name": "clean_transcript",
+      "snapshot": "d66bce1bd31a94ab79f85542753e555e5f04a62de7810356b3f1a781d3e36e4e"
+    },
+    {
+      "assistant": "compact_transcript",
+      "case_count": 1,
+      "database": null,
+      "description": "Signal-retention evals for transcript compaction.",
+      "execution": "live",
+      "family": "assistant",
+      "max_turns": null,
+      "name": "compact_transcript",
+      "snapshot": "97f938265d7b47c66882e793a8c2a8a32ec02fa0505074368a549e01e8dd8dd2"
+    },
+    {
+      "assistant": "chat",
+      "case_count": 30,
+      "database": null,
+      "description": "30 Set 18 context and answer checks. Exactly one fact-oriented response regex per case; no quality judge.",
+      "execution": "live",
+      "family": "assistant",
+      "max_turns": 12,
+      "name": "context_response_smoke",
+      "snapshot": "79de877f5085b31dfc7708eee067d7354b1e29df840dbde568a22520ec298071"
+    },
+    {
+      "assistant": "context_selector",
+      "case_count": 11,
+      "database": null,
+      "description": "Context Selection",
+      "execution": "offline",
+      "family": "context_selection",
+      "max_turns": null,
+      "name": "context_selection",
+      "snapshot": "5b1f3a521647735524b7ad55ca64a25f785220ea8b2dc0c2812245d09e5ddeb6"
+    },
+    {
+      "assistant": "data_analyst",
+      "case_count": 7,
+      "database": null,
+      "description": "Focused aggregate-ranking and terminal-synthesis evals for the data analyst assistant.",
+      "execution": "live",
+      "family": "assistant",
+      "max_turns": 7,
+      "name": "data_analyst",
+      "snapshot": "a5e3f8486711884369fb4902c81994673f0f1770e0438c05834d155e7e0cdba6"
+    },
+    {
+      "assistant": "dummy_assistant",
+      "case_count": 1,
+      "database": null,
+      "description": "Offline end-to-end coverage for eval loading, scoring, metrics, and output reporting.",
+      "execution": "fixture",
+      "family": "assistant",
+      "max_turns": null,
+      "name": "dummy_assistant",
+      "snapshot": "22e4cfa51eb9ee7a7422214115eefe55e1ff9c5a427d3c1e8bf6b6f028661985"
+    },
+    {
+      "assistant": "item_expert",
+      "case_count": 0,
+      "database": null,
+      "description": "Manual ChatTFT investigations.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 10,
+      "name": "item-expert",
+      "snapshot": "b0d446e5aa71826c503f024068d2dc8b03e9d2dd4fab31816fec3facb937417d"
+    },
+    {
+      "assistant": "meta_expert",
+      "case_count": 0,
+      "database": null,
+      "description": "Manual ChatTFT investigations.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 10,
+      "name": "meta-expert",
+      "snapshot": "0091f2ae8e0ef6062e8365f3b6f0f3524586dd659ed17429fe127f56fb633a64"
+    },
+    {
+      "assistant": "skill_selector",
+      "case_count": 12,
+      "database": null,
+      "description": "Skill Selection",
+      "execution": "offline",
+      "family": "skill_selection",
+      "max_turns": null,
+      "name": "skill_selection",
+      "snapshot": "67136a874084824eb7d0eb1413e1a705d5fe66147f9b9b767424eab1c0bc109e"
+    },
+    {
+      "assistant": "unit_expert",
+      "case_count": 0,
+      "database": null,
+      "description": "Manual ChatTFT investigations.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 10,
+      "name": "unit-expert",
+      "snapshot": "898e745f0181492cff7b3077c2f3d7569751608b568994fff85fc75e14c512b4"
+    }
+  ]
+}

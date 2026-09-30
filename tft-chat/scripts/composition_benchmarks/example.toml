@@ -1,0 +1,18 @@
+name = "Composition scaling • CPU and GPU"
+sample_sizes = [100, 500, 1000, 2000]
+seeds = [42]
+repeats = 3
+warmups = 1
+# Optional: a JSON array of BoardObservation objects, or a saved snapshot
+# containing a "boards" array. Relative paths resolve beside this TOML file.
+# input_path = "boards.json"
+
+[[sweeps]]
+kind = "distance"
+backends = ["cpu", "cuda"]
+
+[[sweeps]]
+algorithm = "hdbscan"
+[sweeps.parameters]
+min_cluster_size = [5, 15]
+min_samples = [3, 5]

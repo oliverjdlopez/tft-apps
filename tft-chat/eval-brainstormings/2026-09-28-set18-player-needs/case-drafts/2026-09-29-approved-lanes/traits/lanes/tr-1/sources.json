@@ -1,0 +1,507 @@
+{
+  "lane": "TR-1",
+  "stage": "case-drafting",
+  "case_ids": [
+    "TR-1-C01",
+    "TR-1-C02",
+    "TR-1-C03"
+  ],
+  "sources": [
+    {
+      "id": "D01",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wn2i7m/september_22_2026_daily_discussion_thread/",
+      "title": "September 22 daily discussion",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_partial_plus_indexed_branch",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-1-C01"
+      ],
+      "observations": [
+        "Fresh indexed branch recovered weak-Ahri complaint, Invoker/augment dependence, and disagreement over alternative expensive support units. One reply explicitly concerns 18.2/18.2b."
+      ],
+      "limitations": [
+        "Default opened snapshot omits branch; top-sort URL failed. Not a verified ranked population."
+      ],
+      "patch_scope": "Live Set 18; mixed pre/post 18.3 motivation",
+      "statistical_metadata": null
+    },
+    {
+      "id": "D02",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wpb4o0/183_bpatch_live_k6_nerf_dark_coven_disabled/",
+      "title": "18.3 B-patch discussion",
+      "source_date": "2026-09-24",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_partial_plus_indexed_branch",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-1-C02"
+      ],
+      "observations": [
+        "Opened initial four-Executioner bleed complaint. Fresh indexed expansion includes usual-three reply mentioning Kennen."
+      ],
+      "limitations": [
+        "Correction chain remains incomplete; comment click failed. Soraka framing is constructed. Double Up/PBE branches excluded."
+      ],
+      "patch_scope": "18.3B discussion",
+      "statistical_metadata": null
+    },
+    {
+      "id": "D03",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "title": "18.3 Patch Notes discussion",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_post_and_replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "observations": [
+        "Opened carry/support statistical disagreement and sample-size challenge; opened Cassio/Rammus/Lillia buffs versus six-Defender nerf disagreement."
+      ],
+      "limitations": [
+        "Anecdotal numbers not adopted; exact commenter population unverified."
+      ],
+      "patch_scope": "18.3 discussion",
+      "statistical_metadata": null
+    },
+    {
+      "id": "D04",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1wrrtom/how_to_counter_ahri/",
+      "title": "How to counter Ahri?",
+      "source_date": "2026-09-27",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "indexed_only_open_failed",
+      "roles": [
+        "counter_motivation"
+      ],
+      "case_ids": [
+        "TR-1-C01"
+      ],
+      "observations": [
+        "Indexed nested replies disagree about Ahri viability and mention Invoker/Executioner emblem variants."
+      ],
+      "limitations": [
+        "Normal and short opens failed; positioning advice excluded; no outcome claims adopted."
+      ],
+      "patch_scope": "Set 18 September 27",
+      "statistical_metadata": null
+    },
+    {
+      "id": "D05",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1w3yd3s/181_d_patch_notes/",
+      "title": "18.1 D Patch Notes discussion",
+      "source_date": "2026-09-01",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_post_and_replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-1-C03"
+      ],
+      "observations": [
+        "Opened explicit Cassio dependence-on-six complaint; replies discuss stall and alternative Fiddlesticks/Lillia explanations."
+      ],
+      "limitations": [
+        "Historical motivation, not pre-18.3 outcome data."
+      ],
+      "patch_scope": "Live Set 18 18.1D discussion",
+      "statistical_metadata": null
+    },
+    {
+      "id": "O01",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Official TFT patch 18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened",
+      "roles": [
+        "rules",
+        "version_boundaries"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "observations": [
+        "Invoker maximum and emblem changed; Cassio/Rammus buffs explicitly intended to broaden beyond six Defender; Lillia buff; September 24 and 28 updates visible."
+      ],
+      "limitations": [
+        "Rules and intended direction are not measured outcomes."
+      ],
+      "patch_scope": "18.3 plus dated mid-patch updates",
+      "statistical_metadata": null
+    },
+    {
+      "id": "R01",
+      "url": "https://tactics.tools/info/traits",
+      "title": "Set 18 traits",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened",
+      "roles": [
+        "identity_and_tier_rules"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "observations": [
+        "Executioner three introduces bleed; four increases it. Invoker distinguishes team and member mana."
+      ],
+      "limitations": [
+        "Highest Invoker value is stale versus O01. No outcome evidence."
+      ],
+      "patch_scope": "Set 18; numeric freshness conflict",
+      "statistical_metadata": null
+    },
+    {
+      "id": "R02",
+      "url": "https://tactics.tools/info/units",
+      "title": "Set 18 units",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened",
+      "roles": [
+        "identity_rules"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02"
+      ],
+      "observations": [
+        "Ahri: Blossom/Spellweaver. Soraka: Flora Fatalis/Executioner. Kennen: five-cost Inferno/Executioner."
+      ],
+      "limitations": [
+        "Identity only; no conditional outcome data."
+      ],
+      "patch_scope": "Set 18",
+      "statistical_metadata": null
+    },
+    {
+      "id": "L01",
+      "url": "https://www.littlebuddybot.com/tft-trait-tables",
+      "title": "Little Buddy Bot trait tables",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_headings_image_links",
+      "roles": [
+        "reference_workflow"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "observations": [
+        "Set 18 patch 18.3 headings and image links."
+      ],
+      "limitations": [
+        "No statistical comparisons. Old-set navigation ignored. Image values not used."
+      ],
+      "patch_scope": "Headings: Set 18 18.3",
+      "statistical_metadata": null
+    },
+    {
+      "id": "L02",
+      "url": "https://www.littlebuddybot.com/tft-emblem-recipes",
+      "title": "Little Buddy Bot emblem reference",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_image_fetch_failed",
+      "roles": [
+        "reference_workflow"
+      ],
+      "case_ids": [
+        "TR-1-C01"
+      ],
+      "observations": [
+        "Emblem image link exposed; direct click attempted."
+      ],
+      "limitations": [
+        "Image fetch failed; image content not inspected."
+      ],
+      "patch_scope": "Set 18",
+      "statistical_metadata": null
+    },
+    {
+      "id": "N01",
+      "url": "https://noxutft.com/tft-champions/ahri",
+      "title": "NoxuTFT Ahri build table",
+      "source_date": "2026-09-25",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened",
+      "roles": [
+        "descriptive_outcomes"
+      ],
+      "case_ids": [
+        "TR-1-C01"
+      ],
+      "observations": [
+        "Opened September 25 snapshot; indexed September 22 snapshot differed and was discarded. Named-comp clicks failed."
+      ],
+      "limitations": [
+        "Items and packages differ; labels do not establish active traits; no matched window."
+      ],
+      "patch_scope": "Set 18; 'this patch' unspecified",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": null,
+        "region": null,
+        "patch": null,
+        "subpatch": null,
+        "period_start": null,
+        "period_end": null,
+        "comparison_validated": false,
+        "counts_rounded": true,
+        "updated_display": "25 September 2026",
+        "overall_games_display": "45k",
+        "rows": [
+          {
+            "items": [
+              "Invoker Emblem",
+              "Jeweled Gauntlet",
+              "Rabadon's Deathcap"
+            ],
+            "comp": "Invoker Ahri",
+            "average_placement": 3.89,
+            "games_display": "4.5k"
+          },
+          {
+            "items": [
+              "Jeweled Gauntlet",
+              "Spear of Shojin",
+              "Striker's Flail"
+            ],
+            "comp": "Blossom Ahri",
+            "average_placement": 4.31,
+            "games_display": "1.5k"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N02",
+      "url": "https://noxutft.com/tft-champions/soraka",
+      "title": "NoxuTFT Soraka build table",
+      "source_date": "2026-09-25",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened",
+      "roles": [
+        "descriptive_outcomes"
+      ],
+      "case_ids": [
+        "TR-1-C02"
+      ],
+      "observations": [
+        "Labeled Soraka build row retrieved; comp click failed."
+      ],
+      "limitations": [
+        "Executioner tier and Kennen membership absent."
+      ],
+      "patch_scope": "Set 18; 'this patch' unspecified",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": null,
+        "region": null,
+        "patch": null,
+        "subpatch": null,
+        "period_start": null,
+        "period_end": null,
+        "comparison_validated": false,
+        "counts_rounded": true,
+        "updated_display": "25 September 2026",
+        "rows": [
+          {
+            "items": [
+              "Hextech Gunblade",
+              "Rabadon's Deathcap",
+              "Spear of Shojin"
+            ],
+            "comp": "Executioner Malphite",
+            "average_placement": 3.84,
+            "games_display": "608"
+          }
+        ]
+      }
+    },
+    {
+      "id": "N03",
+      "url": "https://noxutft.com/tft-champions/cassiopeia",
+      "title": "NoxuTFT Cassiopeia build table",
+      "source_date": "2026-09-24",
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened",
+      "roles": [
+        "descriptive_outcomes"
+      ],
+      "case_ids": [
+        "TR-1-C03"
+      ],
+      "observations": [
+        "Two labeled carry-build rows retrieved."
+      ],
+      "limitations": [
+        "Different items; actual Defender count absent; no pre/post windows."
+      ],
+      "patch_scope": "Set 18; 'this patch' unspecified",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": null,
+        "region": null,
+        "patch": null,
+        "subpatch": null,
+        "period_start": null,
+        "period_end": null,
+        "comparison_validated": false,
+        "counts_rounded": true,
+        "updated_display": "24 September 2026",
+        "rows": [
+          {
+            "items": [
+              "Archangel's Staff",
+              "Archangel's Staff",
+              "Hextech Gunblade"
+            ],
+            "comp": "Defender Cassiopeia",
+            "average_placement": 4.16,
+            "games_display": "1.4k"
+          },
+          {
+            "items": [
+              "Archangel's Staff",
+              "Hextech Gunblade",
+              "Spear of Shojin"
+            ],
+            "comp": "Vanguard Morgana",
+            "average_placement": 3.71,
+            "games_display": "1.3k"
+          }
+        ]
+      }
+    },
+    {
+      "id": "W01",
+      "url": "https://tactics.tools/explorer",
+      "title": "Tactics.tools Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_controls_no_data",
+      "roles": [
+        "comparison_attempt"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "observations": [
+        "18.3b, Diamond+, three filter inputs, No Data."
+      ],
+      "limitations": [
+        "No query executed; no cohort rows."
+      ],
+      "patch_scope": "Control: 18.3b",
+      "statistical_metadata": {
+        "visible_patch": "18.3b",
+        "visible_rank": "Diamond+",
+        "executed_filters": false,
+        "rows": []
+      }
+    },
+    {
+      "id": "W02",
+      "url": "https://www.metatft.com/explorer",
+      "title": "MetaTFT Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "javascript_shell",
+      "roles": [
+        "comparison_attempt"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "observations": [
+        "JavaScript-required shell."
+      ],
+      "limitations": [
+        "No rows, controls or dataset retrieved."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "W03",
+      "url": "https://tactics.tools/units/da_18_ahri/all",
+      "title": "Tactics.tools Ahri statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened",
+      "roles": [
+        "descriptive_marginal"
+      ],
+      "case_ids": [
+        "TR-1-C01"
+      ],
+      "observations": [
+        "Opened visible 18.3 differs from indexed 18.3b; mixed carry/support roles."
+      ],
+      "limitations": [
+        "Not Invoker split; cannot merge with N01 or W01. Detached item-row metrics not adopted."
+      ],
+      "patch_scope": "Opened: 18.3",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3",
+        "region": null,
+        "date_window": null,
+        "games_display": "345k",
+        "average_placement": 4.38,
+        "top_four_percent": 52.4,
+        "win_percent": 12.0,
+        "comparison_validated": false
+      }
+    },
+    {
+      "id": "W04",
+      "url": "https://tactics.tools/team-compositions",
+      "title": "Tactics.tools compositions",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:39:22.965909+00:00",
+      "access_status": "opened_unselected_summaries",
+      "roles": [
+        "comparison_attempt"
+      ],
+      "case_ids": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "observations": [
+        "General summary rows and Ranked/Diamond+/18.3b controls visible."
+      ],
+      "limitations": [
+        "No selected Ahri/Soraka/Cassio comparison; title Set 15 conflicts with Set 18 content."
+      ],
+      "patch_scope": "Control: 18.3b; title inconsistency",
+      "statistical_metadata": null
+    }
+  ]
+}

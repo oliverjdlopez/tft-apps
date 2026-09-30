@@ -1,0 +1,11 @@
+{
+  "name": "item_expert",
+  "description": "Produce data-backed reports on TFT composition itemization, holder flexibility, core binds, and pitfalls.",
+  "handoff_description": "Analyze which items and holders make a TFT comp coherent, including rigid versus flexible allocation, non-carry items, and evidence-based pitfalls.",
+  "tools": {
+    "include_all": false,
+    "groups": ["ranking", "query_cohorts"]
+  },
+  "context": {"repository": true},
+  "handoffs": []
+}

@@ -1,0 +1,11 @@
+{
+  "name": "theorizer",
+  "description": "Develop and stress-test TFT theories, off-meta lines, counterfactuals, and hypothesis-driven reads against match data.",
+  "handoff_description": "Explore TFT hypotheses, speculative lines, counterfactual builds, and underplayed options while grounding claims in the data.",
+  "tools": {
+    "include_all": false,
+    "groups": ["ranking", "query_cohorts"]
+  },
+  "context": {"repository": true},
+  "handoffs": ["data_analyst"]
+}

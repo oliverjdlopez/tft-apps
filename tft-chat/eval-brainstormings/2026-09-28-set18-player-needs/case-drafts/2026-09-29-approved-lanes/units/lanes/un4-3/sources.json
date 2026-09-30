@@ -1,0 +1,545 @@
+{
+  "lane": "UN4-3",
+  "stage": "case-drafting",
+  "case_ids": [
+    "UN4-3-C01",
+    "UN4-3-C02",
+    "UN4-3-C03",
+    "UN4-3-C04",
+    "UN4-3-C05",
+    "UN4-3-C06"
+  ],
+  "sources": [
+    {
+      "id": "D1",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1winnef/whats_your_hear_me_out_comp_this_patch/",
+      "title": "What’s your hear me out comp this patch?",
+      "source_date": "2026-09-17",
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened relevant branches and replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "UN4-3-C01",
+        "UN4-3-C02",
+        "UN4-3-C04",
+        "UN4-3-C06"
+      ],
+      "observations": [
+        "Ahri/Morgana suggestion receives Sivir alternative and later ceiling concern.",
+        "Mama Beak reply distinguishes vertical Riftbeast from Aphelios inclusion.",
+        "Spellweaver Fiddlesticks tank comment receives Defender-partner question.",
+        "Sett frontline skepticism receives Ravager-emblem exception."
+      ],
+      "limitations": [
+        "One source for four cases, not independent corroboration.",
+        "Historical anecdotes; queue/rank and outcomes not verified.",
+        "Date from search; opened relative-hour display conflicts."
+      ],
+      "patch_scope": "Historical live Set 18, subpatch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "D2",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w6ujyg/draven_comp_what_should_i_have_done_differently/",
+      "title": "Draven comp, What should I have done differently here?",
+      "source_date": "2026-09-04",
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened post and extended replies/disagreement",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "UN4-3-C03",
+        "UN4-3-C05"
+      ],
+      "observations": [
+        "Kennen secondary carry advocates coexist with Gnar/Ezreal allocation suggestions.",
+        "Replies explicitly dispute Taric 2 without Vanguard versus Amumu 2 with Juggernaut.",
+        "Companion changes discussed; original full screenshot not transcribed."
+      ],
+      "limitations": [
+        "Historical individual game; image not inspected.",
+        "Positions, Taric link targets and transitions excluded from case scope.",
+        "Self-reported Gold is not verified queue metadata."
+      ],
+      "patch_scope": "Historical live Set 18, subpatch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "T1",
+      "url": "https://tactics.tools/units/da_18_morgana",
+      "title": "Morgana TFT statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened labeled overview and visible tab controls",
+      "roles": [
+        "descriptive outcomes",
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C01"
+      ],
+      "observations": [
+        "Labeled overview available; Units/Traits buttons visible, but no matched partner cohorts retrieved."
+      ],
+      "limitations": [
+        "Marginal outcomes cannot answer the comparative case.",
+        "Games rounded; region, period and refresh absent.",
+        "Detached item-trio rows not interpreted."
+      ],
+      "patch_scope": "Set 18 / displayed 18.3b",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "region": null,
+        "period": null,
+        "refresh_time": null,
+        "exact_sample_count": null,
+        "metrics": {
+          "games_display": "48k",
+          "average_placement": 4.48,
+          "top_four_percent": 50.6,
+          "win_percent": 12.0
+        }
+      }
+    },
+    {
+      "id": "T2",
+      "url": "https://tactics.tools/units/da_crimsonraptor18",
+      "title": "Mama Beak TFT statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened labeled overview and visible tab controls",
+      "roles": [
+        "descriptive outcomes",
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C02"
+      ],
+      "observations": [
+        "Labeled overview available; Units/Traits buttons visible, but no matched partner cohorts retrieved."
+      ],
+      "limitations": [
+        "Marginal outcomes cannot answer the comparative case.",
+        "Games rounded; region, period and refresh absent.",
+        "Detached item-trio rows not interpreted."
+      ],
+      "patch_scope": "Set 18 / displayed 18.3b",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "region": null,
+        "period": null,
+        "refresh_time": null,
+        "exact_sample_count": null,
+        "metrics": {
+          "games_display": "42k",
+          "average_placement": 4.59,
+          "top_four_percent": 49.7,
+          "win_percent": 8.24,
+          "zero_item_appearance_percent": 66.9
+        }
+      }
+    },
+    {
+      "id": "T3",
+      "url": "https://tactics.tools/units/da_18_kennen",
+      "title": "Kennen TFT statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened labeled overview and visible tab controls",
+      "roles": [
+        "descriptive outcomes",
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C03"
+      ],
+      "observations": [
+        "Labeled overview available; Units/Traits buttons visible, but no matched partner cohorts retrieved."
+      ],
+      "limitations": [
+        "Marginal outcomes cannot answer the comparative case.",
+        "Games rounded; region, period and refresh absent.",
+        "Detached item-trio rows not interpreted."
+      ],
+      "patch_scope": "Set 18 / displayed 18.3",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3",
+        "star_filter": "Any",
+        "region": null,
+        "period": null,
+        "refresh_time": null,
+        "exact_sample_count": null,
+        "metrics": {
+          "games_display": "124k",
+          "average_placement": 3.96,
+          "top_four_percent": 59.1,
+          "win_percent": 20.3
+        }
+      }
+    },
+    {
+      "id": "T4",
+      "url": "https://tactics.tools/units/da_18_sett",
+      "title": "Sett TFT statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened labeled overview and visible tab controls",
+      "roles": [
+        "descriptive outcomes",
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C06"
+      ],
+      "observations": [
+        "Labeled overview available; Units/Traits buttons visible, but no matched partner cohorts retrieved."
+      ],
+      "limitations": [
+        "Marginal outcomes cannot answer the comparative case.",
+        "Games rounded; region, period and refresh absent.",
+        "Detached item-trio rows not interpreted."
+      ],
+      "patch_scope": "Set 18 / displayed 18.3b",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "region": null,
+        "period": null,
+        "refresh_time": null,
+        "exact_sample_count": null,
+        "metrics": {
+          "games_display": "166k",
+          "average_placement": 4.46,
+          "top_four_percent": 51.1,
+          "win_percent": 11.1
+        }
+      }
+    },
+    {
+      "id": "M1",
+      "url": "https://www.metatft.com/units",
+      "title": "MetaTFT access attempt",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C01",
+        "UN4-3-C02"
+      ],
+      "observations": [
+        "No readable selected filters or result rows."
+      ],
+      "limitations": [
+        "No comparison/population validated.",
+        "Detail-route identity not verified beyond shell."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": {
+        "mode": null,
+        "rank": null,
+        "patch": null,
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "metrics": null
+      }
+    },
+    {
+      "id": "M2",
+      "url": "https://www.metatft.com/comps",
+      "title": "MetaTFT access attempt",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C01",
+        "UN4-3-C02",
+        "UN4-3-C03",
+        "UN4-3-C04",
+        "UN4-3-C05",
+        "UN4-3-C06"
+      ],
+      "observations": [
+        "No readable selected filters or result rows."
+      ],
+      "limitations": [
+        "No comparison/population validated.",
+        "Detail-route identity not verified beyond shell."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": {
+        "mode": null,
+        "rank": null,
+        "patch": null,
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "metrics": null
+      }
+    },
+    {
+      "id": "M3",
+      "url": "https://www.metatft.com/units/Morgana",
+      "title": "MetaTFT access attempt",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C01"
+      ],
+      "observations": [
+        "No readable selected filters or result rows."
+      ],
+      "limitations": [
+        "No comparison/population validated.",
+        "Detail-route identity not verified beyond shell."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": {
+        "mode": null,
+        "rank": null,
+        "patch": null,
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "metrics": null
+      }
+    },
+    {
+      "id": "M4",
+      "url": "https://www.metatft.com/explorer",
+      "title": "MetaTFT access attempt",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C01",
+        "UN4-3-C02",
+        "UN4-3-C03",
+        "UN4-3-C04",
+        "UN4-3-C05",
+        "UN4-3-C06"
+      ],
+      "observations": [
+        "No readable selected filters or result rows."
+      ],
+      "limitations": [
+        "No comparison/population validated.",
+        "Detail-route identity not verified beyond shell."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": {
+        "mode": null,
+        "rank": null,
+        "patch": null,
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "metrics": null
+      }
+    },
+    {
+      "id": "R1",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Teamfight Tactics patch 18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened official notes and mid-patch updates",
+      "roles": [
+        "rules context"
+      ],
+      "case_ids": [
+        "UN4-3-C01",
+        "UN4-3-C02",
+        "UN4-3-C03",
+        "UN4-3-C04",
+        "UN4-3-C05",
+        "UN4-3-C06"
+      ],
+      "observations": [
+        "September 24 B and September 28 update headings inspected."
+      ],
+      "limitations": [
+        "Rules freshness does not define third-party sampling window."
+      ],
+      "patch_scope": "18.3 with September 24 and 28 updates",
+      "statistical_metadata": null
+    },
+    {
+      "id": "R2",
+      "url": "https://tactics.tools/info/units",
+      "title": "Set 18 unit information",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened roster/rules page",
+      "roles": [
+        "entity reference"
+      ],
+      "case_ids": [
+        "UN4-3-C01",
+        "UN4-3-C02",
+        "UN4-3-C03",
+        "UN4-3-C04",
+        "UN4-3-C05",
+        "UN4-3-C06"
+      ],
+      "observations": [
+        "Set 18 unit information accessible."
+      ],
+      "limitations": [
+        "No partnership outcome comparison; exact tooltip revision unknown."
+      ],
+      "patch_scope": "Set 18",
+      "statistical_metadata": null
+    },
+    {
+      "id": "X1",
+      "url": "https://tactics.tools/units/da_18_fiddlesticks",
+      "title": "Attempted unit detail",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Open failed",
+      "roles": [
+        "access limitation"
+      ],
+      "case_ids": [
+        "UN4-3-C04"
+      ],
+      "observations": [
+        "No usable result returned."
+      ],
+      "limitations": [
+        "Route identity unverified; no values retained."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "X2",
+      "url": "https://tactics.tools/units/da_18_taric",
+      "title": "Attempted unit detail",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Open failed",
+      "roles": [
+        "access limitation"
+      ],
+      "case_ids": [
+        "UN4-3-C05"
+      ],
+      "observations": [
+        "No usable result returned."
+      ],
+      "limitations": [
+        "Route identity unverified; no values retained."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "X3",
+      "url": "https://tactics.tools/units/da_18_amumu",
+      "title": "Attempted unit detail",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Open failed",
+      "roles": [
+        "access limitation"
+      ],
+      "case_ids": [
+        "UN4-3-C05"
+      ],
+      "observations": [
+        "No usable result returned."
+      ],
+      "limitations": [
+        "Route identity unverified; no values retained."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "X8",
+      "url": "https://tactics.tools/units",
+      "title": "Tactics.tools units list",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:41:10Z",
+      "access_status": "Opened controls without unit rows",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [],
+      "observations": [
+        "Ranked, Diamond+, 18.3b visible; current list extraction lacks unit rows."
+      ],
+      "limitations": [
+        "Prior-round list numbers not carried forward as fresh verification."
+      ],
+      "patch_scope": "Displayed 18.3b",
+      "statistical_metadata": null
+    },
+    {
+      "id": "T5",
+      "url": "https://tactics.tools/units/da_fiddlesticks18",
+      "title": "Fiddlesticks TFT statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:45:49Z",
+      "access_status": "Canonical route supplied by coordinator, independently opened labeled overview",
+      "roles": [
+        "descriptive outcomes",
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-3-C04"
+      ],
+      "observations": [
+        "Labeled overview retrieved after initial alternate route failed."
+      ],
+      "limitations": [
+        "No Spellweaver tank-role or Defender-partner-conditioned outcomes.",
+        "Rounded games; region, period and refresh unavailable."
+      ],
+      "patch_scope": "Set 18 / displayed 18.3b",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "region": null,
+        "period": null,
+        "exact_sample_count": null,
+        "metrics": {
+          "games_display": "312k",
+          "average_placement": 4.45,
+          "top_four_percent": 51.1,
+          "win_percent": 12.2
+        }
+      }
+    }
+  ]
+}

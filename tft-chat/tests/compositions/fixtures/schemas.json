@@ -1,0 +1,1401 @@
+{
+  "CompositionDetailResponse": {
+    "$defs": {
+      "BoardAssignment": {
+        "additionalProperties": false,
+        "description": "Record classification, competing candidates, and rejection reasons.",
+        "properties": {
+          "candidates": {
+            "items": {
+              "$ref": "#/$defs/FamilyCandidate"
+            },
+            "title": "Candidates",
+            "type": "array"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "family_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family Id"
+          },
+          "observation_id": {
+            "minLength": 1,
+            "title": "Observation Id",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "assigned",
+              "ambiguous",
+              "unclassified"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "variation_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variation Id"
+          }
+        },
+        "required": [
+          "observation_id",
+          "status",
+          "family_id",
+          "variation_id",
+          "candidates",
+          "explanation"
+        ],
+        "title": "BoardAssignment",
+        "type": "object"
+      },
+      "BoardExampleView": {
+        "additionalProperties": false,
+        "description": "Combine already-classified boards with separately computed display outcomes.",
+        "properties": {
+          "assignment": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/BoardAssignment"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "board": {
+            "$ref": "#/$defs/BoardObservation"
+          },
+          "is_representative": {
+            "title": "Is Representative",
+            "type": "boolean"
+          },
+          "outcome": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/BoardOutcome"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "board",
+          "outcome",
+          "assignment",
+          "is_representative"
+        ],
+        "title": "BoardExampleView",
+        "type": "object"
+      },
+      "BoardObservation": {
+        "additionalProperties": false,
+        "description": "Supply only structural, experiment-local data to discovery adapters.",
+        "properties": {
+          "level": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Level"
+          },
+          "observation_id": {
+            "minLength": 1,
+            "title": "Observation Id",
+            "type": "string"
+          },
+          "traits": {
+            "items": {
+              "$ref": "#/$defs/TraitObservation"
+            },
+            "title": "Traits",
+            "type": "array"
+          },
+          "units": {
+            "items": {
+              "$ref": "#/$defs/UnitOccurrence"
+            },
+            "title": "Units",
+            "type": "array"
+          }
+        },
+        "required": [
+          "observation_id",
+          "level",
+          "units",
+          "traits"
+        ],
+        "title": "BoardObservation",
+        "type": "object"
+      },
+      "BoardOutcome": {
+        "additionalProperties": false,
+        "description": "Hold outcomes separately until classification has finished.",
+        "properties": {
+          "observation_id": {
+            "minLength": 1,
+            "title": "Observation Id",
+            "type": "string"
+          },
+          "placement": {
+            "anyOf": [
+              {
+                "maximum": 8,
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placement"
+          }
+        },
+        "required": [
+          "observation_id",
+          "placement"
+        ],
+        "title": "BoardOutcome",
+        "type": "object"
+      },
+      "CompositionContext": {
+        "additionalProperties": false,
+        "description": "Identify the saved source and algorithm without exposing database identities.",
+        "properties": {
+          "algorithm_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Algorithm Id"
+          },
+          "algorithm_version": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Algorithm Version"
+          },
+          "experiment_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experiment Id"
+          },
+          "feature_revision": {
+            "minLength": 1,
+            "title": "Feature Revision",
+            "type": "string"
+          },
+          "patch": {
+            "minLength": 1,
+            "title": "Patch",
+            "type": "string"
+          },
+          "population_kind": {
+            "enum": [
+              "discovery_sample",
+              "full_population"
+            ],
+            "title": "Population Kind",
+            "type": "string"
+          },
+          "queue_id": {
+            "minimum": 0,
+            "title": "Queue Id",
+            "type": "integer"
+          },
+          "set_number": {
+            "minimum": 0,
+            "title": "Set Number",
+            "type": "integer"
+          },
+          "snapshot_revision": {
+            "minLength": 1,
+            "title": "Snapshot Revision",
+            "type": "string"
+          },
+          "source_kind": {
+            "enum": [
+              "fixture",
+              "experiment"
+            ],
+            "title": "Source Kind",
+            "type": "string"
+          },
+          "taxonomy_revision": {
+            "minLength": 1,
+            "title": "Taxonomy Revision",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_kind",
+          "population_kind",
+          "patch",
+          "set_number",
+          "queue_id",
+          "snapshot_revision",
+          "taxonomy_revision",
+          "feature_revision",
+          "algorithm_id",
+          "algorithm_version",
+          "experiment_id"
+        ],
+        "title": "CompositionContext",
+        "type": "object"
+      },
+      "CompositionWarning": {
+        "additionalProperties": false,
+        "description": "Expose a safe actionable warning to the workspace.",
+        "properties": {
+          "code": {
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "CompositionWarning",
+        "type": "object"
+      },
+      "EntityRef": {
+        "additionalProperties": false,
+        "description": "Identify an entity using the canonical identity available in scoped facts.",
+        "properties": {
+          "key": {
+            "minLength": 1,
+            "title": "Key",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "name"
+        ],
+        "title": "EntityRef",
+        "type": "object"
+      },
+      "FamilyCandidate": {
+        "additionalProperties": false,
+        "description": "Explain one candidate under a frozen classification policy.",
+        "properties": {
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence",
+            "type": "array"
+          },
+          "family_id": {
+            "minLength": 1,
+            "title": "Family Id",
+            "type": "string"
+          },
+          "score": {
+            "$ref": "#/$defs/MatchScore"
+          }
+        },
+        "required": [
+          "family_id",
+          "score",
+          "evidence"
+        ],
+        "title": "FamilyCandidate",
+        "type": "object"
+      },
+      "FamilyDefinition": {
+        "additionalProperties": false,
+        "description": "Describe a family without embedding its algorithm membership model.",
+        "properties": {
+          "defining_patterns": {
+            "items": {
+              "$ref": "#/$defs/StructuralPattern"
+            },
+            "title": "Defining Patterns",
+            "type": "array"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "family_id": {
+            "minLength": 1,
+            "title": "Family Id",
+            "type": "string"
+          },
+          "label": {
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "representative_observation_ids": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "title": "Representative Observation Ids",
+            "type": "array"
+          },
+          "variations": {
+            "items": {
+              "$ref": "#/$defs/VariationDefinition"
+            },
+            "title": "Variations",
+            "type": "array"
+          }
+        },
+        "required": [
+          "family_id",
+          "label",
+          "description",
+          "defining_patterns",
+          "representative_observation_ids",
+          "variations"
+        ],
+        "title": "FamilyDefinition",
+        "type": "object"
+      },
+      "FamilyProfile": {
+        "additionalProperties": false,
+        "description": "Summarize family membership with the entire eligible population denominator.",
+        "properties": {
+          "assigned_boards": {
+            "minimum": 0,
+            "title": "Assigned Boards",
+            "type": "integer"
+          },
+          "eligible_population_boards": {
+            "minimum": 0,
+            "title": "Eligible Population Boards",
+            "type": "integer"
+          },
+          "family_id": {
+            "minLength": 1,
+            "title": "Family Id",
+            "type": "string"
+          },
+          "joint_patterns": {
+            "items": {
+              "$ref": "#/$defs/PatternSupport"
+            },
+            "title": "Joint Patterns",
+            "type": "array"
+          },
+          "outcomes": {
+            "$ref": "#/$defs/OutcomeSummary"
+          },
+          "play_share": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Play Share"
+          }
+        },
+        "required": [
+          "family_id",
+          "assigned_boards",
+          "eligible_population_boards",
+          "play_share",
+          "joint_patterns",
+          "outcomes"
+        ],
+        "title": "FamilyProfile",
+        "type": "object"
+      },
+      "ItemOccurrence": {
+        "additionalProperties": false,
+        "description": "Preserve one completed item slot, including duplicate item identities.",
+        "properties": {
+          "item": {
+            "$ref": "#/$defs/EntityRef"
+          },
+          "slot": {
+            "maximum": 2,
+            "minimum": 0,
+            "title": "Slot",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "slot",
+          "item"
+        ],
+        "title": "ItemOccurrence",
+        "type": "object"
+      },
+      "MatchScore": {
+        "additionalProperties": false,
+        "description": "Label score semantics without implying probability calibration.",
+        "properties": {
+          "higher_is_better": {
+            "title": "Higher Is Better",
+            "type": "boolean"
+          },
+          "kind": {
+            "enum": [
+              "distance",
+              "similarity",
+              "model_probability"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "name",
+          "value",
+          "kind",
+          "higher_is_better"
+        ],
+        "title": "MatchScore",
+        "type": "object"
+      },
+      "OutcomeSummary": {
+        "additionalProperties": false,
+        "description": "Distinguish available, empty, suppressed, and unavailable outcomes.",
+        "properties": {
+          "avg_placement": {
+            "anyOf": [
+              {
+                "maximum": 8,
+                "minimum": 1,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Placement"
+          },
+          "observed_boards": {
+            "minimum": 0,
+            "title": "Observed Boards",
+            "type": "integer"
+          },
+          "placement_counts": {
+            "anyOf": [
+              {
+                "items": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "maxItems": 8,
+                "minItems": 8,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placement Counts"
+          },
+          "state": {
+            "enum": [
+              "available",
+              "empty",
+              "suppressed",
+              "unavailable"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "top4_rate": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top4 Rate"
+          },
+          "win_rate": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Win Rate"
+          }
+        },
+        "required": [
+          "state",
+          "observed_boards",
+          "placement_counts",
+          "avg_placement",
+          "top4_rate",
+          "win_rate"
+        ],
+        "title": "OutcomeSummary",
+        "type": "object"
+      },
+      "PatternSupport": {
+        "additionalProperties": false,
+        "description": "Record measured support of the entire conjunction.",
+        "properties": {
+          "eligible_boards": {
+            "minimum": 0,
+            "title": "Eligible Boards",
+            "type": "integer"
+          },
+          "matching_boards": {
+            "minimum": 0,
+            "title": "Matching Boards",
+            "type": "integer"
+          },
+          "pattern": {
+            "$ref": "#/$defs/StructuralPattern"
+          }
+        },
+        "required": [
+          "pattern",
+          "matching_boards",
+          "eligible_boards"
+        ],
+        "title": "PatternSupport",
+        "type": "object"
+      },
+      "StructuralPattern": {
+        "additionalProperties": false,
+        "description": "Keep a jointly meaningful conjunction; alternatives use separate patterns.",
+        "properties": {
+          "label": {
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "pattern_id": {
+            "minLength": 1,
+            "title": "Pattern Id",
+            "type": "string"
+          },
+          "traits": {
+            "items": {
+              "$ref": "#/$defs/TraitRequirement"
+            },
+            "title": "Traits",
+            "type": "array"
+          },
+          "units": {
+            "items": {
+              "$ref": "#/$defs/UnitRequirement"
+            },
+            "title": "Units",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pattern_id",
+          "label",
+          "units",
+          "traits"
+        ],
+        "title": "StructuralPattern",
+        "type": "object"
+      },
+      "TraitObservation": {
+        "additionalProperties": false,
+        "description": "Preserve unknown trait measurements independently from inactive values.",
+        "properties": {
+          "num_units": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Num Units"
+          },
+          "style": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Style"
+          },
+          "tier_current": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier Current"
+          },
+          "trait": {
+            "$ref": "#/$defs/EntityRef"
+          }
+        },
+        "required": [
+          "trait",
+          "num_units",
+          "tier_current",
+          "style"
+        ],
+        "title": "TraitObservation",
+        "type": "object"
+      },
+      "TraitRequirement": {
+        "additionalProperties": false,
+        "description": "Describe an observed active breakpoint rather than inferred synergy.",
+        "properties": {
+          "min_tier_current": {
+            "minimum": 1,
+            "title": "Min Tier Current",
+            "type": "integer"
+          },
+          "trait": {
+            "$ref": "#/$defs/EntityRef"
+          }
+        },
+        "required": [
+          "trait",
+          "min_tier_current"
+        ],
+        "title": "TraitRequirement",
+        "type": "object"
+      },
+      "UnitOccurrence": {
+        "additionalProperties": false,
+        "description": "Keep an individual champion occurrence and its holder-bound investment.",
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/ItemOccurrence"
+            },
+            "maxItems": 3,
+            "title": "Items",
+            "type": "array"
+          },
+          "occurrence_index": {
+            "minimum": 0,
+            "title": "Occurrence Index",
+            "type": "integer"
+          },
+          "star_level": {
+            "minimum": 1,
+            "title": "Star Level",
+            "type": "integer"
+          },
+          "unit": {
+            "$ref": "#/$defs/EntityRef"
+          }
+        },
+        "required": [
+          "occurrence_index",
+          "unit",
+          "star_level",
+          "items"
+        ],
+        "title": "UnitOccurrence",
+        "type": "object"
+      },
+      "UnitRequirement": {
+        "additionalProperties": false,
+        "description": "Describe a conjunctive unit count and optional investment requirement.",
+        "properties": {
+          "itemized": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Itemized"
+          },
+          "min_copies": {
+            "minimum": 1,
+            "title": "Min Copies",
+            "type": "integer"
+          },
+          "unit": {
+            "$ref": "#/$defs/EntityRef"
+          }
+        },
+        "required": [
+          "unit",
+          "min_copies",
+          "itemized"
+        ],
+        "title": "UnitRequirement",
+        "type": "object"
+      },
+      "VariationDefinition": {
+        "additionalProperties": false,
+        "description": "Describe an optional recurrent structure within one family.",
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "label": {
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "patterns": {
+            "items": {
+              "$ref": "#/$defs/StructuralPattern"
+            },
+            "title": "Patterns",
+            "type": "array"
+          },
+          "representative_observation_ids": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "title": "Representative Observation Ids",
+            "type": "array"
+          },
+          "variation_id": {
+            "minLength": 1,
+            "title": "Variation Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "variation_id",
+          "label",
+          "description",
+          "patterns",
+          "representative_observation_ids"
+        ],
+        "title": "VariationDefinition",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Version the complete family display wire contract.",
+    "properties": {
+      "context": {
+        "$ref": "#/$defs/CompositionContext"
+      },
+      "examples": {
+        "items": {
+          "$ref": "#/$defs/BoardExampleView"
+        },
+        "title": "Examples",
+        "type": "array"
+      },
+      "family": {
+        "$ref": "#/$defs/FamilyDefinition"
+      },
+      "profile": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/FamilyProfile"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "schema_version": {
+        "const": "composition.v1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "warnings": {
+        "items": {
+          "$ref": "#/$defs/CompositionWarning"
+        },
+        "title": "Warnings",
+        "type": "array"
+      }
+    },
+    "required": [
+      "schema_version",
+      "context",
+      "family",
+      "profile",
+      "examples",
+      "warnings"
+    ],
+    "title": "CompositionDetailResponse",
+    "type": "object"
+  },
+  "CompositionListResponse": {
+    "$defs": {
+      "CompositionContext": {
+        "additionalProperties": false,
+        "description": "Identify the saved source and algorithm without exposing database identities.",
+        "properties": {
+          "algorithm_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Algorithm Id"
+          },
+          "algorithm_version": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Algorithm Version"
+          },
+          "experiment_id": {
+            "anyOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experiment Id"
+          },
+          "feature_revision": {
+            "minLength": 1,
+            "title": "Feature Revision",
+            "type": "string"
+          },
+          "patch": {
+            "minLength": 1,
+            "title": "Patch",
+            "type": "string"
+          },
+          "population_kind": {
+            "enum": [
+              "discovery_sample",
+              "full_population"
+            ],
+            "title": "Population Kind",
+            "type": "string"
+          },
+          "queue_id": {
+            "minimum": 0,
+            "title": "Queue Id",
+            "type": "integer"
+          },
+          "set_number": {
+            "minimum": 0,
+            "title": "Set Number",
+            "type": "integer"
+          },
+          "snapshot_revision": {
+            "minLength": 1,
+            "title": "Snapshot Revision",
+            "type": "string"
+          },
+          "source_kind": {
+            "enum": [
+              "fixture",
+              "experiment"
+            ],
+            "title": "Source Kind",
+            "type": "string"
+          },
+          "taxonomy_revision": {
+            "minLength": 1,
+            "title": "Taxonomy Revision",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_kind",
+          "population_kind",
+          "patch",
+          "set_number",
+          "queue_id",
+          "snapshot_revision",
+          "taxonomy_revision",
+          "feature_revision",
+          "algorithm_id",
+          "algorithm_version",
+          "experiment_id"
+        ],
+        "title": "CompositionContext",
+        "type": "object"
+      },
+      "CompositionWarning": {
+        "additionalProperties": false,
+        "description": "Expose a safe actionable warning to the workspace.",
+        "properties": {
+          "code": {
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "CompositionWarning",
+        "type": "object"
+      },
+      "EntityRef": {
+        "additionalProperties": false,
+        "description": "Identify an entity using the canonical identity available in scoped facts.",
+        "properties": {
+          "key": {
+            "minLength": 1,
+            "title": "Key",
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "name"
+        ],
+        "title": "EntityRef",
+        "type": "object"
+      },
+      "FamilyPatternPreview": {
+        "additionalProperties": false,
+        "description": "Show at most six units and traits from the first representative structure.",
+        "properties": {
+          "alternative_patterns": {
+            "minimum": 0,
+            "title": "Alternative Patterns",
+            "type": "integer"
+          },
+          "omitted_requirements": {
+            "minimum": 0,
+            "title": "Omitted Requirements",
+            "type": "integer"
+          },
+          "pattern": {
+            "$ref": "#/$defs/StructuralPattern"
+          }
+        },
+        "required": [
+          "pattern",
+          "omitted_requirements",
+          "alternative_patterns"
+        ],
+        "title": "FamilyPatternPreview",
+        "type": "object"
+      },
+      "FamilySummaryView": {
+        "additionalProperties": false,
+        "description": "Provide the bounded family-list projection.",
+        "properties": {
+          "assigned_boards": {
+            "minimum": 0,
+            "title": "Assigned Boards",
+            "type": "integer"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "eligible_population_boards": {
+            "minimum": 0,
+            "title": "Eligible Population Boards",
+            "type": "integer"
+          },
+          "family_id": {
+            "minLength": 1,
+            "title": "Family Id",
+            "type": "string"
+          },
+          "label": {
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "play_share": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Play Share"
+          },
+          "preview": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/FamilyPatternPreview"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "variation_count": {
+            "minimum": 0,
+            "title": "Variation Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "family_id",
+          "label",
+          "description",
+          "assigned_boards",
+          "eligible_population_boards",
+          "play_share",
+          "variation_count",
+          "preview"
+        ],
+        "title": "FamilySummaryView",
+        "type": "object"
+      },
+      "StructuralPattern": {
+        "additionalProperties": false,
+        "description": "Keep a jointly meaningful conjunction; alternatives use separate patterns.",
+        "properties": {
+          "label": {
+            "minLength": 1,
+            "title": "Label",
+            "type": "string"
+          },
+          "pattern_id": {
+            "minLength": 1,
+            "title": "Pattern Id",
+            "type": "string"
+          },
+          "traits": {
+            "items": {
+              "$ref": "#/$defs/TraitRequirement"
+            },
+            "title": "Traits",
+            "type": "array"
+          },
+          "units": {
+            "items": {
+              "$ref": "#/$defs/UnitRequirement"
+            },
+            "title": "Units",
+            "type": "array"
+          }
+        },
+        "required": [
+          "pattern_id",
+          "label",
+          "units",
+          "traits"
+        ],
+        "title": "StructuralPattern",
+        "type": "object"
+      },
+      "TraitRequirement": {
+        "additionalProperties": false,
+        "description": "Describe an observed active breakpoint rather than inferred synergy.",
+        "properties": {
+          "min_tier_current": {
+            "minimum": 1,
+            "title": "Min Tier Current",
+            "type": "integer"
+          },
+          "trait": {
+            "$ref": "#/$defs/EntityRef"
+          }
+        },
+        "required": [
+          "trait",
+          "min_tier_current"
+        ],
+        "title": "TraitRequirement",
+        "type": "object"
+      },
+      "UnitRequirement": {
+        "additionalProperties": false,
+        "description": "Describe a conjunctive unit count and optional investment requirement.",
+        "properties": {
+          "itemized": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Itemized"
+          },
+          "min_copies": {
+            "minimum": 1,
+            "title": "Min Copies",
+            "type": "integer"
+          },
+          "unit": {
+            "$ref": "#/$defs/EntityRef"
+          }
+        },
+        "required": [
+          "unit",
+          "min_copies",
+          "itemized"
+        ],
+        "title": "UnitRequirement",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Version the family-list wire contract.",
+    "properties": {
+      "context": {
+        "$ref": "#/$defs/CompositionContext"
+      },
+      "families": {
+        "items": {
+          "$ref": "#/$defs/FamilySummaryView"
+        },
+        "title": "Families",
+        "type": "array"
+      },
+      "schema_version": {
+        "const": "composition.v1",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "warnings": {
+        "items": {
+          "$ref": "#/$defs/CompositionWarning"
+        },
+        "title": "Warnings",
+        "type": "array"
+      }
+    },
+    "required": [
+      "schema_version",
+      "context",
+      "families",
+      "warnings"
+    ],
+    "title": "CompositionListResponse",
+    "type": "object"
+  },
+  "MatchScore": {
+    "additionalProperties": false,
+    "description": "Label score semantics without implying probability calibration.",
+    "properties": {
+      "higher_is_better": {
+        "title": "Higher Is Better",
+        "type": "boolean"
+      },
+      "kind": {
+        "enum": [
+          "distance",
+          "similarity",
+          "model_probability"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "name": {
+        "minLength": 1,
+        "title": "Name",
+        "type": "string"
+      },
+      "value": {
+        "title": "Value",
+        "type": "number"
+      }
+    },
+    "required": [
+      "name",
+      "value",
+      "kind",
+      "higher_is_better"
+    ],
+    "title": "MatchScore",
+    "type": "object"
+  },
+  "OutcomeSummary": {
+    "additionalProperties": false,
+    "description": "Distinguish available, empty, suppressed, and unavailable outcomes.",
+    "properties": {
+      "avg_placement": {
+        "anyOf": [
+          {
+            "maximum": 8,
+            "minimum": 1,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Avg Placement"
+      },
+      "observed_boards": {
+        "minimum": 0,
+        "title": "Observed Boards",
+        "type": "integer"
+      },
+      "placement_counts": {
+        "anyOf": [
+          {
+            "items": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "maxItems": 8,
+            "minItems": 8,
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Placement Counts"
+      },
+      "state": {
+        "enum": [
+          "available",
+          "empty",
+          "suppressed",
+          "unavailable"
+        ],
+        "title": "State",
+        "type": "string"
+      },
+      "top4_rate": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Top4 Rate"
+      },
+      "win_rate": {
+        "anyOf": [
+          {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Win Rate"
+      }
+    },
+    "required": [
+      "state",
+      "observed_boards",
+      "placement_counts",
+      "avg_placement",
+      "top4_rate",
+      "win_rate"
+    ],
+    "title": "OutcomeSummary",
+    "type": "object"
+  }
+}
