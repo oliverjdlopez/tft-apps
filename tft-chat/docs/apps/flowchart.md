@@ -25,12 +25,12 @@ All models reject unknown fields.
 
 | Model | Purpose |
 | --- | --- |
-| `PatchWorkspace` | `schema_version: "flowchart.v1"`, `name`, optional `patch` and `set_number`, and a `gameplan`. This is exactly what a JSON export contains. |
+| `PatchWorkspace` | `schema_version: "flowchart.v2"`, `name`, optional `patch` and `set_number`, and a `gameplan`. This is exactly what a JSON export contains. |
 | `Gameplan` | Holds the `flowchart`; kept separate so later planning artifacts can be added. |
 | `Flowchart` | A `FlowchartFragment` plus the saved `viewport` (`x`, `y`, `zoom`). |
 | `FlowchartFragment` | `elements` and `connections`, validated as one graph. Saved groups store just a fragment. |
-| `FlowchartElement` | `id`, `kind`, `position`, optional `size`, `title`, optional `stage_hint`, `entities`, `text`. |
-| `FlowchartConnection` | `id`, `source`, `target`, `kind`, `condition` (the guard), `notes`, and optional `source_handle` / `target_handle`. |
+| `FlowchartElement` | `id`, `kind`, `position`, optional `size`, `title`, optional `stage_hint`, `entities`, `text`, `parent_id`, `locked`, and optional group `tint`. |
+| `FlowchartConnection` | `id`, `source`, `target`, `kind`, `condition` (the guard), `notes`, and optional `source_handle` / `target_handle`, `waypoints`, and `label_offset`. |
 | `EntityRef` | `category` (`unit`, `item`, `augment`) and `api_name`. |
 
 Element kinds and how the canvas draws them:
@@ -45,6 +45,7 @@ Element kinds and how the canvas draws them:
 | `end` | Where a line finishes. | Ringed dot | Nothing. |
 | `entity` | One standalone dropped icon. | Tile | Exactly one `EntityRef`. |
 | `note` | A situational annotation. | Note with a folded corner | `text`. |
+| `group` | A visual container in this activity diagram. | Named, tinted frame or collapsed card | Children refer to its `parent_id`; nested positions are relative to the parent. |
 
 Connection kinds:
 
@@ -74,19 +75,32 @@ The backend enforces only what keeps a document coherent:
 - A transition cannot touch a note (use an annotation), enter a `start`, or
   leave an `end`.
 - At most 400 elements and 800 connections, with bounded text lengths.
+- Every parent exists and is a group; containment is acyclic. Authored
+  connections attach to activity elements, rather than visual containers.
+- Coordinates and routing offsets are finite and bounded to ±1,000,000;
+  dimensions are positive and at most 4,000. Routes have at most 64 manual
+  waypoints. Group tint is a six-digit hex color.
 
 Everything else, including decisions without guards, several starts, or
 unconnected nodes, is allowed. The canvas refuses links the backend would
 reject, and outlines a decision branch's guard pill in gold while it is empty.
 
-These kinds and the handle fields were added without changing
-`schema_version`; every earlier `flowchart.v1` document is still valid.
+Legacy `flowchart.v1` workspaces and library fragments are accepted and
+normalized in memory with empty routing metadata, no parent, and no lock.
+Responses and downloads emit `flowchart.v2`. Reading a v1 document does not
+rewrite its row/file or advance its revision; stored JSON upgrades only on an
+ordinary save, import, rename, or explicit export. DOM measurements, search,
+collapse, focus, and named views do not autosave content.
 
 Only entity API names are stored; names and images are resolved at render
 time, so a patch-bundle change never breaks a document.
 
-Panel conveniences (snap-to-grid, minimap visibility, and link style) are
-per-viewer browser settings in `localStorage`, not part of the document.
+Panel conveniences (snap-to-grid, minimap visibility, and link style) use
+`tft.flowchart.panel` in localStorage. Collapse and named focus views use
+`tft.flowchart.views:<source>:<workspace-id>`. These are personal browser
+settings, separate from the workspace document and its revision. The latest
+pan/zoom is also personal state in that key; it falls back to the exported
+viewport when no personal viewport has been saved.
 
 ## Sources
 
@@ -125,9 +139,18 @@ On the canvas:
 - **Left-drag** on empty canvas draws a selection box. Nodes fully inside it,
   and the links between them, are selected. The canvas scrolls when the box
   reaches its edge. **Left-click** selects, and **left-drag** on a node moves
-  it (or the whole selection).
-- **Right-drag** (or middle-drag) pans the canvas; the browser context menu is
-  suppressed there. The scroll wheel zooms.
+  it (or the whole selection). **Left-click on empty canvas** clears all selected
+  nodes and connections, including a large boxed selection.
+- **Right-drag** (or middle-drag) pans the canvas and preserves the selection.
+  A **short right-click** opens common commands next to the cursor on release:
+  undo/redo, adding a node at the click position, and selection operations such
+  as grouping, duplicating, locking and deleting. Right-clicking an unselected
+  node or connection targets it; right-clicking selected objects or empty canvas
+  preserves the current selection. A hold longer than 350 ms or movement beyond
+  5 pixels does not open a menu. The popup stays inside the viewport and closes
+  after choosing a command, clicking elsewhere, or pressing Escape. Read-only
+  workspaces disable document mutations. The browser context menu is suppressed
+  on the canvas. The scroll wheel zooms.
 
 - The toolbar's **Start**, **State**, **Action**, **Decision**, **Fork / join**,
   **End**, and **Note** buttons add that node at the visible center. New
@@ -142,13 +165,109 @@ On the canvas:
   until the link is selected, except on decision branches. The note button on
   the pill opens the transition's notes in a callout under it. The button is
   gold when the link has notes.
-- **Backspace** or **Delete** removes the selection.
+- **Shift**, **Ctrl**, or **Cmd** + click adds to the selection.
+- **Backspace** or **Delete** removes the selection. Ordinary container deletion
+  ungroups it; **Delete group and contents** explicitly removes descendants.
 - **Save group** in the toolbar saves the selected nodes to the library; see
   [saved groups](#saved-groups).
 
-Links are drawn as right-angle paths with rounded corners by default. The
-**Right-angle / Curved** toolbar toggle switches to curves. Like snap-to-grid
-and minimap visibility, it is a per-viewer browser setting.
+Links use obstacle-aware orthogonal routing by default. The **Right-angle /
+Curved** toggle retains the viewer's preferred automatic style. Manual routes
+remain orthogonal. The worker changes routes without moving authored nodes;
+while dragging or awaiting a result, inexpensive provisional paths are shown.
+Attachments are distributed along shared sides, including fork/join bars, and
+A* routing penalizes turns, shared segments, and crossings. Automatic guards
+try clear positions away from nodes and prior labels. Impossible geometry keeps
+a usable path and displays a nonblocking overlap warning.
+
+### Layout and geometry
+
+**Layout diagram** explicitly arranges the diagram using pinned elkjs 0.11.0
+and ELK layered compound layout. **Layout selection** arranges selected siblings
+and the descendants of selected groups; mixed-parent selections are disabled.
+Choose **Top to bottom** (default) or **Left to right**. Layout uses explicit or
+measured sizes and side-constrained ports. Selection layout preserves every
+unselected position and centers the new bounds around the selection's old
+center. Layout clears manual bends on connections affected by arranged nodes.
+Ordinary text edits, routing, collapse and focus never arrange nodes.
+
+**Align / distribute** offers left/center/right, top/middle/bottom and both
+spacing directions for siblings. Distribution requires at least three objects.
+Dragging shows alignment guides. **Lock position** prevents dragging, resizing
+and arranging that object's geometry. A group containing a locked descendant
+cannot move as a unit; layout keeps that group's subtree fixed. Text editing
+remains available.
+
+Select a connection to drag an orthogonal segment or its visible bend grip.
+Use the guard's grip to drag its label. **Reset route/label placement** clears
+manual bends and label offsets on selected connections (or connections touching
+selected elements). Manual placement persists in the document. Reconnect a
+connection endpoint by dragging it to a valid handle; identity, guard and notes
+are retained. Proxy endpoints require expanding their groups first.
+**Insert action** splits a selected transition into two links: the original ID,
+guard, notes and label offset stay on the incoming link, and the outgoing link
+starts unlabelled.
+
+Routing and layout run in workers with progress feedback. New geometry jobs
+terminate obsolete workers, and generation checks reject late responses. Editing
+during layout cancels its result so it cannot overwrite newer document changes.
+
+### Readable text and transactions
+
+Titles, questions, guards and notes render as wrapped text. Double-click or
+**Enter** opens the focused field; **Escape** cancels. **Enter** commits a
+single-line field, **Ctrl/Cmd+Enter** commits multiline fields, and blur commits.
+Typing is a local draft until commit, so a committed field is one undo step.
+Default-sized nodes grow with content; explicit sizes stay explicit and show
+**Overflow · Fit to content** when needed. **Fit to content** returns the node
+to content sizing. The collapsible **Properties** panel shows complete text,
+entity lists and connection details, including for collapsed proxy connections.
+
+The canvas owns one canonical document and up to 100 history transactions per
+open workspace. A drag, resize, layout, group command, paste or committed text
+edit is one transaction. **Undo / Redo**, **Ctrl/Cmd+Z**, **Ctrl/Cmd+Shift+Z**, and
+**Ctrl+Y** restore documents through the same revision-checked autosave.
+**Ctrl/Cmd+A** selects visible objects; **Ctrl/Cmd+D** duplicates at the last
+canvas pointer position (or visible center). Browser **Cut / Copy / Paste**
+events carry a versioned, validated fragment as clipboard data and plain text;
+no desktop clipboard-read permission is required. Text editors retain normal
+text clipboard and undo behavior. Copying a container includes descendants and
+internal links; copying children alone detaches them from unselected parents.
+Paste uses fresh IDs, selects copied roots, and shifts root positions and manual waypoints.
+
+### Nested visual groups
+
+**Group** requires two or more selected siblings and creates a named, tinted
+container. Rename and tint it in Properties. **Ungroup**, **Add to group**, and
+**Remove from group** are available in the selection toolbar and context menu;
+choose the destination group explicitly. Overlap never changes membership.
+Moving a container moves descendants through React Flow parent positioning;
+resizing cannot clip children, and explicit content edits grow containers as
+needed. Ungrouping preserves child world positions and all connections.
+
+**Collapse group** replaces its frame with a compact named card and descendant
+count. Internal connections disappear from the view; each external connection
+gets a separate temporary group-boundary endpoint. Original endpoints, guards,
+notes, IDs, and manual routes remain in the canonical document for expansion.
+Proxy connections are selectable and inspectable. Collapse is personal state;
+saving while collapsed still saves every original element and connection.
+Groups organize one activity diagram; they do not create child diagrams, called
+activities, or state machines.
+
+### Search and personal focus views
+
+**Search diagram** covers titles, notes, guards, stages, group names and resolved
+entity names. A result expands its collapsed ancestors and centers the target;
+connection results reveal both original endpoints. **Selection**, **Upstream**,
+**Downstream**, and **Both** focus modes traverse transition links with cycle
+protection, include associated annotations and ancestor containers, and dim
+unrelated objects. **Reset focus** or Escape clears focus.
+
+**Save view** records a name, viewport, focus mode/seeds and collapsed groups in
+localStorage for that workspace/source. **Open view** restores it; **Clear saved
+views** removes those personal views. Deleted object references are pruned.
+Search, focus, collapse, named views, selection and copying remain available on
+read-only JSON workspaces; document mutations are disabled.
 
 ### Visual system
 
@@ -170,8 +289,9 @@ of states, decisions, and links. It is shared by every workspace.
 
 - **Save:** select elements on the canvas (a box selection works well), choose
   **Save group**, and name it. The group keeps the selected nodes and only
-  the links between them. Positions are stored relative to the group's
-  top-left corner. Saving also works from a read-only JSON workspace, since it
+  the links between them. Selecting a visual container also includes all its descendants. Unselected
+  parents are detached; root positions and manual waypoints shift to the
+  fragment origin, while nested child positions remain relative to parents. Saving also works from a read-only JSON workspace, since it
   does not edit that workspace.
 - **Use:** the palette's **Groups** tab lists each group with its contents
   ("2 states · 1 action · 1 link") and entity thumbnails. Drag a card onto the
@@ -186,8 +306,11 @@ of states, decisions, and links. It is shared by every workspace.
   from a different set show a **Set N** badge, because their unit, item, and
   augment chips may not exist in the current set.
 
-Groups live only in the database (`chat_tft_dev_flowchart_groups`); they are
-not part of workspace exports.
+Library entries live only in `chat_tft_dev_flowchart_groups` and are separate
+from workspace exports. Visual containers and their nested membership are part
+of each workspace document and its export. Inserting a library entry copies
+nested containers and descendants with fresh IDs; inserted fragments are
+independent.
 
 ## Export
 
@@ -254,15 +377,25 @@ Missing workspaces or groups return 404. Edits against the JSON source return
 | Path | Role |
 | --- | --- |
 | `app/backend/src/services/flowchart/` | Models, service operations, and storage helpers. |
-| `app/frontend/src/flowchart/` | `Flowchart.jsx` (rail and save loop), `EntitySidebar.jsx`, `FlowchartPanel.jsx` (React Flow canvas), `nodes.jsx`, `edges.jsx`, `api.js`, `models.js` (Zod mirrors), `flowchart.css`. |
+| `app/frontend/src/flowchart/` | `Flowchart.jsx` (rail and save loop), `EntitySidebar.jsx`, `FlowchartPanel.jsx` (React Flow canvas), `nodes.jsx`, `edges.jsx`, `TextField.jsx`, `document.js` (validated commands/history), `projection.js` (personal views), `layout.js` / `layout.worker.js`, `routing.js` / `routing.worker.js`, `utils.js` (shared helpers), `api.js`, `models.js` (Zod mirrors), `flowchart.css`. |
 | `../desktop/workspace.mjs`, `../desktop/main.mjs` | The `flowchart` view and **Ctrl+4** menu entry. |
 
 ```bash
 uv run pytest -q tests/test_flowchart_api.py tests/test_flowchart_persistence.py tests/test_entity_assets.py
 npm --prefix app/frontend test
+npm --prefix app/frontend run build
 npm --prefix ../desktop test
 ```
 
 `tests/test_flowchart_persistence.py` runs against the isolated `RDS_TEST_*`
 database and skips when it is unavailable; the API tests use a disposable
 SQLite table and a temporary `gameplans/` directory.
+
+
+Geometry/command tests in `app/frontend/src/flowchart/document.test.js` cover
+nested manipulation, collapse, cyclic focus, clipboard validation, locks,
+reconnection, insertion, routing and measured selection/compound layout.
+`TextField.test.jsx` covers keyboard commits/cancellation; `Flowchart.test.jsx`
+covers read-only behavior, autosave/history, personal views and stale layout.
+See [browser smoke and large fixture](../development/testing-and-evals.md#flowchart-editor-validation)
+for production-worker validation without live workspaces.

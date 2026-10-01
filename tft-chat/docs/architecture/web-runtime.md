@@ -342,3 +342,28 @@ and cache lookup results for a mounted view's patch/set. Navigating between
 entities reuses those lookups; switching context disposes stale requests. Reload
 the page after downloading or replacing a bundle to refresh browser lookup state.
 Image transfer failures preserve labels and show the same unavailable-image note.
+
+
+## Flowchart document and worker ownership
+
+The standalone Flowchart canvas uses `flowchart/document.js` as its canonical
+validated command/history layer. `projection.js` derives React Flow parent/child
+nodes and collapsed boundary connections from that document; hiding or dimming
+objects never changes the saved graph. `TextField.jsx` keeps edit drafts local
+until commit. Revision-checked autosave receives complete canonical documents,
+including undo/redo results, and ignores initial loading and DOM measurements.
+
+`routing.worker.js` runs a sparse orthogonal visibility graph and A* with
+obstacle, turn, sharing and crossing costs. `layout.worker.js` uses ELK's native
+worker dispatcher; a distinct fixed-side port per connection avoids hyperedge
+merger recursion on large cyclic diagrams. Worker snapshots/generations and
+termination prevent superseded jobs from replacing newer edits. The pinned
+`elkjs` dependency stays in the standalone Flowchart/worker bundle.
+
+Containers, relative child geometry, locks, waypoints and label offsets persist
+in `flowchart.v2` JSON on the existing tables/routes. Backend and frontend
+validate containment, connection semantics, finite geometry and routing bounds.
+V1 reads normalize in memory without storage writes. Collapse and named focus
+views are personal localStorage state keyed by source and workspace. Clipboard
+uses browser events and validated fragments, keeping desktop renderers
+unprivileged. See [Flowchart commands and compatibility](../apps/flowchart.md).

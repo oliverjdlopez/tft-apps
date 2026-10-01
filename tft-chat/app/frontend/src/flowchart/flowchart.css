@@ -473,3 +473,55 @@
 .flowchart-canvas .react-flow__edge-path.flowchart-annotation { stroke: var(--fc-note); stroke-dasharray: 5 4; }
 /* Guard pills and notes sit above nodes so short links stay readable. */
 .flowchart-canvas .react-flow__edgelabel-renderer { z-index: 5; }
+
+/* Canonical editor views. These follow React Flow's unlayered styles. */
+.flowchart-work-area { display: flex; flex: 1; min-height: 260px; overflow: hidden; }
+.flowchart-work-area .flowchart-canvas { min-width: 240px; }
+.flowchart-panel { outline: none; }
+.flowchart-toolbar { flex-wrap: wrap; gap: 5px; }
+.flowchart-toolbar select { font: inherit; font-size: 12px; border: 1px solid var(--border); border-radius: 5px; padding: 5px; max-width: 190px; }
+.flowchart-view-tools input { max-width: 180px; }
+.flowchart-view-tools form { display: flex; gap: 5px; }
+.flowchart-text { display: block; white-space: pre-wrap; overflow-wrap: anywhere; font-size: inherit; line-height: 1.4; border-radius: 3px; cursor: text; }
+.flowchart-text:focus-visible { outline: 2px solid var(--fc-selected); }
+.flowchart-placeholder { color: var(--muted-foreground); font-weight: 400; }
+.flowchart-shape { overflow: visible; }
+.flowchart-shape .flowchart-text { max-height: 100%; overflow: hidden; }
+.flowchart-title-row { align-items: flex-start; }
+.flowchart-stage { max-width: 70px; flex: 0 0 auto; }
+.flowchart-shape .flowchart-text-editor, .flowchart-edge-label .flowchart-text-editor { display: block; width: 100%; min-width: 40px; max-width: 100%; min-height: 24px; background: var(--card); border: 1px solid var(--fc-selected); border-radius: 3px; padding: 3px; white-space: pre-wrap; field-sizing: content; }
+.flowchart-decision > .flowchart-text, .flowchart-decision > .flowchart-text-editor { width: 50%; max-height: 50%; text-align: center; font-size: 12px; }
+.flowchart-note > .flowchart-text { height: 100%; }
+.flowchart-card { overflow: visible; }
+.flowchart-card-header, .flowchart-card-body { overflow: hidden; }
+.flowchart-action > .flowchart-title-row { max-height: calc(100% - 20px); overflow: hidden; }
+.flowchart-overflow-marker { position: absolute !important; bottom: -15px; left: 0; z-index: 8; }
+.flowchart-overflow { border: 1px solid var(--fc-note); background: var(--card); border-radius: 4px; font-size: 10px; white-space: nowrap; padding: 2px 4px; }
+.flowchart-edge-pill { height: auto; min-height: 28px; max-width: 250px; border-radius: 8px; white-space: normal; padding: 3px 6px; }
+.flowchart-edge-pill .flowchart-text { max-width: 196px; }
+.flowchart-label-grip { border: 0; background: transparent; cursor: move; touch-action: none; color: var(--muted-foreground); }
+.flowchart-segment-handle { pointer-events: stroke; cursor: move; }
+.flowchart-segment-handle:hover { stroke: color-mix(in srgb, var(--fc-selected) 25%, transparent); }
+.flowchart-group { border: 1px solid #7b92ad; border-radius: 10px; padding: 10px 16px; }
+.flowchart-group[data-selected] { box-shadow: 0 0 0 2px var(--fc-selected); }
+.flowchart-group-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; font-weight: 600; }
+.flowchart-group-heading button { border: 1px solid var(--border); border-radius: 4px; background: var(--card); width: 24px; height: 24px; flex-shrink: 0; }
+.flowchart-group[data-collapsed] { display: grid; gap: 8px; font-size: 12px; }
+.flowchart-properties { flex: 0 0 32px; width: 32px; background: var(--card); border-left: 1px solid var(--border); overflow: auto; padding: 8px; }
+.flowchart-properties[open] { flex-basis: 250px; width: 250px; }
+.flowchart-properties:not([open]) summary { writing-mode: vertical-rl; }
+.flowchart-properties summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+.flowchart-properties article { padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 12px; display: grid; gap: 8px; }
+.flowchart-properties .flowchart-text { max-height: none; }
+.flowchart-properties ul { padding-left: 16px; }
+.flowchart-properties input[type=color] { display: block; width: 60px; height: 32px; }
+.flowchart-search-results { max-height: 140px; overflow: auto; display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 10px; }
+.flowchart-search-results button { border: 1px solid var(--border); border-radius: 5px; background: var(--card); padding: 4px 8px; font-size: 12px; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+.flowchart-progress, .flowchart-routing-warning { padding: 4px 10px; font-size: 12px; background: var(--muted); }
+.flowchart-context-menu { position: fixed; z-index: 100; display: flex; flex-direction: column; gap: 4px; max-height: min(420px, calc(100vh - 16px)); overflow: auto; width: min(280px, calc(100vw - 16px)); padding: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 16px #0002; }
+.flowchart-guides { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 6; }
+.flowchart-guides line { stroke: var(--fc-selected); stroke-width: 1; stroke-dasharray: 5 5; }
+@media (max-width: 1000px) { .flowchart-properties[open] { flex-basis: 190px; width: 190px; } .flowchart-work-area { min-height: 400px; } }
+.flowchart-bend-grip { position: absolute; width: 18px; height: 18px; padding: 0; border: 1px solid var(--fc-selected); border-radius: 4px; background: var(--card); color: var(--fc-selected); font-size: 12px; line-height: 16px; cursor: move; pointer-events: all; z-index: 10; touch-action: none; }
+/* Custom containers replace React Flow's stock group frame and padding. */
+.flowchart-canvas .react-flow__node-group { padding: 0; border: 0; background: transparent; border-radius: 10px; }

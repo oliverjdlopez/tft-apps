@@ -162,3 +162,49 @@ renderer isolation, and cleanup. See [the adapter contract](../architecture/comp
 
 Suite CI lives at `../.github/workflows/ci.yml`. Desktop Python tests have their
 own `../desktop/pytest.ini` with the suite root on the import path.
+
+
+## Flowchart editor validation
+
+Run the focused document/storage checks, the full frontend suite/build, and
+suite desktop tests:
+
+```bash
+uv run pytest -q tests/test_flowchart_api.py tests/test_flowchart_persistence.py
+npm --prefix app/frontend test
+npm --prefix app/frontend run build
+npm --prefix ../desktop test
+uv run pytest -q ../desktop/tests/test_backend.py ../desktop/tests/test_vod_backend.py
+```
+
+The API tests use in-memory SQLite and temporary export files. They verify v1
+reads do not rewrite either source, v2 nested save/import/export/library round
+trips, invalid/cyclic parents, bounded routing metadata and optimistic revisions.
+PostgreSQL checks skip when the isolated `RDS_TEST_*` target is unavailable.
+Frontend tests cover commands/history, editor keys, clipboard, nested groups,
+collapse proxies, cyclic search/focus, locks, reconnection, insertion, geometry,
+read-only views, no-save loading and stale layout responses.
+
+For real production-worker smoke, first build the frontend, then run the
+provided disposable server in one terminal and the Playwright script in another:
+
+```bash
+uv run python -m uvicorn --app-dir tests flowchart_smoke_server:app --host 127.0.0.1 --port 8429
+# Use an existing Playwright install or install it in a temporary directory.
+FLOWCHART_PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tests/flowchart_browser_smoke.mjs
+```
+
+`tests/flowchart_smoke_server.py` uses a temporary SQLite store and export root,
+empty asset catalog, and the built frontend; it does not start production
+lifespan, connect to RDS, or edit live workspaces. The smoke imports disposable
+fixtures, checks empty-canvas deselection after a marquee, short right-click
+menus, right-drag/hold selection preservation, popup targeting and dismissal,
+then groups/collapses a connected branch, arranges it, edits a long guard,
+drags a manual bend, copies/pastes, undoes/redoes and reloads to verify document
+and personal-view persistence. `FLOWCHART_SMOKE_URL` can change its loopback URL;
+`FLOWCHART_SMOKE_SCREENSHOT` optionally saves a screenshot. The script also
+imports 400 elements/800 connections, verifies worker progress and responsive
+search during routing/layout, and rejects console/page errors. The synthetic
+fixture allows overlap warnings where clear routes or labels are impossible.
+A Chromium smoke does not validate native Electron/Windows shell behavior;
+report that boundary separately from desktop unit tests.
