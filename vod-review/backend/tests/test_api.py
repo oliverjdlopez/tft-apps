@@ -15,6 +15,12 @@ from backend import annotations as annotations_module
 from backend import db as db_module
 
 
+@pytest.fixture(autouse=True)
+def local_media_mode(monkeypatch):
+    """Keep local-download fixtures independent of suite catalogue reuse."""
+    monkeypatch.setenv("TFT_MEDIA_DIR", "")
+
+
 def make_video(path: Path) -> None:
     subprocess.run(
         [

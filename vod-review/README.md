@@ -244,6 +244,15 @@ it does not promise zero decoding for future intervals that have never been prep
 Sampling occurs before loading cached images during inference. Video deletion removes
 the shared cache, and timestamp selection remains independent of source FPS.
 
+## Automatic creator imports
+
+Use **Automatic imports** in the header to save a creator list, daily time,
+timezone, and publication lookback window. The backend discovers and downloads
+eligible YouTube videos/completed streams/shorts and Twitch VODs into the normal
+library, preparing playback just like a manual upload. Imports are deduplicated;
+analysis remains a user action. Keep the desktop/backend running for scheduled
+work. See [creator scheduling and recovery](docs/creator-imports.md).
+
 ## Google Drive round clips
 
 The round-classification workspace includes **Upload to GDrive** to upload a
@@ -275,8 +284,12 @@ The committed lockfile and component sources are authoritative; the online shadc
 registry may change even when invoking the same CLI version.
 ## Share downloaded media with ChatTFT
 
-Export the same absolute `TFT_MEDIA_DIR` in both backend environments to enable
-one shared SQLite media catalog and local media directory. Both repositories
+Both backends default to the suite-owned `media/` directory and SQLite catalogue.
+Desktop launches enforce that shared storage coordinate. Standalone processes
+can export the same absolute `TFT_MEDIA_DIR` to select another directory.
+Both repositories
 remain independently installed; review jobs, annotations, and ChatTFT's
 application database remain separate. See [shared media setup](docs/shared-media.md)
 for cache behavior, existing-file import, requirements, and storage lifecycle.
+The [suite media guide](../docs/shared-media.md) also documents shared resource
+HTTP APIs and publishing/importing videos through portable references.

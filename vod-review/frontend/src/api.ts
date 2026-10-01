@@ -134,7 +134,10 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, options);
   if (!response.ok) {
     const payload = await response.json().catch(() => ({ detail: response.statusText }));
-    throw new Error(payload.detail ?? "Request failed");
+    const detail = Array.isArray(payload.detail)
+      ? payload.detail.map((issue: { msg?: string }) => issue.msg ?? "Invalid input").join("; ")
+      : payload.detail;
+    throw new Error(detail ?? "Request failed");
   }
   if (response.status === 204) return undefined as T;
   return response.json() as Promise<T>;
@@ -176,6 +179,26 @@ export type TranscriptionTask = { task_id: string; video_id: string | null; stat
 export type DownloadTask = { task_id: string; status: "queued" | "running" | "pausing" | "paused" | "completed" | "failed" | "dismissed"; progress: number; video?: VideoRecord | null; error?: string | null; media_type?: "video" | "audio"; transcription_task_id?: string | null; transcription?: TranscriptionTask | null };
 export type DownloadQuality = "480p" | "720p" | "1080p" | "best";
 export type DownloadMediaType = "video" | "audio";
+
+export type ReplaySchedule = {
+  enabled: boolean; sources: string[]; daily_time: string; timezone: string;
+  window_hours: number; quality: DownloadQuality;
+};
+export type ReplayAutomationRun = {
+  id: string; status: string; scheduled_at: string; window_start: string;
+  started_at: string; finished_at: string | null; matched: number; imported: number;
+  skipped: number; errors: { source_url: string; message: string }[];
+};
+export type ReplayAutomationStatus = {
+  settings: ReplaySchedule; next_run_at: string | null; runs: ReplayAutomationRun[];
+  imports: { media_id: string; title: string; source_url: string; url: string;
+    status: string; progress: number | null; error: string | null; video_id: string | null }[];
+};
+export const getReplayAutomation = () => request<ReplayAutomationStatus>("/api/replay-automation");
+export const saveReplayAutomation = (settings: ReplaySchedule) => request<ReplayAutomationStatus>("/api/replay-automation", {
+  method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings),
+});
+export const runReplayAutomation = () => request<{ run_id: string; status: string }>("/api/replay-automation/run", { method: "POST" });
 
 export const getDownloadTask = (taskId: string) => request<DownloadTask>(`/api/downloads/${taskId}`);
 export const getResumableDownload = () => request<DownloadTask | null>("/api/resumable-download");

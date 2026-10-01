@@ -18,6 +18,11 @@ and one backend on port 8000. A shared startup promise coalesces concurrent tab
 loads and retries. Failure marks both video views unavailable; retry cleans up
 before creating a new runtime. Quit stops only the owned service trees.
 
+VOD creator-import schedules run once in that shared backend, independent of
+which video tab is visible. The schedule persists in the app-local VOD database;
+closing the desktop stops its poller, with the most recent missed daily window
+checked on restart. See [automatic creator imports](../vod-review/docs/creator-imports.md).
+
 ChatTFT uses its copied configured backend port (normally 8300); dev Vite uses
 5173. Pass `--port`, `--dev-port`, `--python` or `--startup-timeout` after npm's
 `--` separator. VOD retains fixed ports 8000 and 5174. Occupied application ports
@@ -49,8 +54,9 @@ complete `RDS_TEST_*` targets ending in `_test`.
 
 Inherited VOD data/cache paths and OAuth token storage are redirected to the
 destination; the external Google OAuth client file reference is retained. Tracing
-uses the destination platform keys. Optional media storage remains app-local;
-no shared catalogue is introduced.
+uses the destination platform keys. Both backends receive the suite-owned
+`TFT_MEDIA_DIR=<suite>/media`, enabling shared downloads and portable resource
+references. See [media sharing](shared-media.md) for APIs and storage lifecycle.
 
 Opt-in real application smoke (Linux/WSLg): from `desktop/`, run
 `env -u ELECTRON_RUN_AS_NODE node_modules/electron/dist/electron --disable-gpu tests/suite-electron.mjs`.

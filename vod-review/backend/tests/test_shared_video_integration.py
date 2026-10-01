@@ -2,6 +2,7 @@
 
 import asyncio
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,7 @@ import pytest
 from backend import app, db
 from backend.media_store import MediaStore
 from backend.media_store.models import MediaRequest
+from backend.media_store.resources import ResourceStore
 from backend.tests.test_api import make_video
 
 
@@ -76,3 +78,26 @@ def test_paused_download_is_not_published_as_complete(shared_media, monkeypatch)
         app.download_video_url_checkpointed("task", "https://youtu.be/abc", None, None, 60, lambda _: None, lambda: True)
     with store.connection() as connection:
         assert connection.execute("SELECT count(*) FROM media_assets").fetchone()[0] == 0
+
+
+def test_audio_download_publication_and_reuse(shared_media, monkeypatch):
+    """Audio-only downloads enter the same catalogue and avoid subsequent transfers."""
+    store, _ = shared_media
+    audio = db.DOWNLOAD_DIR / "source.m4a"
+    subprocess.run(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-i",
+                    "sine=duration=1", "-c:a", "aac", str(audio)], check=True)
+    monkeypatch.setattr(app, "download_audio_url_local", lambda *args: audio)
+    published = app.download_audio_url("https://youtu.be/audio", "task")
+    assert published.is_relative_to(store.root)
+    assert published.is_file()
+    assert not audio.exists()
+    resources = ResourceStore(store.root).find(source="youtube:audio", kind="audio")
+    assert len(resources) == 1
+    assert ResourceStore(store.root).resolve(resources[0].reference).read_bytes() == published.read_bytes()
+
+    def unexpected(*args):
+        """Fail if an alias of a cached source attempts a remote transfer."""
+        raise AssertionError("unexpected audio transfer")
+
+    monkeypatch.setattr(app, "download_audio_url_local", unexpected)
+    assert app.download_audio_url("https://youtube.com/watch?v=audio", "another") == published

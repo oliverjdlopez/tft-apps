@@ -1,12 +1,20 @@
 # Shared media across independent applications
 
-ChatTFT and `oliverjdlopez/vod-review` can point to the same media catalog and
-disk directory. This integration does not use the consolidated TFT Suite repo
-and does not connect VOD Review to ChatTFT's match database.
+In `tft-apps`, both backends now default to the suite-owned `media/` catalogue.
+Desktop launches enforce that shared coordinate. Both expose publication,
+discovery, and verified content by `tft-resource:<id>`; VOD can publish an
+existing review or import a reference as a separate review. See the current
+[suite media sharing guide](../../docs/shared-media.md) for APIs and examples.
+The reuse rules below still apply. An explicitly empty `TFT_MEDIA_DIR` disables
+sharing; leaving it unset in this suite selects the default shared directory.
+
+ChatTFT and VOD Review use the same media catalogue and disk directory while
+keeping application databases and installed environments independent.
 
 ## Setup
 
-On the same Linux/macOS host, export this setting in **both** process environments:
+On the same Linux/macOS host, both suite applications default to `<suite>/media`.
+For standalone processes, an optional override must match in **both** environments:
 
 ```bash
 export TFT_MEDIA_DIR=/absolute/path/to/shared-tft-media
@@ -18,13 +26,13 @@ read/write access. Use a local disk, or a bind-mounted local volume shared by
 containers on the same host. Do not place the SQLite database or advisory locks
 on NFS, cloud-synced folders, or independent disks on different servers.
 
-Shared mode requires system `ffmpeg` **and** `ffprobe` on PATH. It currently
-uses POSIX file locks. Existing local mode remains available by leaving
-`TFT_MEDIA_DIR` unset. The environment setting is read when a download is
-requested; this standalone media integration does not use the app RDS loader.
+URL reuse requires system `ffmpeg` **and** `ffprobe` on PATH. It currently
+uses POSIX file locks. Existing local mode remains available with an explicitly
+empty `TFT_MEDIA_DIR`. The setting is read when a download is requested;
+this media integration does not use the app RDS loader.
 
 Start each application with its existing command. No new server, Python package
-dependency, database credentials, or consolidated repository is needed.
+dependency or database credentials are needed.
 
 ## Reuse rules
 

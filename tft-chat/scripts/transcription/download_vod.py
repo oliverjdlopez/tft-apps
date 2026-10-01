@@ -251,7 +251,7 @@ def _existing_media_path_from_archive_skip(
     return None
 
 
-def download_vod(config: DownloadConfig) -> DownloadResult:
+def download_vod_local(config: DownloadConfig) -> DownloadResult:
     """Download supported media from beginning to end, resuming partial progress.
 
     yt-dlp keeps the media fragment ``.part`` file and its own resume state in
@@ -386,3 +386,22 @@ def download_vod(config: DownloadConfig) -> DownloadResult:
         },
     )
     return result
+
+
+def download_vod(config: DownloadConfig) -> DownloadResult:
+    """Reuse compatible suite media before invoking the resumable downloader.
+
+    Args:
+        config: Source URL, representation, range, and existing download options.
+
+    Returns:
+        A catalogue-owned immutable file, or a local result when sharing is
+        explicitly disabled with an empty TFT_MEDIA_DIR.
+    """
+    from .shared_download import download_shared
+    from .utils import configured_media_store
+
+    store = configured_media_store()
+    if store is None:
+        return download_vod_local(config)
+    return download_shared(config, store)

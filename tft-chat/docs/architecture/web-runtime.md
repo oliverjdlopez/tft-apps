@@ -36,6 +36,10 @@ inputs and delegate to `services/`:
   the current `OpenAIModels.LATEST` ID alongside the curated model choices.
 - `display_service.py` supplies explorer views for models, databases, tools,
   and upstream APIs.
+- `/api/shared-media` exposes immutable shared file publication, discovery,
+  metadata, and verified content through the independently vendored catalogue.
+  See [suite media sharing](../../../docs/shared-media.md) for the cross-backend
+  contract and VOD library integration.
 - `services/flowchart/` stores player-authored patch workspaces for the
   `/api/flowchart` routes; see [Flowchart](../apps/flowchart.md).
 - the remaining services adapt assistants, tasks, rolldown analysis, tracing,

@@ -584,7 +584,9 @@ export function serviceEnvironment(inherited, roots, app, paths = path) {
   environment.LANGFUSE_BASE_URL = "http://localhost:15510";
   environment.LANGFUSE_PUBLIC_URL = "http://localhost:15510";
   environment.LANGFUSE_PROJECT_ID = "tft-apps-evals";
-  if (environment.TFT_MEDIA_DIR) environment.TFT_MEDIA_DIR = paths.join(app, "data/media");
+  // Both backends own this fresh suite catalogue. Never inherit a source
+  // checkout's catalogue, including when the Windows shell launches via WSL.
+  environment.TFT_MEDIA_DIR = paths.join(roots.suite, "media");
   if (app === roots.vod) {
     const requested = environment.VOD_DATA_DIR && paths.resolve(environment.VOD_DATA_DIR);
     const relative = requested && paths.relative(roots.suite, requested);

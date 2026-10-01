@@ -1,5 +1,24 @@
 # Migration verification
 
+## Media sharing follow-up
+
+The subsequent media-sharing implementation passed 56 desktop Node tests,
+41 focused ChatTFT/desktop Python tests, and 58 focused VOD Python tests.
+The Python checks include bidirectional resource HTTP transfers in independently
+installed interpreters, shared video/audio download reuse, default directory
+agreement, actual video validation, corruption/missing-file handling, upload
+cleanup, review deletion, scheduler regressions, and launcher ownership.
+The vendored protocol copies match; local documentation links and
+`git diff --check` passed. Tests used temporary media/databases and generated
+local video/audio; no live downloads, GPU inference, application RDS access,
+or paid evaluations were run. HTTP/launcher checks needed local socket access
+outside the restricted sandbox. The desktop test suite also built ChatTFT's
+frontend. Existing source checkout statuses were preserved. No new GUI flow
+or real Windows/WSL launch was exercised for this follow-up. These focused
+results do not replace the historical full-suite limitations below.
+
+## Original migration
+
 The imported baseline comes from ChatTFT `dev` at
 `d5cf526a3d581c9ffb328d77c913d29d7d0c4d46` and VOD `dev` at
 `ffecf47327025accee6448c1aacb9cd5ac37c8fd`. Both original statuses were checked

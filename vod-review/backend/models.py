@@ -1,6 +1,6 @@
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 try:
     from .constants import (
@@ -34,6 +34,13 @@ class BoundingBox(BaseModel):
         if self.x + self.width > 1.000001 or self.y + self.height > 1.000001:
             raise ValueError("Bounding box must stay inside the video")
         return self
+
+
+class SharedVideoRequest(BaseModel):
+    """Select a shared video without accepting a server filesystem path."""
+
+    model_config = ConfigDict(extra="forbid")
+    reference: str = Field(min_length=1, max_length=64)
 
 
 DownloadQuality = Literal["480p", "720p", "1080p", "best"]

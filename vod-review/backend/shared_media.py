@@ -55,3 +55,30 @@ def download_shared_video(url: str, start: float | None, end: float | None,
         metadata["duration"], metadata["width"], metadata["height"], shared_media=True,
     )
     return video
+
+
+def download_shared_audio(url: str, download: Callable[[], Path]) -> Path:
+    """Publish completed audio downloads or reuse any compatible cached audio stream.
+
+    Args:
+        url: Stable Twitch/YouTube source identity.
+        download: Existing local audio downloader returning a completed file.
+
+    Returns:
+        Immutable shared media, or the original local file when sharing is disabled.
+    """
+    store = MediaStore.from_env()
+    if store is None:
+        return download()
+    created: list[Path] = []
+
+    def produce() -> Path:
+        """Track caller-owned audio so it can be removed only after publication."""
+        path = download()
+        created.append(path)
+        return path
+
+    path = store.obtain(MediaRequest(url=url, kind="audio", profile="audio"), produce)
+    for original in created:
+        original.unlink(missing_ok=True)
+    return path

@@ -17,7 +17,10 @@ SQLite databases, task state, videos, downloads, playback assets, OCR/frame cach
 profiles, build output and dependency directories are excluded. New runtime
 storage belongs to the destination. No external RDS data is copied or rebuilt.
 Private settings remain ignored; external credential file references are retained.
-The shared media catalogue and ResourceStore work are deferred.
+The initial migration deferred shared media. The suite now owns a fresh shared
+media catalogue and ResourceStore; original runtime storage remains untouched.
+See [media sharing](shared-media.md). A shared installed Python package remains
+deferred; both applications retain independent vendored protocol implementations.
 
 `python3 scripts/migrate_evals.py export` exports all live source datasets/items,
 including archived status, prompt versions, evaluator definitions and evaluation

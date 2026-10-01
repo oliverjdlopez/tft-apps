@@ -305,3 +305,16 @@ body { margin: 0; min-width: 320px; background: var(--surface-1); }
   .drive-upload a { color: var(--primary); text-underline-offset: 4px; }
   @media (max-width: 560px) { .welcome-state { min-height: 360px; } }
 }
+
+/* Creator schedule dialogs retain usable fields and scrollable activity on small screens. */
+.creator-automation { max-height: calc(100dvh - 100px); overflow-y: auto; display: grid; gap: 12px; font-size: 13px; }
+.creator-automation p { color: var(--muted-foreground); line-height: 1.5; }
+.creator-automation form, .creator-automation label { display: grid; gap: 8px; }
+.creator-automation-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.creator-automation .creator-automation-enable { display: flex; align-items: center; gap: 8px; }
+.creator-automation-errors, .creator-automation-imports { display: grid; gap: 8px; margin-top: 8px; padding-left: 16px; overflow-wrap: anywhere; }
+.creator-automation-imports li { display: grid; gap: 2px; }
+.creator-automation-imports small { color: var(--muted-foreground); }
+.creator-schedule-button { flex-shrink: 0; }
+@media (max-width: 900px) { .creator-schedule-button span { display: none; } }
+@media (max-width: 560px) { .creator-automation-fields { grid-template-columns: 1fr; } }

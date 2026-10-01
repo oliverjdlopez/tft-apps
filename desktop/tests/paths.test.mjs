@@ -54,7 +54,9 @@ test("inherited original runtime paths and tracing keys cannot escape the destin
   assert.equal(env.VOD_GDRIVE_CLIENT_FILE, original.VOD_GDRIVE_CLIENT_FILE);
   assert.equal(env.VOD_DATA_DIR, "/tmp/suite/vod-review/data");
   assert.equal(env.VOD_GDRIVE_TOKEN_FILE, "/tmp/suite/vod-review/data/gdrive/token.json");
-  assert.equal(env.TFT_MEDIA_DIR, "/tmp/suite/vod-review/data/media");
+  assert.equal(env.TFT_MEDIA_DIR, "/tmp/suite/media");
+  assert.equal(serviceEnvironment(original, roots, roots.chat).TFT_MEDIA_DIR, env.TFT_MEDIA_DIR);
+  assert.equal(serviceEnvironment({}, roots, roots.vod).TFT_MEDIA_DIR, env.TFT_MEDIA_DIR);
   assert.equal(env.LANGFUSE_BASE_URL, "http://localhost:15510");
   assert.equal(env.LANGFUSE_PUBLIC_KEY, undefined);
   assert.equal(original.VOD_DATA_DIR, "/original/data");

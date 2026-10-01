@@ -15,6 +15,7 @@ import { createPortal } from "react-dom";
 import { Activity, Check, CircleHelp, Cpu, Crosshair, Download, Film, FolderOpen, Link2, ListVideo, LoaderCircle, Pause, Play, RefreshCcw, Save, ScanSearch, Settings, SkipBack, SkipForward, Trash2, TriangleAlert, Upload, X } from "lucide-react";
 import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
 import DriveUpload from "./DriveUpload";
+import ReplayAutomation from "./ReplayAutomation";
 import WispResults from "./WispResults";
 import WispFrameReview from "./WispFrameReview";
 import { getWispVideo, saveWispBox, startWispProcessing } from "./api";
@@ -248,6 +249,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [automationOpen, setAutomationOpen] = useState(false);
   const [replaySources, setReplaySources] = useState<string[]>(loadReplaySources);
   const [replaySourceDraft, setReplaySourceDraft] = useState("");
   const [settingsError, setSettingsError] = useState<string | null>(null);
@@ -266,6 +268,14 @@ function App() {
 
   useEffect(() => {
     refreshVideos().catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "Could not load videos")).finally(() => setLoading(false));
+  }, [refreshVideos]);
+
+  useEffect(() => {
+    // Automatic imports can finish in the backend while this persistent view is idle.
+    const refresh = () => { void refreshVideos().catch(() => undefined); };
+    const timer = window.setInterval(refresh, 15000);
+    window.addEventListener("focus", refresh);
+    return () => { window.clearInterval(timer); window.removeEventListener("focus", refresh); };
   }, [refreshVideos]);
 
   useEffect(() => {
@@ -556,6 +566,7 @@ function App() {
         <UiButton variant="outline" size="icon-sm" className="settings-button" type="button" aria-label="Replay source settings" onClick={openSettings}>
           <Settings size={18} />
         </UiButton>
+        <UiButton variant="outline" className="creator-schedule-button" type="button" aria-label="Automatic creator imports" onClick={() => setAutomationOpen(true)}><RefreshCcw size={16} /><span>Automatic imports</span></UiButton>
         <UploadButton onChange={handleUpload} disabled={uploading}>
           {uploading ? <LoaderCircle className="spin" size={17} /> : <Upload size={17} />}
           {uploading ? "Uploading…" : "Upload video"}
@@ -563,6 +574,7 @@ function App() {
       </header>
 
       {error && <UiAlert variant="destructive" className="toast error-toast"><X size={16} /> {error}<UiButton variant="outline" onClick={() => setError(null)} aria-label="Dismiss error">Dismiss</UiButton></UiAlert>}
+      {automationOpen && <ReplayAutomation sources={replaySources} onClose={() => setAutomationOpen(false)} onImported={() => { void refreshVideos().catch(() => undefined); }} />}
       {settingsOpen && <Modal title="Source settings" onOpenChange={() => setSettingsOpen(false)}><div className="settings-modal-heading"><div><p className="eyebrow">REPLAY DISCOVERY</p><h2 id="replay-settings-title">Source settings</h2></div><UiButton variant="outline" type="button" aria-label="Close replay source settings" onClick={() => setSettingsOpen(false)}><X size={17} /></UiButton></div><p>Add one YouTube channel home page or Twitch streamer home page per line. These stay in this browser.</p><label htmlFor="replay-source-list">Replay sources</label><UiTextarea id="replay-source-list" rows={7} value={replaySourceDraft} onChange={(event) => { setReplaySourceDraft(event.target.value); setSettingsError(null); }} placeholder={"https://www.youtube.com/@channel\nhttps://www.twitch.tv/streamer"} autoFocus />{settingsError && <div className="settings-error" role="alert"><TriangleAlert size={14} />{settingsError}</div>}<div className="confirm-modal-actions"><UiButton variant="outline" className="secondary-button" type="button" onClick={() => setSettingsOpen(false)}>Cancel</UiButton><UiButton variant="default" className="primary-button" type="button" onClick={saveReplaySources}>Save sources</UiButton></div></Modal>}
       {deleteTarget && <Modal title="Delete saved VOD?" destructive onOpenChange={() => { if (!deleting) setDeleteTarget(null); }}><div className="confirm-modal-icon"><Trash2 size={19} /></div><h2 id="delete-video-title">Delete saved VOD?</h2><p>“{deleteTarget.original_name}” and its analysis data will be permanently removed from this machine.</p><div className="confirm-modal-actions"><UiButton variant="outline" className="secondary-button" type="button" onClick={() => setDeleteTarget(null)} disabled={deleting}>Cancel</UiButton><UiButton variant="destructive" className="danger-button" type="button" onClick={() => void handleDeleteVideo()} disabled={deleting}>{deleting ? <LoaderCircle className="spin" size={14} /> : <Trash2 size={14} />}{deleting ? "Deleting…" : "Delete VOD"}</UiButton></div></Modal>}
 

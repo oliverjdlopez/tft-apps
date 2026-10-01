@@ -15,7 +15,9 @@ caches and evaluation results ignored. Original checkouts are migration sources;
 never edit them or reuse their services, runner state or Compose volumes. Keep
 complete external RDS settings; use isolated `_test` targets for database tests.
 Do not run ingestion, projection rebuilds or paid evaluations for validation.
-Shared catalogue consolidation and a shared Python package are deferred.
+Shared media uses the suite-owned catalogue described in [media sharing](docs/shared-media.md).
+Keep the independently vendored media protocols synchronized; a shared Python
+package remains deferred.
 
 Use Google-style docstrings for functions and models, explain non-obvious code,
 preserve user changes, and update applicable `docs/**` with every change.

@@ -138,6 +138,8 @@ jobs:
       - run: npm ci
       - run: npm --prefix ../tft-chat/app/frontend ci
       - run: npm test
+      - name: Install the independent VOD environment for cross-backend media tests
+        run: uv sync --project ../vod-review --locked
       - run: uv run --project ../tft-chat --locked --extra evals pytest -c ../tft-chat/pyproject.toml -q tests
 
   vod-review:

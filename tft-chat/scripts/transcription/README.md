@@ -80,9 +80,18 @@ YouTube URLs work with `download` and `all` the same way:
 python -m scripts.transcription.main all "https://youtu.be/abc123"
 ```
 
-Downloaded media and downloader checkpoints are written under `data/`, whose
-contents are ignored by git. Transcript text, JSON, SRT, and segment checkpoint
+In shared mode, downloads and resumable work live under the ignored suite
+`media/` directory. With sharing disabled, media/checkpoints remain under
+app-local `data/`. Transcript text, JSON, SRT, and segment checkpoint
 outputs are written under `scripts/transcription/output/` by default.
 
 The transcription step defaults to `--device cuda --compute-type float16`; override
 those flags for CPU testing or non-default GPU deployments.
+
+## Suite media sharing
+
+Downloads reuse the suite-owned shared catalogue by default. Both backends can
+publish and read media through `/api/shared-media`; the transcription CLI reuses
+compatible VOD audio/video without another transfer. See the
+[suite media sharing guide](../../../docs/shared-media.md) for configuration,
+resource references, CLI publication, and offline validation.

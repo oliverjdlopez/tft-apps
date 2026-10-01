@@ -16,3 +16,4 @@ profiles/
 **/*.tsbuildinfo
 vod-review/frames/
 vod-review/boxes/
+/media/

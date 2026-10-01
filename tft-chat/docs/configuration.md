@@ -35,6 +35,13 @@ filter. It applies to both CLI and API-triggered ingestion.
 
 ## Secrets and infrastructure
 
+Media sharing defaults to `<suite>/media` independently of the working directory.
+`TFT_MEDIA_DIR` can select another absolute directory for standalone processes;
+an explicitly empty export disables sharing. The desktop always uses the
+suite-owned directory instead of inherited source storage. This coordinate does
+not initialize RDS or combine Python environments. See
+[suite media sharing](../../docs/shared-media.md).
+
 `.env.example` documents model API keys, the Riot key, typed database targets,
 AWS-related RDS controls, eval operation/judge timeouts, and S3 toggles.
 Non-secret persistent application behavior is kept in the INI file.

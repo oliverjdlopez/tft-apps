@@ -649,7 +649,7 @@ def download_video_url_local(
                 partial.unlink(missing_ok=True)
 
 
-def download_audio_url(url: str, task_id: str, progress_callback: Callable[[float], None] | None = None) -> Path:
+def download_audio_url_local(url: str, task_id: str, progress_callback: Callable[[float], None] | None = None) -> Path:
     """Download source audio to the local download cache for optional transcription."""
     if not is_supported_video_url(url):
         raise HTTPException(status_code=400, detail="Enter a valid Twitch or YouTube video URL")
@@ -684,6 +684,19 @@ def download_audio_url(url: str, task_id: str, progress_callback: Callable[[floa
     except subprocess.CalledProcessError as exc:
         detail = next((line.strip() for line in (exc.stderr or "").splitlines() if line.strip()), "The remote audio could not be downloaded")
         raise HTTPException(status_code=400, detail=f"Audio download failed: {detail[:300]}") from exc
+
+
+def download_audio_url(url: str, task_id: str, progress_callback: Callable[[float], None] | None = None) -> Path:
+    """Reuse suite audio or a video audio stream before the local audio downloader."""
+    try:
+        from .shared_media import download_shared_audio
+    except ImportError:
+        from shared_media import download_shared_audio
+
+    path = download_shared_audio(url, lambda: download_audio_url_local(url, task_id, progress_callback))
+    if progress_callback:
+        progress_callback(100)
+    return path
 
 
 def _transcribe_audio_file(path: str) -> tuple[str, str | None]:
@@ -1094,11 +1107,25 @@ def shutdown() -> None:
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI):
+async def lifespan(application: FastAPI):
+    """Own the creator scheduler and existing VOD workers for one backend lifetime."""
     startup()
+    automation = None
     try:
+        try:
+            from .replay_automation.discovery import discover_window
+            from .replay_automation.service import ReplayAutomation
+        except ImportError:  # Support the documented backend-directory launch.
+            from replay_automation.discovery import discover_window
+            from replay_automation.service import ReplayAutomation
+        automation = ReplayAutomation(discover_window, import_discovered_video)
+        application.state.replay_automation = automation
+        await automation.start()
         yield
     finally:
+        if automation is not None:
+            await automation.stop()
+        application.state.replay_automation = None
         shutdown()
 
 
@@ -1108,6 +1135,19 @@ try:
 except ImportError:  # Support the documented backend-directory launch.
     from gdrive.router import router as gdrive_router
 app.include_router(gdrive_router)
+try:
+    from .replay_automation.router import router as replay_automation_router
+except ImportError:
+    from replay_automation.router import router as replay_automation_router
+app.include_router(replay_automation_router)
+try:
+    from .media_store.router import router as shared_media_router
+    from .shared_resources import router as shared_video_router
+except ImportError:
+    from media_store.router import router as shared_media_router
+    from shared_resources import router as shared_video_router
+app.include_router(shared_media_router)
+app.include_router(shared_video_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -1267,6 +1307,26 @@ async def import_video_url(request: VideoUrlRequest) -> dict[str, Any]:
     DOWNLOAD_TASKS[task_id] = task
     task.add_done_callback(lambda completed: DOWNLOAD_TASKS.pop(task_id, None) if DOWNLOAD_TASKS.get(task_id) is completed else None)
     return payload
+
+
+async def import_discovered_video(request: VideoUrlRequest, media_id: str) -> dict[str, Any]:
+    """Import scheduled media through the same tracked task and playback path as a URL upload."""
+    try:
+        from .replay_automation import store
+    except ImportError:
+        from replay_automation import store
+    payload = await import_video_url(request)
+    task_id = payload["task_id"]
+    store.update_import(media_id, status="downloading", task_id=task_id)
+    task = DOWNLOAD_TASKS.get(task_id)
+    if task is not None:
+        # Stopping discovery does not itself cancel an ordinary download. Backend
+        # shutdown still owns cancellation of every DOWNLOAD_TASKS entry.
+        await asyncio.shield(task)
+    completed = db.get_download_task(task_id)
+    if completed["status"] != "completed" or completed["video"] is None:
+        raise RuntimeError(completed["error"] or "Scheduled video download did not complete")
+    return completed["video"]
 
 
 @app.post("/api/videos/{video_id}/transcription", status_code=202)

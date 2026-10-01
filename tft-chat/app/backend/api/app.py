@@ -48,6 +48,7 @@ from api.routes import (
     ingest,
     response_tuning,
     rolldown,
+    shared_media,
     specs,
 )
 from core.config import load_config
@@ -238,6 +239,7 @@ def create_app() -> FastAPI:
     app.include_router(assistants.router)
     app.include_router(ingest.router)
     app.include_router(specs.router)
+    app.include_router(shared_media.router)
 
     @app.get("/")
     def index() -> Response:
