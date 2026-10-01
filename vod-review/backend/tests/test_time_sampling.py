@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 from pydantic import ValidationError
 from backend import app as service, db, processor
-from backend.models import VideoUrlRequest, ProcessingRequest, WispProcessingRequest
+from backend.models import VideoUrlRequest, ProcessingRequest
 from backend.sampling import TimeSampler
 
 
@@ -120,6 +120,6 @@ def test_invalid_fps_and_intervals_are_rejected():
         with pytest.raises(ValidationError):
             VideoUrlRequest(url='https://youtu.be/example', target_fps=fps)
     for interval in [-1, 3601, float('inf'), float('nan')]:
-        for model in [ProcessingRequest, WispProcessingRequest]:
+        for model in [ProcessingRequest]:
             with pytest.raises(ValidationError):
                 model(sample_interval_seconds=interval)

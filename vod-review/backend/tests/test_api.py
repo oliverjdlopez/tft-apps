@@ -11,7 +11,6 @@ import httpx
 import pytest
 
 from backend import app as app_module
-from backend import annotations as annotations_module
 from backend import db as db_module
 
 
@@ -554,7 +553,6 @@ def test_upload_box_process_range_and_persistence(
     db_module.DATA_DIR = tmp_path / "data"
     db_module.VIDEO_DIR = db_module.DATA_DIR / "videos"
     db_module.DB_PATH = db_module.DATA_DIR / "vod.sqlite3"
-    monkeypatch.setattr(annotations_module, "DATASET_DIR", db_module.DATA_DIR / "datasets")
     source = tmp_path / "red.mp4"
     make_video(source)
 

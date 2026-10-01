@@ -1,12 +1,12 @@
 /** Compose persistent application views beneath the desktop's own navigation. */
-import { WebContentsView, ipcMain, session } from "electron";
+import { WebContentsView, ipcMain, session, clipboard } from "electron";
+import { MediaError, isMediaReference } from "./media.mjs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { navigationPolicy, permissionAllowed, workspaceCommandAllowed } from "./utils.mjs";
 
 const shellPath = fileURLToPath(new URL("./workspace.html", import.meta.url));
 const externalPages = {
   vod: { url: "http://localhost:5174", partition: "persist:vod-review" },
-  wisps: { url: "http://localhost:5174/wisp_classifier", partition: "persist:wisps" },
   langfuse: { url: "http://localhost:15510/project/tft-apps-evals", partition: "persist:langfuse" },
   database: { url: "http://localhost:8979", partition: "persist:cloudbeaver" },
 };
@@ -18,8 +18,9 @@ export class DesktopWorkspace {
    * Attach persistent views to a window whose renderer contains only local chrome.
    * Args:
    *   window: Owning BrowserWindow; openExternal: validated browser-link handler.
+   *   ensureVideo: Shared video readiness; readMedia: owned catalogue reader.
    */
-  constructor(window, openExternal, ensureVideo = async () => {}) {
+  constructor(window, openExternal, ensureVideo = async () => {}, readMedia = async () => { throw new Error("Media catalogue is unavailable."); }) {
     this.ensureVideo = ensureVideo;
     this.window = window;
     this.active = "chat";
@@ -45,6 +46,24 @@ export class DesktopWorkspace {
       else this.select(action);
     };
     ipcMain.on("desktop-workspace", this.command);
+    ipcMain.handle("desktop-media", async (event, action, value) => {
+      if (this.closed || !workspaceCommandAllowed(event, window.webContents, pathToFileURL(shellPath).href, "media")) {
+        return { error: "Media access is unavailable." };
+      }
+      try {
+        if (action === "copy") {
+          if (!isMediaReference(value)) throw new MediaError("Invalid media reference.");
+          clipboard.writeText(value);
+          return { copied: true };
+        }
+        return await readMedia(action, value);
+      }
+      catch (error) {
+        // Network and decoding errors may contain host details. Only our fixed
+        // application messages are returned to the local renderer.
+        return { error: error instanceof MediaError ? error.message : "Could not load media. Try again." };
+      }
+    });
     window.webContents.on("will-navigate", (event) => event.preventDefault());
     window.webContents.on("will-redirect", (event) => event.preventDefault());
     window.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
@@ -111,11 +130,11 @@ export class DesktopWorkspace {
   /**
    * Switch visibility without navigating or recreating any application.
    * Args:
-   *   tab: ChatTFT, Rolldown, Flowchart, Langfuse, or Database view identifier.
+   *   tab: Fixed product or external workspace identifier, including Media.
    */
   select(tab) {
     if (tab === "compositions" && !this.compositionsEnabled) return;
-    if ((!["chat", "rolldown", "flowchart", "compositions"].includes(tab) && !this.pages.has(tab)) || this.closed) return;
+    if ((!["chat", "rolldown", "flowchart", "compositions", "media"].includes(tab) && !this.pages.has(tab)) || this.closed) return;
     this.active = tab;
     if (this.state === "idle") this.loadExternal(tab);
     this.layout();
@@ -124,6 +143,7 @@ export class DesktopWorkspace {
 
   /** Return the active page for native editing, zoom, reload, and devtools. */
   currentContents() {
+    if (this.active === "media") return this.window.webContents;
     if (this.active === "compositions") return this.compositions.webContents;
     if (this.active === "chat") return this.chat.webContents;
     if (this.active === "rolldown") return this.rolldown.webContents;
@@ -144,14 +164,14 @@ export class DesktopWorkspace {
     this.layout();
     // Video startup has its own deadline. Begin the page deadline only after
     // service readiness so model imports do not exhaust the browser timeout.
-    const ready = ["vod", "wisps"].includes(tab) ? this.ensureVideo(tab) : Promise.resolve();
+    const ready = tab === "vod" ? this.ensureVideo(tab) : Promise.resolve();
     const navigate = () => {
       if (this.closed || generation !== page.generation || page.state !== "loading") return;
       page.timer = setTimeout(() => this.fail(tab), 15000);
       return page.view.webContents.loadURL(page.url);
     };
     // Keep the existing immediate navigation for independently managed tools.
-    const navigation = ["vod", "wisps"].includes(tab) ? ready.then(navigate) : navigate();
+    const navigation = tab === "vod" ? ready.then(navigate) : navigate();
     Promise.resolve(navigation).catch((error) => {
       // An old navigation promise can settle after the user has already retried.
       if (generation === page.generation && error.code !== "ERR_ABORTED") this.fail(tab);
@@ -196,6 +216,7 @@ export class DesktopWorkspace {
   close() {
     this.closed = true;
     ipcMain.removeListener("desktop-workspace", this.command);
+    ipcMain.removeHandler("desktop-media");
     for (const page of this.pages.values()) clearTimeout(page.timer);
     for (const view of [this.chat, this.rolldown, this.flowchart, this.compositions, ...Array.from(this.pages.values(), (page) => page.view)]) {
       if (!view.webContents.isDestroyed()) view.webContents.close();

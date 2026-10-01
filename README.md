@@ -1,7 +1,7 @@
 # tft-apps
 
 One desktop entry point for ChatTFT, Compositions, Rolldown, Flowchart, VOD Review,
-Wisps, Langfuse and CloudBeaver. The two applications retain their own Python
+Media, Langfuse and CloudBeaver. The two applications retain their own Python
 processes, dependency locks, tests and frontend layouts.
 
 ```sh

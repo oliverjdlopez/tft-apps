@@ -2,8 +2,9 @@
 
 ChatTFT and VOD Review use the suite's ignored `media/` directory and its
 `catalog.sqlite3`. Both backends can publish, discover, and retrieve immutable
-files by `tft-resource:<id>`. Review IDs, annotations, analysis jobs, playback
-derivatives, and transcript output remain owned by their application.
+files by `tft-resource:<id>`. Review IDs, analysis jobs, playback
+derivatives, and original transcript records remain owned by their application.
+VOD publishes immutable snapshots of completed transcript text for sharing.
 
 ## Configuration and ownership
 
@@ -42,7 +43,8 @@ serialize lookup, transfer, and publication across processes.
 Completed new downloads also enter the resource index and are discoverable
 through either backend. This index links immutable catalogue-owned media
 rather than storing a second copy. Failed/paused downloads are not published
-as complete. Transcripts and annotations are not automatically published.
+as complete. Completed VOD transcripts are published as text resources;
+ChatTFT CLI transcript outputs still require explicit publication.
 `--overwrite` creates fresh immutable media and references while retaining
 previous versions. Existing catalogue entries created before this integration
 remain reusable for downloads; publish them explicitly to add resource references.
@@ -106,8 +108,51 @@ retained indefinitely; no eviction or delete-resource endpoint is provided.
 Back up the catalogue and its files together. Resolve paths as read-only and
 pull a copy before editing.
 
-These are backend/API capabilities; there is no new media-browser UI or
-assistant tool. Existing VOD imports still appear in its ordinary library.
+Existing VOD imports still appear in its ordinary library. The desktop also
+provides a shared media browser; assistant tools remain outside this integration.
+
+## Desktop media browser
+
+Open **Media** in the desktop navigation or press Ctrl/Cmd+9. The library lists
+all published resource kinds: `video`, `audio`, `image`, `text`, and `data`, newest
+first. Search loaded entries by name, source or reference, and filter by type.
+**Load more** retrieves additional catalogue pages; **Refresh** reloads the
+library. Selection and filters remain when switching tabs.
+
+Select a resource to see its name, source, kind, format, byte size and portable
+`tft-resource:ID`. **Copy reference** copies that identifier for use in either
+backend's API or CLI; the selectable reference remains available even when a
+preview fails or its format is unsupported.
+
+Text and recognized textual data retain the transcript reader, with formatted
+JSON and a 10 MB read limit. Images display inline; audio and video use native
+playback controls and verified HTTP content with range support. Playback pauses
+when leaving the tab. Binary data and unsupported formats remain browseable and
+referenceable without decoding them as text. Empty libraries, unavailable
+storage, missing files and integrity failures have recoverable status messages.
+The local shell is the only renderer permitted to request catalogue operations
+or copy references, through the desktop-owned ChatTFT backend.
+
+VOD automatically publishes completed recognition as UTF-8 `text` resources,
+named after the source video when available, with task/video/language metadata.
+Backend startup also publishes older completed transcripts from its own SQLite
+database, so no download or transcription rerun is needed. Recovery reuses a
+verified snapshot when its contents match and restores missing shared files from
+the local result. Catalogue failures leave the completed local transcript intact
+and log a warning; the next startup retries sharing. An explicitly empty
+`TFT_MEDIA_DIR` disables publication. Refresh the Media library after completion.
+
+ChatTFT CLI transcript output files still require explicit publication. Add a
+completed file without remote I/O, from `tft-chat/`:
+
+```bash
+.venv/bin/python -m scripts.transcription.media_store.resource_cli publish /absolute/path/transcript.txt \
+  --kind text --source youtube:VIDEO_ID --content-type text/plain
+```
+
+VOD uses `backend.media_store.resource_cli` with the same arguments. Publishing
+preserves the original and creates an immutable catalogue snapshot. The desktop
+browser is read-only and does not run downloads or transcription.
 
 ## Python and CLI access
 
@@ -129,7 +174,10 @@ VOD uses `backend.media_store.resource_cli` with the same arguments.
 
 ## Offline validation
 
-From `desktop/`, run `npm test`. From `tft-chat/`:
+From `desktop/`, run `npm test`. The media reader and shell IPC have
+offline Node coverage; `tests/workspace-electron.mjs` also exercises real
+media selection, references, filtering, retained state and failure/retry using a local
+HTTP catalogue fixture. From `tft-chat/`:
 
 ```bash
 .venv/bin/python -m pytest tests/test_shared_resources.py tests/test_shared_transcription.py \
@@ -140,8 +188,12 @@ From `vod-review/`:
 
 ```bash
 .venv/bin/python -m pytest backend/tests/test_shared_resources_api.py \
-  backend/tests/test_shared_media.py backend/tests/test_shared_video_integration.py -q
+  backend/tests/test_shared_media.py backend/tests/test_shared_video_integration.py \
+  backend/tests/test_shared_transcripts.py -q
 ```
+
+Transcript tests exercise the real VOD completion path with recognition stubbed,
+then discover and read the exact UTF-8 bytes through the actual ChatTFT API.
 
 Cross-backend tests invoke each application's own interpreter and actual HTTP
 routes with temporary state, synthesize a small local video, stub network

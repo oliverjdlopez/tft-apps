@@ -70,14 +70,10 @@ describe("replay discovery", () => {
 });
 
 describe("App workspace modes", () => {
-  it("keeps the existing Analyze workspace alongside the new Annotate mode", async () => {
+  it("opens the round analysis workspace directly", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue({ ok: true, status: 200, json: async () => [] } as Response);
     render(<App />);
-    expect(await screen.findByText("Build training data from every VOD.")).toBeInTheDocument();
-    fireEvent.mouseDown(screen.getByRole("tab", { name: "Analyze" }), { button: 0, ctrlKey: false });
     expect(screen.getByText("Find the moment that matters.")).toBeInTheDocument();
-    fireEvent.mouseDown(screen.getByRole("tab", { name: "Annotate" }), { button: 0, ctrlKey: false });
-    expect(screen.getByText("Build training data from every VOD.")).toBeInTheDocument();
   });
 });
 
@@ -145,7 +141,7 @@ describe("VOD download range", () => {
     const request = fetchMock.mock.calls.find(([input]) => String(input).endsWith("/api/videos/from-url"));
     expect(JSON.parse(String(request?.[1]?.body))).toMatchObject({ checkpoint_interval_seconds: 300, quality: "480p" });
     fireEvent.click(screen.getByRole("button", { name: /Dismiss/i }));
-    expect(screen.queryByText("Download paused")).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText("Download paused")).not.toBeInTheDocument());
   });
 });
 
@@ -262,7 +258,6 @@ describe("game detection", () => {
     vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
 
     render(<App />);
-    fireEvent.mouseDown(screen.getByRole("tab", { name: "Analyze" }), { button: 0, ctrlKey: false });
     fireEvent.change(await screen.findByRole("combobox", { name: "Recent videos" }), { target: { value: video.id } });
 
     const transitionsHeading = await screen.findByText("Confirmed round changes");

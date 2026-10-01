@@ -14,11 +14,8 @@ dependencies = [
 "onnxruntime-gpu>=1.23; sys_platform != 'darwin'",
     "paddleocr>=3.5",
     "pillow>=10.0",
-    "pyobjc-framework-Vision>=11; sys_platform == 'darwin'",
     "python-multipart>=0.0.9",
-    "scikit-learn>=1.5",
     "torch>=2.4",
-    "torchvision>=0.19",
     "ultralytics>=8.4",
     "uvicorn[standard]>=0.30",
     "yt-dlp>=2026.8.19",
@@ -43,10 +40,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["wisp_classifier*", "augment_classifier*", "backend*", "round_classifier*", "unit_id*", "unit_segmentation*"]
+include = ["backend*", "round_classifier*", "text_detection*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-
-[tool.setuptools.package-data]
-wisp_classifier = ["*.pgm"]

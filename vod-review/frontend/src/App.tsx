@@ -1,7 +1,6 @@
 import { UploadButton } from "@/components/shared/upload-button";
 import { Progress } from "@/components/ui/progress";
 import { Modal } from "@/components/shared/modal";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button as UiButton } from "@/components/ui/button";
 import { Input as UiInput } from "@/components/ui/input";
 import { Alert as UiAlert } from "@/components/ui/alert";
@@ -16,10 +15,6 @@ import { Activity, Check, CircleHelp, Cpu, Crosshair, Download, Film, FolderOpen
 import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
 import DriveUpload from "./DriveUpload";
 import ReplayAutomation from "./ReplayAutomation";
-import WispResults from "./WispResults";
-import WispFrameReview from "./WispFrameReview";
-import { getWispVideo, saveWispBox, startWispProcessing } from "./api";
-import AnnotationWorkspace from "./AnnotationWorkspace";
 import { useOptimizedPlayback } from "./useOptimizedPlayback";
 
 type Point = { x: number; y: number };
@@ -257,7 +252,6 @@ function App() {
   const [replayErrors, setReplayErrors] = useState<{ source_url: string; message: string }[]>([]);
   const [discoveringReplays, setDiscoveringReplays] = useState(false);
   const [selectedReplayCreator, setSelectedReplayCreator] = useState("all");
-  const [workspaceMode, setWorkspaceMode] = useState<"analyze" | "annotate" | "wisp_classifier">(window.location.pathname === "/wisp_classifier" ? "wisp_classifier" : window.location.pathname === "/round_classifier" ? "analyze" : "annotate");
   const analysisSidebarRef = useRef<HTMLDivElement>(null);
 
   const refreshVideos = useCallback(async () => {
@@ -548,17 +542,10 @@ function App() {
       <header className="topbar">
         <div className="brand-mark"><ScanSearch size={18} strokeWidth={2.4} /></div>
         <div>
-          <p className="eyebrow">FRAMEWISE LAB</p>
-          <h1>Video analysis and annotation</h1>
+          <p className="eyebrow">VOD REVIEW</p>
+          <h1>VOD review and round classification</h1>
         </div>
         <div className="topbar-spacer" />
-        <Tabs className="workspace-navigation" value={workspaceMode} onValueChange={(value) => setWorkspaceMode(value as typeof workspaceMode)}>
-          <TabsList aria-label="Workspace mode" className="h-auto flex-wrap">
-            <TabsTrigger id="workspace-analyze" aria-controls="workspace-panel" value="analyze">Analyze</TabsTrigger>
-            <TabsTrigger id="workspace-wisp_classifier" aria-controls="workspace-panel" value="wisp_classifier">Wisp classifier</TabsTrigger>
-            <TabsTrigger id="workspace-annotate" aria-controls="workspace-panel" value="annotate">Annotate</TabsTrigger>
-          </TabsList>
-        </Tabs>
         <UiButton variant="outline" className="replay-discovery-button" type="button" onClick={() => void handleDisplayReplays()} disabled={discoveringReplays}>
           {discoveringReplays ? <LoaderCircle className="spin" size={16} /> : <ListVideo size={16} />}
           {discoveringReplays ? "Finding replays…" : replays !== null ? "Hide new replays" : "Display new replays"}
@@ -628,13 +615,13 @@ function App() {
           <div className="library-footnote"><CircleHelp size={14} /> Your uploads stay on this machine.</div>
         </UiCard>
 
-        <UiCard as="section" role="tabpanel" id="workspace-panel" aria-labelledby={`workspace-${workspaceMode}`} tabIndex={0} className="analysis-panel panel block gap-0 p-4 sm:p-6 shadow-xs">
-          {selected ? workspaceMode === "annotate" ? <AnnotationWorkspace video={selected} onError={setError} /> : workspaceMode === "wisp_classifier" ? <WispWorkspace key={selected.id} videoId={selected.id} sidebarTarget={analysisSidebarRef.current} onError={setError} /> : <Analyzer video={selected} sidebarTarget={analysisSidebarRef.current} onUpdate={(record) => { setSelected(record); setVideos((current) => current.map((item) => item.id === record.id ? record : item)); }} onError={setError} /> : (
+        <UiCard as="section" id="workspace-panel" aria-label="Round analysis" tabIndex={0} className="analysis-panel panel block gap-0 p-4 sm:p-6 shadow-xs">
+          {selected ? <Analyzer video={selected} sidebarTarget={analysisSidebarRef.current} onUpdate={(record) => { setSelected(record); setVideos((current) => current.map((item) => item.id === record.id ? record : item)); }} onError={setError} /> : (
             <div className="welcome-state">
               <div className="welcome-icon"><Film size={28} /></div>
               <p className="eyebrow">READY WHEN YOU ARE</p>
-              <h2>{workspaceMode === "annotate" ? "Build training data from every VOD." : "Find the moment that matters."}</h2>
-              <p>{workspaceMode === "annotate" ? "Upload once, then create detection and classification examples for any annotation task." : "Upload a VOD, choose a frame, and draw a fixed region to analyze at your chosen snapshot interval."}</p>
+              <h2>Find the moment that matters.</h2>
+              <p>Upload a VOD, choose a frame, and draw a fixed region to analyze at your chosen snapshot interval.</p>
               <UploadButton onChange={handleUpload} disabled={uploading}><Upload size={17} />Choose a video</UploadButton>
             </div>
           )}
@@ -644,22 +631,7 @@ function App() {
   );
 }
 
-function WispWorkspace({ videoId, sidebarTarget, onError }: { videoId: string; sidebarTarget: HTMLDivElement | null; onError: (message: string) => void }) {
-  const [video, setVideo] = useState<VideoRecord | null>(null);
-  const [failed, setFailed] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    let cancelled = false;
-    setFailed(false);
-    getWispVideo(videoId).then((fresh) => { if (!cancelled) setVideo(fresh); }).catch((reason: unknown) => {
-      if (!cancelled) { setFailed(true); onError(reason instanceof Error ? reason.message : "Could not load wisp analysis"); }
-    });
-    return () => { cancelled = true; };
-  }, [videoId, onError, attempt]);
-  return video ? <Analyzer video={video} wisp sidebarTarget={sidebarTarget} onUpdate={setVideo} onError={onError} /> : failed ? <UiButton variant="outline" onClick={() => setAttempt((n) => n + 1)}>Retry loading wisp analysis</UiButton> : <div role="status">Loading wisp analysis…</div>;
-}
-
-function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { wisp?: boolean; video: VideoRecord; sidebarTarget: HTMLDivElement | null; onUpdate: (video: VideoRecord) => void; onError: (message: string) => void }) {
+function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRecord; sidebarTarget: HTMLDivElement | null; onUpdate: (video: VideoRecord) => void; onError: (message: string) => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const initialSeekPending = useRef(true);
   const playback = useOptimizedPlayback(video.id, videoRef);
@@ -669,11 +641,10 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
   const [boxEditing, setBoxEditing] = useState(false);
   const [drawing, setDrawing] = useState<Point | null>(null);
   const [currentTime, setCurrentTime] = useState(video.box?.frame_time ?? 0);
-  const [videoPaused, setVideoPaused] = useState(true);
   const wasPlayingWhenHidden = useRef(false);
   const [saving, setSaving] = useState(false);
   const [starting, setStarting] = useState(false);
-  const [analysisInterval, setAnalysisInterval] = useState(String(video.latest_job?.sample_interval_seconds ?? (wisp ? 0 : 1)));
+  const [analysisInterval, setAnalysisInterval] = useState(String(video.latest_job?.sample_interval_seconds ?? 1));
   const [batchSize, setBatchSize] = useState(video.latest_job?.batch_size ?? 64);
   const [offsetSeconds, setOffsetSeconds] = useState("0");
   const [selectedGameIndex, setSelectedGameIndex] = useState(0);
@@ -728,7 +699,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
   }, [video.id, video.box]);
 
   useEffect(() => {
-    setAnalysisInterval(String(video.latest_job?.sample_interval_seconds ?? (wisp ? 0 : 1)));
+    setAnalysisInterval(String(video.latest_job?.sample_interval_seconds ?? 1));
     setBatchSize(video.latest_job?.batch_size ?? 64);
     setOffsetSeconds("0");
     setSelectedGameIndex(0);
@@ -757,7 +728,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
     let timer: number | undefined;
     const poll = async () => {
       try {
-        const fresh = await (wisp ? getWispVideo : getVideo)(video.id);
+        const fresh = await getVideo(video.id);
         if (!cancelled) onUpdate(fresh);
       } catch (reason: unknown) {
         if (!cancelled) onError(reason instanceof Error ? reason.message : "Could not refresh processing status");
@@ -768,14 +739,14 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
     };
     timer = window.setTimeout(poll, 750);
     return () => { cancelled = true; window.clearTimeout(timer); };
-  }, [isProcessing, video.id, wisp, onUpdate, onError]);
+  }, [isProcessing, video.id, onUpdate, onError]);
 
   useEffect(() => {
     let disposed = false;
     /** Recover results completed in another tab while Google login was open. */
     async function refreshOnReturn() {
       try {
-        const fresh = await (wisp ? getWispVideo : getVideo)(video.id);
+        const fresh = await getVideo(video.id);
         if (!disposed) onUpdate(fresh);
       } catch (reason) {
         if (!disposed) onError(reason instanceof Error ? reason.message : "Could not refresh video status");
@@ -783,7 +754,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
     }
     window.addEventListener("focus", refreshOnReturn);
     return () => { disposed = true; window.removeEventListener("focus", refreshOnReturn); };
-  }, [video.id, wisp, onUpdate, onError]);
+  }, [video.id, onUpdate, onError]);
 
   const redraw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -850,7 +821,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
     }
     setSaving(true);
     try {
-      const fresh = await (wisp ? saveWispBox : saveBox)(video.id, { ...draftBox, frame_time: currentTime });
+      const fresh = await saveBox(video.id, { ...draftBox, frame_time: currentTime });
       setDraftBox(fresh.box);
       setBoxEditing(false);
       onUpdate(fresh);
@@ -869,9 +840,8 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
     }
     setStarting(true);
     try {
-      if (wisp) await startWispProcessing(video.id, interval);
-      else await startProcessing(video.id, batchSize, interval, reuseCachedCrops);
-      const fresh = await (wisp ? getWispVideo : getVideo)(video.id);
+      await startProcessing(video.id, batchSize, interval, reuseCachedCrops);
+      const fresh = await getVideo(video.id);
       onUpdate(fresh);
     } catch (reason: unknown) {
       onError(reason instanceof Error ? reason.message : "Could not start processing");
@@ -942,24 +912,16 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
     ? Math.min(100, Math.round((activeJob.phase === "preparing" ? activeJob.collected_samples / activeJob.total_samples : (activeJob.collected_samples + activeJob.progress) / (activeJob.total_samples * 2)) * 100))
     : 0;
   const deviceLabel = activeJob?.device ?? latestJob?.device;
-  const ocrDevices = activeJob?.ocr_devices ?? currentJob?.ocr_devices;
   const timingError = currentJob?.max_timing_error_ms ?? null;
   const hasTimingWarning = timingError !== null && timingError > 100;
   const roundTransitions = <div className="results-section"><DriveUpload key={video.id} videoId={video.id} offsetSeconds={offsetSeconds} onOffsetChange={setOffsetSeconds} enabled={currentJob?.status === "completed" && results.length > 0} disabledReason={isProcessing ? "Round classification is still running. Upload becomes available when round starts are ready." : currentJob?.status === "completed" ? "No round starts were detected. Check the round crop and process the video again." : "Process this video to detect round starts before uploading."} /><div className="results-heading"><div><p className="eyebrow">ROUND TRANSITIONS</p><h3>Confirmed round changes</h3></div><div className="result-statuses">{selectedGameResults.length > 0 && <UiButton variant="outline" className="round-export-button" type="button" disabled={selectedRoundCount === 0 || exportingRounds} onClick={() => void exportSelectedRounds()}>{exportingRounds ? <LoaderCircle className="spin" size={12} /> : <Download size={12} />}{exportingRounds ? "Building video…" : `Download selected (${selectedRoundCount})`}</UiButton>}{hiddenRoundCount > 0 && <UiButton variant="outline" className="round-visibility-button" type="button" aria-expanded={showAllRounds} onClick={() => setShowAllRounds((visible) => !visible)}>{showAllRounds ? "Show key rounds" : `Show ${hiddenRoundCount} more`}</UiButton>}{games.length > 1 && <label className="game-select"><span>Game</span><UiNativeSelect aria-label="Select game" value={selectedGameIndex} onChange={(event) => setSelectedGameIndex(Number(event.target.value))}>{games.map((game, index) => <option key={game.number} value={index}>Game {game.number} · {game.results.length} rounds</option>)}</UiNativeSelect></label>}{currentJob?.status === "completed" && timingError !== null && <span className={`timing-pill ${hasTimingWarning ? "warning" : ""}`}>{hasTimingWarning ? <TriangleAlert size={12} /> : <Check size={12} />} PTS ±{Math.round(timingError)} ms</span>}{latestJob?.status === "completed" && <UiBadge variant="secondary" className="complete-pill"><Check size={13} /> Complete</UiBadge>}</div></div>{results.length === 0 ? <div className="results-empty"><Activity size={20} /><span>{hasBox ? "Process the video to find confirmed round changes." : "Draw and save a box to enable processing."}</span></div> : <div className="results-list">{visibleResults.map((result) => <ResultRow key={result.scheduled_timestamp_seconds} result={result} selected={selectedRoundKeys.has(resultKey(result))} onSelectionChange={() => toggleRoundSelection(result)} onClick={() => jumpTo(result)} />)}</div>}</div>;
 
-  const sidebar = wisp ? <WispResults key={`${video.id}:${currentJob?.id ?? "none"}`} videoId={video.id} jobId={currentJob?.id} onSeek={(time) => {
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = time;
-    videoRef.current.pause();
-    setCurrentTime(time);
-  }} /> : roundTransitions;
+  const sidebar = roundTransitions;
   return <><div className="analyzer">
-    <div className="analyzer-heading"><div><p className="eyebrow">{wisp ? "WISP CLASSIFIER" : "ANALYSIS WORKSPACE"}</p><h2>{video.original_name}</h2></div><div className="video-meta"><span>{video.width} × {video.height}</span><span>{formatDuration(video.duration)}</span></div></div>
-    {wisp && <p className="wisp-placeholder-note">Development preview: using a placeholder template and detection threshold. Every matching sampled frame is listed.</p>}
-    {wisp && <p className="wisp-placeholder-note">Template: {deviceLabel === 'mps' ? 'Apple Metal (MPS)' : deviceLabel ?? 'Pending'} · Text detection: {ocrDevices?.text_detection ?? 'Pending'} · Recognition providers: {ocrDevices?.recognition ?? 'Pending'} (providers may use CPU for unsupported operations)</p>}
+    <div className="analyzer-heading"><div><p className="eyebrow">ROUND ANALYSIS</p><h2>{video.original_name}</h2></div><div className="video-meta"><span>{video.width} × {video.height}</span><span>{formatDuration(video.duration)}</span></div></div>
     <div className="video-stage-wrap">
       <div className="video-stage" ref={overlayRef} style={{ aspectRatio: `${video.width} / ${video.height}` }}>
-        <video ref={videoRef} controls playsInline preload="metadata" onPlay={() => setVideoPaused(false)} onPause={(event) => { setVideoPaused(true); setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const initialTime = video.box?.frame_time ?? 0; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); }} />
+        <video ref={videoRef} controls playsInline preload="metadata" onPause={(event) => { setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const initialTime = video.box?.frame_time ?? 0; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); }} />
         {playback.status === "preparing" && <div className="playback-status"><LoaderCircle className="spin" size={18} /><strong>Preparing fast playback…</strong><span>This one-time step makes startup and scrubbing responsive.</span></div>}
         {playback.status === "failed" && playback.error && <div className="playback-warning"><span>{playback.error ?? "Optimized playback is unavailable."}</span><UiButton variant="outline" type="button" onClick={() => void playback.retry()}>Retry</UiButton></div>}
         <canvas ref={canvasRef} className={`box-canvas ${boxEditing ? "is-editing" : ""}`} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp} aria-label="Draw a bounding box on the video" />
@@ -970,19 +932,13 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError, wisp = false }: { w
       <UiButton variant="outline" type="button" aria-label="Rewind 5 seconds" onClick={() => skipPlayback(-5)}><SkipBack size={16} /> 5 seconds</UiButton>
       <UiButton variant="outline" type="button" aria-label="Skip forward 5 seconds" onClick={() => skipPlayback(5)}>5 seconds <SkipForward size={16} /></UiButton>
     </div>
-    <div className="workspace-actions"><div className="frame-readout"><span className="status-dot" /> Current frame <strong>{formatDuration(currentTime)}</strong></div><div className="action-buttons"><UiButton variant={boxEditing ? "secondary" : "outline"} aria-pressed={boxEditing} className={`secondary-button ${boxEditing ? "active-tool" : ""}`} onClick={() => { setDrawing(null); setBoxEditing((current) => !current); }}><Crosshair size={16} />{boxEditing ? "Exit drawing" : hasBox ? "Edit box" : "Draw box"}</UiButton><UiButton variant="outline" className="secondary-button" disabled={!draftBox || saving} onClick={saveCurrentBox}>{saving ? <LoaderCircle className="spin" size={16} /> : <Save size={16} />}{saving ? "Saving…" : hasBox ? "Update box" : "Save box"}</UiButton><label className="batch-size-control" title="Elapsed time between analyzed frames. 0 checks every frame."><span>Interval (s)</span><UiInput aria-label="Analysis interval in seconds" type="number" min="0" max="3600" step="any" value={analysisInterval} disabled={isProcessing || starting} onChange={(event) => setAnalysisInterval(event.target.value)} /></label>{!wisp && <label className="batch-size-control"><span>Batch</span><UiInput type="number" min="1" max="256" value={batchSize} disabled={isProcessing || starting} onChange={(event) => setBatchSize(Math.max(1, Math.min(256, Number(event.target.value) || 1)))} /></label>}<label className="offset-control" hidden={wisp}><span>Offset (s)</span><UiInput aria-label="Seek offset in seconds" type="number" step="1" value={offsetSeconds} onChange={(event) => setOffsetSeconds(event.target.value)} /></label>{!wisp && latestJob?.status === "completed" && <UiButton variant="outline" className="secondary-button" disabled={isProcessing || starting} onClick={() => process(true)}><RefreshCcw size={16} /> Rerun OCR</UiButton>}<UiButton variant="default" className="primary-button" disabled={!hasBox || isProcessing || starting} onClick={() => process(false)}>{isProcessing ? <LoaderCircle className="spin" size={16} /> : <Play size={16} />}{isProcessing ? `${activeJob?.phase === "preparing" ? "Preparing" : "Analyzing"} ${progress}%` : latestJob?.status === "completed" ? "Analyze again" : latestJob?.status === "failed" ? "Retry analysis" : "Process video"}</UiButton></div></div>
-    <p className="wisp-placeholder-note">Sampled frames are cached for reuse across analyzers. Preparation and analysis show separate progress.</p>
-    <p className="wisp-placeholder-note">{Number(analysisInterval) > 0 ? `About ${Math.ceil(video.duration / Number(analysisInterval)).toLocaleString()} samples for this video, one every ${analysisInterval} seconds.` : "Every-frame mode: all source frames will be prepared and analyzed."}</p>
-    <p className="wisp-placeholder-note">Analysis interval: 0 checks every frame; 0.1 samples about 10 frames per second. Timestamp clicks use the actual selected frame.</p>
-    {isProcessing && <div className="progress-card"><div className="progress-copy"><div><span className="eyebrow">{activeJob?.sample_interval_seconds === 0 ? "EVERY FRAME" : `EVERY ${activeJob?.sample_interval_seconds} SECONDS`} · BATCH SIZE {activeJob?.batch_size}</span><strong>{activeJob?.status === "queued" ? "Queued for processing" : activeJob?.phase === "preparing" ? "Preparing sampled frames for reuse" : activeJob?.phase === "collecting" ? "Reading and classifying video frames" : wisp ? "Matching wisp template" : "Confirming round transitions"}</strong></div><span>{progress}%</span></div><Progress aria-label="Processing progress" value={progress} /><div className="progress-foot"><span>{(activeJob?.phase === "preparing" || activeJob?.phase === "collecting") ? `${activeJob.collected_samples} of ${activeJob.total_samples || "…"} frames read` : `${activeJob?.progress ?? 0} of ${activeJob?.total_samples || "…"} frames processed`}</span><span><Cpu size={13} /> {deviceLabel ? (deviceLabel === "dummy" ? "Dummy predictor" : deviceLabel === "cuda" ? "CUDA" : deviceLabel === "mps" ? "Apple Metal (MPS)" : deviceLabel === "cpu" ? "CPU fallback" : deviceLabel) : "Selecting device"}</span></div></div>}
+    <div className="workspace-actions"><div className="frame-readout"><span className="status-dot" /> Current frame <strong>{formatDuration(currentTime)}</strong></div><div className="action-buttons"><UiButton variant={boxEditing ? "secondary" : "outline"} aria-pressed={boxEditing} className={`secondary-button ${boxEditing ? "active-tool" : ""}`} onClick={() => { setDrawing(null); setBoxEditing((current) => !current); }}><Crosshair size={16} />{boxEditing ? "Exit drawing" : hasBox ? "Edit box" : "Draw box"}</UiButton><UiButton variant="outline" className="secondary-button" disabled={!draftBox || saving} onClick={saveCurrentBox}>{saving ? <LoaderCircle className="spin" size={16} /> : <Save size={16} />}{saving ? "Saving…" : hasBox ? "Update box" : "Save box"}</UiButton><label className="batch-size-control" title="Elapsed time between analyzed frames. 0 checks every frame."><span>Interval (s)</span><UiInput aria-label="Analysis interval in seconds" type="number" min="0" max="3600" step="any" value={analysisInterval} disabled={isProcessing || starting} onChange={(event) => setAnalysisInterval(event.target.value)} /></label><label className="batch-size-control"><span>Batch</span><UiInput type="number" min="1" max="256" value={batchSize} disabled={isProcessing || starting} onChange={(event) => setBatchSize(Math.max(1, Math.min(256, Number(event.target.value) || 1)))} /></label><label className="offset-control"><span>Offset (s)</span><UiInput aria-label="Seek offset in seconds" type="number" step="1" value={offsetSeconds} onChange={(event) => setOffsetSeconds(event.target.value)} /></label>{latestJob?.status === "completed" && <UiButton variant="outline" className="secondary-button" disabled={isProcessing || starting} onClick={() => process(true)}><RefreshCcw size={16} /> Rerun OCR</UiButton>}<UiButton variant="default" className="primary-button" disabled={!hasBox || isProcessing || starting} onClick={() => process(false)}>{isProcessing ? <LoaderCircle className="spin" size={16} /> : <Play size={16} />}{isProcessing ? `${activeJob?.phase === "preparing" ? "Preparing" : "Analyzing"} ${progress}%` : latestJob?.status === "completed" ? "Analyze again" : latestJob?.status === "failed" ? "Retry analysis" : "Process video"}</UiButton></div></div>
+    <p className="analysis-note">Sampled frames are cached for reuse across round-analysis runs. Preparation and analysis show separate progress.</p>
+    <p className="analysis-note">{Number(analysisInterval) > 0 ? `About ${Math.ceil(video.duration / Number(analysisInterval)).toLocaleString()} samples for this video, one every ${analysisInterval} seconds.` : "Every-frame mode: all source frames will be prepared and analyzed."}</p>
+    <p className="analysis-note">Analysis interval: 0 checks every frame; 0.1 samples about 10 frames per second. Timestamp clicks use the actual selected frame.</p>
+    {isProcessing && <div className="progress-card"><div className="progress-copy"><div><span className="eyebrow">{activeJob?.sample_interval_seconds === 0 ? "EVERY FRAME" : `EVERY ${activeJob?.sample_interval_seconds} SECONDS`} · BATCH SIZE {activeJob?.batch_size}</span><strong>{activeJob?.status === "queued" ? "Queued for processing" : activeJob?.phase === "preparing" ? "Preparing sampled frames for reuse" : activeJob?.phase === "collecting" ? "Reading and classifying video frames" : "Confirming round transitions"}</strong></div><span>{progress}%</span></div><Progress aria-label="Processing progress" value={progress} /><div className="progress-foot"><span>{(activeJob?.phase === "preparing" || activeJob?.phase === "collecting") ? `${activeJob.collected_samples} of ${activeJob.total_samples || "…"} frames read` : `${activeJob?.progress ?? 0} of ${activeJob?.total_samples || "…"} frames processed`}</span><span><Cpu size={13} /> {deviceLabel ? (deviceLabel === "dummy" ? "Dummy predictor" : deviceLabel === "cuda" ? "CUDA" : deviceLabel === "mps" ? "Apple Metal (MPS)" : deviceLabel === "cpu" ? "CPU fallback" : deviceLabel) : "Selecting device"}</span></div></div>}
     {latestJob?.status === "failed" && <div className="job-error"><X size={16} /><span>{latestJob.error ?? "Processing failed"}</span><UiButton variant="outline" onClick={() => process(false)}>Retry</UiButton></div>}
     {hasTimingWarning && <div className="timing-warning"><TriangleAlert size={16} /><span><strong>Playback timing warning.</strong> The nearest available frame deviated by up to {Math.round(timingError)} ms. Result clicks use the actual frame timestamps.</span></div>}
-    {wisp && currentJob?.status === "completed" && <WispFrameReview key={currentJob.id} videoId={video.id} jobId={currentJob.id} time={currentTime} paused={videoPaused} onSeek={(time) => {
-      if (!videoRef.current) return;
-      videoRef.current.pause();
-      videoRef.current.currentTime = time;
-      setCurrentTime(time);
-    }} />}
   </div>{sidebarTarget ? createPortal(sidebar, sidebarTarget) : sidebar}</>;
 }
 

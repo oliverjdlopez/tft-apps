@@ -1,6 +1,6 @@
 # Automatic creator imports
 
-Open **Automatic imports** in the VOD Review or Wisps header. Enter one YouTube
+Open **Automatic imports** in the VOD Review header. Enter one YouTube
 channel or Twitch creator URL per line, a daily time, an IANA timezone such as
 `America/New_York`, and a lookback window in hours or days. Existing browser-local
 replay sources seed the form when no schedule has been saved. Choose video quality,
@@ -51,7 +51,7 @@ and fetch the full video. They reuse the same persistence, video validation,
 optional configured app-local media cache, download progress, and playback
 preparation as a manual URL upload. Each imported VOD appears in the existing
 library, which refreshes every 15 seconds and when the view regains focus.
-Round/Wisp inference, annotation, transcription, and Google Drive clip uploads
+Round inference, transcription, and Google Drive clip uploads
 remain explicit user actions. Draw a crop and process the imported video as usual.
 
 Provider media IDs prevent duplicate automatic imports across creators, URL

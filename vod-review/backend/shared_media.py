@@ -46,7 +46,7 @@ def download_shared_video(url: str, start: float | None, end: float | None,
         original.unlink(missing_ok=True)
         return db.get_video(video["id"])
 
-    # The media is shared, but boxes, analysis jobs and annotations belong to
+    # The media is shared, but boxes and analysis jobs belong to
     # this new review. Never merge that task state just because URLs match.
     metadata = probe(path)
     video = db.create_video(

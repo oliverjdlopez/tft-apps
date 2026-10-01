@@ -7,7 +7,7 @@ import test from "node:test";
 import { VideoRuntime } from "../video-runtime.mjs";
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const fixture = fileURLToPath(new URL("./fixtures/video-service.mjs", import.meta.url));
-const schema = { info: { title: "Framewise Video Analysis and Annotation" }, paths: {
+const schema = { info: { title: "VOD Review and Round Classification" }, paths: {
   "/api/health": { get: {} }, "/api/videos": { get: {} },
 } };
 
@@ -56,12 +56,12 @@ for (const [backend, frontend] of [[true, true], [true, false], [false, true]]) 
   });
 }
 
-test("concurrent VOD and Wisps requests share one owned pair and idempotent shutdown", async (t) => {
+test("concurrent VOD requests share one owned pair and idempotent shutdown", async (t) => {
   const runtime = await setup(t, false, false);
   const vod = runtime.start();
-  const wisps = runtime.start();
-  assert.equal(vod, wisps);
-  assert.equal(await vod, await wisps);
+  const secondStart = runtime.start();
+  assert.equal(vod, secondStart);
+  assert.equal(await vod, await secondStart);
   assert.equal(runtime.children.length, 2);
   await Promise.all([runtime.stop(), runtime.stop()]);
   assert(runtime.children.every((child) => child.ended));

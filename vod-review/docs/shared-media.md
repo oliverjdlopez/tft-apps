@@ -89,7 +89,7 @@ requests in either application use the shared entry.
 
 ## Ownership and cleanup
 
-VOD review IDs, boxes, jobs, annotations, and playback derivatives remain in
+VOD review IDs, boxes, jobs, and playback derivatives remain in
 its own database/directories. A persistent `videos.shared_media` flag prevents
 the delete endpoint from unlinking a shared source, even if shared mode is
 later disabled. Local uploads retain their existing deletion behavior.
@@ -100,6 +100,21 @@ manually remove files still referenced by a review or active transcription.
 `--overwrite` in ChatTFT publishes a new asset without replacing files already
 in use. Back up the catalog together with its media directory. Work/checkpoint
 cleanup should only be done while both apps are stopped.
+
+## Completed transcript sharing
+
+VOD retains recognized text in its app-local `transcription_tasks` records and
+publishes immutable UTF-8 snapshots in the shared catalogue after recognition
+completes. The desktop **Media** tab lists these under **Text / transcripts**.
+Names match the source VOD when available, and metadata records the task, video
+and detected language. Both backends can read the same portable reference.
+
+Backend startup also shares existing completed transcripts without downloading
+or recognizing them again. Repeated recovery reuses verified matching snapshots;
+missing/corrupt shared files can be restored from local text. If storage is
+unavailable, the local task remains completed, a warning is logged, and sharing
+is retried on the next startup. An empty `TFT_MEDIA_DIR` disables sharing.
+Original review/transcription records remain independent of catalogue snapshots.
 
 ## Code ownership and validation
 
@@ -115,7 +130,7 @@ Offline tests generate tiny local videos and exercise reuse, range/quality
 matching, process concurrency, missing-file recovery, and immutable refresh:
 
 ```bash
-uv run pytest -q backend/tests/test_shared_media.py backend/tests/test_shared_video_integration.py backend/tests/test_api.py
+uv run pytest -q backend/tests/test_shared_media.py backend/tests/test_shared_video_integration.py backend/tests/test_shared_transcripts.py backend/tests/test_api.py
 ```
 
 VOD Review's corresponding tests are `backend/tests/test_shared_media.py` and

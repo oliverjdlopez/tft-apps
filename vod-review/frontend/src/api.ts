@@ -1,62 +1,11 @@
 export const API_BASE = import.meta.env.VITE_API_BASE ?? "http://localhost:8000";
 
-export type WispFrame = { sample_index: number; frame_index: number; timestamp: number; confidence: number; total: number; ocr_text?: string | null };
-export const getWispFrame = (videoId: string, jobId: string, timestamp: number, offset: number) =>
-  request<WispFrame>(`/api/videos/${encodeURIComponent(videoId)}/wisps/jobs/${encodeURIComponent(jobId)}/frame?timestamp=${timestamp}&offset=${offset}`);
-
 export type BoundingBox = {
   x: number;
   y: number;
   width: number;
   height: number;
   frame_time: number;
-};
-
-export type TaskKey = "unit_segmentation" | "text_detection" | "round_classifier" | "unit_id" | "augment_classifier";
-export type DatasetSplit = "train" | "val";
-export type AnnotationKind = "detection" | "classification" | "template";
-
-export type AnnotationLabel = {
-  id: string;
-  display_name: string;
-};
-
-export type AnnotationTask = {
-  key: TaskKey;
-  display_name: string;
-  kind: AnnotationKind;
-  labels: AnnotationLabel[];
-  enabled: boolean;
-};
-
-export type AnnotationItem = {
-  label_id: string | null;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-export type AnnotationQueueItem = {
-  sample_index: number;
-  requested_timestamp_seconds: number;
-  actual_timestamp_seconds: number | null;
-  status: "pending" | "saved" | "skipped";
-  items: AnnotationItem[];
-};
-
-export type AnnotationProject = {
-  id: string;
-  video_id: string;
-  task: TaskKey;
-  kind: AnnotationKind;
-  split: DatasetSplit;
-  sample_interval_seconds: number;
-  locked: boolean;
-  created_at: string;
-  updated_at: string;
-  counts: { saved: number; skipped: number; pending: number };
-  queue: AnnotationQueueItem[];
 };
 
 export type SampleResult = {
@@ -74,7 +23,6 @@ export type RoundExportClip = {
 };
 
 export type Job = {
-  ocr_devices?: { text_detection?: string; recognition?: string };
   id: string;
   status: "queued" | "running" | "completed" | "failed";
   progress: number;
@@ -231,70 +179,6 @@ export const startProcessing = (id: string, batchSize: number, sampleIntervalSec
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ batch_size: batchSize, sample_interval_seconds: sampleIntervalSeconds, reuse_cached_crops: reuseCachedCrops }),
   });
-
-export const listAnnotationTasks = () => request<AnnotationTask[]>("/api/annotation-tasks");
-
-export const getAnnotationProject = (videoId: string, task: TaskKey) =>
-  request<AnnotationProject | null>(`/api/videos/${videoId}/annotation-projects/${task}`);
-
-export const putAnnotationProject = (
-  videoId: string,
-  task: TaskKey,
-  split: DatasetSplit,
-  sampleIntervalSeconds: number,
-) => request<AnnotationProject>(`/api/videos/${videoId}/annotation-projects/${task}`, {
-  method: "PUT",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ split, sample_interval_seconds: sampleIntervalSeconds }),
-});
-
-export const resetAnnotationProject = (videoId: string, task: TaskKey) =>
-  request<void>(`/api/videos/${videoId}/annotation-projects/${task}`, { method: "DELETE" });
-
-export type DetectionFramePayload = {
-  kind: "detection";
-  status: "saved" | "skipped";
-  boxes: Omit<AnnotationItem, "label_id">[];
-};
-
-export type ClassificationFramePayload = {
-  kind: "classification";
-  status: "saved" | "skipped";
-  crops: Array<Omit<AnnotationItem, "label_id"> & { label_id: string }>;
-};
-
-export type TemplateFramePayload = {
-  kind: "template";
-  status: "saved" | "skipped";
-  label_id?: string;
-};
-
-export const putAnnotationFrame = (
-  videoId: string,
-  task: TaskKey,
-  sampleIndex: number,
-  payload: DetectionFramePayload | ClassificationFramePayload | TemplateFramePayload,
-) => request<AnnotationProject>(`/api/videos/${videoId}/annotation-projects/${task}/frames/${sampleIndex}`, {
-  method: "PUT",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload),
-});
-
-export const deleteAnnotationFrame = (videoId: string, task: TaskKey, sampleIndex: number) =>
-  request<AnnotationProject>(`/api/videos/${videoId}/annotation-projects/${task}/frames/${sampleIndex}`, {
-    method: "DELETE",
-  });
-
-export const getWispVideo = (id: string) => request<VideoRecord>(`/api/videos/${id}/wisps`);
-export const saveWispBox = (id: string, box: BoundingBox) => request<VideoRecord>(`/api/videos/${id}/wisps/bounding-box`, {
-  method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(box),
-});
-export const startWispProcessing = (id: string, sampleIntervalSeconds = 0) => request<Job>(`/api/videos/${id}/wisps/process`, {
-  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sample_interval_seconds: sampleIntervalSeconds }),
-});
-export type WispPage = { page: number; pages: number; total: number; results: { frame_index: number; timestamp_seconds: number; confidence: number }[] };
-export const getWispDetections = (id: string, jobId: string, page: number) =>
-  request<WispPage>(`/api/videos/${id}/wisps/jobs/${jobId}/detections?page=${page}`);
 
 export type DriveUploadOptions = { key_rounds_only: boolean; offset_seconds: number; duration_seconds: number };
 

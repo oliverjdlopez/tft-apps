@@ -6,11 +6,8 @@ import av
 import cv2
 import numpy as np
 import pytest
-import torch
 
-from backend import app as service, db, frame_cache, processor, wisps
-from wisp_classifier.detector import TemplateMatcher
-from pathlib import Path
+from backend import app as service, db, frame_cache, processor
 
 
 @pytest.fixture
@@ -20,10 +17,7 @@ def source(tmp_path, monkeypatch):
     monkeypatch.setattr(db, 'DOWNLOAD_DIR', tmp_path / 'downloads')
     monkeypatch.setattr(db, 'DB_PATH', tmp_path / 'test.sqlite3')
     db.init_db()
-    wisps.initialize()
     path = db.VIDEO_DIR / 'test.mkv'
-    template_path = Path(__file__).resolve().parents[2] / 'wisp_classifier/placeholder_template.pgm'
-    template = cv2.cvtColor(cv2.imread(str(template_path), 0), cv2.COLOR_GRAY2RGB)
     with av.open(str(path), 'w') as output:
         stream = output.add_stream('ffv1', rate=30)
         stream.width = stream.height = 32
@@ -31,13 +25,12 @@ def source(tmp_path, monkeypatch):
         for n in range(30):
             rgb = np.zeros((32, 32, 3), np.uint8)
             rgb[:, :16] = (n, 20, 30)
-            rgb[2:7, 22:27] = template
             for packet in stream.encode(av.VideoFrame.from_ndarray(rgb, format='rgb24')):
                 output.mux(packet)
         for packet in stream.encode():
             output.mux(packet)
     db.create_video('v', 'test.mkv', path, 'video/mp4', 1, 32, 32)
-    return path, template_path
+    return path, None
 
 
 def count_decodes(monkeypatch):
@@ -113,29 +106,19 @@ def test_interrupted_missing_and_changed_cache_rebuild(source, monkeypatch):
     assert len(calls) == 4
 
 
-@pytest.mark.skipif(not torch.cuda.is_available(), reason='CUDA GPU required')
-def test_round_then_wisp_and_new_round_box_decode_once(source, monkeypatch):
-    path, template_path = source
+def test_round_runs_with_changed_box_decode_only_missing_frames(source, monkeypatch):
+    path, _ = source
     calls = count_decodes(monkeypatch)
     class Classifier:
         device_label = 'cpu'
         def predict_batch(self, crops):
             return [('11', 1.0)] * len(crops)
     monkeypatch.setattr(service, 'get_ocr_classifier', lambda *_: Classifier())
-    monkeypatch.setattr(wisps, 'TemplateMatcher', lambda: TemplateMatcher(template_path))
     box = dict(x=0, y=0, width=0.5, height=1, frame_time=0)
     db.save_bounding_box('v', box)
     db.create_processing_job('v', 'round-one', 4, 0.2)
     service.run_job('round-one')
     assert db.get_video('v')['current_job']['progress'] == 5
-    wisps.save_box('v', dict(box, x=0.5))
-    job, _ = wisps.create_job('v', 0.1)
-    wisps.run_job('v', job['id'])
-    complete = wisps.get_video('v')['current_job']
-    assert complete['device'] == 'cuda'
-    assert complete['detection_count'] == 10
-    hits = wisps.detections('v', job['id'], 1)['results']
-    assert [h['frame_index'] for h in hits] == list(range(0, 30, 3))
     db.save_bounding_box('v', dict(box, x=0.5))
     db.create_processing_job('v', 'round-two', 4, 0.1)
     service.run_job('round-two')
@@ -226,16 +209,3 @@ def test_yuv_cache_matches_direct_cropping(tmp_path, monkeypatch):
         cached = next(container.decode(container.streams.video[0]))
         actual, _ = processor._FrameCropConverter(av, box).convert(cached)
     assert np.array_equal(actual, reference)
-
-
-@pytest.mark.skipif(not torch.cuda.is_available(), reason='CUDA GPU required')
-def test_smaller_box_is_processed_with_scaled_template(source, monkeypatch):
-    _, template_path = source
-    monkeypatch.setattr(wisps, 'TemplateMatcher', lambda: TemplateMatcher(template_path))
-    wisps.save_box('v', dict(x=0, y=0, width=0.05, height=0.05, frame_time=0))
-    job, _ = wisps.create_job('v', 0.5)
-    wisps.run_job('v', job['id'])
-    result = wisps.get_video('v')['latest_job']
-    assert result['status'] == 'completed'
-    assert result['progress'] == 2
-    assert result['device'] == 'cuda'

@@ -20,27 +20,28 @@ from pathlib import Path
 from typing import Any, Callable
 from urllib.parse import urlparse
 
-from fastapi import Query, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from round_classifier.predict import get_ocr_classifier
+from round_classifier.config import load_round_labels
 
 try:
-    from . import annotations, db, wisps, frame_cache
+    from . import db, frame_cache
+    from .shared_transcripts import publish_completed_transcripts
     from .constants import (
         DEFAULT_BATCH_SIZE,
         MAX_COLLECTION_PROGRESS_UPDATES,
         PROGRESS_WRITE_INTERVAL_SECONDS,
         SAMPLE_INTERVAL_SECONDS,
     )
-    from .models import AnnotationFrameRequest, AnnotationProjectRequest, BoundingBox, DownloadQuality, ReplayDiscoveryRequest, WispProcessingRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, TaskKey, VideoUrlRequest
+    from .models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest
 except ImportError:  # Running with `uvicorn app:app` from the backend directory.
-    import annotations
-    import wisps
     import frame_cache
     import db
+    from shared_transcripts import publish_completed_transcripts
     from constants import DEFAULT_BATCH_SIZE, MAX_COLLECTION_PROGRESS_UPDATES, PROGRESS_WRITE_INTERVAL_SECONDS, SAMPLE_INTERVAL_SECONDS
-    from models import AnnotationFrameRequest, AnnotationProjectRequest, BoundingBox, DownloadQuality, ReplayDiscoveryRequest, WispProcessingRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, TaskKey, VideoUrlRequest
+    from models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest
 
 try:
     from .processor import process_cached_crops, process_video_all_frames
@@ -722,8 +723,11 @@ async def _run_transcription_task(task_id: str) -> None:
         db.update_transcription_task(task_id, status="completed", transcript=transcript, language=language)
     except HTTPException as exc:
         db.update_transcription_task(task_id, status="failed", error=str(exc.detail))
+        return
     except Exception as exc:
         db.update_transcription_task(task_id, status="failed", error=str(exc))
+        return
+    await asyncio.to_thread(publish_completed_transcripts, task_id)
 
 
 def _download_url_metadata(url: str) -> dict[str, Any]:
@@ -1006,9 +1010,7 @@ def run_job(job_id: str) -> None:
         last_progress_write = now
 
     try:
-        round_labels = tuple(
-            label["id"] for label in annotations.load_task_config()["round_classifier"]["labels"]
-        )
+        round_labels = load_round_labels()
         classifier = get_ocr_classifier(round_labels)
         if job["reuse_cached_crops"]:
             cache_dir = ocr_cache_dir() / str(job["source_job_id"])
@@ -1086,8 +1088,7 @@ def startup() -> None:
     global WORKERS
     configure_performance_logging()
     db.init_db()
-    wisps.initialize()
-    annotations.initialize_datasets()
+    publish_completed_transcripts()
     if WORKERS is None:
         WORKERS = ThreadPoolExecutor(max_workers=1, thread_name_prefix="video-processor")
 
@@ -1129,7 +1130,7 @@ async def lifespan(application: FastAPI):
         shutdown()
 
 
-app = FastAPI(title="Framewise Video Analysis and Annotation", lifespan=lifespan)
+app = FastAPI(title="VOD Review and Round Classification", lifespan=lifespan)
 try:
     from .gdrive.router import router as gdrive_router
 except ImportError:  # Support the documented backend-directory launch.
@@ -1196,11 +1197,6 @@ async def discover_replays(request: ReplayDiscoveryRequest) -> dict[str, Any]:
         reverse=True,
     )
     return {"replays": ordered, "errors": errors}
-
-
-@app.get("/api/annotation-tasks")
-async def annotation_tasks() -> list[dict[str, Any]]:
-    return annotations.task_definitions()
 
 
 @app.post("/api/videos", status_code=201)
@@ -1573,68 +1569,3 @@ async def start_processing(video_id: str, request: ProcessingRequest | None = No
         WORKERS = ThreadPoolExecutor(max_workers=1, thread_name_prefix="video-processor")
     WORKERS.submit(run_job, job_id)
     return payload
-
-
-@app.get("/api/videos/{video_id}/annotation-projects/{task}")
-async def get_annotation_project(video_id: str, task: TaskKey) -> dict[str, Any] | None:
-    return annotations.get_project(video_id, task)
-
-
-@app.put("/api/videos/{video_id}/annotation-projects/{task}")
-async def put_annotation_project(
-    video_id: str,
-    task: TaskKey,
-    request: AnnotationProjectRequest,
-) -> dict[str, Any]:
-    return annotations.put_project(video_id, task, request)
-
-
-@app.delete("/api/videos/{video_id}/annotation-projects/{task}", status_code=204)
-async def delete_annotation_project(video_id: str, task: TaskKey) -> None:
-    annotations.delete_project(video_id, task)
-
-
-@app.put("/api/videos/{video_id}/annotation-projects/{task}/frames/{sample_index}")
-async def put_annotation_frame(
-    video_id: str,
-    task: TaskKey,
-    sample_index: int,
-    request: AnnotationFrameRequest,
-) -> dict[str, Any]:
-    return annotations.put_frame(video_id, task, sample_index, request)
-
-
-@app.delete("/api/videos/{video_id}/annotation-projects/{task}/frames/{sample_index}")
-async def delete_annotation_frame(video_id: str, task: TaskKey, sample_index: int) -> dict[str, Any]:
-    return annotations.delete_frame(video_id, task, sample_index)
-
-
-@app.get('/api/videos/{video_id}/wisps')
-def get_wisp_video(video_id: str):
-    return wisps.get_video(video_id)
-
-
-@app.put('/api/videos/{video_id}/wisps/bounding-box')
-def save_wisp_box(video_id: str, box: BoundingBox):
-    return wisps.save_box(video_id, box.model_dump())
-
-
-@app.post('/api/videos/{video_id}/wisps/process', status_code=202)
-async def start_wisp_processing(video_id: str, request: WispProcessingRequest | None = None):
-    global WORKERS
-    job, created = wisps.create_job(video_id, request.sample_interval_seconds if request else 0)
-    if created:
-        if WORKERS is None:
-            WORKERS = ThreadPoolExecutor(max_workers=1, thread_name_prefix='video-processor')
-        WORKERS.submit(wisps.run_job, video_id, job['id'])
-    return job
-
-
-@app.get('/api/videos/{video_id}/wisps/jobs/{job_id}/detections')
-def get_wisp_detections(video_id: str, job_id: str, page: int = Query(default=1, ge=1)):
-    return wisps.detections(video_id, job_id, page)
-
-
-@app.get('/api/videos/{video_id}/wisps/jobs/{job_id}/frame')
-def get_wisp_frame(video_id: str, job_id: str, timestamp: float = Query(default=0, ge=0), offset: int = 0):
-    return wisps.review_frame(video_id, job_id, timestamp, offset)

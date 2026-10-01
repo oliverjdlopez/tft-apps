@@ -44,6 +44,13 @@ def main() -> None:
                           side_effect=AssertionError("VOD must reuse the cached audio stream")):
             path = app_module.download_audio_url("https://youtu.be/exchange", "audio-task")
         result = {"path": str(path)}
+    elif operation.get("action") == "complete_transcription":
+        import asyncio
+
+        db.create_transcription_task("exchange-transcript", "/fixture/vod.mp4")
+        with patch.object(app_module, "_transcribe_audio_file", return_value=(operation["text"], "en")):
+            asyncio.run(app_module._run_transcription_task("exchange-transcript"))
+        result = db.get_transcription_task("exchange-transcript")
     else:
         client = TestClient(app)
         response = client.request(

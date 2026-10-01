@@ -1,8 +1,7 @@
 # tft-apps agent documentation router
 
 The user entry point is `desktop/`. ChatTFT and VOD retain separate dependency
-environments, application layouts and process lifetimes. VOD Review and Wisps
-are two persistent views of one VOD frontend/backend pair.
+environments, application layouts and process lifetimes. VOD Review is one persistent view of its owned frontend/backend pair.
 
 Read [suite architecture and setup](docs/desktop.md) before launcher changes.
 For `tft-chat/**`, read [ChatTFT instructions](tft-chat/AGENTS.md) and applicable

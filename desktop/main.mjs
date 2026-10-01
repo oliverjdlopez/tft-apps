@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
 import net from "node:net";
 import { DesktopWorkspace } from "./workspace.mjs";
+import { createMediaReader } from "./media.mjs";
 import { DesktopRuntime } from "./runtime.mjs";
 import { VideoRuntime } from "./video-runtime.mjs";
 import { launchOptions, navigationPolicy, permissionAllowed } from "./utils.mjs";
@@ -45,7 +46,7 @@ function createWindow() {
     backgroundColor: "#fafafa", show: false,
     webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, preload: fileURLToPath(new URL("./workspace-preload.cjs", import.meta.url)) },
   });
-  workspace = new DesktopWorkspace(window, openExternal, ensureVideoWorkspace);
+  workspace = new DesktopWorkspace(window, openExternal, ensureVideoWorkspace, createMediaReader(() => frontendUrl));
   for (const view of [workspace.chat, workspace.rolldown, workspace.flowchart, workspace.compositions]) {
     const contents = view.webContents;
     contents.on("will-navigate", (event) => {
@@ -123,7 +124,7 @@ async function loadApplicationViews() {
 /**
  * Attach or start one video workspace without blocking ChatTFT startup.
  * Args:
- *   tab: VOD Review or Wisps workspace identifier.
+ *   tab: VOD Review workspace identifier.
  * Returns:
  *   A shared readiness promise; repeated retry clicks cannot create duplicates.
  */
@@ -138,7 +139,7 @@ function ensureVideoWorkspace(tab) {
     if (quitting) return;
     const service = new VideoRuntime(root, node, options, wsl);
     videoRuntimes.set(key, service);
-    service.on("failure", () => { service.state = "failed"; workspace?.fail("vod"); workspace?.fail("wisps"); });
+    service.on("failure", () => { service.state = "failed"; workspace?.fail("vod"); });
     await service.start();
   })().finally(() => videoStarts.delete(key));
   videoStarts.set(key, pending);
@@ -232,8 +233,7 @@ function installMenu() {
     { label: "File", submenu: [{ role: process.platform === "darwin" ? "close" : "quit" }] },
     { role: "editMenu" },
     { label: "View", submenu: [
-      // Product tabs (Ctrl/Cmd+1-6) come first, in tab-bar order; the two
-      // external integrations (Langfuse, Database) follow at +7/+8. Selecting
+      // Retain existing shortcuts; Media follows at +9. Selecting
       // "compositions" while workspace.compositionsEnabled is false is a
       // no-op (see DesktopWorkspace#select), the same guard that already
       // protects the hidden nav button and the IPC command bridge.
@@ -242,9 +242,9 @@ function installMenu() {
       { label: "Rolldown", accelerator: "CmdOrCtrl+3", click: () => workspace?.select("rolldown") },
       { label: "Flowchart", accelerator: "CmdOrCtrl+4", click: () => workspace?.select("flowchart") },
       { label: "VOD Review", accelerator: "CmdOrCtrl+5", click: () => workspace?.select("vod") },
-      { label: "Wisps", accelerator: "CmdOrCtrl+6", click: () => workspace?.select("wisps") },
       { label: "Langfuse", accelerator: "CmdOrCtrl+7", click: () => workspace?.select("langfuse") },
       { label: "Database", accelerator: "CmdOrCtrl+8", click: () => workspace?.select("database") },
+      { label: "Media", accelerator: "CmdOrCtrl+9", click: () => workspace?.select("media") },
       { type: "separator" },
       { label: "Reload", accelerator: "CmdOrCtrl+R", click: () => reloadView(false) },
       { label: "Force Reload", accelerator: "CmdOrCtrl+Shift+R", click: () => reloadView(true) },
@@ -309,7 +309,7 @@ if (!app.requestSingleInstanceLock()) {
     ));
     installMenu();
     createWindow();
-    for (const tab of ["vod", "wisps"]) {
+    for (const tab of ["vod"]) {
       ensureVideoWorkspace(tab).then(() => {
         if (!quitting && workspace?.active === tab) workspace.loadExternal(tab);
       }).catch((error) => {

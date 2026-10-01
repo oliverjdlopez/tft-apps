@@ -51,7 +51,7 @@ async function stop() {
 async function run() {
   await app.whenReady();
   const videoStart = video.start();
-  assert.equal(videoStart, video.start(), "both video views share one startup");
+  assert.equal(videoStart, video.start(), "concurrent requests share one startup");
   const [origin] = await Promise.all([chat.start(), videoStart]);
   assert.equal(video.children.length, 2);
   window = new BrowserWindow({ show: false, width: 1440, height: 960, webPreferences: {
@@ -62,7 +62,6 @@ async function run() {
   workspace.compositionsEnabled = true;
   if (disposablePorts) {
     workspace.pages.get("vod").url = `http://127.0.0.1:${video.frontendPort}`;
-    workspace.pages.get("wisps").url = `http://127.0.0.1:${video.frontendPort}/wisp_classifier`;
   }
   for (const [tab, view, route] of [["chat", workspace.chat, "/"],
     ["compositions", workspace.compositions, "/compositions"], ["rolldown", workspace.rolldown, "/rolldown"],
@@ -74,14 +73,13 @@ async function run() {
     assert.equal(await view.webContents.executeJavaScript("typeof window.desktopWorkspace"), "undefined");
     console.log(`PASS: ${tab} loads at ${route}`);
   }
-  for (const tab of ["vod", "wisps"]) {
+  for (const tab of ["vod"]) {
     const page = workspace.pages.get(tab);
     await page.view.webContents.loadURL(page.url);
     workspace.select(tab);
     assert(await page.view.webContents.executeJavaScript("document.body.innerText.length > 0"));
-    console.log(`PASS: ${tab} loads from shared origin`);
+    console.log(`PASS: ${tab} loads the round review page`);
   }
-  assert.equal(new URL(workspace.pages.get("vod").url).origin, new URL(workspace.pages.get("wisps").url).origin);
   window.once("closed", () => stop().then(() => app.quit()));
   window.close();
   await stop();

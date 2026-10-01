@@ -44,6 +44,20 @@ def test_both_http_backends_discover_and_read_each_others_publications(tmp_path)
         assert base64.b64decode(downloaded["body"]) == content
 
 
+def test_completed_vod_transcript_is_visible_and_readable_through_chat(tmp_path):
+    """Publish through real VOD completion and retrieve identical UTF-8 via ChatTFT."""
+    text = "A completed VOD transcript.\nCafé ☕ — round 2-1."
+    completed = peer(tmp_path, "vod", action="complete_transcription", text=text)
+    assert completed["status"] == "completed"
+    listed = peer(tmp_path, "chat", method="GET", url="/api/shared-media", params={"kind": "text"})
+    assert listed["status"] == 200
+    resource, = listed["json"]
+    assert resource["metadata"]["type"] == "transcript"
+    downloaded = peer(tmp_path, "chat", method="GET", url=resource["content_url"], binary=True)
+    assert downloaded["status"] == 200
+    assert base64.b64decode(downloaded["body"]) == text.encode("utf-8")
+
+
 @pytest.mark.skipif(not shutil.which("ffmpeg") or not shutil.which("ffprobe"), reason="requires local media tools")
 def test_shared_download_reuse_and_chat_video_import_into_vod(tmp_path):
     """Reuse VOD audio in ChatTFT and retain a Chat-published video after review deletion."""

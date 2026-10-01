@@ -81,7 +81,7 @@ export default function ReplayAutomation({ sources, onClose, onImported }: {
       {!draft ? <p role="status">Loading schedule…</p> : <form onSubmit={(event) => { event.preventDefault(); void save(); }}>
         <label className="creator-automation-enable"><Checkbox aria-label="Enable daily imports" checked={draft.enabled} onCheckedChange={(checked) => { setDraft({ ...draft, enabled: checked === true }); setSavedMessage(""); }} />Enable daily imports</label>
         <label>Creators<Textarea aria-label="Automatic import creators" rows={5} value={sourceText} onChange={(event) => { setSourceText(event.target.value); setSavedMessage(""); }} placeholder={"https://www.youtube.com/@channel\nhttps://www.twitch.tv/streamer"} /></label>
-        <p>One YouTube channel or Twitch creator URL per line. This schedule is shared by VOD Review and Wisps.</p>
+        <p>One YouTube channel or Twitch creator URL per line. This schedule imports videos into VOD Review.</p>
         <div className="creator-automation-fields">
           <label>Daily time<Input aria-label="Daily import time" type="time" required value={draft.daily_time} onChange={(event) => setDraft({ ...draft, daily_time: event.target.value })} /></label>
           <label>Timezone<Input aria-label="Import timezone" required value={draft.timezone} onChange={(event) => setDraft({ ...draft, timezone: event.target.value })} placeholder="America/New_York" /></label>
@@ -89,7 +89,7 @@ export default function ReplayAutomation({ sources, onClose, onImported }: {
           <label>Window unit<NativeSelect aria-label="Import lookback unit" value={windowUnit} onChange={(event) => setWindowUnit(event.target.value)}><option value="hours">Hours</option><option value="days">Days</option></NativeSelect></label>
         </div>
         <label>Video quality<NativeSelect aria-label="Automatic import quality" value={draft.quality} onChange={(event) => setDraft({ ...draft, quality: event.target.value as DownloadQuality })}><option value="480p">480p</option><option value="720p">720p</option><option value="1080p">1080p</option><option value="best">Best available</option></NativeSelect></label>
-        <p>Imports use native FPS and are ready for playback like manual uploads. Draw a crop in Analyze or Wisps to run analysis. Videos already imported are skipped.</p>
+        <p>Imports use native FPS and are ready for playback like manual uploads. Draw a crop in the review page to run round analysis. Videos already imported are skipped.</p>
         <div className="confirm-modal-actions"><Button variant="outline" type="button" disabled={busy || running} onClick={() => void save(true)}>Run now</Button><Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save schedule"}</Button></div>
       </form>}
       {error && <p role="alert" className="settings-error">{error}</p>}

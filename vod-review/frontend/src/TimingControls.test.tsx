@@ -25,22 +25,21 @@ it("sends download FPS alongside quality and checkpoint settings", async () => {
   const call = fetch.mock.calls.find(([url]) => String(url).endsWith("/from-url"));
   expect(JSON.parse(String(call?.[1]?.body))).toMatchObject({ target_fps: 30, quality: "720p", checkpoint_interval_seconds: 120 });
 });
-it.each(["Analyze", "Wisp classifier"])("sends a time-based interval from %s", async (mode) => {
+it("sends a time-based interval for round analysis", async () => {
   const fetch = mockApi();
   render(<App />);
-  fireEvent.mouseDown(screen.getByRole("tab", { name: mode }), { button: 0, ctrlKey: false });
   fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: "v" } });
   const interval = await screen.findByLabelText("Analysis interval in seconds");
   fireEvent.change(interval, { target: { value: "0.25" } });
   fireEvent.click(screen.getByRole("button", { name: "Process video" }));
-  const endpoint = mode === "Analyze" ? "/videos/v/process" : "/videos/v/wisps/process";
+  const endpoint = "/videos/v/process";
   await waitFor(() => expect(fetch.mock.calls.some(([url]) => String(url).endsWith(endpoint))).toBe(true));
   const call = fetch.mock.calls.find(([url]) => String(url).endsWith(endpoint));
   expect(JSON.parse(String(call?.[1]?.body))).toMatchObject({ sample_interval_seconds: 0.25 });
 });
 
 
-it("keeps polling wisp progress until completion with stable callbacks", async () => {
+it("keeps polling round progress until completion with stable callbacks", async () => {
   let reads = 0;
   const job = { id: "job", status: "running", phase: "preparing", sample_interval_seconds: 0.5,
     batch_size: 64, total_samples: 100, progress: 0, collected_samples: 0, results: [], device: "cuda" };
@@ -59,7 +58,7 @@ it("keeps polling wisp progress until completion with stable callbacks", async (
       ocr_text: null,
     };
     else if (url.endsWith("/playback")) payload = { status: "failed", error: "Test playback unavailable" };
-    else if (url.endsWith("/wisps")) {
+    else if (url.endsWith("/videos/v")) {
       reads += 1;
       if (reads < 4) {
         const active = { ...job, collected_samples: [0, 20, 60][reads - 1] };
@@ -72,10 +71,9 @@ it("keeps polling wisp progress until completion with stable callbacks", async (
     return { ok: true, status: 200, json: async () => payload } as Response;
   });
   render(<App />);
-  fireEvent.mouseDown(screen.getByRole("tab", { name: "Wisp classifier" }), { button: 0, ctrlKey: false });
   fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: "v" } });
   expect(await screen.findByRole("button", { name: "Preparing 20%" }, { timeout: 2000 })).toBeDisabled();
   expect(await screen.findByRole("button", { name: "Preparing 60%" }, { timeout: 2000 })).toBeDisabled();
-  expect(await screen.findByText("No wisps detected.", {}, { timeout: 2000 })).toBeInTheDocument();
+  expect(await screen.findByRole("button", { name: "Analyze again" }, { timeout: 2000 })).toBeEnabled();
   expect(reads).toBe(4);
 });

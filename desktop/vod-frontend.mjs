@@ -9,14 +9,12 @@ import { emitEvent, watchParent, integerOption } from "./utils.mjs";
  * Start the selected checkout's Vite server without changing its configuration.
  * Args:
  *   args: CLI arguments; --repo selects an installed VOD application, and
- *     optional --port/--backend-port isolate smoke services. --wisps is retained
- *     for compatibility and uses the same service ports.
+ *     optional --port/--backend-port isolate smoke services.
  * Returns:
  *   The listening Vite server, owned by this foreground command.
  */
 export async function startVodFrontend(args = process.argv.slice(2)) {
   const { values } = parseArgs({ args, options: {
-    wisps: { type: "boolean", default: false },
     managed: { type: "boolean", default: false },
     repo: { type: "string" },
     port: { type: "string", default: "5174" },
@@ -40,11 +38,7 @@ export async function startVodFrontend(args = process.argv.slice(2)) {
       /** Identify the proxy destination before Vite's HTML fallback. */
       configureServer(vite) {
         vite.middlewares.use((request, response, next) => {
-          if (request.url === "/__chattft_video__/identity") {
-            response.setHeader("content-type", "application/json");
-            response.setHeader("cache-control", "no-store");
-            response.end(JSON.stringify({ app: "vod", backendPort }));
-          } else if (request.url === "/__chattft_desktop__/identity" && process.env.CHATTFT_DESKTOP_IDENTITY) {
+          if (request.url === "/__chattft_desktop__/identity" && process.env.CHATTFT_DESKTOP_IDENTITY) {
             response.setHeader("x-chattft-desktop-identity", process.env.CHATTFT_DESKTOP_IDENTITY);
             response.end();
           } else next();

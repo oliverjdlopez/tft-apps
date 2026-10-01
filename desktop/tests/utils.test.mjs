@@ -95,9 +95,10 @@ test("navigation and clipboard access are limited to the intended origins", () =
 test("workspace commands allow every shell tab, including Flowchart, and nothing else", () => {
   const contents = { mainFrame: { url: "file:///shell/workspace.html" } };
   const event = { sender: contents, senderFrame: contents.mainFrame };
-  for (const action of ["chat", "rolldown", "flowchart", "compositions", "vod", "wisps", "langfuse", "database", "retry"])
+  for (const action of ["chat", "rolldown", "flowchart", "compositions", "vod", "langfuse", "database", "retry"])
     assert.equal(workspaceCommandAllowed(event, contents, contents.mainFrame.url, action), true);
   assert.equal(workspaceCommandAllowed(event, contents, contents.mainFrame.url, "devtools"), false);
+  assert.equal(workspaceCommandAllowed(event, contents, contents.mainFrame.url, "wisps"), false);
   assert.equal(workspaceCommandAllowed(event, contents, "file:///other.html", "flowchart"), false);
 });
 

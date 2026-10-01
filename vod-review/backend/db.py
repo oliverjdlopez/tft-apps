@@ -64,28 +64,6 @@ def init_db() -> None:
             class_label TEXT, confidence REAL,
             FOREIGN KEY(job_id) REFERENCES jobs(id), FOREIGN KEY(video_id) REFERENCES videos(id)
         );
-        CREATE TABLE IF NOT EXISTS annotation_projects (
-            id TEXT PRIMARY KEY, video_id TEXT NOT NULL, task TEXT NOT NULL,
-            split TEXT NOT NULL, sample_interval_seconds REAL NOT NULL,
-            locked_at TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
-            FOREIGN KEY(video_id) REFERENCES videos(id),
-            UNIQUE(video_id, task)
-        );
-        CREATE TABLE IF NOT EXISTS annotation_frames (
-            id TEXT PRIMARY KEY, project_id TEXT NOT NULL, sample_index INTEGER NOT NULL,
-            requested_timestamp_seconds REAL NOT NULL, actual_timestamp_seconds REAL,
-            status TEXT NOT NULL, image_path TEXT, annotation_path TEXT,
-            created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
-            FOREIGN KEY(project_id) REFERENCES annotation_projects(id),
-            UNIQUE(project_id, sample_index)
-        );
-        CREATE TABLE IF NOT EXISTS annotation_items (
-            id TEXT PRIMARY KEY, frame_id TEXT NOT NULL, item_index INTEGER NOT NULL,
-            label_id TEXT, x REAL NOT NULL, y REAL NOT NULL,
-            width REAL NOT NULL, height REAL NOT NULL, image_path TEXT,
-            FOREIGN KEY(frame_id) REFERENCES annotation_frames(id),
-            UNIQUE(frame_id, item_index)
-        );
         CREATE TABLE IF NOT EXISTS download_tasks (
             id TEXT PRIMARY KEY, status TEXT NOT NULL, progress REAL NOT NULL DEFAULT 0,
             video_id TEXT, error TEXT, url TEXT, start_seconds REAL, end_seconds REAL,
@@ -101,8 +79,6 @@ def init_db() -> None:
         );
         CREATE INDEX IF NOT EXISTS idx_videos_created ON videos(created_at DESC);
         CREATE INDEX IF NOT EXISTS idx_results_job_time ON results(job_id, timestamp_seconds);
-        CREATE INDEX IF NOT EXISTS idx_annotation_frames_project ON annotation_frames(project_id, sample_index);
-        CREATE INDEX IF NOT EXISTS idx_annotation_items_frame ON annotation_items(frame_id, item_index);
         """
     )
     video_columns = {row["name"] for row in connection.execute("PRAGMA table_info(videos)")}
@@ -480,22 +456,7 @@ def delete_video(video_id: str) -> Path:
     if row is None:
         connection.close()
         raise HTTPException(status_code=404, detail="Video not found")
-    project_rows = connection.execute("SELECT id FROM annotation_projects WHERE video_id=?", (video_id,)).fetchall()
-    project_ids = [row["id"] for row in project_rows]
-    frame_paths = []
-    item_paths = []
-    if project_ids:
-        placeholders = ",".join("?" for _ in project_ids)
-        frames = connection.execute(f"SELECT id, image_path, annotation_path FROM annotation_frames WHERE project_id IN ({placeholders})", project_ids).fetchall()
-        frame_ids = [frame["id"] for frame in frames]
-        frame_paths.extend(path for frame in frames for path in (frame["image_path"], frame["annotation_path"]) if path)
-        if frame_ids:
-            frame_placeholders = ",".join("?" for _ in frame_ids)
-            items = connection.execute(f"SELECT image_path FROM annotation_items WHERE frame_id IN ({frame_placeholders})", frame_ids).fetchall()
-            item_paths.extend(item["image_path"] for item in items if item["image_path"])
-            connection.execute(f"DELETE FROM annotation_items WHERE frame_id IN ({frame_placeholders})", frame_ids)
-        connection.execute(f"DELETE FROM annotation_frames WHERE project_id IN ({placeholders})", project_ids)
-        connection.execute(f"DELETE FROM annotation_projects WHERE id IN ({placeholders})", project_ids)
+    # Retired annotation tables and authored datasets are intentionally preserved.
     job_rows = connection.execute("SELECT id FROM jobs WHERE video_id=?", (video_id,)).fetchall()
     job_ids = [job["id"] for job in job_rows]
     if job_ids:
@@ -505,8 +466,6 @@ def delete_video(video_id: str) -> Path:
     connection.execute("DELETE FROM videos WHERE id=?", (video_id,))
     connection.commit()
     connection.close()
-    for path in (*frame_paths, *item_paths):
-        Path(path).unlink(missing_ok=True)
     return Path(row["path"])
 
 

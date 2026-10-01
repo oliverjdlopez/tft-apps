@@ -1,4 +1,4 @@
-/** Own one VOD backend and frontend shared by the VOD Review and Wisps views. */
+/** Own one VOD backend and frontend for VOD Review. */
 import { DesktopRuntime } from "./runtime.mjs";
 import { assertPortAvailable, waitForHttp, waitForIdentity, waitForRecord } from "./utils.mjs";
 

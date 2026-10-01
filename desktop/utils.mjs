@@ -449,7 +449,7 @@ export async function electronExecutable(cache) {
  *   Shell directory keyed by its content, leaving running launches untouched.
  */
 export async function stageWindowsShell(source, cache) {
-  const names = ["package.json", "paths.mjs", "main.mjs", "runtime.mjs", "video-runtime.mjs", "utils.mjs", "status.html", "status.js", "status.css", "workspace.mjs", "workspace-preload.cjs", "workspace.html", "workspace.js", "workspace.css"];
+  const names = ["package.json", "paths.mjs", "main.mjs", "runtime.mjs", "video-runtime.mjs", "utils.mjs", "status.html", "status.js", "status.css", "workspace.mjs", "workspace-preload.cjs", "workspace.html", "workspace.js", "workspace.css", "media.mjs", "media.js"];
   const files = await Promise.all(names.map(async (name) => [name, await readFile(path.join(source, name))]));
   const hash = createHash("sha256");
   for (const [name, content] of files) hash.update(name).update(content);
@@ -510,46 +510,15 @@ export async function createParentPipe() {
  */
 export function workspaceCommandAllowed(event, contents, shellUrl, action) {
   return event.sender === contents && event.senderFrame === contents.mainFrame
-    && event.senderFrame?.url === shellUrl && ["chat", "rolldown", "flowchart", "compositions", "vod", "wisps", "langfuse", "database", "retry"].includes(action);
+    && event.senderFrame?.url === shellUrl && ["chat", "rolldown", "flowchart", "compositions", "vod", "langfuse", "database", "media", "retry"].includes(action);
 }
 
 // ---------------------------------------------------------------------------
 //
 // Video runtime helpers
-// Identify compatible services without adopting their process lifetime.
+// Reserve ports for suite-owned video services.
 //
 // ---------------------------------------------------------------------------
-
-/**
- * Recognize a video API or the proxy frontend; reject occupied unrelated ports.
- * Args:
- *   origin: Fixed loopback URL; kind: backend or frontend; tab: vod or wisps;
- *   signal: Startup cancellation signal.
- * Returns:
- *   True for a compatible service, false only for a refused connection.
- */
-export async function probeVideoService(origin, kind, tab, signal) {
-  const endpoint = kind === "backend" ? "/openapi.json" : "/__chattft_video__/identity";
-  let response;
-  try {
-    response = await fetch(`${origin}${endpoint}`, {
-      signal: AbortSignal.any([signal, AbortSignal.timeout(3000)]), redirect: "error",
-    });
-  } catch (error) {
-    signal.throwIfAborted();
-    if (error.cause?.code === "ECONNREFUSED") return false;
-    throw new Error(`Cannot verify ${tab} ${kind} at ${origin}. Check the service and port.`);
-  }
-  try {
-    const data = await response.json();
-    if (response.ok && kind === "backend" && data.info?.title === "Framewise Video Analysis and Annotation"
-      && data.paths?.["/api/health"]?.get && data.paths?.["/api/videos"]?.get
-      && (tab !== "wisps" || data.paths?.["/api/videos/{video_id}/wisps"]?.get)) return true;
-    if (response.ok && kind === "frontend" && data.app === tab
-      && data.backendPort === (tab === "wisps" ? 8001 : 8000)) return true;
-  } catch { /* A non-JSON response is an occupied, incompatible service. */ }
-  throw new Error(`Port at ${origin} is not a compatible ${tab} ${kind}. For an older frontend, stop it and retry with the updated desktop launcher.`);
-}
 
 /**
  * Reject any occupied video port before starting either suite-owned service.

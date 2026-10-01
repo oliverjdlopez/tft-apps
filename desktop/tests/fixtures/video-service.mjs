@@ -6,7 +6,7 @@ const server = http.createServer((request, response) => {
   response.setHeader("content-type", "application/json");
   if (request.url === "/__chattft_desktop__/identity") response.setHeader("x-chattft-desktop-identity", process.env.CHATTFT_DESKTOP_IDENTITY);
   response.end(JSON.stringify(kind === "backend" && request.url === "/openapi.json"
-    ? { info: { title: "Framewise Video Analysis and Annotation" }, paths: {
+    ? { info: { title: "VOD Review and Round Classification" }, paths: {
       "/api/health": { get: {} }, "/api/videos": { get: {} },
     } } : kind === "frontend" ? { app: "vod", backendPort: 8000 } : { status: "ok" }));
 });

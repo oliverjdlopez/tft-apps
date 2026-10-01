@@ -58,6 +58,9 @@ test("Windows staging copies shell only and source edits produce a fresh immutab
   assert.equal(await stageWindowsShell(path.join(root, "desktop"), cache), staged);
   assert.match(await readFile(path.join(staged, "workspace.mjs"), "utf8"), /persist:cloudbeaver/);
   assert.match(await readFile(path.join(staged, "main.mjs"), "utf8"), /sandbox: true/);
+  for (const name of ["media.mjs", "media.js"]) {
+    assert.equal(await readFile(path.join(staged, name), "utf8"), await readFile(path.join(root, "desktop", name), "utf8"));
+  }
   await assert.rejects(readFile(path.join(staged, "backend.py")), { code: "ENOENT" });
   await writeFile(path.join(staged, "status.css"), "new style");
   const updated = await stageWindowsShell(staged, cache);

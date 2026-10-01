@@ -138,18 +138,18 @@ test("Force Reload restarts ChatTFT once, preserves external tabs, and handles f
   const force = commands.find((item) => item.label === "Force Reload").click;
   const workspace = Workspace.current;
   const initial = Runtime.instances[0];
-  assert.equal(videos.length, 1, "startup of both tabs creates one runtime");
+  assert.equal(videos.length, 1, "startup creates one VOD runtime");
   assert.equal(videos[0].starts, 1);
   videos[0].emit("failure", new Error("Video failed"));
-  assert.deepEqual(workspace.failed, ["vod", "wisps"]);
+  assert.deepEqual(workspace.failed, ["vod"]);
   let stopped;
   videos[0].gate = new Promise((resolve) => { stopped = resolve; });
   const vodRetry = workspace.ensureVideo("vod");
-  const wispsRetry = workspace.ensureVideo("wisps");
-  assert.equal(vodRetry, wispsRetry);
+  const secondRetry = workspace.ensureVideo("vod");
+  assert.equal(vodRetry, secondRetry);
   assert.equal(videos[0].stops, 1);
   stopped();
-  await Promise.all([vodRetry, wispsRetry]);
+  await Promise.all([vodRetry, secondRetry]);
   assert.equal(videos.length, 2);
   assert.equal(videos[1].starts, 1);
 
