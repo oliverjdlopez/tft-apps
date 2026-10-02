@@ -1,0 +1,84 @@
+{
+  "lane": "UN4-2",
+  "title": "Unit build alternatives and their board conditions",
+  "cases": [
+    {
+      "id": "UN4-2-C01",
+      "title": "AP-oriented Nidalee within comparable boards",
+      "lane": "UN4-2",
+      "subject": "units",
+      "original_question": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?",
+      "question": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "UN4-2-R2-P1"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Nidalee2 with exactly three ordinary items, partitioning explicit AP-oriented, AD-oriented and mixed triplets; compare within observed cores and Invoker strata.",
+      "plan": "rank_unit_loadouts discovers actual exact trios; use the item catalogue to declare a reproducible orientation taxonomy. compare_cohorts contrasts named triplets within shared supports and trait contribution intervals. query_cohort/deltas discovers the allied package, with entity names retained in grouped rows.",
+      "checks": "Keep mixed/ambiguous trios separate and show support/outcomes for each compared package. Investigate whether differences persist inside named contexts, not only aggregate AP/AD labels. No fixed preferred build or ranking is expected.",
+      "limits": "No AP/AD filter or observed Adaptor-form field exists. A named item-based orientation proxy must be explicit and must not be called confirmed ranged/melee form. Other inventory and global investment remain residual confounders."
+    },
+    {
+      "id": "UN4-2-C02",
+      "title": "Azir’s Shojin slot",
+      "lane": "UN4-2",
+      "subject": "units",
+      "original_question": "Does three-star Azir need Shojin, or can I build Guinsoo’s plus two damage items? Are there boards where spending that slot on mana looks more worthwhile?",
+      "question": "Does three-star Azir need Shojin, or can I build Guinsoo’s plus two damage items? Are there boards where spending that slot on mana looks more worthwhile?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "UN4-2-R2-P2"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Azir3 with Guinsoo's, one shared named damage item, and either Shojin or a second named damage item, ordinary three-item trios only.",
+      "plan": "Discover exact fixed-pair loadouts, classify the second damage item without assuming all damage items lack mana benefits, and compare explicit holder trios. Repeat in supported Blackthorn/Executioner/Summoner contribution contexts and named frontline shells.",
+      "checks": "Preserve Guinsoo's and the shared item, report exact third-slot cells with counts/mean/top4/win and available intervals. Explain board-context variation from crossed observations, not a mana theory alone.",
+      "limits": "No mana-generation/combat simulator gold. Additional damage-item definitions are preparation choices; total board-item equality and Blackthorn sacrifice are not enforceable."
+    },
+    {
+      "id": "UN4-2-C03",
+      "title": "Rapidfire-emblem Nidalee as an exceptional build",
+      "lane": "UN4-2",
+      "subject": "units",
+      "original_question": "Does AP Nidalee with a Rapidfire emblem actually outperform ordinary AP builds, or is it mainly showing up on much stronger endgame boards?",
+      "question": "Does AP Nidalee with a Rapidfire emblem actually outperform ordinary AP builds, or is it mainly showing up on much stronger endgame boards?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "UN4-2-R2-P1"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Nidalee2 with Rapidfire Emblem plus two declared AP-oriented ordinary items versus the same pair plus each observed ordinary third; three items on one holder.",
+      "plan": "Discover ordinary pairs and emblem loadouts, then compare exact holder-bound packages within supported Rapidfire contribution and allied-core strata. Query final level, board item count, frontline upgrades and other carry loadouts as comparability diagnostics.",
+      "checks": "Bind the emblem to Nidalee and preserve the shared pair. Show cell samples/outcomes and whether support differs across observed packages. Do not use emblem-wide or Nidalee-wide averages as the exact build comparison.",
+      "limits": "AP orientation is an item-defined proxy, not guaranteed form. Emblem source and complete board wealth cannot be controlled with current tools; residual selection may explain outcome gaps."
+    },
+    {
+      "id": "UN4-2-C04",
+      "title": "Ahri double Blue Buff outside the simulator",
+      "lane": "UN4-2",
+      "subject": "units",
+      "original_question": "A simulator suggested double Blue Buff for Ahri. Do two-star Ahri endgame boards with that build actually hold up against a single mana item and two damage items, and does the surrounding board change the comparison?",
+      "question": "A simulator suggested double Blue Buff for Ahri. Do two-star Ahri endgame boards with that build actually hold up against a single mana item and two damage items, and does the surrounding board change the comparison?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Ahri2: two ordinary Blue Buff copies plus a shared damage item versus one Blue Buff plus that item and another damage item. Shojin alternatives are separate.",
+      "plan": "Resolve Blue Buff and query rank_unit_loadouts with duplicate required item terms: distinct-slot matching supports multiplicity discovery. If the chosen scope/reference permits and records this inventory, compare exact single-copy Ahri trios using explicit item multiplicity and per-holder item count. Split Blossom/Spellweaver/Invoker contexts.",
+      "checks": "Verify two copies, not the same item condition repeated twice with default one-copy semantics. Preserve the shared damage item and star level, show counts/outcomes, and report an empty/suppressed build distinctly from an illegality conclusion.",
+      "limits": "The local catalogue does not establish Blue Buff uniqueness/stacking legality for 18.3B. Do not invent a rule or fabricate sample support; record legality/reference uncertainty while still performing supported discovery. The simulator is motivation, not an expected result."
+    }
+  ]
+}

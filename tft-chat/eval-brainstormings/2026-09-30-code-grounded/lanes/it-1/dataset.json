@@ -1,0 +1,134 @@
+{
+  "items": [
+    {
+      "case": "IT-1-C01",
+      "input": "How do Kraken's Fury and Guinsoo's Rageblade builds compare on Aphelios? Are there good builds without Rageblade?\n\nFor this comparison, focus on two-star Aphelios boards where he carries exactly three ordinary completed items. First discover the remaining item pairs that actually appear; do not assume a particular pair. Compare Kraken's Fury without Rageblade, Rageblade without Kraken's Fury, and builds with both when the data supports them.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve the player-named holder and items against the active analysis scope, then investigate two-star, exactly three-item Aphelios loadouts. Describe the observed alternative triplets from the returned rows; paginate when more results are available and do not invent unsupported builds.",
+          "For build discovery, report each relevant triplet's board count and loadout pick rate with its Aphelios-holder denominator. Compare Kraken's Fury and Guinsoo's Rageblade packages using explicit holder-bound item cohorts, guarding against multiple Aphelios copies when combining item predicates.",
+          "Where possible, compare the same other-item pair across the Kraken's Fury and Rageblade alternatives inside shared observed companion or frontline conditions and final-level slices. Keep both-items builds separate from single-item alternatives. If there is no publicly supported common pair, report descriptive whole-build results and state that the one-slot contrast is unresolved.",
+          "For reportable comparisons, give boards, mean placement, top-four rate and win rate, plus returned effect intervals, overlap, suppression and warning information. Interpret lower mean placement as better and rates in their stated direction; do not treat a suppressed or missing row as zero.",
+          "State that exact whole-board equipment matching and global investment control are unavailable; disclose residual differences in companion investment. Do not reuse historical web results as current gold evidence or claim that an observed association proves item causation.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade against the active scoped evidence actually returned. Either alternative may be favored; unsupported or suppressed estimates must be described as unresolved rather than as zero or as a fixed historical winner."
+      },
+      "metadata": {
+        "source_case_id": "IT-1-C01",
+        "lane": "IT-1",
+        "subject": "items",
+        "proposal_lineage": [
+          "IT-1-R2-P1"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_item_and_holder_names",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_aphelios_loadouts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts",
+              "arguments": {
+                "star_level": 2,
+                "item_count": 3
+              }
+            }
+          },
+          {
+            "name": "compare_build_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-1/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-1-C02",
+      "input": "With Bloodthirster and Infinity Edge on Brambleback, how does Titan's Resolve compare with Edge of Night for the last slot?\n\nCompare two-star Brambleback carrying exactly three ordinary completed items: Bloodthirster and Infinity Edge plus either Titan's Resolve or Edge of Night. Keep all three items on that single holder; the named pair is fixed even if either build is rare.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Brambleback and the four named items against the active analysis scope. Check two-star, three-item Brambleback loadouts containing the fixed Bloodthirster and Infinity Edge pair, and determine whether each named third-item triplet has reportable support. Preserve the specified pair even when rare.",
+          "Compare the exact Titan's Resolve and Edge of Night alternatives with holder-bound item conditions and a one-Brambleback-copy guard for joint predicates. Use shared observed final-level and core conditions where supported; use returned companion/frontline loadouts to describe remaining investment rather than asserting exact whole-board equality.",
+          "Report each cohort's board count and, where available, histogram, mean placement, top-four rate and win rate, together with returned target-minus-baseline effects and intervals, overlap, suppression and warnings. Distinguish an explicitly empty cohort from a missing or suppressed result; do not substitute item marginals for this fixed-build comparison.",
+          "Interpret lower mean placement as better and report rates in their stated direction. If one or both alternatives lack reportable samples, say which comparison cannot be estimated; do not infer zero performance or force a winner.",
+          "Treat the execution scope's Set 18 standard-ranked patch and collection provenance as a preflight requirement for post-September-24/28 interpretation because calls have no date or subpatch filter. Do not infer cast timing or stack speed from placement outcomes.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade against the active scoped evidence actually returned. Either alternative may be favored; if support is insufficient, report the specific missing or suppressed comparison without converting it to zero or borrowing historical item marginals."
+      },
+      "metadata": {
+        "source_case_id": "IT-1-C02",
+        "lane": "IT-1",
+        "subject": "items",
+        "proposal_lineage": [
+          "IT-1-R2-P2"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_item_and_holder_names",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_fixed_pair_loadouts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts",
+              "arguments": {
+                "star_level": 2,
+                "item_count": 3
+              }
+            }
+          },
+          {
+            "name": "compare_third_item_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-1/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

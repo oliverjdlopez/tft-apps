@@ -44,3 +44,21 @@ uses each current authored evaluator definition. Source provider secret keys
 are never exported through platform APIs. The normal destination setup installs
 its backend connection and the copied application OpenAI credential without
 making model calls.
+
+On 2026-10-01, the user requested copying the populated unit expert dataset into
+this suite and running it here. The existing `chattft/unit-expert` dataset kept
+its destination ID and received all 17 active cases from the source
+`unit-expert` dataset. Inputs, expected outputs, metadata, statuses and all 51
+deterministic checks were verified against a fresh source export. The local
+suite definition retains the source's 40-turn limit and `unit_expert` assistant;
+the destination's baseline prompts and native grading configuration remain in
+use. The private export, prior destination definition, item-ID mapping and run
+receipt are under ignored `.migration/unit-expert-20261001/`. Source services
+were accessed only to read dataset content; execution uses this suite's runner
+and Langfuse project on port 15510.
+
+The 2026-10-02 preservation of the older `tft-suite` checkout retains its
+remaining authored evaluation files, immutable snapshots and complete Git
+history without replacing this suite's active catalogue. See the
+[retirement record](retiring-tft-suite.md) for archive locations, worktree
+handling, recovery and the current relocation status.

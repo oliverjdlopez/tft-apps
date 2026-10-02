@@ -1,0 +1,1166 @@
+{
+  "items": [
+    {
+      "case": "CO4-1-C01",
+      "expected_output": {
+        "reference": "Grade the evidence-relative candidate discovery, joint package support, outcomes, and honest scope of the ordinary-resource proxy. Any supported candidates and outcome direction are acceptable; no fixed winning comps are expected.",
+        "requirements": [
+          "Investigate the applicable scoped Set 18 standard-ranked observations without assuming a winning repertoire in advance; state any scope or candidate-coverage limitation rather than reusing historical or online performance as ground truth.",
+          "Identify two or three substantively different AP-oriented packages from observed named carry builds and recurring support combinations. For each, name the core units and relevant item-holder needs, and verify joint package membership instead of inferring a core from separate unit marginals.",
+          "Give the reportable board counts and available mean placement, top-four, and win outcomes for the builds or packages used to support the recommendations. Explain the sample denominator and interpret lower mean placement as better; popularity alone does not establish a good learning choice.",
+          "Describe the actual ordinary-item and support-investment proxies inspected. Do not claim whole-board artifact, emblem, or high-roll exclusion from a carry-only item check, and do not treat observed final three-star support counts as a measure of luck. Identify uninspected candidates or pages that limit completeness.",
+          "Treat observed final-board outcomes as associations rather than proof of a comp's causal strength or the probability that choosing it succeeds. Report suppressed or unavailable results as unknown, not zero."
+        ]
+      },
+      "input": "What two or three AP comps are worth learning on 18.3B without relying on an artifact, emblem, or a big reroll high roll, and what core units and item needs distinguish them?\n\nI’m building an AP learning repertoire for a verified 18.3B standard-ranked scope. Please start from ordinary-item named carry builds and avoid relying on multiple three-star supports; Ahri, Soraka, and Zyra are leads to investigate, not the only candidates. Since the available board filters cannot certify that every item and star level across a whole board is ordinary, show which carry and support proxies you inspected and how far the evidence supports the broader restriction.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-1-C01",
+        "case_id": "comp-expert/CO4-1-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "investigates_named_cohort_packages"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_supported_packages"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-1",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_case_id": "CO4-1-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "0f92e89bf65e461714ef518c507bbac00a77e96c059b3c03366a722f50fc3404",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-1-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-1-C02",
+      "expected_output": {
+        "reference": "Grade the explicit carry-build categories, common-denominator top-four contribution, win tradeoff, separate Zyra–Amumu context, and limits on whole-board partition claims. Either result direction or an unresolved comparison is acceptable.",
+        "requirements": [
+          "Investigate current scoped Set 18 standard-ranked results without assuming whether Veigar–Ornn belongs in the repertoire or which item category wins.",
+          "Discover observed Veigar loadouts and named Veigar–Ornn support/build cells. Compare named ordinary-item carry builds with specialist-item versions where reportable, keeping Veigar reroll boards eligible and item-holder conditions explicit.",
+          "For clearly defined nonoverlapping categories within a named reportable Veigar–Ornn family, report both top-four rate and each category's contribution to that family's observed top fours using the same denominator. Give board counts and the available win-rate tradeoff. Do not infer top-four contribution from a higher category rate or sum overlapping specialist cohorts.",
+          "Compare a separately defined ordinary Zyra–Amumu package as repertoire context, not as a matched Veigar swap. Give its sample size and available top-four, win, and placement outcomes, and state why differences across those package families do not isolate an item effect.",
+          "Do not call a Veigar ordinary-item board globally ordinary or claim the specialist-item partition covers all boards unless whole-board item counts and disjoint categories are actually certified. Avoid deriving exact counts from rounded rates; keep suppressed or unavailable categories unknown rather than zero.",
+          "State any scope and sample readiness limits. Interpret final-board associations carefully; they do not establish causal item effects or the probability that choosing a reroll succeeds."
+        ]
+      },
+      "input": "For an ordinary-item AP repertoire on 18.3B, should Veigar–Ornn be on my list if I care more about top fours than firsts, or is its good placement mostly coming from specialist-item boards?\n\nPlease compare named ordinary-item Veigar–Ornn carry builds with observed Veigar specialist-item versions, allowing Veigar reroll, and prioritize top-four outcomes. As repertoire context, look at a separately defined ordinary Zyra–Amumu package; it is a comparison of packages, not a matched Veigar swap. Ordinary items on Veigar alone do not establish that the rest of his board is ordinary, so describe this as a carry-build comparison and say what whole-board evidence is unavailable.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-1-C02",
+        "case_id": "comp-expert/CO4-1-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "discovers_veigar_loadouts"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_reportable_build_groups"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-1",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_case_id": "CO4-1-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "5b7986f2e365b0d21c7ee36f1daaccf14d7bdba76b0e3033e73a866514ea8965",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-1-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-1-C03",
+      "expected_output": {
+        "reference": "Grade the joint role-proxy definitions, coverage and outcome reporting, named zero-item Kha’Zix sensitivity, and distinction between end-state associations and reroll success probability. Either supported strategic conclusion or an explicitly unresolved comparison is acceptable.",
+        "requirements": [
+          "Investigate applicable scoped Set 18 standard-ranked three-star Azir board results without presupposing whether Azir reroll is worth choosing or attributing the outcome to one teammate.",
+          "Define explicit primary-carry, co-carry, support, and ambiguous role-proxy categories using joint named-unit star/item-count conditions. Preserve ambiguous and incomplete coverage rather than forcing all boards into a role; do not confuse a missing Kha’Zix with a present zero-item Kha’Zix.",
+          "Include the three-completed-item Azir and present zero-item Kha’Zix sensitivity as its own explicitly defined cohort when reportable. Identify recurring core candidates through joint checks, not separate partner marginals.",
+          "For reportable role-proxy groups, give board counts and shares over a clearly named three-star-Azir denominator, plus available mean placement, top-four, and win outcomes. Identify suppressed cells as unknown and state how much of the denominator the explicit groups cover.",
+          "Separate high-performing itemized Azir end states from the chance of success after choosing reroll. Explain that final boards do not expose actual damage roles, reroll attempts, timing, generic teammate investment totals, form, or sacrifice choice, and label bounded role partitioning accordingly.",
+          "State scope and sample readiness limitations without using a generic refusal in place of investigating supported cohorts. Interpret lower mean placement as better and avoid causal claims from final-board associations."
+        ]
+      },
+      "input": "Is Azir reroll actually a reasonable comp to choose on 18.3B, or do his good three-star stats mostly come from boards where someone else is carrying? What would make the Azir version worth choosing?\n\nPlease investigate Set 18 standard-ranked final boards with three-star Azir, separating named carry-investment proxies into primary-carry, co-carry, support, and ambiguous end states based on Azir's completed items and named teammate investment. Include the sensitivity where Azir has three completed items and Kha’Zix is present with zero items. These are board-state proxies: item counts do not reveal damage roles, reroll attempts, timing, or intent, and a bounded candidate list may leave some boards unclassified.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-1-C03",
+        "case_id": "comp-expert/CO4-1-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_joint_azir_role_proxies"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_reportable_role_groups"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-1",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-1-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_case_id": "CO4-1-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "6bb02811ac48244ba7371f2626d179334df04003f32d5d79876da797c74af302",
+        "source_status": "disputed",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-1-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C01",
+      "expected_output": {
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes.",
+        "requirements": [
+          "Name the declared population and scope actually supplied, including patch and population provenance when available; distinguish a candidate “five-cost soup” proxy from an exhaustive family definition.",
+          "Identify each supported recurring core using joint membership evidence, with its observed board count and denominator. Separate joint recurrence from individual unit frequency.",
+          "Describe flexible partners or alternatives only for inspected candidate cores, and state which candidate pages or pairs were checked; do not claim exhaustive clustering.",
+          "Report outcome summaries only with their observed denominators and explain overlap among cores. Treat suppressed or unavailable estimates as unknown, not zero.",
+          "Avoid inferring causation or optimality from final-board associations; explain that exact global five-cost counts and full-roster partitions are not available from the public filters."
+        ]
+      },
+      "input": "People keep calling the level-nine boards “five-cost soup,” but they don't all look alike. What recurring cores show up in those endgame boards, and which units are actually flexible around them?\n\nBegin with final-level-nine boards in the available confirmed Set 18 standard-ranked scope. Discover cost-five partner frequencies, then use named candidate pairs/cores to verify joint recurrence. Do not define the family by excluding lower-cost anchors.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C01",
+        "case_id": "comp-expert/CO4-2-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-2-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "6baf55754810c4ef3e7a02239784386b1dc0eeedf912d93cf3ef12a5089798d6",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C02",
+      "expected_output": {
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes.",
+        "requirements": [
+          "Name the scope actually supplied and define the Veigar three-star plus active Elderwood family; clarify that active trait status is based on recorded board facts.",
+          "Report measured joint support for each named core with board counts and denominators, and distinguish it from separate marginal unit frequencies.",
+          "Describe the principal observed partner/flex patterns within the candidates examined, including relevant final level, partner star, or holder-loadout context when reportable.",
+          "Compare alleged core-member presence and absence only where both estimates are reportable; suppressed groups remain unknown rather than evidence of absence.",
+          "Describe outcomes as associations among completed boards, not a required guide roster or proof that a unit caused the outcome; note that complete rosters and exact flex slots are unavailable."
+        ]
+      },
+      "input": "When I look up Elderwood Veigar, the finished boards aren't all the same. Which units keep showing up together, and what are the main ways people fill the remaining slots?\n\nInvestigate all-placement final boards containing three-star Veigar and a recorded active Elderwood trait. Do not require Ornn or any guide roster up front; discover candidate cores and flex partners from the observed boards.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C02",
+        "case_id": "comp-expert/CO4-2-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-2-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "a3a4520d70fa4f2c018d3efe0096889eb63c583080a407acbc23648ee8731773",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C03",
+      "expected_output": {
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes.",
+        "requirements": [
+          "Define the operational population and the itemized-carry versus filler proxies from observable board fields; do not present these proxies as a generic AD-role classifier.",
+          "Cover all six pairs: Aphelios–Brambleback, Aphelios–Sivir, Aphelios–Nidalee, Brambleback–Sivir, Brambleback–Nidalee, and Sivir–Nidalee. Give each inspected pair’s support count and denominator when reportable.",
+          "Verify recurring shared-support claims with joint package evidence. Separate pair membership from higher-order intersections and identify inspected candidate/page coverage.",
+          "Report overlapping pair or triple cells as overlapping; do not sum them into a unique family or claim a union denominator without prepared evidence.",
+          "Summarize observed outcomes with denominators where available, and avoid claiming that a particular carry pairing caused the result or is universally best."
+        ]
+      },
+      "input": "In finished AD boards, are Aphelios–Brambleback and Sivir–Nidalee really two fixed pairs, or do the carries recombine into other recurring boards? Which support units stay together when they do?\n\nTreat “finished AD boards” as a player label to operationalize transparently. Investigate all six named pairs among Aphelios, Brambleback, Sivir, and Nidalee, plus selected triple/quad overlaps; distinguish itemized-carry proxies from low-item/filler proxies using observable item counts or loadouts.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C03",
+        "case_id": "comp-expert/CO4-2-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "830de2c26614aebbca0dd45015d94d8655f1e3657736d409c945507b06ee84ec",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C04",
+      "expected_output": {
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes.",
+        "requirements": [
+          "Define Zyra-only, Soraka-only, and both-carry populations and explain the observable itemization proxy used; keep the three populations distinct.",
+          "Interpret “Malphite and Sentinel aren’t the frontline” as boards lacking both named anchors for the primary analysis, and report single-anchor-absent variants separately if inspected.",
+          "Identify recurring replacement frontline/support packages with joint recurrence counts and denominators, rather than relying on isolated tank rankings.",
+          "Show relevant level, board-size, and item-budget context when supported, and distinguish measured packages from scattered or suppressed groups.",
+          "Do not infer that a board was an emergency choice or that a package is causally better; final-board records cannot reveal intent, timing, or full deployed-slot equivalence."
+        ]
+      },
+      "input": "For finished Zyra/Soraka boards, what does the rest of the team look like when Malphite and Sentinel aren't the frontline? Are there recurring alternatives, or just scattered emergency boards?\n\nAnalyze completed boards with Zyra, Soraka, or both as separate inclusive families, using observable itemization to distinguish invested from low-item carry proxies. For the main question, exclude both Malphite and Sentinel; separately label any variants missing only one anchor.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C04",
+        "case_id": "comp-expert/CO4-2-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "32a7449e2419f83390d403ec916da7afae351a5e35bbbce2a5f921102ccf9ef7",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C04",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C05",
+      "expected_output": {
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes.",
+        "requirements": [
+          "Define the top-four population and observable itemization proxy; state whether placement-specific support was complete or suppressed.",
+          "Report Teemo-carry and Teemo-companion recurrence using top-four-specific counts and denominators from reportable comparison histograms or complete returned placement cells. Label incomplete support when suppressed placement cells prevent an exact count; do not reconstruct suppressed cells.",
+          "Identify recurring cores through joint membership checks rather than Teemo presence or separate marginal frequencies alone.",
+          "Keep any all-placement discovery or sensitivity results clearly separate from top-four recurrence and outcome rates; do not infer top-four totals from suppressed groups.",
+          "Report available placement outcomes with their denominators and avoid causal claims about Teemo itemization or composition identity; state the complete-roster and role-classification limits."
+        ]
+      },
+      "input": "When Teemo shows up in several top-four endgame boards, are those actually the same composition? What recurring cores separate Teemo carry boards from boards that just keep him alongside another carry?\n\nFocus on Teemo-containing top-four final boards (placements 1–4), using itemized versus low-item Teemo as a stated carry/companion proxy. Preserve an all-placement sensitivity analysis separately; do not replace the top-four population with all boards.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C05",
+        "case_id": "comp-expert/CO4-2-C05",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C05",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "7cc18b7355264342c00ef66e296d54c3a1969ab0eb65910d9d29ddcc70ffe558",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C05",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C06",
+      "expected_output": {
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes.",
+        "requirements": [
+          "Define each of the three named end-state populations using observable star, item-count, and trait-contribution fields; state that these are final-board proxies for player labels.",
+          "Report each candidate core’s joint recurrence, count, and denominator, and distinguish core support from marginal unit or trait frequency.",
+          "Measure and describe the hybrid overlap with a valid shared population or grouped-query approach; do not add overlapping family counts as if they were disjoint.",
+          "Show level, board-size, and investment differences where reportable, and compare outcomes only with their observed denominators and support caveats.",
+          "Do not infer reroll process, Alpha Mark ownership, sacrifice events, combat behavior, or causation; explain that contains-core evidence cannot identify every flex slot or full roster."
+        ]
+      },
+      "input": "Are the finished boards people call Warwick–Murkwolf reroll actually the same family as vertical Riftbeast boards that carry Murkwolf? Which units define each core, and where do they overlap?\n\nCompare itemized Murkwolf end states across three explicitly labeled populations: three-star Murkwolf with three-star Warwick; itemized Murkwolf with higher recorded Riftbeast contribution strata; and their hybrid intersection. Keep Murkwolf star/item investment and Warwick investment visible.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C06",
+        "case_id": "comp-expert/CO4-2-C06",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "compare_cohorts",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort",
+              "compare_cohorts"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C06",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "b1a9b89879e50e3cac5a2af22d88e8f8f9c2cc81c1676a4603d042b1a8b811bf",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C06",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C01",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report what the applicable scoped observations support, including an inconclusive or unavailable comparison when warranted; no package winner is presumed.",
+        "requirements": [
+          "Establish the observed AD-oriented Nidalee item-build strata alongside Sivir on final level-eight boards, and ensure Malphite is absent from the target population.",
+          "Identify recurring frontline and support combinations using joint board evidence, with counts and mean placement, top-four rate, and win rate for supported package comparisons; distinguish observed package results from marginal partner frequencies.",
+          "Compare packages only within comparable named carry and tank investment strata where supported, and state clearly which emblem restriction was actually inspected. Equipped-emblem exclusions do not establish that no other trait grant occurred.",
+          "Treat an absent or suppressed package as unknown rather than zero, describe outcomes as final-board associations, and do not use historical 18.2 guide numbers as current outcome evidence."
+        ]
+      },
+      "input": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.\n\nPlease treat this as a final level-eight comparison with Nidalee and Sivir present and Malphite absent. Establish the AD-oriented Nidalee variants from observed named item builds, then compare supported frontline and support packages at comparable named carry and tank investment. I want the emblem-free intent checked as far as the available board evidence allows: report inspected equipped-emblem restrictions separately, since those do not rule out every possible trait grant.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C01",
+        "case_id": "comp-expert/CO4-3-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed packages"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect frontline and support patterns"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect frontline and support patterns",
+            "original_values": [
+              "get_cohort_unit_deltas",
+              "query_cohort",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-3-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "4475da69ff160d9f96bcb04e2378c47d53956f0d8900ddf335a6998e92982c33",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C02",
+      "expected_output": {
+        "reference": "Evidence-relative grading: no tank package is designated the winner. Use applicable scoped results and identify sparse, overlapping, or unsupported comparisons honestly.",
+        "requirements": [
+          "Analyze itemized Master Yi plus Kog'Maw boards with Rengar absent, keeping Yi two-star and three-star cohorts distinct and separating supported final-level strata.",
+          "Define Vi-focused and Krug-focused patterns from explicit observed star and named item allocations; report shared-tank and unclear-investment boards separately instead of assigning them to one side.",
+          "Report joint recurrence and sample counts with mean placement, top-four rate, win rate, and observed supporting units or traits for supported package comparisons.",
+          "Distinguish tank identity from investment differences and from Yi's item build. State that tank investment is a board proxy rather than measured damage absorbed, and do not claim matched artifact/emblem totals or a complete equal-budget comparison."
+        ]
+      },
+      "input": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.\n\nFocus on final boards with itemized Master Yi and Kog'Maw, with Rengar absent. Separate Yi two-star and three-star and common final-level strata where the samples support it. Compare Vi-focused, Krug-focused, shared-investment, and unclear frontline patterns; a board containing both tanks must remain visible as a shared case. Use star and named item investment only as observable proxies for tank investment, not as damage-absorbed roles or equal whole-board budgets.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C02",
+        "case_id": "comp-expert/CO4-3-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare frontline allocations"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect tank and companion patterns"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect tank and companion patterns",
+            "original_values": [
+              "get_cohort_unit_deltas",
+              "query_cohort",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-3-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "cabd425c78eb277a50ef0dedf6b27013bc20a31ad8143f36e0e82f96d6c75f91",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C03",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report each supported level/package result as observed; do not presume a winning trait package or interpret an unavailable cell as zero.",
+        "requirements": [
+          "Compare all four package-by-level cells: Yorick plus Karma at levels eight and nine, and Alune plus Amumu at levels eight and nine, with Ahri and Sett present in the shared context; keep shared Ahri and Sett star and named item investment strata explicit where supported.",
+          "For supported cells report board counts, mean placement, top-four and win rates, and confidence intervals where available; identify overlapping boards before describing the pairs as exclusive.",
+          "Inspect remaining support units and recorded Blossom and Executioner contribution differences using joint board evidence, not trait labels alone.",
+          "Explain that a pair condition means those units are present, not that the board has an exact complete roster; equal final level does not guarantee equal deployed capacity. Do not assert controlled global budget or special-state matching."
+        ]
+      },
+      "input": "With Ahri and Sett on my final board, how does keeping Yorick and Karma for the Blossom package compare with using Alune and Amumu for an Executioner package? Are the results different at level eight and level nine?\n\nCompare final boards containing Ahri and Sett with the Yorick-plus-Karma partner pair against boards with the Alune-plus-Amumu pair, separately at levels eight and nine. Keep shared Ahri and Sett star and named item investment strata explicit where supported. Treat boards that satisfy both pairs as an overlapping package and report them separately when the comparison supports doing so. Inspect the remaining supports and actual trait contributions rather than assuming the package labels alone describe the board.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C03",
+        "case_id": "comp-expert/CO4-3-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare partner packages by level"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect partner and trait composition"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect partner and trait composition",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "0ac1519727438751ac455b2fd9241e85db7e492f838094d7719a495b22f29986",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C04",
+      "expected_output": {
+        "reference": "Evidence-relative grading: describe the package associations returned for the scoped population; no Solar or Adaptor result is presumed superior.",
+        "requirements": [
+          "Keep the required three-star Akali and Camille anchors and identify the actual observed support-unit star and item-build patterns that define the compared Solar-heavy and Adaptor-focused packages.",
+          "Explain which support units occur together and report counts and mean placement, top-four and win rates for supported complete and incomplete named upgrade patterns, retaining those groups separately.",
+          "Compare within common final levels and named additional-upgrade or item strata when supported, and describe other observed three-star and item differences without generalizing from a selected high-placement subset.",
+          "Do not infer Adaptor form from a label or assert control of total three-stars, artifact count, upgraded-board cost, or broader equality that the available filters cannot enforce."
+        ]
+      },
+      "input": "With Akali and Camille both three-star, how do Solar-heavy end boards compare with Adaptor-focused support packages? Which supporting units change together, and does the comparison hold when the other three-stars and artifacts are similar?\n\nRestrict the investigation to final boards with three-star Akali and Camille. Define Solar-heavy and Adaptor-focused as explicit observed support packages, keeping supporting-unit stars and named item builds visible. Compare complete named support patterns and incomplete support-upgrade patterns separately, and use common final levels and named additional-upgrade or item strata where available. The available board facts do not identify Adaptor form or provide a global three-star, artifact-count, or upgraded-board-cost filter, so describe those limits instead of claiming exact equality.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C04",
+        "case_id": "comp-expert/CO4-3-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare named support packages"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "discover joint support patterns"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "discover joint support patterns",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "0f5bf4211b11f43241560e8fda51fb079c3ede8fd99808ac49e112b6b85bf9bc",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C04",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C05",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report actual scoped package results or an unresolved comparison; the reference carries no assumed payoff direction.",
+        "requirements": [
+          "Compare Ahri-Morgana end boards at the same final level across the Alune/Lux/Taric core and observed Kog'Maw- or Hecarim-containing support variants, stating the actual bounded package definitions and keeping shared named carry/tank investment strata explicit where supported.",
+          "Name the other observed supporting units or explicitly describe the bounded core, and report sample counts, mean placement, top-four rate, win rate, and supported trait contribution differences.",
+          "Report package overlap rather than assuming Kog'Maw and Hecarim variants are mutually exclusive. Treat generic Lux as heterogeneous unless an observed identity resolves the variant.",
+          "Do not use broad composition-family totals as variant denominators or claim full-roster closure, exact board capacity, global special-item exclusion, or a controlled Lux choice based on unrelated board traits."
+        ]
+      },
+      "input": "For Ahri–Morgana end boards, is there actually a payoff to the Alune/Lux/Taric support package compared with versions using Kog'Maw or Hecarim? I'd like a comparison at the same final level, including what fills the remaining slots.\n\nCompare final boards with Ahri and Morgana present at the same final level: the Alune/Lux/Taric support core against observed Kog'Maw-containing and Hecarim-containing versions. Discover what else fills the board and keep shared named Ahri and Morgana carry and tank investment strata explicit where the observations support them. Report overlap where boards satisfy more than one package condition. Resolve and describe the observed Lux identity if the data exposes it; a generic Lux observation by itself does not identify which variant is present. Same level is a useful stratum, not proof of equal capacity or an exact roster match.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C05",
+        "case_id": "comp-expert/CO4-3-C05",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare same-level package cohorts"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect supporting roster and traits"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect supporting roster and traits",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C05",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "6b58438caa90ee81fd496d040ab40bf72ec445310769d3d3d384e3e0d10c904d",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C05",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-4-C01",
+      "expected_output": {
+        "reference": "Grade the evidence-relative package discovery, independently verified Eclipse activation, upgrade-vector comparisons, denominators and outcome interpretation, and honest limits on roster and investment controls. Either supported direction or an unresolved comparison is acceptable.",
+        "requirements": [
+          "Investigate the applicable active analysis scope and report its readiness and population limits; do not treat historical or online results as ground truth for this database.",
+          "Define the observed Aphelios carry and Eclipse comparison populations, verify active Eclipse independently of generic Solar presence, and identify the named frontline or utility packages actually inspected. Do not present a contains-core cohort as an exact roster.",
+          "Where supported, distinguish named Solar three-star vectors from predominantly two-star variants and report the sample denominators and available mean placement, top-four rate, win rate, and uncertainty for each comparison. Lower mean placement is better; outcomes may disagree.",
+          "Describe package substitutions and investment differences visible in the compared boards. Do not infer a causal benefit from spending slots, claim generic global investment equality, or assume that itemized Aphelios makes the rest of the board ordinary.",
+          "Treat suppressed groups and missing comparisons as unknown rather than zero. State that the named vectors and packages are bounded coverage, since there is no generic all-three-star or exact roster filter, and do not turn an end-state win rate into the chance of choosing the composition successfully."
+        ]
+      },
+      "input": "On a level-9 Aphelios board, when is keeping Eclipse worth the slots compared with a stronger frontline and utility package? Does that change if the Solar units are already three-star?\n\nPlease investigate final level-nine boards with itemized Aphelios. Compare boards with active Eclipse against its complement within shared carry, level, and upgrade shells, and discover named frontline or utility alternatives from the observed results rather than assuming a fixed roster. Check Solar member star levels and verify Eclipse activation from its own observable record. Separate named Solar three-star vectors from predominantly two-star cases where the data permits. These final-board comparisons describe associations; they do not show that buying or keeping Eclipse caused an outcome.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C01",
+        "case_id": "comp-expert/CO4-4-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_observed_aphelios_packages"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_eclipse_and_support_packages"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-4-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "fb911bb706bd467dd04aafe3a69282d5409c31770846d1210ba065ab34e469a5",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-4-C02",
+      "expected_output": {
+        "reference": "Grade the discovery of the unknown companion, separate cap membership, observed outcome reporting, upgrade and item context, and explicit reconstruction limits. Either cap may look better, or the evidence may remain unresolved.",
+        "requirements": [
+          "Investigate the applicable scoped Azir and Mama Beak board results without inventing the unknown sixth shared unit or importing historical answer numbers.",
+          "Use the five known shared anchors and Azir's Rapidfire Emblem as the discovery shell, identify observed companion candidates, and check candidate conjunctions separately with each cap. Keep the Ezreal–Scuttle Crab and Kennen–Amumu pair membership exclusive when defining comparison arms.",
+          "Report the observed sample count and available mean placement, top-four rate, and win rate for each reportable cap or matched discovered-companion cell. Explain denominators, interpret placement direction correctly, and allow win rate and top-four rate to favor different caps.",
+          "Describe relevant Azir and Krug upgrade, item, and utility differences that are visible in the returned groups. Do not claim that a named contains-all shell is a complete eight-unit roster or that level eight fixes unit count.",
+          "Label this as a reconstruction from available final-board facts unless full legal rosters are independently certified. State that exact roster closure, Alpha Mark, acquisition timing, and choice-conditioned win probability are unavailable; report suppressed or absent results as unknown rather than zero.",
+          "After discovering a candidate eighth identity, requiring all eight distinct names and using a reportable board_size=8 query row can establish stored-roster closure for that row’s count and outcomes. Do not assign the broader compare_cohorts intervals to that slice or imply the original image roster was recovered."
+        ]
+      },
+      "input": "For a level-8 Azir–Mama Beak board, how do the Ezreal–Scuttle Crab and Kennen–Amumu versions compare as finished boards? Is one more likely to win rather than just make top four?\n\nTreat this as a reconstruction study of final boards with Azir carrying a Rapidfire Emblem. The five known shared units are itemized Azir, itemized Mama Beak, Krug, Sett, and Yunara; the original question's sixth shared unit is unknown and must be discovered from the scoped observations, not guessed. Compare the Ezreal plus Scuttle Crab package with the Kennen plus Amumu package, then inspect candidate shared companions and any supported matched package cells. Level eight and the seven known members do not prove an exact roster. If a supported eighth member is discovered, compare the eight-record versions separately where available.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C02",
+        "case_id": "comp-expert/CO4-4-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "discovers_shared_companions_and_package_support"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "CO4-4-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "f3b9e7c114a5c1f5bdf6959c5de041c6a0c5ab065a54d0d01a4b5a8444948a70",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-4-C03",
+      "expected_output": {
+        "reference": "Grade the independent popularity and outcome comparisons, clear sample denominators, overlap and roster caveats, and evidence-relative interpretation. The observed ordering may differ from the historical panel.",
+        "requirements": [
+          "Compare the three named finishing-unit candidates using current results from the applicable scoped data; do not carry over the historical website ordering or percentages as expected values.",
+          "Define each candidate population around the shared core, inspect support counts and outcomes, and report counts and denominators. Separate popularity ordering from average-placement and win-rate ordering; lower mean placement is better.",
+          "Where the candidates overlap or differ in stars, inventory, or other companions, describe that composition and explain how it limits a direct comparison. Use reportable group outcomes or comparisons and do not claim matched boards unless the query actually defines them.",
+          "Requiring the nine distinct named units and selecting the reportable board_size=9 query row establishes stored-roster closure for that row. Use its own sample and outcomes; broader compare_cohorts summaries and intervals do not inherit the restriction. This does not establish occupied capacity or exhaustive eligible ninth-unit coverage.",
+          "Treat end-board outcomes as associations, not as causal evidence or a recommendation that replacing one unit will improve results. Report suppressed or unobserved outcomes as unknown rather than zero."
+        ]
+      },
+      "input": "For level-nine Primal Aphelios–Nidalee end boards in the scoped data, is the most common finishing unit also getting the best average placement and win rate? Compare the Alune, Brambleback and Ivern versions around the shared core.\n\nUse this shared eight-unit core for the investigation: Amumu, Aphelios, Nidalee, Sentinel, Diana, Kog'Maw, Vi, and Varus. Inspect boards adding Alune, Brambleback, or Ivern at final level nine. Keep candidate overlap, other inventory, and star differences visible. Where available, compare each fully named roster’s outcomes specifically among boards with nine stored unit records. Distinguish these results from broader core-containing boards; neither player level nor record count alone proves occupied capacity or covers every possible finishing unit.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "adaptation": "Removed dependence on a mutable TFT Codex panel while preserving the popularity-versus-performance investigation and its known shared roster. Original website snapshot numbers remain historical provenance, not gold for a different database.",
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C03",
+        "case_id": "comp-expert/CO4-4-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_named_finishing_unit_frequencies"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "supported",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "5c7d8312d3e16e79a2ef369b4560360b57820a3733be8434c7f9b2c43ecb30de",
+        "source_status": "grounded",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-4-C04",
+      "expected_output": {
+        "reference": "Grade the scoped candidate comparisons, outcome and uncertainty reporting, shared-core and investment interpretation, and explicit capacity and Lux-identity limits. A supported preference or an unresolved ranking is acceptable.",
+        "requirements": [
+          "Investigate the three support versions in the applicable level-ten scoped data without assuming that Alune is better or using the old website percentages as ground truth.",
+          "Define candidate cohorts around the shared core and report each reportable sample count, mean placement, top-four rate, and win rate. Compare within named carry or tank star and loadout strata when the data supports those slices, and describe investment differences that remain.",
+          "Report pairwise effect estimates and confidence intervals when available, including overlap and warnings. A small rounded difference or interval spanning zero does not prove superiority or equivalence; suppressed groups are unknown, not zero.",
+          "Use board size and companions as roster diagnostics. Requiring all nine distinct named identities and selecting a reportable board_size=9 query row establishes stored-roster closure for that row, but it does not filter compare_cohorts or supply its confidence intervals. Explain that stored unit-record count differs from occupied capacity because Elder Dragon uses two slots; neither a partial core nor level alone establishes closure or capacity.",
+          "Identify generic-Lux variant heterogeneity if the variant cannot be resolved. Interpret final-board win rate as an end-state association, not the chance of winning after choosing the composition, and do not infer causal effects from selected finished boards."
+        ]
+      },
+      "input": "For level-ten Elder Dragon–Draven end boards in the scoped data, is there convincing evidence that the Alune support version performs better than the Lux or Soraka versions, once the shared core and observed investment differences are considered?\n\nCompare support versions around these shared eight unit records: Draven, Elder Dragon, Ivern, Kennen, Maokai, Taric, Amumu, and Sentinel, plus Alune, Lux, or Soraka. Elder Dragon occupies two slots in the reference, so nine stored unit records do not mean a level-nine board or nine occupied slots. Compare the candidates within named carry and tank star or loadout strata where supported, and inspect other companions and board size as roster diagnostics. Resolve Lux to an observable variant when possible; otherwise describe the generic-Lux mix.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "adaptation": "Converted the website-panel interpretation into a ChatTFT scoped-data uncertainty comparison, keeping the shared core and three alternatives. The previously supported web-only answer is not considered measured support for this new benchmark.",
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C04",
+        "case_id": "comp-expert/CO4-4-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_candidate_roster_diagnostics"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_support_version_effects"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "supported",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "38458dfdd603a102776637e806dc31622e95ca8de1f11eca96080dd51fab9721",
+        "source_status": "grounded",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C04",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

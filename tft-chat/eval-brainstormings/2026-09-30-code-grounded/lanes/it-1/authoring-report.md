@@ -1,0 +1,17 @@
+# IT-1 dataset authoring report
+
+Authored 2 active dataset items: IT-1-C01 and IT-1-C02. Inputs retain each original player question as the leading text and add a short scenario paragraph with the fixed holder, star level, and item-count constraints. C01 leaves the remaining pair open for discovery; C02 keeps its named two-item core fixed.
+
+Both cases require `resolve_tft_names`, `rank_unit_loadouts`, and `compare_cohorts` trace calls. These existing checks confirm that the assistant attempted the intended name-resolution, build-discovery, and cohort-comparison path; they do not prove that a call succeeded, used a valid cohort, or produced a correct result. `query_cohort` remains optional because it supports diagnostics rather than the core comparison. No nested resolved-name argument check was added, since cohort filter arguments and resolver output do not provide a robust fixed identifier to assert.
+
+The answer requirements keep the grading case-specific: C01 calls for observed Aphelios triplets, holder-denominated loadout rates, supported same-pair contrasts, and explicit treatment of the both-items package; C02 calls for the fixed Brambleback pair and comparison of the two named third-item packages. Both require board counts, outcome metrics, warnings/suppression, and limits on causal or historical claims. Their inputs expose the experimental conditions instead of hiding them in metadata.
+
+Current judge limitation: `evals/utils.py:execution_evidence` supplies a bounded trace summary and presentation extract, not full analytical tool outputs. Metadata therefore sets `grading_scope` to `investigation_behavior_and_answer_coverage` and `numeric_ground_truth_verified` to `false`. The answer-quality judge can assess coverage and visible reasoning but cannot independently check every reported value against complete query results. Exact numerical verification remains a preparation gap requiring a frozen aggregate reference or a full-trace audit; no outcome values or winner were fabricated.
+
+Other preparation gaps remain external to this authored file: the execution scope and dataset revision need preflight; C02's post-September-24/28 interpretation needs verified scope provenance; and public cohort floors may suppress either case's comparisons. Whole-board completed-item budget matching, exact companion investment control, automatic pair matching, and a call-level date/subpatch filter are unsupported. This dataset does not claim that data were collected, registered, or run.
+
+Validation performed: parsed the JSON with Python; validated both cases against the natural Langfuse item contract; validated all six deterministic assertions through the repository trace-check validator; and confirmed the authored file list is limited to `dataset.json` and `authoring-report.md` in this lane. No dataset registration, database query, model run, or live evaluation was performed.
+
+## Final coordinator verification
+
+After lane authoring, the coordinator reviewed and normalized this file alongside the full collection. The final lane contains 2 cases and 6 trace checks. The [coordinator review](../../docs/coordinator-review.md) records content corrections; the [validation report](../../validation/dataset-validation.json) is authoritative for the final import and assertion results. The original authoring observations above describe the lane submission, before any coordinator refinements.

@@ -1,0 +1,82 @@
+{
+  "lane": "TR-3",
+  "title": "Emblem-enabled board variants",
+  "cases": [
+    {
+      "id": "TR-3-C01",
+      "title": "Defender Cassiopeia: competing emblem holders",
+      "lane": "TR-3",
+      "subject": "traits",
+      "original_question": "In Defender Cassiopeia boards, do Rengar or Kha’Zix versions actually finish better when they hold the Defender emblem?",
+      "question": "In Defender Cassiopeia boards, do Rengar or Kha’Zix versions actually finish better when they hold the Defender emblem?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+      "source_status": "disputed",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "TR-3-R2-P1"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Cassiopeia carry with Fiddlesticks and six-Defender support, comparing Defender Emblem on Rengar versus Kha'Zix with explicit holder stars and remaining two item slots.",
+      "plan": "Use exact holder-bound emblem predicates, named one-copy holder guards and carry/frontline investment in compare_cohorts. Discover actual supporting cores and verify Defender contribution counts; inspect alternate cores rather than treating six Defender as a roster.",
+      "checks": "Sample sizes and mean/top4/win must come from the joint emblem-holder/core cells. Preserve holder upgrades and remaining items, report support-slot changes and both-holder overlap if present. An emblem-wide ranking is insufficient.",
+      "limits": "Exactly one Defender emblem can be counted by its exact item name; zero other emblem families/global upgraded-board cost cannot be assumed. Rival choices and unseen trait grants are not recoverable from generic unit names."
+    },
+    {
+      "id": "TR-3-C02",
+      "title": "Hunter Camille and Caitlyn as an alternative",
+      "lane": "TR-3",
+      "subject": "traits",
+      "original_question": "Is Hunter-emblem Camille with Caitlyn a real alternative to Nidalee/Sivir, or does that board mostly fall short?",
+      "question": "Is Hunter-emblem Camille with Caitlyn a real alternative to Nidalee/Sivir, or does that board mostly fall short?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "TR-3-R2-P2"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Hunter Emblem on Camille with Caitlyn versus Hunter Emblem on Nidalee with Sivir. Vanguard/Coven leads are discovered support conditions, not assumed complete optimal rosters.",
+      "plan": "Build actual emblem-holder/carry partner cohorts, inspect stars/loadouts and recurring support, verify Hunter contribution intervals, and compare reportable packages at shared final levels/named investment. Keep low-cost three-star versus four-cost two-star versions distinct.",
+      "checks": "Explain exact support and equipment-slot cost of each package with counts/outcomes. Bind emblems to intended holders; neither item-wide Hunter stats nor independent Camille/Caitlyn marginals answer the joint comparison.",
+      "limits": "No generic upgraded-board-cost or equivalent-economic-investment predicate. Old 18.2 external snapshots provide no current gold and must not be pooled into the selected scope."
+    },
+    {
+      "id": "TR-3-C04",
+      "title": "Brawler Yi without artifact dependence",
+      "lane": "TR-3",
+      "subject": "traits",
+      "original_question": "Can Brawler-emblem Master Yi boards finish reliably with normal items, or is their reputation mostly coming from artifact games?",
+      "question": "Can Brawler-emblem Master Yi boards finish reliably with normal items, or is their reputation mostly coming from artifact games?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Master Yi carrying Brawler Emblem, ordinary Edge of Night/Guinsoo's as the primary ordinary complement, compared with named artifact complements in the same discovered family.",
+      "plan": "Discover exact emblem-bearing loadouts and observed Yi/Rengar/Vi/Nidalee or alternate support cores without conflating them. Compare named ordinary and artifact holder trios in shared star/trait/level contexts, and query other equipped items to assess whole-board special dependence.",
+      "checks": "Separate ordinary Yi items from artifact-free entire boards. Report counts/top4/win and complete package identity, including actual teammates and upgrades; do not use a broad guide-family headline as the exact emblem/star/trio sample.",
+      "limits": "Global artifact-free eligibility and artifact-count matching are unavailable as direct filters. The strict reputation question needs that prepared partition; current evidence can still compare declared holder packages honestly."
+    },
+    {
+      "id": "TR-3-C05",
+      "title": "Inferno Kha’Zix and the freed Akali slot",
+      "lane": "TR-3",
+      "subject": "traits",
+      "original_question": "In five-Inferno Kha’Zix endgames, does putting Inferno emblem on Kha’Zix and replacing Akali actually improve the final board?",
+      "question": "In five-Inferno Kha’Zix endgames, does putting Inferno emblem on Kha’Zix and replacing Akali actually improve the final board?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Kha'Zix carry plus Fiddlesticks in five-Inferno end states. One arm retains Akali and a third ordinary Kha'Zix item; the other binds Inferno Emblem to Kha'Zix, excludes Akali and uses an actually observed replacement support.",
+      "plan": "Discover replacement candidates under emblem+Akali-absence conditions, verify candidate conjunctions, then compare each named final package with shared Kha'Zix co-items/stars and tank investment. Verify recorded five-Inferno support and query board_size/level diagnostics.",
+      "checks": "Account for both the consumed item slot and the altered support unit. State the chosen replacement and actual counts/outcomes; Soraka/Maokai are leads, not automatically optimal. Exact no-extra-slot claims need certification.",
+      "limits": "No general exact-board-size filter, evolution choice or farm-history data. Package association cannot identify the causal value of the emblem alone."
+    }
+  ]
+}

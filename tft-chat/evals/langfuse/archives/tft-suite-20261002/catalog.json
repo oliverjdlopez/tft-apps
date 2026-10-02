@@ -35,6 +35,18 @@
       "snapshot": "d66bce1bd31a94ab79f85542753e555e5f04a62de7810356b3f1a781d3e36e4e"
     },
     {
+      "assistant": "comp_expert",
+      "case_count": 18,
+      "database": null,
+      "description": "Set 18 compositions investigations from the original subject lanes. Evidence gathering and answer coverage; numerical gold unverified.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 40,
+      "name": "comp-expert",
+      "snapshot": "9d8071956135c1dd3a0e58e7719b75f5fd1699dfedc8c4e3918f77bb39188fb7"
+    },
+    {
       "assistant": "compact_transcript",
       "case_count": 1,
       "database": null,
@@ -91,15 +103,15 @@
     },
     {
       "assistant": "item_expert",
-      "case_count": 0,
+      "case_count": 17,
       "database": null,
-      "description": "Manual ChatTFT investigations.",
+      "description": "Set 18 items investigations from the original subject lanes. Evidence gathering and answer coverage; numerical gold unverified.",
       "execution": "live",
       "family": "assistant",
       "managed_workflow": true,
-      "max_turns": 10,
+      "max_turns": 40,
       "name": "item-expert",
-      "snapshot": "b0d446e5aa71826c503f024068d2dc8b03e9d2dd4fab31816fec3facb937417d"
+      "snapshot": "d7be19bd08b4715111f573f430a0adf7efd822bacf8ea6dfe79a51cfcfaa35b6"
     },
     {
       "assistant": "meta_expert",
@@ -111,7 +123,7 @@
       "managed_workflow": true,
       "max_turns": 10,
       "name": "meta-expert",
-      "snapshot": "0091f2ae8e0ef6062e8365f3b6f0f3524586dd659ed17429fe127f56fb633a64"
+      "snapshot": "ac8f4638b475b08760b4a54842a77ce1051b161884010d591bdfa7e52784663d"
     },
     {
       "assistant": "skill_selector",
@@ -125,6 +137,18 @@
       "snapshot": "67136a874084824eb7d0eb1413e1a705d5fe66147f9b9b767424eab1c0bc109e"
     },
     {
+      "assistant": "chat",
+      "case_count": 17,
+      "database": null,
+      "description": "Set 18 traits investigations from the original subject lanes. Evidence gathering and answer coverage; numerical gold unverified. Uses chat until a trait_expert assistant is registered.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 40,
+      "name": "trait-expert",
+      "snapshot": "f4d625e7edb2cd94a130a1ee5e90ea6edf27d7bf99967e033cf1a7db7c488366"
+    },
+    {
       "assistant": "unit_expert",
       "case_count": 17,
       "database": null,
@@ -134,7 +158,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "unit-expert",
-      "snapshot": "31ea4d873da53ac055f94d113984df4c1319eeb2c942261d91bcd663badd408f"
+      "snapshot": "4c379075d432fab26683ad7fb7cdd7e7be7063ef99944aaa0baf97461eedcf1d"
     }
   ]
 }

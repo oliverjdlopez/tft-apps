@@ -1,0 +1,211 @@
+{
+  "items": [
+    {
+      "case": "TR-3-C01",
+      "input": "In Defender Cassiopeia boards, do Rengar or Kha’Zix versions actually finish better when they hold the Defender emblem?\n\nInvestigate final boards with Cassiopeia as the carry, Fiddlesticks present, and an observed six-contributor Defender condition where available. Compare Defender Emblem on Rengar against Defender Emblem on Kha’Zix. For each arm, require exactly one copy of the named holder across all star levels, then keep its star level and three completed item slots explicit: the emblem takes one slot and the other two items must be discovered from the data. Keep Cassiopeia investment and actual supporting units visible; treat six Defender contributors as a bounded trait slice, not a complete roster. Find and verify observed support cores before comparing them, and report any overlap between the two holder arms.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the active scoped results and establish whether the relevant population is ready; do not import historical or online outcome numbers as ground truth.",
+          "Define the two joint populations using Cassiopeia, Fiddlesticks, the observed Defender contribution count, and an exactly one-copy-across-all-stars Rengar or Kha’Zix holder carrying Defender Emblem. Report holder stars and the two other observed item slots; do not treat separate holder-bound item predicates as proof of one holder unless the one-copy guard is satisfied.",
+          "Discover actual supporting cores and compare joint holder/core cells only where sample and shared-context support allow. Report board counts, denominator, mean placement, top-four rate, and win rate when reportable; lower mean placement is better, and outcome measures may disagree.",
+          "Explain the observed support-slot and item-package differences, the holder-arm overlap, and any remaining Cassiopeia or frontline investment differences. A marginal emblem ranking or separate unit frequencies do not answer the head-to-head question.",
+          "Treat six Defender contributors as an observed trait-contribution slice, not a roster signature. Other emblem families, global upgraded-board investment, rival choices, and unseen grants are not held fixed by these predicates; say when a package comparison remains confounded and interpret it as association, not causation. Suppressed or absent results are unknown, not zero."
+        ],
+        "reference": "Grade whether the investigation binds the emblem to the intended single-copy holder, discovers and compares actual support packages with denominators and outcomes, and states the remaining investment and roster limits. Either direction or an unresolved comparison is acceptable."
+      },
+      "metadata": {
+        "source_case_id": "TR-3-C01",
+        "lane": "TR-3",
+        "subject": "traits",
+        "proposal_lineage": [
+          "TR-3-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_defender_holder_and_support_cells",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_observed_defender_holder_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+        "source_status": "disputed",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-3-C02",
+      "input": "Is Hunter-emblem Camille with Caitlyn a real alternative to Nidalee/Sivir, or does that board mostly fall short?\n\nCompare Hunter Emblem on Camille with Caitlyn against Hunter Emblem on Nidalee with Sivir. In each arm, require exactly one copy across all star levels of the named emblem holder and keep that holder’s star level and three completed item slots explicit, including the emblem’s occupied slot. Separate Camille three-star versions from Nidalee two-star versions and compare within matching supported star strata where possible; do not pool those distinct investment profiles into one headline. Discover Vanguard or Coven support rather than assuming either is the complete optimal roster. Inspect actual partner loadouts and keep final level and named carry/support investment visible.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate current results from the applicable active scope and state its readiness and population limits; old external 18.2 snapshots and online rankings are not current database ground truth.",
+          "Build joint cohorts for Hunter Emblem on exactly one Camille or Nidalee copy across all stars, with the named Caitlyn or Sivir partner. Report the holder’s star level and actual other item slots; an item-wide Hunter ranking and separate holder/partner marginals are insufficient.",
+          "Keep the three-star Camille and two-star Nidalee versions separate, and compare only supported shared final-level, support, or investment strata. Verify Hunter contribution counts from observable trait data without treating medal labels as numeric breakpoints.",
+          "Discover and name the actual support and item packages, then report reportable board counts, denominators, mean placement, top-four rate, and win rate. Explain support-slot and equipment-slot costs and allow outcome measures to disagree; do not claim equal economic investment from these proxies.",
+          "Treat Vanguard/Coven as leads rather than assumed complete rosters. State that generic upgraded-board cost and equivalent economic investment are unavailable, and interpret finished-board associations as descriptive rather than causal. A suppressed group is unknown, not zero."
+        ],
+        "reference": "Grade the holder-bound emblem investigation, separate star/investment strata, discovered joint packages, outcome and denominator reporting, and honest limits on investment matching. Camille may compare favorably, fall short, or remain unresolved in reportable data."
+      },
+      "metadata": {
+        "source_case_id": "TR-3-C02",
+        "lane": "TR-3",
+        "subject": "traits",
+        "proposal_lineage": [
+          "TR-3-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_hunter_holder_partner_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_hunter_package_outcomes",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-3-C04",
+      "input": "Can Brawler-emblem Master Yi boards finish reliably with normal items, or is their reputation mostly coming from artifact games?\n\nInvestigate Master Yi holding Brawler Emblem, with exactly one Yi copy across all star levels and three completed item slots on that holder. Compare the observed ordinary Edge of Night plus Guinsoo’s complement against named artifact-containing Yi loadouts, keeping Yi stars and any shared support/core conditions explicit. The emblem consumes one of the three slots. Discover the support core and item trios from scoped results, and query other equipped items to describe the rest of the board. An ordinary Yi loadout does not prove that the whole board is artifact-free.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate applicable current scoped results and report readiness and sample limits; do not use historical guide-family summaries as the exact emblem/star/core sample.",
+          "Identify observed Master Yi loadouts with Brawler Emblem bound to exactly one Yi copy across all stars. Compare the named Edge of Night plus Guinsoo’s ordinary complement with specific observed artifact-containing holder trios, keeping star level and actual support/core conditions distinct.",
+          "Report board counts and denominators, mean placement, top-four rate, and win rate for reportable named packages. Include the complete observed package identity, including Yi’s other item slots, stars, and teammates; frequency or separate partner marginals alone do not establish a joint core.",
+          "Inspect other board items to assess special-item dependence, but distinguish this descriptive inventory from a globally artifact-free or artifact-count-matched population. State that no direct global artifact-free eligibility or artifact-count filter is available; do not claim ordinary Yi items mean an ordinary entire board.",
+          "Explain which parts of the reputation question the named holder-package comparisons can address and which require a prepared whole-board partition. Interpret end-board rates as associations, not item effects or causal reliability. Missing or suppressed cells are unknown rather than zero."
+        ],
+        "reference": "Grade the exact single-holder and loadout investigation, joint support discovery, package outcomes, and clear separation of ordinary holder items from whole-board artifact dependence. The global reputation question may remain unresolved without the prepared inventory partition."
+      },
+      "metadata": {
+        "source_case_id": "TR-3-C04",
+        "lane": "TR-3",
+        "subject": "traits",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_brawler_yi_loadouts_and_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort"
+              ]
+            }
+          },
+          {
+            "name": "compares_named_ordinary_and_artifact_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-3-C05",
+      "input": "In five-Inferno Kha’Zix endgames, does putting Inferno emblem on Kha’Zix and replacing Akali actually improve the final board?\n\nCompare two observed five-contributor Inferno end-board packages with Kha’Zix as the itemized carry and Fiddlesticks present as the tank: one keeps Akali and gives Kha’Zix a third ordinary item; the other puts Inferno Emblem on Kha’Zix, removes Akali, and adds a replacement support actually found in the data. Require exactly one Kha’Zix copy across all star levels in each arm. Keep Fiddlesticks star and defensive-item investment comparable where supported, and keep Kha’Zix stars and the two shared co-items explicit so the emblem occupies the third slot, and discover the replacement instead of assuming Soraka or Maokai. Inspect other companions, level, and stored board-size diagnostics where possible; neither level nor board size alone proves an exact occupied-capacity roster.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate current scoped final-board results for the two Kha’Zix/Fiddlesticks five-Inferno packages and state scope readiness and the applicable sample denominator; do not infer a causal emblem effect from these selected end states.",
+          "Discover replacement candidates among boards with Inferno Emblem on exactly one Kha’Zix copy across all stars and Akali absent. Verify each candidate conjunction before comparing it; Soraka and Maokai are search leads, not presumed winners.",
+          "Define the comparison arms so the baseline retains Akali and a third ordinary Kha’Zix item, while the target binds Inferno Emblem to Kha’Zix, excludes Akali, and includes an observed replacement. Keep Kha’Zix stars and two shared co-items explicit, and verify five Inferno contributors from trait contribution data. Keep Fiddlesticks star and named defensive-item investment visible and comparable where supported.",
+          "For reportable discovered packages, report the replacement identity, board counts and denominators, mean placement, top-four rate, and win rate. Explain the consumed Kha’Zix slot and support substitution, and inspect level, companions, and board-size rows as descriptive diagnostics rather than comparison filters.",
+          "State that board_size is stored unit-record count and cannot by itself certify occupied capacity or exact roster closure; a complete named roster may be checked against a grouped board-size row if independently established, but that does not make it a compare_cohorts filter. Evolution choice, farm history, and causal value are unavailable. Treat suppressed or missing outcomes as unknown, not zero."
+        ],
+        "reference": "Grade replacement discovery, exact holder/absence and package definition, five-contributor verification, outcome reporting, and honest roster and causal limits. A supported package may improve, fall short, or remain unresolved."
+      },
+      "metadata": {
+        "source_case_id": "TR-3-C05",
+        "lane": "TR-3",
+        "subject": "traits",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_inferno_holder_replacement_candidates",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_akali_and_replacement_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-3/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

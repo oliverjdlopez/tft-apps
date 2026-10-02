@@ -1,0 +1,66 @@
+{
+  "lane": "UN4-4",
+  "title": "Alternative units within similar board structures",
+  "cases": [
+    {
+      "id": "UN4-4-C01",
+      "title": "Lillia versus Malphite in Soraka/Zyra boards",
+      "lane": "UN4-4",
+      "subject": "units",
+      "original_question": "How do Soraka and Zyra boards with Lillia as the main tank compare with similar boards using Malphite? Are there versions where Lillia holds up, or is she usually a weaker substitute?",
+      "question": "How do Soraka and Zyra boards with Lillia as the main tank compare with similar boards using Malphite? Are there versions where Lillia holds up, or is she usually a weaker substitute?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "UN4-4-R2-P1"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Primary interpretation: final level eight, both Soraka2 and Zyra2, exactly one Lillia2 or Malphite2 with an explicit three-item defensive build; dual-tank boards separate.",
+      "plan": "Discover candidate tank trios and support packages, then compare disjoint named tank cohorts within the shared carry/star/level shell. query_cohort reports deployed-unit count, item budget and Fae/Defender/Blackthorn support; repeat named common-core comparisons with actual item identities.",
+      "checks": "Carry the two-carry interpretation into input. Show both tank samples/outcomes and any supported alternative contexts, with differences in trait package stated. Preserve star and defensive-build definitions; do not pool single-carry families silently.",
+      "limits": "Final level is not actual capacity; exact whole-board matching and Blackthorn choice are unavailable. Three items alone do not prove three defensive items."
+    },
+    {
+      "id": "UN4-4-C02",
+      "title": "Ashe versus Draven on Maokai boards",
+      "lane": "UN4-4",
+      "subject": "units",
+      "original_question": "Is Ashe really the better carry than Draven on Maokai endgame boards, or are they succeeding in different versions of the board?",
+      "question": "Is Ashe really the better carry than Draven on Maokai endgame boards, or are they succeeding in different versions of the board?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+      "source_status": "disputed",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "UN4-4-R2-P2"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Final level nine, itemized Maokai2, exactly one Ashe2 or Draven2 with three completed items; dual carries, level ten and one-star carry versions separate.",
+      "plan": "Discover carry/tank exact loadouts and support units; compare the two exclusive carry packages with shared Maokai investment and level. Query actual support and Elder Dragon presence, then repeat inside supported named core/Dragon strata.",
+      "checks": "Report counts/outcomes for common and different variants; explain whether the pooled ordering persists inside inspected overlaps. AP/AD or carry-specific build suitability means forced identical trios are not required. No all-board Maokai marginal answers this.",
+      "limits": "Generic legendary count, accumulated Maokai health, Draven rewards and occupied capacity are not filterable. Observe named legendaries and unit-record counts without claiming exact wealth matching."
+    },
+    {
+      "id": "UN4-4-C03",
+      "title": "Elder Dragon versus Ezreal supporting packages",
+      "lane": "UN4-4",
+      "subject": "units",
+      "original_question": "Among finished Draven–Maokai boards, how do the Elder Dragon and Ezreal versions compare for top fours and wins once board size, upgrades and emblem differences are accounted for?",
+      "question": "Among finished Draven–Maokai boards, how do the Elder Dragon and Ezreal versions compare for top fours and wins once board size, upgrades and emblem differences are accounted for?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "UN4-4-R2-P2"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Final level-nine Draven2/Maokai2 boards with equal declared main-carry/tank investment; itemized Elder Dragon2 versus Ezreal2, primary groups excluding the other candidate.",
+      "plan": "Compare explicit secondary-holder packages inside the shared core after discovering exact itemizations. Query board_size, total completed items, traits and support-unit rows; separate named emblem variants and inspect whether the occupied-slot comparison can actually be certified.",
+      "checks": "Report mean/top4/win separately, full comparison histograms and samples where possible. Keep Elder Dragon's double-capacity issue visible and show changed supporting packages rather than presenting equal level as equal deployed capacity.",
+      "limits": "board_size counts unit records; actual occupied capacity and boardwide no-emblem categories are not exposed predicates. A fully capacity-matched gold comparison needs prepared aggregate evidence; the current route is a qualified package comparison."
+    }
+  ]
+}

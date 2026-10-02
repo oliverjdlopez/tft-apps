@@ -1,0 +1,196 @@
+{
+  "items": [
+    {
+      "case": "TR-1-C01",
+      "input": "Do Ahri endgame boards perform well without Invoker, or are the good results mostly coming from boards where she has an Invoker emblem?\n\nPlease analyze the Set 18 standard-ranked final-board results for itemized Ahri independently of Invoker. Separate boards with no active Invoker, active Invoker without the emblem on Ahri, and the Invoker Emblem held by Ahri. Keep Ahri's observed star, build, and final-level contexts visible where samples permit. Compare the results and prevalence of each supported group; treat the emblem on Ahri separately from an emblem held by another unit. These are final-board associations, not evidence that the emblem caused the outcome.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the applicable scoped Set 18 standard-ranked final-board results without assuming which Ahri group performs best or using historical or online outcomes as ground truth.",
+          "Define and report an itemized-Ahri family independently of Invoker status. Distinguish no active Invoker from active Invoker without an emblem on Ahri, and from boards where Ahri herself holds Invoker Emblem. Keep other-holder emblem observations separate; do not interpret a board-level emblem as an Ahri-held emblem.",
+          "Use a comparison of active Invoker versus its complement inside a shared Ahri investment shell to cover missing trait rows, and inspect explicit active/no-Ahri-holder-emblem and Ahri-holder-emblem groups where reportable. An inactive trait filter alone does not establish the absence of an active trait because missing trait rows do not match it.",
+          "Report supported group sizes or shares with a clear denominator and available average placement, top-four, and win outcomes. Preserve relevant Ahri star, observed loadout/build, and final-level strata where samples permit; describe suppressed or unsupported groups as unknown rather than zero.",
+          "Compare common item, support, and level contexts when evidence permits, acknowledge sparse overlap and unmeasured board differences, and explain that finished-board associations cannot establish a causal Invoker-emblem effect. Do not claim a globally emblem-free group from evidence that only establishes no emblem on Ahri.",
+          "State data-scope and sample-readiness limitations precisely. Candidate names and historical item or trait descriptions are not proof of current patch rules or performance.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade whether the investigation separates native Invoker activation from an Invoker Emblem actually held by Ahri, accounts for absent trait rows, and reports evidence-relative outcomes without choosing a winner in advance."
+      },
+      "metadata": {
+        "source_case_id": "TR-1-C01",
+        "lane": "TR-1",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-1/cases.md",
+        "proposal_lineage": [
+          "TR-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "ahri_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Ahri",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "queries_ahri_trait_and_holder_groups",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_ahri_trait_groups",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-1-C02",
+      "input": "Do Soraka boards with four Executioners actually finish better than the three-Executioner versions, or is that mostly because those boards also have Kennen?\n\nPlease analyze itemized Soraka final boards, independently identifying the Soraka family. Compare boards with three versus four contributing Executioner units separately when Kennen is absent and when Kennen is present, so the analysis covers all four groups. Inspect observed support and displaced units where reportable. Use the recorded contributor count and verify the applicable trait activation; keep this as an outcome association rather than a causal or matched-board claim.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate applicable scoped Set 18 standard-ranked final-board evidence without presuming whether three or four Executioner contributors, or Kennen presence, is associated with better results.",
+          "Define the itemized-Soraka family independently and compare all four cells: three and four recorded Executioner contributors, each with Kennen present and absent. Report each cell's board count or its explicit lack of reportable support; one frequent Kennen row or separate partner marginals do not cover the four-cell question.",
+          "Use explicit Executioner contributing-unit bounds and verify active state and the patch-compatible breakpoint interpretation. A medal tier is a string, not a numeric breakpoint; do not substitute tier labels or total-tier values for contributor counts.",
+          "Within each Kennen stratum, compare three versus four contributors; within each contributor stratum, compare Kennen present versus absent. Give available counts, average placement, top-four, and win outcomes, and describe suppressed or missing groups as unknown rather than zero.",
+          "Where supported, inspect the actual Soraka loadout and recorded support or displaced units, verifying joint combinations instead of combining independent marginals. State that the tools do not automatically match total board resources or test interaction significance; do not reconstruct Lux or Kha'Zix choices from roster arithmetic.",
+          "Interpret results as final-board associations, not evidence that the fourth contributor or Kennen caused an outcome change. State scope, sample, and trait-rule readiness limits accurately.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade whether the answer covers the four explicit contributor-by-Kennen cells and makes within-Kennen and within-contributor comparisons where reportable. Either supported direction or unresolved contrasts can be correct."
+      },
+      "metadata": {
+        "source_case_id": "TR-1-C02",
+        "lane": "TR-1",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-1/cases.md",
+        "proposal_lineage": [
+          "TR-1-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "soraka_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Soraka",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "queries_soraka_trait_and_kennen_cells",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_soraka_trait_cells",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts",
+              "min_count": 2
+            }
+          }
+        ],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-1-C03",
+      "input": "After the 18.3 buffs to Cassiopeia and her tanks, did her endgame boards get better outside six Defender, or is six Defender still carrying her results?\n\nFor this run, analyze the currently selected scope for itemized Cassiopeia boards at two, four, and six Defender contributors, comparing current package performance and prevalence inside named core, star, and final-level contexts where reportable. A conclusion about change after the buffs also needs separately supplied pre-buff results with compatible collection provenance; report the current-scope comparison on its own when that evidence is not supplied. Do not treat missing pre-buff evidence as zero change or infer that a difference was caused by these buffs.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Answer from the currently selected scope's applicable Set 18 standard-ranked final-board results; explicitly separate current two-, four-, and six-Defender performance from any historical before/after claim.",
+          "Define the itemized-Cassiopeia family independently, inspect exact observed Cassiopeia builds, and compare the two-, four-, and six-contributor Defender strata within named core, Cassiopeia star, and final-level conditions where samples permit. Report prevalence or counts and available average placement, top-four, and win outcomes for each reportable group.",
+          "Interpret contributor counts using patch-compatible activation evidence, and distinguish exact two/four/six-contributor slices from the full activation bands if those include intervening counts. A medal tier is not a numeric breakpoint, and six Defender contributors do not imply a six-unit board.",
+          "Describe suppressed or unavailable cells as unknown rather than zero. Keep current-scope comparisons distinct from the before/after claim and do not attribute observed differences to simultaneous champion and tank buffs.",
+          "Only assess change after 18.3 if separately supplied pre-period aggregate results and compatible collection provenance are actually available to the assistant. The current selected scope supports current performance only; arbitrary metadata cannot make a second database or time window available to this run. Missing pre-period evidence is a preparation gap, not evidence of no change.",
+          "State that final-board data cannot establish causation, acquisition timing, or a guaranteed hotfix boundary, and report scope and sample readiness limits precisely.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade whether the investigation answers current-scope Defender-stratum performance and cleanly limits before/after claims to separately supplied compatible pre-period evidence. No numerical outcome or winning stratum is preselected."
+      },
+      "metadata": {
+        "source_case_id": "TR-1-C03",
+        "lane": "TR-1",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-1/cases.md",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "cassiopeia_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Cassiopeia",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "queries_cassiopeia_defender_strata",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_cassiopeia_defender_strata",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked",
+        "adaptation": "Retain the original player question, adding in dataset input that this run uses the selected scope and can answer current two/four/six-Defender performance; a before/after conclusion needs supplied pre-period evidence. The temporal requirement is tracked as a preparation gap rather than fabricated or silently dropped."
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

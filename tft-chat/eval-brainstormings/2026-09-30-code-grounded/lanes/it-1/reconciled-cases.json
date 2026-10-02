@@ -1,0 +1,46 @@
+{
+  "lane": "IT-1",
+  "title": "Completed-item alternatives across comparable holders and builds",
+  "cases": [
+    {
+      "id": "IT-1-C01",
+      "title": "Aphelios without Rageblade",
+      "lane": "IT-1",
+      "subject": "items",
+      "original_question": "How do Kraken's Fury and Guinsoo's Rageblade builds compare on Aphelios? Are there good builds without Rageblade?",
+      "question": "How do Kraken's Fury and Guinsoo's Rageblade builds compare on Aphelios? Are there good builds without Rageblade?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-1/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "IT-1-R2-P1"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Two-star Aphelios with exactly three ordinary completed items. Discover actual remaining pairs before comparing Kraken-only, Rageblade-only and both-item packages; do not fix an unsupported pair.",
+      "plan": "Resolve Aphelios and both items. Use rank_unit_loadouts for two-star, three-item build discovery, paginating supported triplets. Select ordinary triplets through the local item catalogue and resolved identities. Use compare_cohorts on explicit holder-bound triplets within shared observed companion/frontline conditions and final levels. Enforce one Aphelios copy for joint item predicates. Use query_cohort for board item-count and support composition diagnostics.",
+      "checks": "Report triplet boards, loadout_pick_rate with its holder denominator, mean placement, top4 and win rates. Compare the same other-item pair when one has public support in both arms. Keep both-items separate, preserve overlap/suppression/interval warnings, and do not substitute item marginals. Without a common pair, give descriptive whole-build results and say the one-slot contrast is unresolved.",
+      "limits": "Exact global item budget, all ordinary equipment on the entire board and automatic matching are unavailable; ordinary here refers to the selected Aphelios triplet. Declare residual companion investment differences. Historical 901-game web evidence supplies no current gold value."
+    },
+    {
+      "id": "IT-1-C02",
+      "title": "Brambleback's third fighter item",
+      "lane": "IT-1",
+      "subject": "items",
+      "original_question": "With Bloodthirster and Infinity Edge on Brambleback, how does Titan's Resolve compare with Edge of Night for the last slot?",
+      "question": "With Bloodthirster and Infinity Edge on Brambleback, how does Titan's Resolve compare with Edge of Night for the last slot?",
+      "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-1/cases.md",
+      "source_status": "provisional",
+      "source_answer_status": "incomplete",
+      "proposal_lineage": [
+        "IT-1-R2-P2"
+      ],
+      "benchmark_type": "evidence_relative_investigation",
+      "data_readiness": "not_measured_scope_and_samples_require_preflight",
+      "scenario": "Two-star Brambleback with Bloodthirster and Infinity Edge, plus exactly Titan's Resolve or Edge of Night; three ordinary completed items on a single holder.",
+      "plan": "Resolve the holder and all four item names. rank_unit_loadouts with the fixed pair, three items and exact star discovers whether the named triplets are reportable. compare_cohorts uses the exact two alternatives, one-holder-copy guard and common final-level/core conditions. Query frontline and carry loadouts to describe remaining investment.",
+      "checks": "Preserve the fixed pair even if rare. Compare boards, histogram, mean/top4/win and returned effect intervals; distinguish a missing ranking row from an explicitly empty cohort. Reject use of the old 4.11 versus 4.21 item marginals as the fixed-build difference. No cast-time or stack-speed conclusion from placement.",
+      "limits": "Post-September-24/28 interpretation requires verified execution-scope provenance; no date/subpatch call filter exists. Exact whole-board matching is limited to named supported conditions and descriptive item-count groups."
+    }
+  ]
+}

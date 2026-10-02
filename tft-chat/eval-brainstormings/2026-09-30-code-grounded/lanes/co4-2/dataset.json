@@ -1,0 +1,287 @@
+{
+  "items": [
+    {
+      "case": "CO4-2-C01",
+      "input": "People keep calling the level-nine boards “five-cost soup,” but they don't all look alike. What recurring cores show up in those endgame boards, and which units are actually flexible around them?\n\nBegin with final-level-nine boards in the available confirmed Set 18 standard-ranked scope. Discover cost-five partner frequencies, then use named candidate pairs/cores to verify joint recurrence. Do not define the family by excluding lower-cost anchors.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Name the declared population and scope actually supplied, including patch and population provenance when available; distinguish a candidate “five-cost soup” proxy from an exhaustive family definition.",
+          "Identify each supported recurring core using joint membership evidence, with its observed board count and denominator. Separate joint recurrence from individual unit frequency.",
+          "Describe flexible partners or alternatives only for inspected candidate cores, and state which candidate pages or pairs were checked; do not claim exhaustive clustering.",
+          "Report outcome summaries only with their observed denominators and explain overlap among cores. Treat suppressed or unavailable estimates as unknown, not zero.",
+          "Avoid inferring causation or optimality from final-board associations; explain that exact global five-cost counts and full-roster partitions are not available from the public filters."
+        ],
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes."
+      },
+      "metadata": {
+        "source_case_id": "CO4-2-C01",
+        "lane": "CO4-2",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [
+          "CO4-2-R2-P1"
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_declared_board_population",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_unit_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C02",
+      "input": "When I look up Elderwood Veigar, the finished boards aren't all the same. Which units keep showing up together, and what are the main ways people fill the remaining slots?\n\nInvestigate all-placement final boards containing three-star Veigar and a recorded active Elderwood trait. Do not require Ornn or any guide roster up front; discover candidate cores and flex partners from the observed boards.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Name the scope actually supplied and define the Veigar three-star plus active Elderwood family; clarify that active trait status is based on recorded board facts.",
+          "Report measured joint support for each named core with board counts and denominators, and distinguish it from separate marginal unit frequencies.",
+          "Describe the principal observed partner/flex patterns within the candidates examined, including relevant final level, partner star, or holder-loadout context when reportable.",
+          "Compare alleged core-member presence and absence only where both estimates are reportable; suppressed groups remain unknown rather than evidence of absence.",
+          "Describe outcomes as associations among completed boards, not a required guide roster or proof that a unit caused the outcome; note that complete rosters and exact flex slots are unavailable."
+        ],
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes."
+      },
+      "metadata": {
+        "source_case_id": "CO4-2-C02",
+        "lane": "CO4-2",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [
+          "CO4-2-R2-P2"
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_declared_board_population",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C03",
+      "input": "In finished AD boards, are Aphelios–Brambleback and Sivir–Nidalee really two fixed pairs, or do the carries recombine into other recurring boards? Which support units stay together when they do?\n\nTreat “finished AD boards” as a player label to operationalize transparently. Investigate all six named pairs among Aphelios, Brambleback, Sivir, and Nidalee, plus selected triple/quad overlaps; distinguish itemized-carry proxies from low-item/filler proxies using observable item counts or loadouts.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define the operational population and the itemized-carry versus filler proxies from observable board fields; do not present these proxies as a generic AD-role classifier.",
+          "Cover all six pairs: Aphelios–Brambleback, Aphelios–Sivir, Aphelios–Nidalee, Brambleback–Sivir, Brambleback–Nidalee, and Sivir–Nidalee. Give each inspected pair’s support count and denominator when reportable.",
+          "Verify recurring shared-support claims with joint package evidence. Separate pair membership from higher-order intersections and identify inspected candidate/page coverage.",
+          "Report overlapping pair or triple cells as overlapping; do not sum them into a unique family or claim a union denominator without prepared evidence.",
+          "Summarize observed outcomes with denominators where available, and avoid claiming that a particular carry pairing caused the result or is universally best."
+        ],
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes."
+      },
+      "metadata": {
+        "source_case_id": "CO4-2-C03",
+        "lane": "CO4-2",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_declared_board_population",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_unit_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C04",
+      "input": "For finished Zyra/Soraka boards, what does the rest of the team look like when Malphite and Sentinel aren't the frontline? Are there recurring alternatives, or just scattered emergency boards?\n\nAnalyze completed boards with Zyra, Soraka, or both as separate inclusive families, using observable itemization to distinguish invested from low-item carry proxies. For the main question, exclude both Malphite and Sentinel; separately label any variants missing only one anchor.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define Zyra-only, Soraka-only, and both-carry populations and explain the observable itemization proxy used; keep the three populations distinct.",
+          "Interpret “Malphite and Sentinel aren’t the frontline” as boards lacking both named anchors for the primary analysis, and report single-anchor-absent variants separately if inspected.",
+          "Identify recurring replacement frontline/support packages with joint recurrence counts and denominators, rather than relying on isolated tank rankings.",
+          "Show relevant level, board-size, and item-budget context when supported, and distinguish measured packages from scattered or suppressed groups.",
+          "Do not infer that a board was an emergency choice or that a package is causally better; final-board records cannot reveal intent, timing, or full deployed-slot equivalence."
+        ],
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes."
+      },
+      "metadata": {
+        "source_case_id": "CO4-2-C04",
+        "lane": "CO4-2",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_declared_board_population",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_unit_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C05",
+      "input": "When Teemo shows up in several top-four endgame boards, are those actually the same composition? What recurring cores separate Teemo carry boards from boards that just keep him alongside another carry?\n\nFocus on Teemo-containing top-four final boards (placements 1–4), using itemized versus low-item Teemo as a stated carry/companion proxy. Preserve an all-placement sensitivity analysis separately; do not replace the top-four population with all boards.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define the top-four population and observable itemization proxy; state whether placement-specific support was complete or suppressed.",
+          "Report Teemo-carry and Teemo-companion recurrence using top-four-specific counts and denominators from reportable comparison histograms or complete returned placement cells. Label incomplete support when suppressed placement cells prevent an exact count; do not reconstruct suppressed cells.",
+          "Identify recurring cores through joint membership checks rather than Teemo presence or separate marginal frequencies alone.",
+          "Keep any all-placement discovery or sensitivity results clearly separate from top-four recurrence and outcome rates; do not infer top-four totals from suppressed groups.",
+          "Report available placement outcomes with their denominators and avoid causal claims about Teemo itemization or composition identity; state the complete-roster and role-classification limits."
+        ],
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes."
+      },
+      "metadata": {
+        "source_case_id": "CO4-2-C05",
+        "lane": "CO4-2",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_declared_board_population",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-2-C06",
+      "input": "Are the finished boards people call Warwick–Murkwolf reroll actually the same family as vertical Riftbeast boards that carry Murkwolf? Which units define each core, and where do they overlap?\n\nCompare itemized Murkwolf end states across three explicitly labeled populations: three-star Murkwolf with three-star Warwick; itemized Murkwolf with higher recorded Riftbeast contribution strata; and their hybrid intersection. Keep Murkwolf star/item investment and Warwick investment visible.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define each of the three named end-state populations using observable star, item-count, and trait-contribution fields; state that these are final-board proxies for player labels.",
+          "Report each candidate core’s joint recurrence, count, and denominator, and distinguish core support from marginal unit or trait frequency.",
+          "Measure and describe the hybrid overlap with a valid shared population or grouped-query approach; do not add overlapping family counts as if they were disjoint.",
+          "Show level, board-size, and investment differences where reportable, and compare outcomes only with their observed denominators and support caveats.",
+          "Do not infer reroll process, Alpha Mark ownership, sacrifice events, combat behavior, or causation; explain that contains-core evidence cannot identify every flex slot or full roster."
+        ],
+        "reference": "No numerical winner or answer has been preselected. Grade claims against the actual scoped observations and their denominators; acceptable conclusions may differ with the verified sample. The preparation notes describe available methods and limits, not observed outcomes."
+      },
+      "metadata": {
+        "source_case_id": "CO4-2-C06",
+        "lane": "CO4-2",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_declared_board_population",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

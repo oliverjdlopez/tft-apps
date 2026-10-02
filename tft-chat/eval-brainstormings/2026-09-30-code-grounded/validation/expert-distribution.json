@@ -1,0 +1,523 @@
+{
+  "additional_triggers_required": 0,
+  "all_four_custom_experiments_enabled": true,
+  "all_four_frozen_bundles_validated": true,
+  "completed_at_utc": "2026-09-30T15:28:07.340199+00:00",
+  "copy_map": [
+    {
+      "case": "CO4-1-C01",
+      "dataset": "comp-expert",
+      "item_id": "5c31b9b2571e618e7c882573cc91088d00b4c5c99796241f5e3920cc706daa3a",
+      "source_item_id": "0f92e89bf65e461714ef518c507bbac00a77e96c059b3c03366a722f50fc3404"
+    },
+    {
+      "case": "CO4-1-C02",
+      "dataset": "comp-expert",
+      "item_id": "475887ef4d6a45c2eeaf7eb3fb76e8edd2f1c23b17ef0944f6f6e63cde1ac040",
+      "source_item_id": "5b7986f2e365b0d21c7ee36f1daaccf14d7bdba76b0e3033e73a866514ea8965"
+    },
+    {
+      "case": "CO4-1-C03",
+      "dataset": "comp-expert",
+      "item_id": "540ad2391a1d8ee7fb12c19c51ec7c91fbefc026512d571d41325e2bb5d0a7db",
+      "source_item_id": "6bb02811ac48244ba7371f2626d179334df04003f32d5d79876da797c74af302"
+    },
+    {
+      "case": "CO4-2-C01",
+      "dataset": "comp-expert",
+      "item_id": "297dc810cb13cac3e82a99fd05b865b263e84cb30919cbac3853b22cb2a6e4c6",
+      "source_item_id": "6baf55754810c4ef3e7a02239784386b1dc0eeedf912d93cf3ef12a5089798d6"
+    },
+    {
+      "case": "CO4-2-C02",
+      "dataset": "comp-expert",
+      "item_id": "0f4e044d3d6ef2d90b81d35ecb1e0fe0dc840784a9164acb8176ba3dc192ec42",
+      "source_item_id": "a3a4520d70fa4f2c018d3efe0096889eb63c583080a407acbc23648ee8731773"
+    },
+    {
+      "case": "CO4-2-C03",
+      "dataset": "comp-expert",
+      "item_id": "7a4b32f9c22ee8b212a1c86834ba8ce9bb5d0548e06b0d784cdef9f0ab0be2c6",
+      "source_item_id": "830de2c26614aebbca0dd45015d94d8655f1e3657736d409c945507b06ee84ec"
+    },
+    {
+      "case": "CO4-2-C04",
+      "dataset": "comp-expert",
+      "item_id": "b75aea7af6f9b6cebd6372f123efc0be04ffc87f0e940094ec312affe5cb3905",
+      "source_item_id": "32a7449e2419f83390d403ec916da7afae351a5e35bbbce2a5f921102ccf9ef7"
+    },
+    {
+      "case": "CO4-2-C05",
+      "dataset": "comp-expert",
+      "item_id": "94af21e799876cdf6103756c750217a2f45528ab234c6154fabc39314183cdad",
+      "source_item_id": "7cc18b7355264342c00ef66e296d54c3a1969ab0eb65910d9d29ddcc70ffe558"
+    },
+    {
+      "case": "CO4-2-C06",
+      "dataset": "comp-expert",
+      "item_id": "f7c4a1c1a4e309c4e321f15981a70274449219cc8baddb37959e0ed4e4f8a8ae",
+      "source_item_id": "b1a9b89879e50e3cac5a2af22d88e8f8f9c2cc81c1676a4603d042b1a8b811bf"
+    },
+    {
+      "case": "CO4-3-C01",
+      "dataset": "comp-expert",
+      "item_id": "092004a40677576f52147774bf01486f12212a753d82bf6fce71f359a0ad600e",
+      "source_item_id": "4475da69ff160d9f96bcb04e2378c47d53956f0d8900ddf335a6998e92982c33"
+    },
+    {
+      "case": "CO4-3-C02",
+      "dataset": "comp-expert",
+      "item_id": "f966a996042819e8b7253100b97bb065da66d429d0bdd9bae736ff20b39545bb",
+      "source_item_id": "cabd425c78eb277a50ef0dedf6b27013bc20a31ad8143f36e0e82f96d6c75f91"
+    },
+    {
+      "case": "CO4-3-C03",
+      "dataset": "comp-expert",
+      "item_id": "116fad960b08afc21ce238a53e50e3c1a3e372b5dc0f02d91db88b1784eb6d88",
+      "source_item_id": "0ac1519727438751ac455b2fd9241e85db7e492f838094d7719a495b22f29986"
+    },
+    {
+      "case": "CO4-3-C04",
+      "dataset": "comp-expert",
+      "item_id": "3cc03e3a6d7bb353112b4769a1bde6ac1ece1dccd2ab87666a6dd7dabab978ac",
+      "source_item_id": "0f5bf4211b11f43241560e8fda51fb079c3ede8fd99808ac49e112b6b85bf9bc"
+    },
+    {
+      "case": "CO4-3-C05",
+      "dataset": "comp-expert",
+      "item_id": "d0fc2846799e556f1f1144a7682637aa72f23ed32446f7530daa5d48d491e3df",
+      "source_item_id": "6b58438caa90ee81fd496d040ab40bf72ec445310769d3d3d384e3e0d10c904d"
+    },
+    {
+      "case": "CO4-4-C01",
+      "dataset": "comp-expert",
+      "item_id": "fc44c5386963f54d7dab1f0ce0e1069c38f1935ff8de982e9bde1a69d63575ef",
+      "source_item_id": "fb911bb706bd467dd04aafe3a69282d5409c31770846d1210ba065ab34e469a5"
+    },
+    {
+      "case": "CO4-4-C02",
+      "dataset": "comp-expert",
+      "item_id": "70800ce72296a074cc9ed7369c1acc83048bd38746484d7acd5eb42b313c557d",
+      "source_item_id": "f3b9e7c114a5c1f5bdf6959c5de041c6a0c5ab065a54d0d01a4b5a8444948a70"
+    },
+    {
+      "case": "CO4-4-C03",
+      "dataset": "comp-expert",
+      "item_id": "c0cf75ee184d0adddaa771e544e3ea73bdc2828bceee77f0784279835cb8654c",
+      "source_item_id": "5c7d8312d3e16e79a2ef369b4560360b57820a3733be8434c7f9b2c43ecb30de"
+    },
+    {
+      "case": "CO4-4-C04",
+      "dataset": "comp-expert",
+      "item_id": "82cebbc965279b836b5a6dc8bd06beebc8596120214d0babbd79c81ea72f71b9",
+      "source_item_id": "38458dfdd603a102776637e806dc31622e95ca8de1f11eca96080dd51fab9721"
+    },
+    {
+      "case": "IT-1-C01",
+      "dataset": "item-expert",
+      "item_id": "4c572b687fa9b9e1f7ce52c87042a32155f1aa1aad2aa3e7422fbdecfd3a0d92",
+      "source_item_id": "5cce2eb0bfb1a3b656525d42338dca2a3e89bc666435568cad0e01382d7383de"
+    },
+    {
+      "case": "IT-1-C02",
+      "dataset": "item-expert",
+      "item_id": "78eca6779f39a11da8a619e0c794c3123d4f4e5fb72c840bf2c3f58556449f79",
+      "source_item_id": "ed90442a6317e5a211be8d448bb2ecc7bb9b8f49325dc1412084da63553eea39"
+    },
+    {
+      "case": "IT-2-C01",
+      "dataset": "item-expert",
+      "item_id": "d26659168fea4d5cb7996761cfa49bfe01f2423de04faddb8c82d0231455fe16",
+      "source_item_id": "6827fb32ce84fccef0934b858f95eb4762ec7b9a61f4c49e625884ebb741f571"
+    },
+    {
+      "case": "IT-2-C02",
+      "dataset": "item-expert",
+      "item_id": "260c54c007a50c2212959dfcf86f575ab73073dbd53d1211aebf3170f2de893b",
+      "source_item_id": "7eae5f64f590113d720878bbb89fcca0129ff957489666452d3cc6d6025bac99"
+    },
+    {
+      "case": "IT-2-C03",
+      "dataset": "item-expert",
+      "item_id": "cefd97cf7eebc4c755cfff6622b336e4e2b7abfba1e5246b4db553306f17f150",
+      "source_item_id": "788c5d70f0c138c02631bf201c3470513629f0946457aaa4aaae2f7757e9d36e"
+    },
+    {
+      "case": "IT-3-C01",
+      "dataset": "item-expert",
+      "item_id": "faddc41033aace7cf8954b9bba669f5334f51be15823e1295ce571068ca631fb",
+      "source_item_id": "3ea94e053c78cf07fbd38537f4b754ad69e60acf12f4909f52805a11eca29eec"
+    },
+    {
+      "case": "IT-3-C02",
+      "dataset": "item-expert",
+      "item_id": "28be4c1254df2b9b25d8cb11c51314aa100f30cce1e58ab6bcc103e064190126",
+      "source_item_id": "4bacb1bbc63fe84ce42f2a198efa1707db683fc5d3081ee7f079b8a255cd156d"
+    },
+    {
+      "case": "IT-3-C03",
+      "dataset": "item-expert",
+      "item_id": "b2a2a42cb0d47450319d0977ad7102ca1125b84d8162406c5e76168fa389ce0a",
+      "source_item_id": "675c0094a467ab2a9a3dc4580122c4f2c6fb2b8e3ba4de4f5db6d612198f7993"
+    },
+    {
+      "case": "IT-3-C04",
+      "dataset": "item-expert",
+      "item_id": "b3f79c503236fe66de696bb28028be8b62dbe3f1e782eab2f4f6b90c668c4031",
+      "source_item_id": "7298853d79fc9bf0b1fe6117f5efe3936362507ee89452ce3e27bbdf877aa907"
+    },
+    {
+      "case": "IT-3-C05",
+      "dataset": "item-expert",
+      "item_id": "c1c085fab6d44945c47c61be154709835cd5d28d1deeaaa576e81853146d0c7c",
+      "source_item_id": "c883d0cd75d8cb8b99ef2cc51f9d28119e00b07e9d6053803af66c74f079c6c8"
+    },
+    {
+      "case": "IT-3-C06",
+      "dataset": "item-expert",
+      "item_id": "99e068b25824e3419156bc6fea068f7f83e224ea07cf54ab24dac4f925ab148c",
+      "source_item_id": "f632960fae822304be1d7e541b4c042326ae3450b3c62a76c3733b27fc8aed35"
+    },
+    {
+      "case": "IT-4-C01",
+      "dataset": "item-expert",
+      "item_id": "b43be1d29819ddb2272c9446f48a8e68f2f5bc7417ecbcd46d0c6e0c6864d099",
+      "source_item_id": "329409dff5f9a9cff77aaa7e916846f3bb45cda05fc8cdb54d8dc286470b6889"
+    },
+    {
+      "case": "IT-4-C02",
+      "dataset": "item-expert",
+      "item_id": "2b5c0e3f7ecb896316f04dc3eb051880a81d9e76c6062c5118f86b2451d8535b",
+      "source_item_id": "fe6c259eba374e6b632139eded3b6f5003cf2b7e6be74367b748ebab3c6fc08d"
+    },
+    {
+      "case": "IT-4-C03",
+      "dataset": "item-expert",
+      "item_id": "cdbd29aaeb59206b5d4ee327b20c0dd46079c83a584d197b3ed0ece0c1b64a6b",
+      "source_item_id": "d68f89bac50b6c9fa6a0be5e3725f959726910b7716053bb06b4601021a7a673"
+    },
+    {
+      "case": "IT-4-C04",
+      "dataset": "item-expert",
+      "item_id": "07f9ba7ca87bafbc2a1a589bc2cdd8f085328392566a3f4406820f5b2a5aeaa2",
+      "source_item_id": "56d8825d9c9d77500049e73d3ca92d74cc965730af74b24662fcacd7d926e995"
+    },
+    {
+      "case": "IT-4-C05",
+      "dataset": "item-expert",
+      "item_id": "a1226682b04dbb27d601b1119b63c5cc546e2b77bb6dd73aa71c843b4bdf8779",
+      "source_item_id": "73649f7093fc948e9116f81ece2a29dcf91ce2ca3dfbb0f69066d7efa98e2990"
+    },
+    {
+      "case": "IT-4-C06",
+      "dataset": "item-expert",
+      "item_id": "98017424511ba85e8fb06f58e3c31bef77c499accbf1a347cf6bf7f7231ca0a7",
+      "source_item_id": "ed108a001c7e64bd62c5c1756211e76b8108ade5bb28db9af76edd8c6a0f6f8c"
+    },
+    {
+      "case": "TR-1-C01",
+      "dataset": "trait-expert",
+      "item_id": "122fa61d00aa774d5c6e0a295a0d03ea888420df3594cb93dae5dcd819c09a85",
+      "source_item_id": "7973d15cfca64cc576bb5d193b2b87513fffee09fe68ba4d27856a85f0323551"
+    },
+    {
+      "case": "TR-1-C02",
+      "dataset": "trait-expert",
+      "item_id": "75156bd3ad7f1d8a4308c28819cb420ed6b39b13cc8cfce32c96eb6cf0cdde0e",
+      "source_item_id": "ab22d5d30ab6c79a056e278eca40bf5b301743707c2560098673d9650862815f"
+    },
+    {
+      "case": "TR-1-C03",
+      "dataset": "trait-expert",
+      "item_id": "5f2dffac1411cf6eb8dfce0235325c6c3debf99ae9dea3abecfd7ed0b1eba5fe",
+      "source_item_id": "5d878e0fbb53e9cb78682a1f3d22d1c69b6c44d5d03fa95786f619c4565c9804"
+    },
+    {
+      "case": "TR-2-C01",
+      "dataset": "trait-expert",
+      "item_id": "e5f8f522b5391091e6594c8f5296e80a35a567c9c01e30019a4165ff15b10a6e",
+      "source_item_id": "7085826651c782f33d99ce69e1840eba716900f0190484c9661df5f9187d8398"
+    },
+    {
+      "case": "TR-2-C02",
+      "dataset": "trait-expert",
+      "item_id": "db03bcd7fac4e5c4c462361b1bada4d5019839364bf4b79a81bbd431645d800f",
+      "source_item_id": "1b62de96dedc497d803467b62f824d53f7b4ab3b69d8a3115912f5caacd0bb44"
+    },
+    {
+      "case": "TR-2-C03",
+      "dataset": "trait-expert",
+      "item_id": "2c34dc92931ac52f6f49c8079b4340c66af95ea8d1ee3e7ddfb5743f02dab53b",
+      "source_item_id": "cf372930ea4b33f21e399727fadb862f01213d8388681c9b5c9b3d2e7472ca47"
+    },
+    {
+      "case": "TR-2-C04",
+      "dataset": "trait-expert",
+      "item_id": "a1e7bd5d4041d56e42ded2fd5c14ca3cd2366b54cf74d2bd2a714d5ae6823573",
+      "source_item_id": "74147a73a69ef21fa7fbbee038453a1c7f0773571ee061c9743907e24b9c66ea"
+    },
+    {
+      "case": "TR-2-C05",
+      "dataset": "trait-expert",
+      "item_id": "b3bf4f6cff0614a62439d7949e252238e6e2e3e57ca3ee7c17d5e54acd597959",
+      "source_item_id": "5acbe8414544409f8b1ff339b90c82a0902784fd85640d6fea62a11deaddc5e6"
+    },
+    {
+      "case": "TR-2-C06",
+      "dataset": "trait-expert",
+      "item_id": "6dbda20da04f4f78759f722f25123392c26a541533653dc31a0d99121b417cd4",
+      "source_item_id": "aaa4d8adc4fbef0bc90fcf21fcb726875e9d1a6396335d9c567fca2e43f8afac"
+    },
+    {
+      "case": "TR-3-C01",
+      "dataset": "trait-expert",
+      "item_id": "4acfe2dbdde88980bf22d0d36beb389b7055f06f07c580a0581309f071b96a26",
+      "source_item_id": "59be95bab17a1a6d9be4194a6303cbb75ddc2d6f8b474f379d5eec92a08a2b7d"
+    },
+    {
+      "case": "TR-3-C02",
+      "dataset": "trait-expert",
+      "item_id": "64708964987afc11ab8973fcc16b08cf13001f96039c1ea2897cc1e56cd5d4ec",
+      "source_item_id": "68615f9fa75d510374bd552f86c7dd57e332a162e332ac7e3d506c7fa300166a"
+    },
+    {
+      "case": "TR-3-C04",
+      "dataset": "trait-expert",
+      "item_id": "9b53592b161e97904728b8316022cae9fb18bf28cfd80b575c9ceae1cd9c4ae3",
+      "source_item_id": "957b721d64981d858e748efefcdd412c48ffc99a70008480660c33f86731d4a3"
+    },
+    {
+      "case": "TR-3-C05",
+      "dataset": "trait-expert",
+      "item_id": "85e307e341156236ecd08ec47b3cb770a746cf304ca966313fee84c6d3f49ed6",
+      "source_item_id": "50ed57b082ad9abb60273040f208ecf7251049cd1ff0a855bb75c84cbb897e4f"
+    },
+    {
+      "case": "TR-4-C01",
+      "dataset": "trait-expert",
+      "item_id": "3d922a4547377898f776bac9f59c739fa22b22f0f36ce245694c3c112ab1badd",
+      "source_item_id": "a1cfc486cfe2e21c58e64ef7fd804b5cb3be9e559fc0fc2878f2214297b97a2f"
+    },
+    {
+      "case": "TR-4-C02",
+      "dataset": "trait-expert",
+      "item_id": "fb047799461916e303d84882e12abd87d2977ee53e8d853cfffe52baad311150",
+      "source_item_id": "cbaa728622b60fd3a98862f6b84f2b1a95ea40332a463a95eac6816b10ee71cf"
+    },
+    {
+      "case": "TR-4-C03",
+      "dataset": "trait-expert",
+      "item_id": "294af9256e03a73c8531c955e11243eaa4fa8d2da7870fd9d5e2682d86c8f7ec",
+      "source_item_id": "7dd004c95717916a9823f0b7741e6eb73b696199cc6c572467e3cd92c7b2e1de"
+    },
+    {
+      "case": "TR-4-C04",
+      "dataset": "trait-expert",
+      "item_id": "a93c2ba825f46a49722130d47b79ac284ce875be9cdd37f0117c5fad1ec9e1fb",
+      "source_item_id": "c41d2fa094a43cae15bcb67b77386837b0351701c8b22064319cc971bd5ddbce"
+    },
+    {
+      "case": "UN4-1-C01",
+      "dataset": "unit-expert",
+      "item_id": "f50f6a9ca3e2ade7ea2d26109b9b388f84d32f75ac594c05acde01cc8c1b59f0",
+      "source_item_id": "d338df087577b8be814db9172a62b238fb31fe6d803cc9474479c3042ce0c6ac"
+    },
+    {
+      "case": "UN4-1-C02",
+      "dataset": "unit-expert",
+      "item_id": "cc13010a5b61230811b57890d553219622481f7e6a6c36338781cee60ad4dfd4",
+      "source_item_id": "b9f9c4e8576f5ede6aca421b5193fdf67f458d1e4b74216b00e2bff19fc27551"
+    },
+    {
+      "case": "UN4-1-C03",
+      "dataset": "unit-expert",
+      "item_id": "68096a7f53baffd15cc2af84afe70517b5d15b202b2ffba9bd6efb7c9416d70c",
+      "source_item_id": "7173e6ca861de9a48babe4afd01085c49062baef781ff76ff068aca1cd17c717"
+    },
+    {
+      "case": "UN4-1-C04",
+      "dataset": "unit-expert",
+      "item_id": "ad9ad76742f63b341ef426b094130ecd0a29f34724c2b7cc6d919b6dd6ba374e",
+      "source_item_id": "78cbb246c2216cc466a3a40259f57c77ac6a5c029611ee3732bb35011afb3a5d"
+    },
+    {
+      "case": "UN4-2-C01",
+      "dataset": "unit-expert",
+      "item_id": "48d8ac4ac8acbacff37563dcf180fd96778ce46a1b97bb008a3f74c96456df1d",
+      "source_item_id": "3ed1035984831ae54eaed1373270f7c1f94fccc0e096b384c3615af708241307"
+    },
+    {
+      "case": "UN4-2-C02",
+      "dataset": "unit-expert",
+      "item_id": "376ce2b641180c2f2a92ba29e519fbccdaf79c879fd998ed4401f205a679d4d9",
+      "source_item_id": "2e841b6fcac56747496f3bf6217fc4d75cbe2377f9f503f49e8a24a80dfbb5d8"
+    },
+    {
+      "case": "UN4-2-C03",
+      "dataset": "unit-expert",
+      "item_id": "ce61969ac12b5d1dc4f2d088c610e09d96b03b70f4584d65d5d9db91c120e04d",
+      "source_item_id": "891a85a1f2483cd904a3c20a81dd10c391a7e3eda438a8e778def2014dbe757c"
+    },
+    {
+      "case": "UN4-2-C04",
+      "dataset": "unit-expert",
+      "item_id": "afbd24491a6aa4df5d9713caf3fe0ce0ed8b43d67e41ad33d8aa080df3ff0763",
+      "source_item_id": "e240956b481a31aab2ad2d5a91ff1c0fdfca8c930b0a8b364c510a3dd79c1388"
+    },
+    {
+      "case": "UN4-3-C01",
+      "dataset": "unit-expert",
+      "item_id": "ac3bc492ba71b456e1f9d260dae0fe87a2e3ecca0977a115c950c1f4b0ab42a8",
+      "source_item_id": "3e348906f65298628a3e0c466910c3048bacaf28a5b6547eef52b0f3c99a4e4e"
+    },
+    {
+      "case": "UN4-3-C02",
+      "dataset": "unit-expert",
+      "item_id": "176c9c8173f1a6b388ef98a6a980dad3f4acd8f547c83afb41431e94a4781a7c",
+      "source_item_id": "f830aae110744d926a1e5e9b251af1850f730b9dc5c4d0b53c700d70209284d0"
+    },
+    {
+      "case": "UN4-3-C03",
+      "dataset": "unit-expert",
+      "item_id": "ef7a44569311fc5d99745424330dae1388e0dee601870fbc8859f6c70bc5ad9e",
+      "source_item_id": "78fae1cf4d3af28a5bf47483f133cac1d7e217382d92e89f255de62f0302b75e"
+    },
+    {
+      "case": "UN4-3-C04",
+      "dataset": "unit-expert",
+      "item_id": "a574e9ff4c759940f11abb673c5b680f03919c404e2e4443ade4aab62a5d33c9",
+      "source_item_id": "3e1f62bf929f84bf73bc105a5f49300bae6b56494b9c0c9ede188769e7f942f1"
+    },
+    {
+      "case": "UN4-3-C05",
+      "dataset": "unit-expert",
+      "item_id": "01bd6ca031ee3bfc67b07755463a8d04d73025de11acf52e02de59f58d5a1aca",
+      "source_item_id": "3a7c675a9af154cac2b66f97a73e693829d380607474330a6d68a14696e7e40a"
+    },
+    {
+      "case": "UN4-3-C06",
+      "dataset": "unit-expert",
+      "item_id": "11ef010c578bfcd20ae2a91218eff930ef771ee95e59b8092ea51b3965d22bc4",
+      "source_item_id": "f59ffa54862686ceb35eafcb31a1d2a4e081cae7b244d845ec54b8cdca27db91"
+    },
+    {
+      "case": "UN4-4-C01",
+      "dataset": "unit-expert",
+      "item_id": "12efd0c0ce3e2d6d4ec9f96be2913b4651268880afdfbeff119c74266d5dc8e2",
+      "source_item_id": "5d3520649a662a1159df9881bd36b390449db37f3b299c61894c5b5c9762be48"
+    },
+    {
+      "case": "UN4-4-C02",
+      "dataset": "unit-expert",
+      "item_id": "66d6e74faab62b0756e924565a187a9ab9d4e248f7e527cc2e6da2edbbeb26d4",
+      "source_item_id": "09d801501e85552e1e9d63d9cd92c60fc193f4737521498a2ffdb0b6393ca37c"
+    },
+    {
+      "case": "UN4-4-C03",
+      "dataset": "unit-expert",
+      "item_id": "fefccf652f2a1fc93aa8c12ae9c1bdc9676af6d4e873d6829e2194e6fff308c5",
+      "source_item_id": "08719080c721c3529632e51638067d9ab7fd359820b399e7b16c665eeba2db0d"
+    }
+  ],
+  "destinations": [
+    {
+      "assistant": "comp_expert",
+      "checks": 28,
+      "dataset": "comp-expert",
+      "dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+      "dataset_url": "http://localhost:15500/project/chattft-evals/datasets/cmuo9c08q005zuf07yoqnbxqo/items",
+      "items": 18,
+      "lanes": {
+        "CO4-1": 3,
+        "CO4-2": 6,
+        "CO4-3": 5,
+        "CO4-4": 4
+      },
+      "max_turns": 40,
+      "snapshot": "9d8071956135c1dd3a0e58e7719b75f5fd1699dfedc8c4e3918f77bb39188fb7"
+    },
+    {
+      "assistant": "item_expert",
+      "checks": 46,
+      "dataset": "item-expert",
+      "dataset_id": "cmu8nwaga001zuf07f73rav2s",
+      "dataset_url": "http://localhost:15500/project/chattft-evals/datasets/cmu8nwaga001zuf07f73rav2s/items",
+      "items": 17,
+      "lanes": {
+        "IT-1": 2,
+        "IT-2": 3,
+        "IT-3": 6,
+        "IT-4": 6
+      },
+      "max_turns": 40,
+      "snapshot": "d7be19bd08b4715111f573f430a0adf7efd822bacf8ea6dfe79a51cfcfaa35b6"
+    },
+    {
+      "assistant": "chat",
+      "checks": 29,
+      "dataset": "trait-expert",
+      "dataset_id": "cmuo9c0jc0065uf07zqs57phn",
+      "dataset_url": "http://localhost:15500/project/chattft-evals/datasets/cmuo9c0jc0065uf07zqs57phn/items",
+      "items": 17,
+      "lanes": {
+        "TR-1": 3,
+        "TR-2": 6,
+        "TR-3": 4,
+        "TR-4": 4
+      },
+      "max_turns": 40,
+      "snapshot": "f4d625e7edb2cd94a130a1ee5e90ea6edf27d7bf99967e033cf1a7db7c488366"
+    },
+    {
+      "assistant": "unit_expert",
+      "checks": 51,
+      "dataset": "unit-expert",
+      "dataset_id": "cmu8nvge2001kuf073qd3855n",
+      "dataset_url": "http://localhost:15500/project/chattft-evals/datasets/cmu8nvge2001kuf073qd3855n/items",
+      "items": 17,
+      "lanes": {
+        "UN4-1": 4,
+        "UN4-2": 4,
+        "UN4-3": 6,
+        "UN4-4": 3
+      },
+      "max_turns": 40,
+      "snapshot": "4c379075d432fab26683ad7fb7cdd7e7be7063ef99944aaa0baf97461eedcf1d"
+    }
+  ],
+  "documentation_links_verified": true,
+  "grading_membership_updated": true,
+  "input_and_expected_output_preserved": true,
+  "meta_expert": {
+    "id": "cmu8nxsqw002euf07kd0b8sgi",
+    "items": 0,
+    "preserved": true
+  },
+  "model_execution_performed": false,
+  "new_immutable_snapshots_verified": 10,
+  "original_item_identity_recorded_in_metadata": true,
+  "other_datasets_preserved": [
+    "meta-expert",
+    "context-response",
+    "end-to-end",
+    "data-analysis"
+  ],
+  "other_grading_settings_preserved": true,
+  "portable_definitions_import_validated": 4,
+  "private_complete_backup_created": true,
+  "registration_tests_passed": 17,
+  "runner_ready": true,
+  "source_catalog_registration_removed": true,
+  "source_dataset": "set18-grounded-investigations",
+  "source_dataset_deleted": true,
+  "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+  "source_experiments_in_backup": 0,
+  "source_snapshot_retained": "dfa52695218ca43ca2f80c06e86f301a5864bdeb4254b336e3de397ae7e10a5c",
+  "startup_would_recreate_nothing": true,
+  "statuses_and_lane_lineage_preserved": true,
+  "tool_alternative_adjustments": 28,
+  "tool_alternatives_equivalent_over_available_tools": true,
+  "total_cases": 69,
+  "total_checks": 154,
+  "unrelated_experiments_preserved": 26
+}

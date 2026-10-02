@@ -1,0 +1,2333 @@
+{
+  "scope": "offline_definition_validation_not_live_model_or_database_execution",
+  "lanes": [
+    {
+      "lane": "IT-1",
+      "items": 2,
+      "checks": 6,
+      "assertions": [
+        {
+          "case": "IT-1-C01",
+          "name": "resolve_item_and_holder_names",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-1-C01",
+          "name": "discover_aphelios_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 1,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-1-C01",
+          "name": "compare_build_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-1-C02",
+          "name": "resolve_item_and_holder_names",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-1-C02",
+          "name": "discover_fixed_pair_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 1,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-1-C02",
+          "name": "compare_third_item_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "IT-2",
+      "items": 3,
+      "checks": 9,
+      "assertions": [
+        {
+          "case": "IT-2-C01",
+          "name": "resolve_names",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C01",
+          "name": "compare_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C01",
+          "name": "inspect_trait_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C02",
+          "name": "resolve_names",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C02",
+          "name": "compare_allocations",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C02",
+          "name": "inspect_shell_context",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C03",
+          "name": "resolve_names",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C03",
+          "name": "compare_allocations",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-2-C03",
+          "name": "inspect_trait_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "IT-3",
+      "items": 6,
+      "checks": 13,
+      "assertions": [
+        {
+          "case": "IT-3-C01",
+          "name": "zyra_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C01",
+          "name": "compares_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C02",
+          "name": "elise_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C02",
+          "name": "compares_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C03",
+          "name": "ashe_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C03",
+          "name": "compares_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C04",
+          "name": "morgana_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C04",
+          "name": "compares_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C05",
+          "name": "mama_beak_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C05",
+          "name": "queries_cohort_context",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C05",
+          "name": "compares_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C06",
+          "name": "fiddlesticks_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-3-C06",
+          "name": "compares_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "IT-4",
+      "items": 6,
+      "checks": 18,
+      "assertions": [
+        {
+          "case": "IT-4-C01",
+          "name": "resolve_items_and_holders",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C01",
+          "name": "discover_build_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C01",
+          "name": "compare_holder_allocations",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C02",
+          "name": "resolve_radiant_variants",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C02",
+          "name": "compare_holder_allocations",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C02",
+          "name": "inspect_holder_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C03",
+          "name": "resolve_items_units_and_trait",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C03",
+          "name": "compare_complete_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C03",
+          "name": "inspect_stratum_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C04",
+          "name": "resolve_build_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C04",
+          "name": "discover_exact_caitlyn_builds",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C04",
+          "name": "compare_builds",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C05",
+          "name": "resolve_sett_build_and_trait",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C05",
+          "name": "discover_trait_and_carry_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C05",
+          "name": "compare_sett_allocations",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C06",
+          "name": "resolve_veigar_and_tank_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C06",
+          "name": "discover_builds_and_tank_partners",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "IT-4-C06",
+          "name": "compare_within_tank_strata",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "UN4-1",
+      "items": 4,
+      "checks": 12,
+      "assertions": [
+        {
+          "case": "UN4-1-C01",
+          "name": "veigar_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C01",
+          "name": "queries_veigar_board_cells",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C01",
+          "name": "compares_veigar_cells",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C02",
+          "name": "master_yi_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C02",
+          "name": "ranks_exact_candidate_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C02",
+          "name": "compares_candidate_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C03",
+          "name": "veigar_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C03",
+          "name": "ranks_veigar_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C03",
+          "name": "compares_veigar_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C04",
+          "name": "ornn_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C04",
+          "name": "queries_joint_frontline_cells",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-1-C04",
+          "name": "compares_frontline_allocations",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "UN4-2",
+      "items": 4,
+      "checks": 15,
+      "assertions": [
+        {
+          "case": "UN4-2-C01",
+          "name": "resolve_unit_and_item_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C01",
+          "name": "discover_exact_star_three_item_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 1,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C01",
+          "name": "compare_named_build_contexts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C02",
+          "name": "resolve_build_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C02",
+          "name": "discover_azir_three_star_triplets",
+          "type": "tool_called",
+          "schema_alternatives_checked": 1,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C02",
+          "name": "compare_exact_slot_alternatives",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C02",
+          "name": "inspect_supporting_board_strata",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C03",
+          "name": "resolve_unit_emblem_and_item_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C03",
+          "name": "discover_nidalee_two_star_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 1,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C03",
+          "name": "compare_emblem_builds",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C03",
+          "name": "inspect_package_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C04",
+          "name": "resolve_ahri_and_item_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C04",
+          "name": "discover_two_star_three_item_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 1,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C04",
+          "name": "compare_ahri_builds",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-2-C04",
+          "name": "inspect_trait_contexts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "UN4-3",
+      "items": 6,
+      "checks": 12,
+      "assertions": [
+        {
+          "case": "UN4-3-C01",
+          "name": "compare observed cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C01",
+          "name": "inspect candidate builds or cohort composition",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C02",
+          "name": "compare observed cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C02",
+          "name": "inspect candidate builds or cohort composition",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C03",
+          "name": "compare observed cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C03",
+          "name": "inspect candidate builds or cohort composition",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C04",
+          "name": "compare observed cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C04",
+          "name": "inspect candidate builds or cohort composition",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C05",
+          "name": "compare observed cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C05",
+          "name": "inspect candidate builds or cohort composition",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C06",
+          "name": "compare observed cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-3-C06",
+          "name": "inspect candidate builds or cohort composition",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "UN4-4",
+      "items": 3,
+      "checks": 12,
+      "assertions": [
+        {
+          "case": "UN4-4-C01",
+          "name": "resolve_carry_tank_and_trait_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C01",
+          "name": "discover_exact_tank_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C01",
+          "name": "compare_supported_tank_outcomes",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C01",
+          "name": "inspect_board_shape_and_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C02",
+          "name": "resolve_carry_tank_and_support_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C02",
+          "name": "discover_carry_and_tank_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C02",
+          "name": "compare_carry_package_outcomes",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C02",
+          "name": "inspect_board_variants_and_investment",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C03",
+          "name": "resolve_core_secondary_and_item_terms",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C03",
+          "name": "discover_secondary_unit_builds",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C03",
+          "name": "compare_secondary_package_outcomes",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "UN4-4-C03",
+          "name": "inspect_capacity_upgrade_and_item_diagnostics",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "CO4-1",
+      "items": 3,
+      "checks": 6,
+      "assertions": [
+        {
+          "case": "CO4-1-C01",
+          "name": "investigates_named_cohort_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-1-C01",
+          "name": "compares_supported_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-1-C02",
+          "name": "discovers_veigar_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-1-C02",
+          "name": "compares_reportable_build_groups",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-1-C03",
+          "name": "queries_joint_azir_role_proxies",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-1-C03",
+          "name": "compares_reportable_role_groups",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "CO4-2",
+      "items": 6,
+      "checks": 6,
+      "assertions": [
+        {
+          "case": "CO4-2-C01",
+          "name": "investigate_the_declared_board_population",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-2-C02",
+          "name": "investigate_the_declared_board_population",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-2-C03",
+          "name": "investigate_the_declared_board_population",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-2-C04",
+          "name": "investigate_the_declared_board_population",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-2-C05",
+          "name": "investigate_the_declared_board_population",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-2-C06",
+          "name": "investigate_the_declared_board_population",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "CO4-3",
+      "items": 5,
+      "checks": 10,
+      "assertions": [
+        {
+          "case": "CO4-3-C01",
+          "name": "compare observed packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C01",
+          "name": "inspect frontline and support patterns",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C02",
+          "name": "compare frontline allocations",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C02",
+          "name": "inspect tank and companion patterns",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C03",
+          "name": "compare partner packages by level",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C03",
+          "name": "inspect partner and trait composition",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C04",
+          "name": "compare named support packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C04",
+          "name": "discover joint support patterns",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C05",
+          "name": "compare same-level package cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-3-C05",
+          "name": "inspect supporting roster and traits",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "CO4-4",
+      "items": 4,
+      "checks": 6,
+      "assertions": [
+        {
+          "case": "CO4-4-C01",
+          "name": "queries_observed_aphelios_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-4-C01",
+          "name": "compares_eclipse_and_support_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-4-C02",
+          "name": "discovers_shared_companions_and_package_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-4-C03",
+          "name": "queries_named_finishing_unit_frequencies",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-4-C04",
+          "name": "queries_candidate_roster_diagnostics",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "CO4-4-C04",
+          "name": "compares_support_version_effects",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "TR-1",
+      "items": 3,
+      "checks": 9,
+      "assertions": [
+        {
+          "case": "TR-1-C01",
+          "name": "ahri_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C01",
+          "name": "queries_ahri_trait_and_holder_groups",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C01",
+          "name": "compares_ahri_trait_groups",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C02",
+          "name": "soraka_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C02",
+          "name": "queries_soraka_trait_and_kennen_cells",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C02",
+          "name": "compares_soraka_trait_cells",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C03",
+          "name": "cassiopeia_name_resolved_for_loadout_lookup",
+          "type": "tool_argument_resolved",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C03",
+          "name": "queries_cassiopeia_defender_strata",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-1-C03",
+          "name": "compares_cassiopeia_defender_strata",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "TR-2",
+      "items": 6,
+      "checks": 6,
+      "assertions": [
+        {
+          "case": "TR-2-C01",
+          "name": "investigate_the_named_package_comparison",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-2-C02",
+          "name": "investigate_the_named_package_comparison",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-2-C03",
+          "name": "investigate_the_named_package_comparison",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-2-C04",
+          "name": "investigate_the_named_package_comparison",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-2-C05",
+          "name": "investigate_the_named_package_comparison",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-2-C06",
+          "name": "investigate_the_named_package_comparison",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "TR-3",
+      "items": 4,
+      "checks": 8,
+      "assertions": [
+        {
+          "case": "TR-3-C01",
+          "name": "queries_defender_holder_and_support_cells",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-3-C01",
+          "name": "compares_observed_defender_holder_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-3-C02",
+          "name": "queries_hunter_holder_partner_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-3-C02",
+          "name": "compares_hunter_package_outcomes",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-3-C04",
+          "name": "queries_brawler_yi_loadouts_and_support",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-3-C04",
+          "name": "compares_named_ordinary_and_artifact_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-3-C05",
+          "name": "queries_inferno_holder_replacement_candidates",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-3-C05",
+          "name": "compares_akali_and_replacement_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    },
+    {
+      "lane": "TR-4",
+      "items": 4,
+      "checks": 6,
+      "assertions": [
+        {
+          "case": "TR-4-C01",
+          "name": "compare_trait_support_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-4-C02",
+          "name": "compare_within_family_eclipse_cohorts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-4-C03",
+          "name": "discover_mama_beak_offensive_loadouts",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-4-C03",
+          "name": "compare_joint_support_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-4-C04",
+          "name": "inspect_named_carry_item_builds",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        },
+        {
+          "case": "TR-4-C04",
+          "name": "compare_support_packages",
+          "type": "tool_called",
+          "schema_alternatives_checked": 0,
+          "witness": "positive_and_negative"
+        }
+      ],
+      "import_normalization": "passed_with_export_intercepted",
+      "semantic_validation": "passed"
+    }
+  ],
+  "missing_lanes": [],
+  "case_count": 69,
+  "check_count": 154,
+  "preservation": {
+    "original_research_files": 78,
+    "source_documentation_eval_test_files": 676,
+    "authorized_integration_changes": [
+      "docs/development/langfuse-content.md",
+      "evals/langfuse/snapshots/catalog.json"
+    ],
+    "changed_paths": []
+  },
+  "registration_performed": false,
+  "live_evaluation_performed": false,
+  "numerical_gold_verified": false,
+  "combined_validation": {
+    "items": 69,
+    "checks": 154,
+    "assertions": [
+      {
+        "case": "IT-1-C01",
+        "name": "resolve_item_and_holder_names",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-1-C01",
+        "name": "discover_aphelios_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 1,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-1-C01",
+        "name": "compare_build_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-1-C02",
+        "name": "resolve_item_and_holder_names",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-1-C02",
+        "name": "discover_fixed_pair_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 1,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-1-C02",
+        "name": "compare_third_item_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C01",
+        "name": "resolve_names",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C01",
+        "name": "compare_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C01",
+        "name": "inspect_trait_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C02",
+        "name": "resolve_names",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C02",
+        "name": "compare_allocations",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C02",
+        "name": "inspect_shell_context",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C03",
+        "name": "resolve_names",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C03",
+        "name": "compare_allocations",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-2-C03",
+        "name": "inspect_trait_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C01",
+        "name": "zyra_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C01",
+        "name": "compares_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C02",
+        "name": "elise_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C02",
+        "name": "compares_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C03",
+        "name": "ashe_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C03",
+        "name": "compares_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C04",
+        "name": "morgana_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C04",
+        "name": "compares_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C05",
+        "name": "mama_beak_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C05",
+        "name": "queries_cohort_context",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C05",
+        "name": "compares_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C06",
+        "name": "fiddlesticks_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-3-C06",
+        "name": "compares_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C01",
+        "name": "resolve_items_and_holders",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C01",
+        "name": "discover_build_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C01",
+        "name": "compare_holder_allocations",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C02",
+        "name": "resolve_radiant_variants",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C02",
+        "name": "compare_holder_allocations",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C02",
+        "name": "inspect_holder_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C03",
+        "name": "resolve_items_units_and_trait",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C03",
+        "name": "compare_complete_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C03",
+        "name": "inspect_stratum_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C04",
+        "name": "resolve_build_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C04",
+        "name": "discover_exact_caitlyn_builds",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C04",
+        "name": "compare_builds",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C05",
+        "name": "resolve_sett_build_and_trait",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C05",
+        "name": "discover_trait_and_carry_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C05",
+        "name": "compare_sett_allocations",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C06",
+        "name": "resolve_veigar_and_tank_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C06",
+        "name": "discover_builds_and_tank_partners",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "IT-4-C06",
+        "name": "compare_within_tank_strata",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C01",
+        "name": "veigar_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C01",
+        "name": "queries_veigar_board_cells",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C01",
+        "name": "compares_veigar_cells",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C02",
+        "name": "master_yi_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C02",
+        "name": "ranks_exact_candidate_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C02",
+        "name": "compares_candidate_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C03",
+        "name": "veigar_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C03",
+        "name": "ranks_veigar_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C03",
+        "name": "compares_veigar_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C04",
+        "name": "ornn_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C04",
+        "name": "queries_joint_frontline_cells",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-1-C04",
+        "name": "compares_frontline_allocations",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C01",
+        "name": "resolve_unit_and_item_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C01",
+        "name": "discover_exact_star_three_item_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 1,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C01",
+        "name": "compare_named_build_contexts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C02",
+        "name": "resolve_build_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C02",
+        "name": "discover_azir_three_star_triplets",
+        "type": "tool_called",
+        "schema_alternatives_checked": 1,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C02",
+        "name": "compare_exact_slot_alternatives",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C02",
+        "name": "inspect_supporting_board_strata",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C03",
+        "name": "resolve_unit_emblem_and_item_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C03",
+        "name": "discover_nidalee_two_star_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 1,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C03",
+        "name": "compare_emblem_builds",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C03",
+        "name": "inspect_package_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C04",
+        "name": "resolve_ahri_and_item_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C04",
+        "name": "discover_two_star_three_item_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 1,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C04",
+        "name": "compare_ahri_builds",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-2-C04",
+        "name": "inspect_trait_contexts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C01",
+        "name": "compare observed cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C01",
+        "name": "inspect candidate builds or cohort composition",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C02",
+        "name": "compare observed cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C02",
+        "name": "inspect candidate builds or cohort composition",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C03",
+        "name": "compare observed cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C03",
+        "name": "inspect candidate builds or cohort composition",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C04",
+        "name": "compare observed cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C04",
+        "name": "inspect candidate builds or cohort composition",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C05",
+        "name": "compare observed cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C05",
+        "name": "inspect candidate builds or cohort composition",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C06",
+        "name": "compare observed cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-3-C06",
+        "name": "inspect candidate builds or cohort composition",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C01",
+        "name": "resolve_carry_tank_and_trait_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C01",
+        "name": "discover_exact_tank_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C01",
+        "name": "compare_supported_tank_outcomes",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C01",
+        "name": "inspect_board_shape_and_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C02",
+        "name": "resolve_carry_tank_and_support_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C02",
+        "name": "discover_carry_and_tank_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C02",
+        "name": "compare_carry_package_outcomes",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C02",
+        "name": "inspect_board_variants_and_investment",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C03",
+        "name": "resolve_core_secondary_and_item_terms",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C03",
+        "name": "discover_secondary_unit_builds",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C03",
+        "name": "compare_secondary_package_outcomes",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "UN4-4-C03",
+        "name": "inspect_capacity_upgrade_and_item_diagnostics",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-1-C01",
+        "name": "investigates_named_cohort_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-1-C01",
+        "name": "compares_supported_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-1-C02",
+        "name": "discovers_veigar_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-1-C02",
+        "name": "compares_reportable_build_groups",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-1-C03",
+        "name": "queries_joint_azir_role_proxies",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-1-C03",
+        "name": "compares_reportable_role_groups",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-2-C01",
+        "name": "investigate_the_declared_board_population",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-2-C02",
+        "name": "investigate_the_declared_board_population",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-2-C03",
+        "name": "investigate_the_declared_board_population",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-2-C04",
+        "name": "investigate_the_declared_board_population",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-2-C05",
+        "name": "investigate_the_declared_board_population",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-2-C06",
+        "name": "investigate_the_declared_board_population",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C01",
+        "name": "compare observed packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C01",
+        "name": "inspect frontline and support patterns",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C02",
+        "name": "compare frontline allocations",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C02",
+        "name": "inspect tank and companion patterns",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C03",
+        "name": "compare partner packages by level",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C03",
+        "name": "inspect partner and trait composition",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C04",
+        "name": "compare named support packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C04",
+        "name": "discover joint support patterns",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C05",
+        "name": "compare same-level package cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-3-C05",
+        "name": "inspect supporting roster and traits",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-4-C01",
+        "name": "queries_observed_aphelios_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-4-C01",
+        "name": "compares_eclipse_and_support_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-4-C02",
+        "name": "discovers_shared_companions_and_package_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-4-C03",
+        "name": "queries_named_finishing_unit_frequencies",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-4-C04",
+        "name": "queries_candidate_roster_diagnostics",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "CO4-4-C04",
+        "name": "compares_support_version_effects",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C01",
+        "name": "ahri_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C01",
+        "name": "queries_ahri_trait_and_holder_groups",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C01",
+        "name": "compares_ahri_trait_groups",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C02",
+        "name": "soraka_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C02",
+        "name": "queries_soraka_trait_and_kennen_cells",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C02",
+        "name": "compares_soraka_trait_cells",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C03",
+        "name": "cassiopeia_name_resolved_for_loadout_lookup",
+        "type": "tool_argument_resolved",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C03",
+        "name": "queries_cassiopeia_defender_strata",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-1-C03",
+        "name": "compares_cassiopeia_defender_strata",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-2-C01",
+        "name": "investigate_the_named_package_comparison",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-2-C02",
+        "name": "investigate_the_named_package_comparison",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-2-C03",
+        "name": "investigate_the_named_package_comparison",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-2-C04",
+        "name": "investigate_the_named_package_comparison",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-2-C05",
+        "name": "investigate_the_named_package_comparison",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-2-C06",
+        "name": "investigate_the_named_package_comparison",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C01",
+        "name": "queries_defender_holder_and_support_cells",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C01",
+        "name": "compares_observed_defender_holder_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C02",
+        "name": "queries_hunter_holder_partner_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C02",
+        "name": "compares_hunter_package_outcomes",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C04",
+        "name": "queries_brawler_yi_loadouts_and_support",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C04",
+        "name": "compares_named_ordinary_and_artifact_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C05",
+        "name": "queries_inferno_holder_replacement_candidates",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-3-C05",
+        "name": "compares_akali_and_replacement_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-4-C01",
+        "name": "compare_trait_support_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-4-C02",
+        "name": "compare_within_family_eclipse_cohorts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-4-C03",
+        "name": "discover_mama_beak_offensive_loadouts",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-4-C03",
+        "name": "compare_joint_support_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-4-C04",
+        "name": "inspect_named_carry_item_builds",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      },
+      {
+        "case": "TR-4-C04",
+        "name": "compare_support_packages",
+        "type": "tool_called",
+        "schema_alternatives_checked": 0,
+        "witness": "positive_and_negative"
+      }
+    ],
+    "import_normalization": "passed_with_export_intercepted",
+    "semantic_validation": "passed"
+  },
+  "artifact_links": {
+    "local_links_checked": 177,
+    "missing": []
+  },
+  "preserved_proposal_lineages": 32
+}

@@ -1,0 +1,232 @@
+{
+  "items": [
+    {
+      "case": "UN4-4-C01",
+      "input": "How do Soraka and Zyra boards with Lillia as the main tank compare with similar boards using Malphite? Are there versions where Lillia holds up, or is she usually a weaker substitute?\n\nCompare final level-eight boards that contain both two-star Soraka and two-star Zyra, with exactly one two-star Lillia or exactly one two-star Malphite carrying three completed items classified as defensive under a disclosed item-name rule. Keep the two tank versions disjoint and do not combine them with boards carrying both candidates. Discover the actual item packages and compare within recurring named support cores where there is enough data; report Fae, Defender and Blackthorn support when observable. Also inspect final level, stored unit-record count and total completed-item investment as descriptive board-shape checks. Level and stored unit count are different measurements, neither certifies occupied capacity, and three items do not by themselves establish a defensive build. A named core means the board contains those units, not that it contains only them.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve the player names in the selected scope and establish support for the exact two-star Soraka and Zyra carry shell and each mutually exclusive two-star tank with exactly three completed items on that tank. Disclose the reproducible item-name rule used to classify a tank's three items as defensive; keep mixed or uncertain builds distinct rather than calling any three-item build defensive.",
+          "Compare Lillia and Malphite boards within the shared carry, star and final-level shell, reporting each cohort's sample and available mean placement, top-four rate and win rate. Show differences in actual tank item packages and trait/support composition; do not substitute broad unit marginals for the named tank comparison.",
+          "Inspect recurring named common cores and relevant Fae, Defender and Blackthorn support where the tools and sample sizes permit. State which core or trait-contribution slices were actually compared and their sample support; do not imply that a named core is an exact roster or a matched Blackthorn choice.",
+          "Use grouped final-level, stored unit-record count and completed-item-count evidence to describe board shape and other item investment where available. Explain that final level is not deployed unit count or occupied capacity, and that these diagnostics cannot hold complete roster, global item budget or all defensive item categories fixed.",
+          "Answer from observed scoped evidence with the direction or an unresolved result, including sample counts and outcome tradeoffs. Distinguish suppressed or unavailable cells from measured zero, avoid causal claims, and do not use historical or external rankings as current gold.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "No tank is predetermined to win. Grade the exact carry/tank shell, item-definition transparency, package and support-context coverage, and evidence-relative conclusion."
+      },
+      "metadata": {
+        "source_case_id": "UN4-4-C01",
+        "lane": "UN4-4",
+        "subject": "units",
+        "proposal_lineage": [
+          "UN4-4-R2-P1"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_carry_tank_and_trait_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_exact_tank_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            }
+          },
+          {
+            "name": "compare_supported_tank_outcomes",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts",
+                "query_cohort"
+              ]
+            }
+          },
+          {
+            "name": "inspect_board_shape_and_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-4-C02",
+      "input": "Is Ashe really the better carry than Draven on Maokai endgame boards, or are they succeeding in different versions of the board?\n\nCompare final level-nine boards with exactly one itemized two-star Maokai, and exactly one two-star Ashe or exactly one two-star Draven carrying three completed items. Keep the carry arms exclusive; report dual-carry, level-ten and one-star-carry boards separately if useful. Discover actual carry and Maokai item packages, then compare within recurring named support cores and Elder Dragon strata when samples allow. Inspect final level, stored unit-record count, named supporting legendaries and total completed-item investment as descriptive checks; equal level does not mean equal deployed units, occupied capacity or total board investment. Do not treat a named core as an exact roster, or infer Maokai health, Draven rewards or Elder Dragon occupied-space equivalence from these fields.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve the player terms and establish each exclusive two-star carry arm with three completed items on exactly one carry occurrence, plus the shared itemized two-star Maokai shell. Discover and report the observed carry and Maokai package identities rather than relying on all-board Ashe, Draven or Maokai marginals.",
+          "Compare Ashe and Draven outcomes inside the shared final-level and Maokai-star shell, reporting boards and available mean placement, top-four rate and win rate. Where supported, repeat within recurring named common cores and Elder Dragon presence strata; explain which pooled differences persist, change or remain unresolved in the inspected overlaps.",
+          "Inspect named support units, final level, stored unit-record count and grouped completed-item investment to describe board variants and other investment. State the actual slices and their samples; do not claim equal wealth, Maokai accumulated health, Draven rewards, exact roster, or occupied capacity from these proxies.",
+          "Account for carry-specific item suitability by comparing observed packages rather than requiring identical Ashe and Draven trios. Keep dual carries, one-star carry boards and level ten out of the primary comparison, or identify them separately instead of silently pooling them.",
+          "Answer from returned scoped evidence with sample counts and outcome tradeoffs, or explain why a comparison cannot be resolved. Distinguish missing or suppressed evidence from zero, avoid causal claims, and do not use disputed historical answers as current gold.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "The original answer is incomplete and disputed; no carry is predetermined to win. Grade exclusive carry/package comparison, inspected board variants, and honest residual-confounding limits."
+      },
+      "metadata": {
+        "source_case_id": "UN4-4-C02",
+        "lane": "UN4-4",
+        "subject": "units",
+        "proposal_lineage": [
+          "UN4-4-R2-P2"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_carry_tank_and_support_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_carry_and_tank_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            }
+          },
+          {
+            "name": "compare_carry_package_outcomes",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts",
+                "query_cohort"
+              ]
+            }
+          },
+          {
+            "name": "inspect_board_variants_and_investment",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+        "source_status": "disputed",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-4-C03",
+      "input": "Among finished Draven–Maokai boards, how do the Elder Dragon and Ezreal versions compare for top fours and wins once board size, upgrades and emblem differences are accounted for?\n\nCompare final level-nine boards with exactly one two-star Draven and one two-star Maokai, each on the same supported completed-item-count stratum, plus exactly one itemized two-star Elder Dragon or exactly one itemized two-star Ezreal; keep the other candidate absent from the primary arm. Discover and report actual secondary-unit item packages. Inspect upgrades, stored unit-record count, boardwide completed-item totals, named emblem-bearing variants and support traits as descriptive diagnostics. Elder Dragon occupies two spaces, while stored unit count counts records; neither that count nor equal player level certifies equal occupied capacity. The tools cannot filter every global emblem, radiant or special-item category, so report the remaining mismatch instead of claiming full emblem or capacity matching.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve the named units and establish the shared two-star Draven/Maokai core and exclusive itemized two-star Elder Dragon versus Ezreal arms. Use a common supported completed-item-count stratum for Draven and Maokai where possible, state its chosen value and sample, and report the discovered secondary-holder item packages without presupposing a winning trio.",
+          "Compare the two exclusive packages at final level nine and report separate sample counts, mean placement, top-four rate and win rate where available, including comparison histograms or placement distribution when returned. Do not silently pool boards carrying both candidates, or treat a missing/suppressed package as zero.",
+          "Inspect upgrade distributions, stored unit-record count, total completed-item investment, named emblem-bearing variants and support-trait composition. Show which variants were actually examined and their support; treat grouping as descriptive evidence, not a filter that fixed boardwide investment or full roster composition.",
+          "Explicitly account for Elder Dragon's two-space occupancy: board_size is a count of stored unit records, player level is a separate field, and neither establishes actual occupied capacity. Explain that global emblem, radiant, artifact or other special-item exclusions are not generally enforceable by these cohort predicates, so residual package and capacity confounding remains.",
+          "Answer whether observed top-four and win outcomes differ or the evidence is unresolved, with counts and available uncertainty. Do not claim a fully capacity-matched or emblem-matched gold comparison, infer causal effects, or substitute historical or external ranking numbers for scoped results.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "No secondary package or winner is predetermined. Grade the shared investment declaration, exclusive package outcomes, required board-shape diagnostics, and accurate limits on Elder Dragon capacity and global emblem matching."
+      },
+      "metadata": {
+        "source_case_id": "UN4-4-C03",
+        "lane": "UN4-4",
+        "subject": "units",
+        "proposal_lineage": [
+          "UN4-4-R2-P2"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_core_secondary_and_item_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_secondary_unit_builds",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            }
+          },
+          {
+            "name": "compare_secondary_package_outcomes",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts",
+                "query_cohort"
+              ]
+            }
+          },
+          {
+            "name": "inspect_capacity_upgrade_and_item_diagnostics",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

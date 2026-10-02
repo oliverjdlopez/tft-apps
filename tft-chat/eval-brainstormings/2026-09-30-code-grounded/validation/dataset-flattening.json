@@ -1,0 +1,73 @@
+{
+  "all_item_ids_content_and_timestamps_preserved": true,
+  "configured_additional_triggers": 0,
+  "current_dataset_names": [
+    "context-response",
+    "data-analysis",
+    "end-to-end",
+    "item-expert",
+    "meta-expert",
+    "set18-grounded-investigations",
+    "unit-expert"
+  ],
+  "custom_experiment_configurations_preserved": true,
+  "dataset_ids_preserved": true,
+  "datasets": [
+    {
+      "dataset_id": "cmu8nwaga001zuf07f73rav2s",
+      "items": 0,
+      "items_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "new_name": "item-expert",
+      "old_name": "chattft/item-expert",
+      "previous_snapshot": "b0d446e5aa71826c503f024068d2dc8b03e9d2dd4fab31816fec3facb937417d",
+      "snapshot": "b03d51559f02b79ed9358851b16ea230196af57786911c39aa3e54201ce26548",
+      "suite": "item-expert",
+      "trigger_sha256": "f271e738655bfdb44a5d38ebfbe543924384be3c764b6941a20506d7dcbf0d3e"
+    },
+    {
+      "dataset_id": "cmu8nxsqw002euf07kd0b8sgi",
+      "items": 0,
+      "items_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "new_name": "meta-expert",
+      "old_name": "chattft/meta-expert",
+      "previous_snapshot": "0091f2ae8e0ef6062e8365f3b6f0f3524586dd659ed17429fe127f56fb633a64",
+      "snapshot": "ac8f4638b475b08760b4a54842a77ce1051b161884010d591bdfa7e52784663d",
+      "suite": "meta-expert",
+      "trigger_sha256": "f271e738655bfdb44a5d38ebfbe543924384be3c764b6941a20506d7dcbf0d3e"
+    },
+    {
+      "dataset_id": "cmuo7kkp60006uf07rue7hztz",
+      "items": 69,
+      "items_sha256": "06c5c6fef9e5dfca31dd6628913a60550bb1d4a84db669552382a0e6984f8e3f",
+      "new_name": "set18-grounded-investigations",
+      "old_name": "chattft/set18-grounded-investigations",
+      "previous_snapshot": "43fc0055617dcdac69c3c2e6697f82ebeb7fd041437751e2f6371b77569fd64d",
+      "snapshot": "dfa52695218ca43ca2f80c06e86f301a5864bdeb4254b336e3de397ae7e10a5c",
+      "suite": "set18_grounded_investigations",
+      "trigger_sha256": "f271e738655bfdb44a5d38ebfbe543924384be3c764b6941a20506d7dcbf0d3e"
+    },
+    {
+      "dataset_id": "cmu8nvge2001kuf073qd3855n",
+      "items": 0,
+      "items_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "new_name": "unit-expert",
+      "old_name": "chattft/unit-expert",
+      "previous_snapshot": "898e745f0181492cff7b3077c2f3d7569751608b568994fff85fc75e14c512b4",
+      "snapshot": "6462f1a133cc79a9a3aa9250c6c7fd3b23c785791da5366ce32fe13f641e0057",
+      "suite": "unit-expert",
+      "trigger_sha256": "f271e738655bfdb44a5d38ebfbe543924384be3c764b6941a20506d7dcbf0d3e"
+    }
+  ],
+  "frozen_live_bundles_validated": 4,
+  "grading_rules_unchanged": true,
+  "historical_experiments_preserved": 26,
+  "model_execution_performed": false,
+  "native_webhook_execution_tested": false,
+  "private_backup_created": true,
+  "renamed_at_utc": "2026-09-30T15:09:10.558093+00:00",
+  "runner_ready": true,
+  "startup_seeding_would_create_nothing": true,
+  "tests": {
+    "passed": 28
+  }
+}

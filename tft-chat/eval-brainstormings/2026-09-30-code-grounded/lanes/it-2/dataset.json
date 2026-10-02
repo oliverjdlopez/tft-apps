@@ -1,0 +1,213 @@
+{
+  "items": [
+    {
+      "case": "IT-2-C01",
+      "input": "With Shojin, Infinity Edge and Last Whisper, how do two-star Ezreal, Sivir and Yunara compare as endgame carries? What trait support makes each worth considering?\n\nFor this comparison, look at final boards where each candidate is two-star and personally holds that same complete three-item set. Keep their different trait support packages in view. Compare the holder cohorts, and separate boards that contain multiple candidates or describe the overlap clearly. Treat the result as an observed final-board association, not a causal item effect. Use the ordinary versions of the named items.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate all three candidates as exact two-star holders of Shojin, Infinity Edge, and Last Whisper; do not substitute Yunara at another star level or infer the holder from item presence somewhere on the board.",
+          "Give the board sample and mean placement, top-four rate, and win rate for each reportable holder cohort. Explain that lower mean placement is better and that suppressed or unsupported samples are not zero.",
+          "Describe observed trait-support prevalence and conditional outcomes for each holder using reportable strata, and compare meaningful support strata where the data supports them. Do not present a pooled holder ordering as though support, total inventory, or whole boards were identical.",
+          "State overlap among candidate cohorts or use mutually exclusive candidate slices when making head-to-head claims. Explain the evidence and uncertainty behind any direction, or say the comparison remains unresolved.",
+          "Do not claim a winning holder or causal item value in advance; do not infer exact defensive-item roles, timing, or whole-board inventory equality from these tools.",
+          "Use ordinary item identities. For joint item predicates, require exactly one copy of each named holder across all star levels, separately constraining its star and completed-item count; do not let items on duplicate copies satisfy a single-holder build."
+        ],
+        "reference": "Grade against the active scoped results and their warnings. The original research is provisional and supplies no gold winner."
+      },
+      "metadata": {
+        "source_case_id": "IT-2-C01",
+        "lane": "IT-2",
+        "subject": "items",
+        "proposal_lineage": [
+          "IT-2-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "resolve_names",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "weight": 1,
+            "threshold": 1
+          },
+          {
+            "name": "compare_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "weight": 1,
+            "threshold": 1
+          },
+          {
+            "name": "inspect_trait_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "get_cohort_trait_deltas",
+                "query_cohort"
+              ]
+            },
+            "weight": 1,
+            "threshold": 1
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-2-C02",
+      "input": "On an Azir–Malphite board, is Adaptive Helm better as Azir's third item or Malphite's? I'm comparing three-star Azir with Nashor's Tooth and Jeweled Gauntlet against two-star Malphite with Warmog's and Gargoyle.\n\nPlease compare boards containing both units with only one copy of each named holder: Azir at three stars and Malphite at two stars. In one group, Azir carries Nashor’s Tooth, Jeweled Gauntlet and Adaptive Helm while Malphite carries Warmog’s Armor and Gargoyle Stoneplate; in the other, Azir carries Nashor’s Tooth and Jeweled Gauntlet while Malphite carries Warmog’s Armor, Gargoyle Stoneplate and Adaptive Helm. Each group therefore has five completed items across these two holders. Compare both allocations jointly within supported common shells when possible, and treat other board items and the rest of the roster as possible differences. Use the ordinary versions of the named items.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define two joint allocation cohorts: Azir three-star with Nashor’s Tooth and Jeweled Gauntlet, plus Adaptive Helm on Azir (three items) versus the same Azir without Helm (two items) and Adaptive Helm on two-star Malphite alongside Warmog’s Armor and Gargoyle Stoneplate (three items).",
+          "Use holder-bound predicates and exact per-holder item counts in each arm, with exactly one copy of each named holder across all stars, constrained separately to the specified star level. Report both arms jointly; separate item-holder marginals do not establish either allocation.",
+          "Report reportable joint sample sizes, placement distribution or histogram, mean placement, top-four rate, win rate, and available uncertainty. Explain direction and uncertainty, or state that the evidence does not resolve which allocation performs better; suppressed cohorts are not zero.",
+          "Where supported, inspect common shell or trait strata and explain whether the observed comparison changes. Distinguish the equal five-item inventory across these two holders from total board inventory or whole-board equality.",
+          "Describe a final-board association rather than a causal marginal value for Adaptive Helm; disclose overlap, selection, other-holder items, or roster differences that affect interpretation.",
+          "Use ordinary item identities. For joint item predicates, require exactly one copy of each named holder across all star levels, separately constraining its star and completed-item count; do not let items on duplicate copies satisfy a single-holder build."
+        ],
+        "reference": "The research establishes a comparison design, not a winner. Assess the answer against actual cohort results and warnings."
+      },
+      "metadata": {
+        "source_case_id": "IT-2-C02",
+        "lane": "IT-2",
+        "subject": "items",
+        "proposal_lineage": [
+          "IT-2-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "resolve_names",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "weight": 1,
+            "threshold": 1
+          },
+          {
+            "name": "compare_allocations",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "weight": 1,
+            "threshold": 1
+          },
+          {
+            "name": "inspect_shell_context",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_trait_deltas",
+                "get_cohort_unit_deltas"
+              ]
+            },
+            "weight": 1,
+            "threshold": 1
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-2-C03",
+      "input": "On a final board with two-star Ashe and two-star Sivir, should Ashe get Shojin, Red Buff and Last Whisper while Sivir gets Blue Buff, Infinity Edge and Striker's Flail, or should those two complete builds be reversed?\n\nCompare boards containing both two-star carries, each with exactly three completed items. One allocation gives Ashe Shojin, Red Buff and Last Whisper, and Sivir Blue Buff, Infinity Edge and Striker’s Flail; the other assigns the full Sivir trio to Ashe and the full Ashe trio to Sivir. The same six completed items are on these two holders in either group. Look at the joint allocations and relevant Hunter or Juggernaut support context; other holders and the rest of the board may still differ. Use the ordinary versions of the named items.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Compare the two complete six-item allocations jointly: Ashe and Sivir must each be two-star holders with exactly three completed items, and the entire three-item packages must be reversed between them in the second arm.",
+          "Do not treat one carry’s successful individual loadout as evidence for the joint allocation. State both cohorts’ sample sizes and report mean placement, top-four rate, win rate, and placement histogram or available uncertainty; explain that lower placement is better and missing/suppressed groups are not zero.",
+          "Investigate relevant Hunter and Juggernaut support strata where reportable and describe whether trait context changes or limits the observed comparison.",
+          "Give an evidence-relative direction or conclude the comparison is unresolved. Note cohort overlap and plausible differences in other units or items; equal six-item inventory across the two named holders does not establish whole-board equality.",
+          "Do not claim burn/shred uptime, item transfer timing, or a causal item effect from final-board aggregates.",
+          "Use ordinary item identities. For joint item predicates, require exactly one copy of each named holder across all star levels, separately constraining its star and completed-item count; do not let items on duplicate copies satisfy a single-holder build."
+        ],
+        "reference": "Grade against actual scoped results; no preferred allocation is prescribed by the provisional source case."
+      },
+      "metadata": {
+        "source_case_id": "IT-2-C03",
+        "lane": "IT-2",
+        "subject": "items",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "resolve_names",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "weight": 1,
+            "threshold": 1
+          },
+          {
+            "name": "compare_allocations",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "weight": 1,
+            "threshold": 1
+          },
+          {
+            "name": "inspect_trait_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_trait_deltas"
+              ]
+            },
+            "weight": 1,
+            "threshold": 1
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

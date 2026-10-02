@@ -77,8 +77,10 @@ Workflow datasets, prompt versions, native evaluators, and annotations are edite
 in its UI. See the [browser walkthrough](langfuse-onboarding.md). Native Custom Experiment buttons call the local Python service, which
 runs the real assistant graph and publishes traces, scores, and comparisons.
 
-The copied live workspace has six datasets and 56 cases, including 11 archived
-cases; active workflow inputs retain their authored schemas. The local catalog
+The initial copied workspace had six datasets and 56 cases, including 11 archived
+cases. On 2026-10-01, an explicitly requested unit expert import added 17 active
+cases to the existing `chattft/unit-expert` dataset, bringing the workspace to 73
+cases. Active workflow inputs retain their authored schemas. The local catalog
 retains immutable historical snapshots plus registered workflows. See the suite
 [migration record](../../../docs/migration.md) for exact inventory and verification. Reusable trace, selector, worker,
 and database logic lives
@@ -122,6 +124,14 @@ Historical Promptfoo results are retained untouched. The
 integration, not current commands. The ChatTFT in-app Evals API/editor remain removed.
 
 The [natural workspace validation record](langfuse-validation.md) documents migration identity checks, browser acceptance, native mock scheduling, timeout evidence, and existing repository test failures.
+
+The 2026-10-02 [retirement of the older checkout](../../../docs/retiring-tft-suite.md)
+preserved its complete 69-case authored Set 18 collection under
+`eval-brainstormings/2026-09-30-code-grounded/`, 16 additional immutable snapshots,
+and its historical catalogue under `evals/langfuse/archives/tft-suite-20261002/`.
+These copies preserve authoring and historical definitions; they do not replace
+the active catalogue or register cases in the hosted workspace. The existing
+17-case unit expert import and other local work remain intact.
 
 ## Context and response smoke checks
 
