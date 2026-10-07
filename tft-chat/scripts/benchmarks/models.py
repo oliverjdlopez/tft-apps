@@ -8,6 +8,7 @@ from typing import Any, Literal
 
 BenchmarkTier = Literal["light", "heavy"]
 BenchmarkPhase = Literal["discovery", "warmup", "timed", "profile"]
+ExpectedResultKind = Literal["table", "resolution", "comparison"]
 
 
 @dataclass(frozen=True)
@@ -19,12 +20,18 @@ class WorkloadDefinition:
         tier: ``light`` or ``heavy`` workload category.
         tool_name: Registered database tool exercised by the workload.
         description: Human-readable purpose shown by ``--list``.
+        expected_kind: Structured result family expected from the tool.
+        group_by: Expected table grain when the result is tabular.
+        prerequisites: Preconditions required for meaningful output.
     """
 
     name: str
     tier: BenchmarkTier
     tool_name: str
     description: str
+    expected_kind: ExpectedResultKind = "table"
+    group_by: tuple[str, ...] = ()
+    prerequisites: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -37,6 +44,9 @@ class BenchmarkCase:
         tool_name: Registered database tool to invoke.
         arguments: JSON-compatible tool arguments for the selected database.
         description: Human-readable workload description.
+        expected_kind: Structured result family expected from the tool.
+        group_by: Expected table grain when the result is tabular.
+        prerequisites: Preconditions required for meaningful output.
     """
 
     name: str
@@ -44,6 +54,9 @@ class BenchmarkCase:
     tool_name: str
     arguments: dict[str, Any]
     description: str
+    expected_kind: ExpectedResultKind = "table"
+    group_by: tuple[str, ...] = ()
+    prerequisites: tuple[str, ...] = ()
 
 
 @dataclass
@@ -56,7 +69,8 @@ class InvocationRecord:
         iteration: Zero-based iteration within the phase.
         call_id: Unique ID propagated to database diagnostics.
         elapsed_ms: End-to-end invocation duration.
-        status: ``success``, ``tool_error``, or ``exception``.
+        status: One of success, invalid_input, tool_error, invalid_result,
+            timeout, insufficient_data, or exception.
         result_metadata: Bounded shape and count metadata from the result.
         database_timing: Internal timing fields emitted by ``run_db_tool``.
         error_type: Exception or tool-error type when the call failed.
@@ -69,7 +83,15 @@ class InvocationRecord:
     iteration: int
     call_id: str
     elapsed_ms: float
-    status: str
+    status: Literal[
+        "success",
+        "invalid_input",
+        "tool_error",
+        "invalid_result",
+        "timeout",
+        "insufficient_data",
+        "exception",
+    ]
     result_metadata: dict[str, Any] = field(default_factory=dict)
     database_timing: dict[str, Any] = field(default_factory=dict)
     error_type: str | None = None
