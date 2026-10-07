@@ -2,6 +2,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from agents import Agent
 from agents.extensions.models.litellm_model import LitellmModel
 
@@ -333,6 +335,45 @@ def test_item_and_unit_experts_receive_an_unfiltered_data_view() -> None:
     for name in ("item_expert", "unit_expert"):
         prompt = assistant_spec(name).system_prompt
         assert "aggregate" in prompt
+
+
+@pytest.mark.parametrize(
+    "name", ["comp_expert", "item_expert", "unit_expert", "data_analyst"]
+)
+def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> None:
+    """Keep cohort guidance consistent with the registered item-condition schema.
+
+    Args:
+        name: Assistant whose cohort guidance must match item-filter capabilities.
+    """
+    from domain.tools.db_tools.models import ItemCondition
+
+    prompt = assistant_spec(name).system_prompt
+    fields = ItemCondition.model_fields
+    assert {"holder", "holder_star_level", "min_copies", "max_copies"} <= fields.keys()
+    assert "name-only item" in prompt
+    assert "`holder`" in prompt
+    assert "`holder_star_level`" in prompt
+    assert "Separate unit and item conditions do not imply holder binding" in prompt or (
+        "a separate unit condition does not bind the item" in prompt
+    )
+    assert "across multiple matching holders" in prompt
+    assert "does not identify its holder" not in prompt
+    assert "It does not bind an item to a unit" not in prompt
+
+
+def test_prompt_evidence_guidance_matches_assistant_ownership() -> None:
+    """Reserve display policy for the responder and histogram retrieval for the analyst."""
+    chat = assistant_spec("chat").system_prompt
+    analyst = assistant_spec("data_analyst").system_prompt
+    responder = assistant_spec("final_responder").system_prompt
+    assert "## Evidence displays" not in chat
+    assert "no direct match-data tools" not in chat
+    assert "Your direct analytical tools are bounded rankings" in chat
+    assert "Preserve these" not in analyst
+    assert "`compare_cohorts`; a mean does not establish a distribution" in analyst
+    assert "handoff to `final_responder`" in analyst
+    assert "Use present_evidence once" in responder
 
 
 def test_chat_has_direct_context_ranking_and_probability_tools() -> None:

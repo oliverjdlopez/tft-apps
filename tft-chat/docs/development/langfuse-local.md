@@ -28,12 +28,21 @@ the forwarding image, waits for schema migrations, seeds missing evaluation cont
 from the host interpreter, and starts the detached host experiment listener. Later startup preserves content edited in
 Langfuse. `up --no-browser` starts the same services without opening a browser.
 
-Sign in with `evals@chattft.local`. The password is the value of
-`LANGFUSE_INIT_USER_PASSWORD` in the generated `evals/langfuse/.env` file. The
-launcher creates random credentials once with owner-only permissions and prints
-their location, never their values. Do not replace this file while retaining the
-existing volumes: database passwords, encryption keys, and API credentials must
-stay paired with their data.
+This is the canonical evaluation project. After the 2026-10-06 cutover, the
+legacy `chattft-evals` stack on port 15500 is stopped with its volumes retained.
+Its October 4 unit-expert result is preserved under the suite's ignored
+`.migration/legacy-langfuse-cutover-20261006/` archive. New runs use the
+`tft-apps-evals` project and this checkout's host runner. The historical run
+was exported for review, not recreated as a native suite experiment.
+
+Sign in with `LANGFUSE_INIT_USER_EMAIL` and `LANGFUSE_INIT_USER_PASSWORD`
+from the generated `evals/langfuse/.env` file. The default email is
+`evals@chattft.local`. The launcher creates random credentials once with
+owner-only permissions and prints the configured email and password location,
+never the password value. The suite desktop tab can use these fields for
+automatic sign-in; see [suite desktop setup](../../../docs/desktop.md).
+Do not replace this file while retaining the existing volumes: database
+passwords, encryption keys, and API credentials must stay paired with their data.
 
 Only the UI is published to loopback. Langfuse sends its authenticated webhook
 requests to `http://experiments/experiments` on internal port 80. That container

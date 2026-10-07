@@ -45,9 +45,10 @@ mutation tools.
 3. Search and cohort tools expose only bounded structured JSON results. Raw
    rows, query relations, scope ids, counters, player identifiers, and
    timestamps remain private.
-4. `tft-rebuild-tables` projects the configured queue's `chat_tft_patch` (or
-   latest patch when unset) into the compatibility projection and refreshes the
-   aggregate tables. Structured tools read those projections internally.
+4. `chat-tft-rebuild-tables` catches up the configured patch/queue/set scope,
+   reusing existing facts and aggregate counters. Add `--full-rebuild` to clear
+   and recalculate that scope's derived data. Structured tools read those
+   projections internally.
 
 `player_units.cost` is the normalized 1-based shop gold cost. Existing databases
 with the old zero-based `rarity` column are migrated when the schema opens.
@@ -83,8 +84,11 @@ Common commands:
 # Ingest recent ranked matches.
 tft-ingest --platform na1 --max-new-matches 50
 
+# Reuse existing calculations and process newly stored matches.
+chat-tft-rebuild-tables
+
 # Explicitly reset and fully rebuild the configured analysis scope.
-tft-rebuild-tables
+chat-tft-rebuild-tables --full-rebuild
 
 # Legacy-v1 only: install its covering indexes before relational cutover.
 tft-add-analysis-indexes

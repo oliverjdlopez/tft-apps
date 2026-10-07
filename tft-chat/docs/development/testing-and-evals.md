@@ -46,6 +46,26 @@ Set `PYTEST_TEST_TIMEOUT_SECONDS` to change the repository default, or use
 `@pytest.mark.timeout(seconds)` for a targeted override. A marker value of `0`
 explicitly disables the guardrail for that test.
 
+### Development database benchmark coverage
+
+`tests/test_db_benchmarks.py` checks workload definitions and CLI defaults,
+input/result validation, insufficient-data classification, successful-sample
+statistics, timeout cleanup, and the database-free `--list` path without
+connecting to PostgreSQL. `tests/test_db_benchmarks_integration.py` seeds a
+synthetic ready fact population and aggregate rows in the isolated `RDS_TEST_*`
+database, then checks benchmark discovery, holder-conditioned queries, result
+grouping, and read-only behavior. It never targets the configured application
+database and skips locally when the isolated target is unavailable.
+
+Run both suites with:
+
+```bash
+uv run pytest -q tests/test_db_benchmarks.py tests/test_db_benchmarks_integration.py
+```
+
+CI probes its isolated PostgreSQL target before pytest so a configured but
+unreachable database cannot turn these integration checks into silent skips.
+
 ## Configured database smoke tests
 
 `tests/test_configured_db_smoke.py` makes representative calls through the
@@ -79,8 +99,11 @@ runs the real assistant graph and publishes traces, scores, and comparisons.
 
 The initial copied workspace had six datasets and 56 cases, including 11 archived
 cases. On 2026-10-01, an explicitly requested unit expert import added 17 active
-cases to the existing `chattft/unit-expert` dataset, bringing the workspace to 73
-cases. Active workflow inputs retain their authored schemas. The local catalog
+cases to the existing `chattft/unit-expert` dataset. The 2026-10-06 cutover added
+17 item, 18 composition and 17 trait cases, and refreshed the unit cases from
+the latest authored source. The suite now has eight datasets and 125 cases in
+total, including 69 active expert cases and the original 11 archived cases.
+Active workflow inputs retain their authored schemas. The local catalog
 retains immutable historical snapshots plus registered workflows. See the suite
 [migration record](../../../docs/migration.md) for exact inventory and verification. Reusable trace, selector, worker,
 and database logic lives

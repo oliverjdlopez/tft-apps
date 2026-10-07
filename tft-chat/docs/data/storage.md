@@ -51,5 +51,7 @@ The raw hierarchy is `raw_matches` → `player_boards` → `board_units` →
 `unit_items`, with `board_traits` attached to each board and patch/set-scoped
 `item_metadata` providing canonical item identity and family. `analysis_scopes`
 fixes patch/queue/set identity and `analysis_processed_matches` makes
-incremental aggregation idempotent. `tft-rebuild-tables` is the explicit
-full-scope rebuild; startup modes run catch-up only.
+incremental aggregation idempotent. `chat-tft-rebuild-tables` reuses existing
+calculations and catches up ledger-missing matches by default. Add
+`--full-rebuild` to replace the configured scope's projection from scratch;
+startup modes run catch-up only.

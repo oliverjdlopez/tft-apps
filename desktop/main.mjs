@@ -10,6 +10,7 @@ import { DesktopWorkspace } from "./workspace.mjs";
 import { createMediaReader } from "./media.mjs";
 import { DesktopRuntime } from "./runtime.mjs";
 import { VideoRuntime } from "./video-runtime.mjs";
+import { readLangfuseSettings, signInLangfuse } from "./langfuse.mjs";
 import { launchOptions, navigationPolicy, permissionAllowed } from "./utils.mjs";
 
 const wsl = process.env.CHATTFT_DESKTOP_WSL ? JSON.parse(process.env.CHATTFT_DESKTOP_WSL) : undefined;
@@ -18,6 +19,7 @@ const root = wsl?.root ?? fileURLToPath(new URL("../", import.meta.url));
 const statusPath = fileURLToPath(new URL("./status.html", import.meta.url));
 const options = wsl?.options ?? launchOptions(process.argv.slice(2), root);
 const node = wsl?.node ?? process.env.CHATTFT_DESKTOP_NODE;
+const langfuse = readLangfuseSettings(root, { wsl });
 let window;
 let workspace;
 let runtime;
@@ -46,7 +48,10 @@ function createWindow() {
     backgroundColor: "#fafafa", show: false,
     webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true, preload: fileURLToPath(new URL("./workspace-preload.cjs", import.meta.url)) },
   });
-  workspace = new DesktopWorkspace(window, openExternal, ensureVideoWorkspace, createMediaReader(() => frontendUrl));
+  workspace = new DesktopWorkspace(window, openExternal, ensureVideoWorkspace, createMediaReader(() => frontendUrl), {
+    langfuseUrl: langfuse.url,
+    prepareLangfuse: (partition) => signInLangfuse(partition, langfuse),
+  });
   for (const view of [workspace.chat, workspace.rolldown, workspace.flowchart, workspace.compositions]) {
     const contents = view.webContents;
     contents.on("will-navigate", (event) => {

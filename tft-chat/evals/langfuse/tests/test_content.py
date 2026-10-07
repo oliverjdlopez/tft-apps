@@ -70,8 +70,15 @@ def test_committed_inventory_preserves_authored_checks():
     """Keep all authored cases, grading weights, and the empty suite visible."""
     entries = load_catalog(ROOT)
     bundles = [load_snapshot(e["snapshot"], ROOT) for e in entries]
-    assert len(entries) == 9
-    assert sum(len(b["items"]) for b in bundles) == 84
+    assert len(entries) == 14
+    assert sum(len(b["items"]) for b in bundles) == 153
+    experts = {b["suite"]["name"]: b for b in bundles if "expert" in b["suite"]["name"]}
+    assert {name: len(bundle["items"]) for name, bundle in experts.items()} == {
+        "comp-expert": 18, "item-expert": 17, "meta-expert": 0,
+        "trait-expert": 17, "unit-expert": 17,
+    }
+    assert sum(len(item["metadata"].get("deterministic_checks", []))
+               for bundle in experts.values() for item in bundle["items"]) == 162
     assertions = [
         assertion
         for bundle in bundles
@@ -84,7 +91,7 @@ def test_committed_inventory_preserves_authored_checks():
                           if bundle["schema_version"] >= 2
                           else item["expected_output"]["assertions"])
     ]
-    assert sum(a["kind"] == "trace" for a in assertions) == 86
+    assert sum(a["kind"] == "trace" for a in assertions) == 248
     assert sum(a["kind"] == "rubric" for a in assertions) == 13
     assert next(b for b in bundles if b["suite"]["name"] == "analyze_transcript")["items"] == []
     assert all("file://" not in json.dumps(b) for b in bundles)

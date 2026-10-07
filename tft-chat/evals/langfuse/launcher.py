@@ -129,7 +129,9 @@ def up(*, open_browser: bool = True) -> None:
                        env=host_runner_environment(PLATFORM_ROOT), check=True)
         start(PLATFORM_ROOT)
     compose(["up", "-d", "--wait", "--wait-timeout", "120", "experiments"])
-    print(f"Langfuse: {PUBLIC_URL}\nLogin: evals@chattft.local\nPassword: LANGFUSE_INIT_USER_PASSWORD in {environment}")
+    from dotenv import dotenv_values
+    login_email = dotenv_values(environment).get("LANGFUSE_INIT_USER_EMAIL") or "evals@chattft.local"
+    print(f"Langfuse: {PUBLIC_URL}\nLogin: {login_email}\nPassword: LANGFUSE_INIT_USER_PASSWORD in {environment}")
     if open_browser:
         webbrowser.open(PUBLIC_URL)
 

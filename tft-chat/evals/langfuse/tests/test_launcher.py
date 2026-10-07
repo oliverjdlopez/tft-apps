@@ -29,12 +29,16 @@ def test_down_preserves_volumes(tmp_path: Path, monkeypatch) -> None:
 def test_start_seeds_before_worker_and_does_not_print_secrets(tmp_path: Path, capsys, monkeypatch) -> None:
     """Startup seeds missing content before accepting UI experiment requests."""
     monkeypatch.setenv("LANGFUSE_TEST_DEPLOYMENT", "1")
+    (tmp_path / ".env").write_text("LANGFUSE_INIT_USER_EMAIL=custom@example.test\nLANGFUSE_INIT_USER_PASSWORD=private-test-value\n")
     with patch.object(launcher.subprocess, "run"), patch.object(launcher, "prepare_environment", return_value=tmp_path / ".env"), patch.object(launcher, "compose") as compose:
         launcher.up(open_browser=False)
     calls = [call.args[0] for call in compose.call_args_list]
     assert calls[3] == ["run", "--rm", "--no-deps", "experiments", "python", "-m", "evals.langfuse.seed"]
     assert calls[4][-1] == "experiments"
-    assert "LANGFUSE_INIT_USER_PASSWORD" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "Login: custom@example.test" in output
+    assert "LANGFUSE_INIT_USER_PASSWORD" in output
+    assert "private-test-value" not in output
 
 
 def test_provenance_detects_untracked_content(tmp_path: Path) -> None:

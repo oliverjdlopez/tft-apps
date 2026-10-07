@@ -24,8 +24,8 @@ Selecting or changing a database maintenance operation. Running these commands a
 
 ## Choose the operation
 
-- Ledger-only lag, no processed raw mutation: `tft-update-tables` or startup/explicit catch-up.
-- Replace the configured patch/queue/set projection or repair a dirty scope: `tft-rebuild-tables`.
+- Ledger-only lag, no processed raw mutation: `chat-tft-rebuild-tables` (default catch-up), or startup catch-up.
+- Replace the configured patch/queue/set projection or repair a dirty scope: `chat-tft-rebuild-tables --full-rebuild`.
 - Legacy-v1 covering indexes before cutover: `tft-add-analysis-indexes`.
 - Relational-v2 cutover: `tft-migrate-relational-v2 --preflight-only`, then the migration in a maintenance window.
 - Explicit source-to-destination PostgreSQL copy: `tft-copy-rds --source ... --destination ...`.

@@ -3,11 +3,12 @@ import { WebContentsView, ipcMain, session, clipboard } from "electron";
 import { MediaError, isMediaReference } from "./media.mjs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { navigationPolicy, permissionAllowed, workspaceCommandAllowed } from "./utils.mjs";
+import { DEFAULT_LANGFUSE_URL } from "./langfuse.mjs";
 
 const shellPath = fileURLToPath(new URL("./workspace.html", import.meta.url));
 const externalPages = {
   vod: { url: "http://localhost:5174", partition: "persist:vod-review" },
-  langfuse: { url: "http://localhost:15510/project/tft-apps-evals", partition: "persist:langfuse" },
+  langfuse: { url: DEFAULT_LANGFUSE_URL, partition: "persist:langfuse" },
   database: { url: "http://localhost:8979", partition: "persist:cloudbeaver" },
 };
 const preferences = { nodeIntegration: false, contextIsolation: true, sandbox: true, webSecurity: true };
@@ -19,9 +20,11 @@ export class DesktopWorkspace {
    * Args:
    *   window: Owning BrowserWindow; openExternal: validated browser-link handler.
    *   ensureVideo: Shared video readiness; readMedia: owned catalogue reader.
+   *   langfuseOptions: Main-process URL and session preparation.
    */
-  constructor(window, openExternal, ensureVideo = async () => {}, readMedia = async () => { throw new Error("Media catalogue is unavailable."); }) {
+  constructor(window, openExternal, ensureVideo = async () => {}, readMedia = async () => { throw new Error("Media catalogue is unavailable."); }, { langfuseUrl = DEFAULT_LANGFUSE_URL, prepareLangfuse } = {}) {
     this.ensureVideo = ensureVideo;
+    this.prepareLangfuse = prepareLangfuse;
     this.window = window;
     this.active = "chat";
     this.compositionsEnabled = false;
@@ -36,7 +39,7 @@ export class DesktopWorkspace {
     window.contentView.addChildView(this.rolldown);
     window.contentView.addChildView(this.flowchart);
     for (const [tab, definition] of Object.entries(externalPages)) {
-      this.attachExternal(tab, definition, openExternal);
+      this.attachExternal(tab, tab === "langfuse" ? { ...definition, url: langfuseUrl } : definition, openExternal);
     }
     // Only the local top-level shell receives this bridge. No hosted page
     // can invoke desktop actions, even if it learns the IPC channel name.
@@ -164,14 +167,17 @@ export class DesktopWorkspace {
     this.layout();
     // Video startup has its own deadline. Begin the page deadline only after
     // service readiness so model imports do not exhaust the browser timeout.
-    const ready = tab === "vod" ? this.ensureVideo(tab) : Promise.resolve();
+    const prepareLangfuse = tab === "langfuse" && this.prepareLangfuse;
+    const ready = tab === "vod" ? this.ensureVideo(tab)
+      : prepareLangfuse ? Promise.resolve().then(() => this.prepareLangfuse(session.fromPartition(page.partition)))
+        : Promise.resolve();
     const navigate = () => {
       if (this.closed || generation !== page.generation || page.state !== "loading") return;
       page.timer = setTimeout(() => this.fail(tab), 15000);
       return page.view.webContents.loadURL(page.url);
     };
-    // Keep the existing immediate navigation for independently managed tools.
-    const navigation = tab === "vod" ? ready.then(navigate) : navigate();
+    // Preserve video startup timing while preparing Langfuse's session first.
+    const navigation = tab === "vod" || prepareLangfuse ? ready.then(navigate) : navigate();
     Promise.resolve(navigation).catch((error) => {
       // An old navigation promise can settle after the user has already retried.
       if (generation === page.generation && error.code !== "ERR_ABORTED") this.fail(tab);

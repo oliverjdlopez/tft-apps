@@ -55,6 +55,7 @@ jobs:
           test -n "$RDS_TEST_PORT"
           test -n "$RDS_TEST_ADMIN"
           test "$RDS_TEST_DB" = "${RDS_TEST_DB%_test}_test"
+          uv run python -c 'import psycopg; from core.config import resolve_database_target; target = resolve_database_target("test"); connection = psycopg.connect(target.connect_url); connection.close()' 2>/dev/null || { echo "Configured RDS_TEST_* PostgreSQL target is unreachable" >&2; exit 1; }
       - name: Run tests
         run: uv run --locked --extra evals pytest -q
       - name: Validate and test Langfuse content and execution

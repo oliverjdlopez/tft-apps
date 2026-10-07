@@ -57,6 +57,19 @@ volume and host port 8979 (container port 8978). Start CloudBeaver explicitly wi
 `docker compose -f desktop/cloudbeaver/compose.yaml up -d` from the suite root.
 Neither stack shares volumes or runners with the original services.
 
+The legacy `chattft-evals` project on port 15500 was stopped after the
+2026-10-06 expert-dataset cutover. Its volumes are retained for recovery; normal
+desktop and evaluation launches use only `tft-apps-evals` on port 15510. See the
+[cutover record](migration.md) for preserved historical results.
+
+The Langfuse desktop tab reads `LANGFUSE_DESKTOP_URL`,
+`LANGFUSE_INIT_USER_EMAIL`, and `LANGFUSE_INIT_USER_PASSWORD` from that ignored
+file in Electron's main process. It accepts only a loopback HTTP(S) URL, reuses
+an existing session, and otherwise signs in before opening the project page.
+The credentials are never passed to the hosted renderer. Set
+`LANGFUSE_DESKTOP_AUTO_LOGIN=false` for manual sign-in; a failed automatic
+sign-in also leaves the normal sign-in page available.
+
 Use the [ChatTFT backend guide](../tft-chat/docs/architecture/web-runtime.md) or
 [VOD guide](../vod-review/README.md) for standalone troubleshooting commands. Run
 Python suites from each application root and desktop tests with `npm test` from

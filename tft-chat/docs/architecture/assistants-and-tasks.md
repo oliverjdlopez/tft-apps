@@ -69,6 +69,16 @@ references, never an instruction to reconstruct numerical presentation data.
 Other execution surfaces without an evidence store retain prose/Markdown
 behavior. See [Evidence displays](../tool_groups/evidence.md).
 
+Tool results pass through the SDK handoff history without a custom input filter,
+and the shared invocation context retains registered evidence independently of
+model-generated handoff text. Trace recording is observational; it does not
+transport tool results or evidence. Chat's prompt handles analytical routing;
+the analyst owns cohort membership and histogram retrieval guidance, while the
+final responder owns display selection and presentation fallback. Neither chat
+nor the analyst needs instructions to preserve references manually. Historical
+evaluation snapshots remain frozen; these corrections apply to repository
+prompts used by normal application runs.
+
 ## Runtime instructions
 
 `domain.assistants.build_assistant_instructions` renders instructions for the

@@ -57,6 +57,26 @@ receipt are under ignored `.migration/unit-expert-20261001/`. Source services
 were accessed only to read dataset content; execution uses this suite's runner
 and Langfuse project on port 15510.
 
+On 2026-10-06, the remaining expert workflow was consolidated into this suite.
+The live `chattft-evals` definitions were exported before mutation, then all 69
+active item, unit, composition and trait cases were verified field by field in
+the `tft-apps-evals` project. The existing unit and item dataset IDs were kept;
+composition and trait datasets were added. Their current case versions and
+40-turn routing are recorded in the active snapshot catalogue. The empty meta
+dataset remains available. The legacy `chattft-evals` Compose stack was stopped
+without deleting its volumes. Its 30 terminal local jobs were archived, and the
+suite host runner now uses a fresh queue. Its experiment buttons and webhook
+health were verified at <http://localhost:15510>. Private source, destination, job,
+and verification records are under ignored
+`.migration/legacy-langfuse-cutover-20261006/`.
+
+The 2026-10-04 legacy unit-expert experiment is preserved there as a complete
+job record and a prompt/final-output Markdown export. Langfuse run identities,
+traces and scores were not transplanted into the suite project; its old UI link
+will be unavailable while the legacy stack is stopped. The preserved legacy
+volumes are a recovery copy, not an execution target. Future experiments belong
+to the suite project on port 15510.
+
 The 2026-10-02 preservation of the older `tft-suite` checkout retains its
 remaining authored evaluation files, immutable snapshots and complete Git
 history without replacing this suite's active catalogue. See the

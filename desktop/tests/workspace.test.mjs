@@ -89,6 +89,32 @@ test("switching retains loaded pages; errors and retries remain independent of C
   assert.equal(ipcMain.listenerCount("desktop-workspace"), 0);
 });
 
+test("Langfuse uses the configured URL after its isolated session is prepared", async () => {
+  let finishPreparation;
+  const prepared = new Promise((resolve) => { finishPreparation = resolve; });
+  const calls = [];
+  const url = "http://localhost:15510/project/tft-apps-evals";
+  const workspace = new DesktopWorkspace(windowFixture(), () => {}, undefined, undefined, {
+    langfuseUrl: url,
+    async prepareLangfuse(received) {
+      assert.equal(received, partition);
+      calls.push("prepare");
+      await prepared;
+    },
+  });
+  try {
+    workspace.select("langfuse");
+    const contents = workspace.pages.get("langfuse").view.webContents;
+    assert.equal(contents.loads.length, 0);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(calls, ["prepare"]);
+    assert.equal(contents.loads.length, 0);
+    finishPreparation();
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(contents.loads, [url]);
+  } finally { workspace.close(); }
+});
+
 test("hosted pages lack a preload and unsafe navigation cannot escape the origin", () => {
   const external = [];
   const workspace = new DesktopWorkspace(windowFixture(), (url) => external.push(url));
