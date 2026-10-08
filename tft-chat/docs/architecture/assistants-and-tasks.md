@@ -63,8 +63,9 @@ unavailable evidence.
 `present_evidence` tool selects one initial static table, interactive table, or
 placement distribution by reference. Analytical tools retain their usual
 results and additionally register evidence when an invocation supplies an
-`EvidenceStore`. Chat supplies this shared SDK context across handoffs and its
-tool-free maximum-turn fallback. The responder receives field metadata and
+`EvidenceStore`. Chat owns the store inside `AssistantRunContext.evidence` and
+shares that context across handoffs and its tool-free maximum-turn fallback.
+Legacy callers may still pass an `EvidenceStore` directly. The responder receives field metadata and
 references, never an instruction to reconstruct numerical presentation data.
 Other execution surfaces without an evidence store retain prose/Markdown
 behavior. See [Evidence displays](../tool_groups/evidence.md).
@@ -81,6 +82,39 @@ prompts used by normal application runs.
 
 ## Runtime instructions
 
+Chat calls `domain.assistants.prepare_resources` once before execution. It uses
+the latest user message for selection, or up to four recent user messages when
+the latest message matches the existing follow-up heuristic. Assistant replies
+remain in SDK conversation history but are not part of the selector query.
+The selected references and skills are retained in `PreparedResources`.
+
+`domain.runtime.models.AssistantRunContext` holds explicit runtime settings,
+prepared resources, provider dependencies, evidence, activity, and optional
+request timing. Each chat invocation receives fresh state. SDK local context is
+not automatically model-visible; callbacks and tools expose only their intended
+instructions and result fields. The object is not serialized into browser events
+or persisted as cross-turn conversation state.
+
+`domain.assistants.create_assistant` installs each agent's instruction callback
+as part of normal construction, including every nested handoff. Each callback
+captures its own immutable specification, so a later registry reload does not
+change an existing graph's prompt or resource permissions. There is no separate
+callback map for the chat service to build or attach.
+
+With `AssistantRunContext`, the callbacks render prepared resources on every
+model step according to that agent's repository-context and skill policies.
+All handoff depths follow the same per-agent rules; contextualization no longer
+depends on whether a target is directly reachable from the root. Only the root
+receives the optional caller system prefix and excludes selected skill bodies.
+Its callback is reused by the tool-free fallback under a different agent name.
+Rendering never selects resources or loads runtime configuration.
+
+The standard call is `create_assistant(name, model=model)`, followed by an SDK
+runner call with `context=run_context`. Preparation, invocation state, lifecycle
+hooks, and transport remain caller-owned. Callers without typed context receive
+the specification's durable prompt without retrieval; this supports selectors,
+transcript tasks, and legacy bare-evidence-store runs.
+
 `domain.assistants.build_assistant_instructions` renders instructions for the
 target assistant. It
 combines the stable assistant prompt with only the request-specific layers that
@@ -96,12 +130,23 @@ Fresh handoff agents retain the request's model choice, preventing an
 Anthropic-backed chat request from silently switching providers during a
 handoff.
 
+Explicit `instructions` and `instructions_by_name` overrides retain precedence
+over the installed default, including frozen evaluation strings and custom SDK
+callbacks. Root `instructions` wins over its entry in `instructions_by_name`.
+Direct/evaluation callers that already assemble explicit prompts retain that
+behavior. Construction-time token diagnostics
+mark dynamic instruction counts and their combined static total as unresolved
+(`null`), rather than counting a callback representation. Static counts remain
+unchanged.
+
 ## Execution surfaces
 
 Callers execute assistants through `Runner.run`, `Runner.run_sync`, or
-`Runner.run_streamed`. `services/chat_service.py` owns HTTP chat models,
-streaming SDK events, contextualized handoffs, tracing metadata, and the
-maximum-turn fallback. Direct assistant API, CLI, eval, and chat-handoff paths
+`Runner.run_streamed`. `services/chat_service.py` creates the invocation context,
+prepares resources, constructs agents through the ordinary factory, supplies shared
+`ActivityRunHooks`, and owns tracing and the maximum-turn fallback. The assistant
+layer owns resource selection and prompt policy; tools own evidence operations;
+the streaming adapter preserves the browser protocol. Direct assistant API, CLI, eval, and chat-handoff paths
 all use the same registry and target-specific instruction construction.
 
 ## Registered tasks
@@ -118,6 +163,7 @@ Structural assistant and chat behavior is covered by:
 
 ```bash
 uv run pytest -q tests/test_assistants.py tests/test_chat_service.py tests/test_agent_workflow_evals.py
+uv run pytest -q tests/test_runtime_instructions.py tests/test_runtime_tools.py tests/test_runtime_streaming.py
 uv run --extra evals chat-tft-evals validate
 ```
 

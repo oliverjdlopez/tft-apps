@@ -13,6 +13,7 @@ from domain.assistants.assistants import (
     render_input as _render_input,
 )
 from domain.assistants.registry import AssistantRegistry, assistant_registry
+from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import (
     ASSISTANT_SPECS_DIR,
     SPECS_DIR,
@@ -145,7 +146,7 @@ def create_assistant(
     instructions_by_name: Mapping[str, Any] | None = None,
     output_type: type[Any] | None = None,
 ) -> Agent[Any]:
-    """Construct a fresh SDK assistant graph from the registry.
+    """Construct a fresh SDK graph with specification-owned prompt rendering.
 
     Args:
         name: Root registered assistant name.
@@ -155,7 +156,9 @@ def create_assistant(
         output_type: Optional structured output type for the root agent.
 
     Returns:
-        A fresh SDK agent with fresh handoff agents.
+        A fresh SDK agent and handoffs with built-in instruction callbacks.
+        With AssistantRunContext they render permitted prepared resources;
+        without it they return durable prompts. Explicit overrides take priority.
     """
     _configure_tools()
     agent = _build_assistant(
@@ -197,6 +200,7 @@ __all__ = [
     "create_assistant",
     "list_assistants",
     "load_assistant_spec",
+    "prepare_resources",
     "reload_assistant_specs",
     "render_assistant_input",
     "resolve_assistant_tools",

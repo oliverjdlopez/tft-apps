@@ -36,6 +36,16 @@ changes to evidence ownership or transport. Grader execution evidence recognizes
 `present_evidence` and legacy `present_inline_data` calls from historical traces;
 frozen historical snapshots retain their original prompt and tool names.
 
+Invocation-context regression coverage lives in `tests/test_runtime_instructions.py`,
+`tests/test_runtime_tools.py`, and `tests/test_runtime_streaming.py`. These use
+fake providers, tools, and models to verify selection-once behavior, prompt
+parity, default factory rendering across nested handoffs, specification snapshots,
+explicit override precedence, dependency isolation, evidence precision, lifecycle
+identity, legacy callers, and stream cancellation without paid calls. Run them with the existing
+assistant, chat, context, skill, evidence, and tool suites. The context evaluation
+adapter has a pre-existing retired-symbol import mismatch that also blocks
+`chat-tft-evals validate`; report that limitation separately from runtime results.
+
 Current cohort and delta registry coverage is in `tests/test_cohort_facts.py`
 and `tests/test_openai_tools.py`.
 

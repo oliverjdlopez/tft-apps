@@ -14,7 +14,6 @@ from api.routes.chat import ChatMessage, ChatRequest, router as chat_router
 from domain.constants import AnthropicModels, OpenAIModels
 from core.config import load_config
 from services.chat_service import (
-    _build_chat_instructions,
     chat_config,
     resolve_chat_assistant,
     stream_chat,
@@ -26,7 +25,9 @@ from domain.providers.context import (
 )
 from domain.providers.skills import SkillDefinition
 from domain.tools import get_tool
-from domain.assistants import assistant_tool_names, list_assistants
+from domain.assistants import assistant_tool_names, list_assistants, prepare_resources
+from domain.runtime import AssistantRunContext, PreparedResources, ToolActivity
+from domain.runtime.activity import ActivityRunHooks
 from domain.tools.evidence import EvidenceStore
 from domain.tools.context import CONTEXT_TOOL_GROUP
 from domain.tools.db_tools.cohort_tools import COHORT_TOOL_GROUP
@@ -124,7 +125,7 @@ def test_builds_agents_sdk_tools_not_metadata_dicts() -> None:
     assert getattr(tool, "name", "") == "resolve_tft_names"
 
 
-def test_build_chat_instructions_retains_recent_entity_for_follow_up() -> None:
+def test_prepare_resources_retains_recent_entity_for_follow_up() -> None:
     context_file = ContextFile(
         name="set-17-units",
         description="Set 17 units",
@@ -158,21 +159,21 @@ def test_build_chat_instructions_retains_recent_entity_for_follow_up() -> None:
         ],
     )
 
-    _root, _handoffs, references, _skills = asyncio.run(
-        _build_chat_instructions(
+    resources = asyncio.run(
+        prepare_resources(
             [message.model_dump() for message in request.messages],
-            request.system,
+            set_number=17,
             context_provider=FakeContextProvider(),
             skill_provider=FakeSkillProvider(),
         )
     )
 
-    assert [snippet.content for snippet in references] == [
+    assert [snippet.content for snippet in resources.references] == [
         "# Units\n\n- **Riven** — adaptive bruiser"
     ]
 
 
-def test_build_chat_instructions_drops_history_for_unrelated_turn() -> None:
+def test_prepare_resources_drops_history_for_unrelated_turn() -> None:
     queries: list[str] = []
 
     class FakeContextProvider:
@@ -191,9 +192,9 @@ def test_build_chat_instructions_drops_history_for_unrelated_turn() -> None:
         ChatMessage(role="user", content="Hello, thanks!"),
     ]
     asyncio.run(
-        _build_chat_instructions(
+        prepare_resources(
             [message.model_dump() for message in messages],
-            None,
+            set_number=17,
             context_provider=FakeContextProvider(),
             skill_provider=FakeSkillProvider(),
         )
@@ -373,12 +374,12 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         path="domain/resources/skills/compare-boards/SKILL.md",
     )
 
-    async def empty_instructions(_messages, _system, *, assistant_name):
-        assert assistant_name == "meta_expert"
-        return "CHAT", {}, (reference,), (skill,)
+    async def selected_resources(_messages, **kwargs):
+        """Provide selections without invoking a model-backed selector."""
+        return PreparedResources(query="What is the best comp?", references=(reference,), skills=(skill,))
 
     monkeypatch.setattr(
-        "services.chat_service._build_chat_instructions", empty_instructions
+        "services.chat_service.prepare_resources", selected_resources
     )
 
     def fake_create_assistant(name, **kwargs):
@@ -388,8 +389,11 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
 
     monkeypatch.setattr("services.chat_service.create_assistant", fake_create_assistant)
 
-    def fake_run_streamed(agent, *, input, max_turns, context):
-        assert isinstance(context, EvidenceStore)
+    def fake_run_streamed(agent, *, input, max_turns, context, hooks):
+        assert isinstance(context, AssistantRunContext)
+        assert isinstance(context.evidence, EvidenceStore)
+        assert isinstance(hooks, ActivityRunHooks)
+        captured["context"] = context
         captured["run_agent"] = agent
         captured["stream_input"] = input
         captured["max_turns"] = max_turns
@@ -459,11 +463,10 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         assistant_tool_names("meta_expert")
     )
     assert metadata["context_sources"] == "domain/resources/context/units.md"
-    assert captured["create_kwargs"] == {
-        "instructions": "CHAT",
-        "model": "gpt-5",
-        "instructions_by_name": {},
-    }
+    create_kwargs = captured["create_kwargs"]
+    assert create_kwargs == {"model": "gpt-5"}
+    assert captured["context"].runtime.root_assistant == "meta_expert"
+    assert captured["context"].resources.references == (reference,)
     assert captured["stream_input"] == [
         {"role": "user", "content": "What is the best comp?"}
     ]
@@ -485,6 +488,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
             self.name = kwargs["name"]
             captured["agent_names"].append(self.name)
             assert kwargs["tools"] == [] and kwargs["handoffs"] == []
+            assert kwargs["instructions"] is main_agent.instructions
 
     class FailingResult:
         async def stream_events(self):
@@ -503,10 +507,11 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
             )
 
     monkeypatch.setattr("services.chat_service.Agent", FakeAgent)
-    main_agent = SimpleNamespace(name=assistant_name)
+    main_agent = SimpleNamespace(name=assistant_name, instructions=object())
 
-    def fake_run_streamed(agent, *, input, max_turns, context):
+    def fake_run_streamed(agent, *, input, max_turns, context, hooks):
         captured.setdefault("contexts", []).append(context)
+        captured.setdefault("hooks", []).append(hooks)
         captured["max_turns"].append(max_turns)
         return FailingResult() if agent is main_agent else FinalResult()
 
@@ -519,13 +524,12 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         lambda _name, **_kwargs: main_agent,
     )
 
-    async def empty_instructions(_messages, _system, **_kwargs):
-        """Check routed instruction selection without invoking resource selectors."""
-        assert _kwargs["assistant_name"] == assistant_name
-        return "CHAT", {}, (), ()
+    async def selected_resources(_messages, **_kwargs):
+        """Provide prepared resources without invoking resource selectors."""
+        return PreparedResources(query="Finish the analysis")
 
     monkeypatch.setattr(
-        "services.chat_service._build_chat_instructions", empty_instructions
+        "services.chat_service.prepare_resources", selected_resources
     )
 
     request = ChatRequest(
@@ -550,5 +554,61 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
     expected = "chat_tft_final_response" if assistant_name == "chat" else f"{assistant_name}_final_response"
     assert captured["agent_names"] == [expected]
     assert captured["max_turns"] == [3, 1]
-    assert isinstance(captured["contexts"][0], EvidenceStore)
+    assert isinstance(captured["contexts"][0], AssistantRunContext)
+    assert isinstance(captured["contexts"][0].evidence, EvidenceStore)
+    assert captured["hooks"][0] is captured["hooks"][1]
     assert captured["contexts"][0] is captured["contexts"][1]
+
+
+@pytest.mark.parametrize("fallback", [False, True])
+def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, fallback):
+    """HTTP consumer closure reaches the active main or fallback stream adapter."""
+    contexts = []
+    closed = []
+    main_agent = SimpleNamespace(name="chat", instructions="DURABLE ROOT")
+    main_result, final_result = object(), object()
+
+    async def prepared(_messages, **_kwargs):
+        """Provide resources without invoking a selector or external model."""
+        return PreparedResources(query="Finish the analysis")
+
+    def run_streamed(agent, *, context, **_kwargs):
+        """Capture the shared context for both runner entry points."""
+        contexts.append(context)
+        return main_result if agent is main_agent else final_result
+
+    async def events(result, *, run_context, **_kwargs):
+        """Model an adapter suspended while the consumer processes a delta."""
+        if fallback and result is main_result:
+            raise MaxTurnsExceeded("tool limit")
+        run_context.activity.calls["pending"] = ToolActivity("pending", "lookup")
+        try:
+            yield "delta"
+            await asyncio.Event().wait()
+        finally:
+            closed.append(result)
+
+    monkeypatch.setattr("services.chat_service.prepare_resources", prepared)
+    monkeypatch.setattr("services.chat_service.create_assistant", lambda *args, **kwargs: main_agent)
+    monkeypatch.setattr("services.chat_service.Runner.run_streamed", run_streamed)
+    monkeypatch.setattr("services.chat_service.stream_agent_events", events)
+
+    async def run():
+        """Close chat after its first text delta rather than consuming to completion."""
+        stream = stream_chat(
+            [{"role": "user", "content": "Finish the analysis"}],
+            None,
+            "offline",
+            model="offline",
+            max_tool_rounds=1,
+        )
+        async for chunk in stream:
+            if chunk == "delta":
+                break
+        await asyncio.wait_for(stream.aclose(), timeout=2)
+
+    asyncio.run(run())
+    assert closed == [final_result if fallback else main_result]
+    assert len(contexts) == (2 if fallback else 1)
+    assert all(context is contexts[0] for context in contexts)
+    assert contexts[0].activity.calls["pending"].status == "cancelled"

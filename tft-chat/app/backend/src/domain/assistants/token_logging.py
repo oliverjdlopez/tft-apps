@@ -229,13 +229,18 @@ def log_agent_graph(agent: Agent[Any], *, task_prompt: str) -> None:
             return
         seen.add(id(candidate))
         model = _model_name(candidate)
+        dynamic_instructions = callable(candidate.instructions)
         instructions = (
             candidate.instructions if isinstance(candidate.instructions, str) else ""
         )
         tool_definitions = _tool_definitions(candidate)
         handoff_definitions = _handoff_definitions(candidate)
         task_tokens = count_tokens(task_prompt, model=model) if root else 0
-        instruction_tokens = count_tokens(instructions, model=model)
+        # Dynamic callbacks need a run context and must not be executed just for
+        # diagnostics. Their instruction count remains unresolved at construction.
+        instruction_tokens = (
+            None if dynamic_instructions else count_tokens(instructions, model=model)
+        )
         tool_tokens = _definition_tokens(tool_definitions, model=model)
         handoff_tokens = _definition_tokens(handoff_definitions, model=model)
         summaries.append(
@@ -243,16 +248,16 @@ def log_agent_graph(agent: Agent[Any], *, task_prompt: str) -> None:
                 "assistant": candidate.name,
                 "model": model,
                 "encoding": _encoding_name(model),
+                "instructions_kind": "dynamic" if dynamic_instructions else "static",
                 "tokens": {
                     "instructions": instruction_tokens,
                     "task_prompt": task_tokens,
                     "tools": tool_tokens,
                     "handoffs": handoff_tokens,
                     "estimated_static_total": (
-                        instruction_tokens
-                        + task_tokens
-                        + tool_tokens
-                        + handoff_tokens
+                        None
+                        if instruction_tokens is None
+                        else instruction_tokens + task_tokens + tool_tokens + handoff_tokens
                     ),
                 },
                 "tool_count": len(tool_definitions),

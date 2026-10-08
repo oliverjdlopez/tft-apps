@@ -9,6 +9,7 @@ from agents import Agent
 
 from core.config import load_config
 from domain.assistants.registry import AssistantRegistry, assistant_registry
+from domain.assistants.utils import instruction_callback, render_instruction_layers
 from domain.providers.context import (
     DEFAULT_CONTEXT_PROVIDER,
     ContextProvider,
@@ -30,7 +31,7 @@ def build_assistant(
     instructions_by_name: Mapping[str, Any] | None = None,
     output_type: type[Any] | None = None,
 ) -> Agent[Any]:
-    """Construct a fresh SDK agent and recursive handoff graph.
+    """Construct a fresh graph with each agent's context policy installed.
 
     Args:
         registry: Assistant registry used for specs, handoffs, and tools.
@@ -41,7 +42,8 @@ def build_assistant(
         output_type: Optional structured output type for the root agent.
 
     Returns:
-        A fresh SDK agent with fresh handoff agents.
+        A fresh SDK agent and handoffs with default instruction renderers.
+        Explicit instruction overrides take precedence over those renderers.
 
     Raises:
         ValueError: If the handoff graph contains a cycle.
@@ -74,7 +76,11 @@ def build_assistant(
         return Agent(
             name=spec.name,
             handoff_description=spec.handoff_description,
-            instructions=instruction_map.get(candidate, spec.system_prompt),
+            instructions=(
+                instruction_map[candidate]
+                if candidate in instruction_map
+                else instruction_callback(spec, root=not path)
+            ),
             model=spec.resolved_model() if model is None else model,
             model_settings=spec.model_settings(),
             tools=registry.resolve_tools(spec),
@@ -133,31 +139,27 @@ def build_assistant_instructions(
         The assembled instruction text for the assistant invocation.
     """
     spec = assistant_registry.get_spec(assistant_name)
-    effective_set = (
-        load_config().chat.set_number if set_number is None else set_number
-    )
     selected_references: tuple[ContextSnippet, ...] = ()
     if spec.repository_context and query.strip():
-        selected_references = (
-            tuple(references)
-            if references is not None
-            else tuple(context_provider.select(query, set_number=effective_set))
-        )
-    # Preselected skills are filtered again at the injection boundary so no
-    # caller can accidentally grant an assistant broader access than its spec.
-    selected_skills = tuple(skills or ())
-    if spec.skill_names is not None:
-        allowed_skill_names = set(spec.skill_names)
-        selected_skills = tuple(
-            skill for skill in selected_skills if skill.name in allowed_skill_names
-        )
-
-    parts = [(base_instructions or spec.system_prompt).strip()]
-    if selected_references:
-        parts.append(context_provider.render(selected_references))
-    if selected_skills:
-        parts.append(skill_provider.render(selected_skills))
-    return "\n\n".join(part for part in parts if part).strip()
+        if references is not None:
+            selected_references = tuple(references)
+        else:
+            # Prepared invocations already chose their set at the boundary.
+            # Only standalone selection needs the legacy configuration fallback.
+            effective_set = (
+                load_config().chat.set_number if set_number is None else set_number
+            )
+            selected_references = tuple(
+                context_provider.select(query, set_number=effective_set)
+            )
+    return render_instruction_layers(
+        spec,
+        context_provider=context_provider,
+        skill_provider=skill_provider,
+        references=selected_references,
+        skills=skills or (),
+        base_instructions=base_instructions,
+    )
 
 
 __all__ = ["build_assistant", "build_assistant_instructions", "render_input"]

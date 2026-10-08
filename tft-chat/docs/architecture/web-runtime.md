@@ -19,6 +19,9 @@ selection, instruction assembly, agent setup, first stream chunk, first model
 event, first text delta, and total request time. Missing stage values mean the
 request ended before that stage completed; interrupted streams are recorded as
 such. The output is local diagnostic data and is ignored by Git.
+Instruction assembly is the cumulative time spent rendering dynamic instruction
+callbacks across model steps, including fallback; resource-selection timings
+still measure the single preparation pass.
 
 ## Backend composition
 
@@ -27,8 +30,9 @@ local tracing, attempts to validate and warm the application database, and can
 start query-table catch-up. Route modules under `api/routes/` validate HTTP
 inputs and delegate to `services/`:
 
-- `chat_service.py` owns model selection, API-key checks, configuration
-  payloads, streamed chat execution, and `StreamingResponse` construction. Its
+- The chat route owns model selection, API-key checks, and `StreamingResponse`
+  construction; `chat_service.py` owns configuration payloads and streamed chat
+  execution. Its
   `/api/config` model options come from `domain.model_catalog.chat_model_specs`,
   which supplies the labels and IDs shown in the chat model dropdown. Labels
   include the exact model ID and are derived from it, so they cannot advertise a
@@ -99,6 +103,22 @@ receive this chat-only formatting. HTTP response chunks are not used as part
 boundaries.
 Chat Activity trace links open the encoded trace-detail URL rather than the
 dashboard index.
+
+Chat supplies one typed `AssistantRunContext` to the runner and stream adapter.
+`domain.runtime.activity.ActivityRunHooks` records tool-call IDs, owning agent,
+arguments, actual execution timestamps, and handoffs in that context. These
+records remain internal: SDK stream events still determine browser ordering,
+and the existing Activity UI and payloads are unchanged. Hooks emit no browser
+events. The tool wrapper records raised failures/cancellation; returned error
+payloads remain ordinary completed tool executions.
+
+The stream adapter obtains validated display events from
+`domain.tools.evidence.presentation_event`, preserving a presentation before its
+completed-tool event and retaining backend numerical precision. Legacy adapter
+callers can still supply a bare evidence store. Interrupted stream consumers
+cancel the SDK result and consume its cleanup stream before returning; unfinished
+activity records become cancelled or failed. The chat service explicitly closes
+the nested adapter on consumer closure, including during the maximum-turn fallback.
 
 ## Main navigation
 

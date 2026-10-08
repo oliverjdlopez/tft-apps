@@ -142,6 +142,7 @@ def test_factory_builds_sdk_agent_with_spec_model_settings() -> None:
     assert isinstance(agent, Agent)
     assert agent.model == load_config().models.openai_model
     assert agent.model_settings.reasoning.effort == ReasoningEfforts.MEDIUM.value
+    assert callable(agent.instructions)
 
 
 def test_render_assistant_input_uses_spec_task_prompt(monkeypatch) -> None:
@@ -226,6 +227,8 @@ def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
     assert root["handoff_count"] > 0
     assert root["tokens"]["tools"] > 0
     assert root["tokens"]["handoffs"] > 0
+    assert root["instructions_kind"] == "dynamic"
+    assert root["tokens"]["instructions"] is None
 
 
 def test_instructions_render_references_and_skill_in_order(monkeypatch) -> None:
