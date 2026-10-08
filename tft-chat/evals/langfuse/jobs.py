@@ -64,6 +64,15 @@ class JobStore:
         if state not in {"completed", "failed", "interrupted", "exported"}:
             raise ValueError("Invalid terminal job state")
         with self.connect() as connection:
+            row = connection.execute("SELECT bundle FROM jobs WHERE id=?", (job_id,)).fetchone()
+            if row is not None and state in {"completed", "failed"}:
+                bundle = json.loads(row["bundle"])
+                if "items" in bundle and "suite" in bundle:
+                    from .artifacts import write_run_artifact
+                    if result is None:
+                        result = {"passed": False, "experiments": []}
+                    write_run_artifact(bundle, result, self.path.parent / "artifacts", job_id,
+                                       state=state, error=error)
             connection.execute("UPDATE jobs SET state=?,result=?,error=?,updated=? WHERE id=?", (
                 state, json.dumps(result) if result is not None else None, error, time.time(), job_id,
             ))

@@ -431,3 +431,58 @@ async def close_proxy_stream(response, client) -> None:
     """Release both socket response and transport after native streaming ends."""
     await response.aclose()
     await client.aclose()
+
+
+# ===========================================================================
+# Completed-run Markdown artifacts
+# Preserve authored prompts and final answers; format only tool arguments.
+# Full tool return payloads remain in Langfuse and never enter these exports.
+# ===========================================================================
+
+
+def artifact_execution_fields(result: dict) -> dict:
+    """Retain argument evidence in durable reports without tool return payloads."""
+    trace = result.get("metadata", {}).get("tft_trace")
+    calls = None if trace is None else [
+        {key: call[key] for key in ("name", "arguments", "agent", "call_id") if key in call}
+        for call in trace.get("tool_calls", [])
+    ]
+    return {"tool_calls": calls, "execution_error": result.get("error")}
+
+
+def markdown_scalar(value: Any) -> str:
+    """Escape a scalar for Markdown lists while distinguishing JSON nulls."""
+    if value is None:
+        return "Not set (`null`)"
+    if isinstance(value, bool):
+        return "`true`" if value else "`false`"
+    if isinstance(value, (int, float)):
+        return f"`{value}`"
+    text = str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    text = re.sub(r"([\\`*_{}\[\]()#+.!|>~-])", r"\\\1", text)
+    return text.replace("\n", "<br>") if text else "Empty string"
+
+
+def markdown_arguments(value: Any, depth: int = 0) -> list[str]:
+    """Format nested argument fields and ordered arrays without JSON blocks."""
+    if not isinstance(value, (dict, list)):
+        return ["    " * depth + "- Value: " + markdown_scalar(value)]
+    lines = []
+    entries = value.items() if isinstance(value, dict) else enumerate(value, 1)
+    for key, child in entries:
+        label = markdown_scalar(key) if isinstance(value, dict) else f"Item {key}"
+        prefix = "    " * depth + f"- **{label}**:"
+        if isinstance(child, (dict, list)):
+            if not child:
+                lines.append(prefix + (" Empty object" if isinstance(child, dict) else " Empty list"))
+            else:
+                lines.append(prefix)
+                lines.extend(markdown_arguments(child, depth + 1))
+        else:
+            lines.append(prefix + " " + markdown_scalar(child))
+    return lines
+
+
+def markdown_content(value: Any) -> str:
+    """Keep text byte-for-byte and render structured prompts or outputs as lists."""
+    return value if isinstance(value, str) else "\n".join(markdown_arguments(value))

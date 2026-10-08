@@ -68,6 +68,7 @@ def test_run_exports_effective_definition_before_execution(tmp_path: Path, monke
     bundle["config"]["action"] = "export"
     original = content.export_snapshot(bundle, tmp_path)
     monkeypatch.setattr(launcher, "SNAPSHOT_ROOT", tmp_path)
+    monkeypatch.setenv("LANGFUSE_RUNTIME_DIR", str(tmp_path / "runtime"))
     received = []
 
     def evaluate(value, client=None):

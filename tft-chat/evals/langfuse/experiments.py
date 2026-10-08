@@ -86,7 +86,10 @@ def evaluate_item(*, input: str | dict, output: dict, expected_output: str | dic
 def run_local_item(item: dict, *, suite: dict, variant: dict, prompts: dict) -> dict:
     """Run one credential-free fixture or selector and preserve its full scores."""
     result = execute_attempt(suite, item, variant, prompts)
-    return {"id": item["id"], "result": result, "scores": score_attempt(item, result, prompts)}
+    from .utils import artifact_execution_fields
+    return {"id": item["id"], "result": result, "result_is_execution_wrapper": True,
+            "scores": score_attempt(item, result, prompts),
+            **artifact_execution_fields(result)}
 
 
 def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None) -> dict:
@@ -164,9 +167,9 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
                                                                                  if key != "legacy_definition"},
                                 dataset_id=bundle["dataset_id"], dataset_name=bundle["dataset_name"],
                                 created_at=version, updated_at=version, media_references=[]) for item in items]
-            result_store = {} if natural else None
+            result_store = {}
             evaluators = [] if unscored else [partial(
-                evaluate_item, prompts=bundle["prompts"], result_store=result_store,
+                evaluate_item, prompts=bundle["prompts"], result_store=result_store if natural else None,
                 score_configs=bundle.get("grading", {}).get("score_configs", {}),
             )]
             result = client.run_experiment(
@@ -205,8 +208,15 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
             returned = {row["remote_id"] for row in reports}
             # The SDK may omit a failed task; retain that failure in CI artifacts.
             reports.extend({"id": item["id"], "remote_id": item["remote_id"], "scores": [],
-                            "result": {"error": "SDK did not return an experiment item result"}}
+                            "result": {"error": "SDK did not return an experiment item result"},
+                            "result_is_execution_wrapper": True}
                            for item in items if item["remote_id"] not in returned)
+            from .utils import artifact_execution_fields
+            for row in reports:
+                row.setdefault("result_is_execution_wrapper", not natural)
+                captured = result_store.get(row["id"])
+                if captured is not None:
+                    row.update(artifact_execution_fields(captured))
             experiments.append({"name": name, "passed": passed, "dataset_run_id": result.dataset_run_id,
                                 "url": public_experiment_url(result.dataset_run_url), "item_count": len(result.item_results), "items": reports})
     if client is not None:

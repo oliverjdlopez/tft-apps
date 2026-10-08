@@ -237,7 +237,7 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
             from .grading import reconcile_report
             from .utils import configured_workspace
             import time
-            store = JobStore(PLATFORM_ROOT / '.runtime')
+            store = JobStore(Path(os.environ.get('LANGFUSE_RUNTIME_DIR', str(PLATFORM_ROOT / '.runtime'))))
             job_id = store.submit(bundle, snapshot_id, awaiting_result=result)
             workspace = configured_workspace()
             try:
@@ -253,6 +253,12 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
                 store.finish(job_id, 'completed' if result['passed'] else 'failed', result=result)
             finally:
                 workspace.close()
+        if "markdown_artifact" not in result:
+            from .artifacts import write_run_artifact
+            from uuid import uuid4
+            runtime = Path(os.environ.get("LANGFUSE_RUNTIME_DIR", str(PLATFORM_ROOT / ".runtime")))
+            write_run_artifact(bundle, result, runtime / "artifacts", result.get("group_id") or uuid4().hex,
+                               state="completed" if result["passed"] else "failed")
         result["snapshot"] = snapshot_id
         print(json.dumps(result, indent=2, default=str))
         return 0 if result["passed"] else 1

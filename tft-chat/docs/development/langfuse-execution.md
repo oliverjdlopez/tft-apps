@@ -65,6 +65,36 @@ names receive stable hash suffixes; `original_check_name` and exported
 `weighted_score` remains available when reading legacy reports. It is not the
 natural workflow's decision metric; every required check must pass.
 
+## Automatic Markdown artifacts
+
+Completed dataset jobs automatically write a private Markdown artifact to
+`evals/langfuse/.runtime/artifacts/<job-id>.md`. A configured
+`LANGFUSE_RUNTIME_DIR` relocates this directory with the runner's other state.
+Each experiment variant/repetition contains its selected frozen prompts, full
+final responses, and tool calls in recorded order beneath each response.
+Arguments are rendered as nested Markdown lists, including explicit nulls;
+tool return values are excluded. Structured prompts and outputs are rendered
+as lists, while text prompts and responses are preserved verbatim.
+
+The execution report now retains argument-only tool captures before entering
+`awaiting_scores`, so grading can resume after a restart without retrieving
+tool arguments from Langfuse. `JobStore.finish()` exports when execution and
+grading reach a terminal `completed` or `failed` outcome, including grading
+timeouts. Export-only requests and still-pending jobs do not produce a report.
+Early failures produce an artifact with the selected prompts and explicit
+missing-response notes; uncaptured tool arguments are distinguished from a
+captured trace containing no calls. Interrupted executions retain the existing
+explicit-replay requirement.
+
+`GET /jobs/<job-id>` exposes `result.markdown_artifact` with `status: "written"`
+and the absolute file `path`. Export failures instead record `status: "failed"`
+and an `error`, without changing the evaluation outcome or discarding results.
+The native completion status event includes the same report. The CLI `run`
+path also exports automatically and prints this field in its result JSON;
+runs without asynchronous grading use the comparison group ID as the filename.
+Files are replaced atomically and remain ignored runtime artifacts. Older
+saved jobs do not acquire tool arguments retroactively.
+
 ## Traces
 
 The documented OpenInference OpenAI Agents integration records actual nested

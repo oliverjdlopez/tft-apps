@@ -149,7 +149,9 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
                    "selection_live": False, "data_snapshot_label": None, "snapshot": None},
     }
     monkeypatch.setattr(experiments, "execute_attempt", lambda *args: {
-        "output": "Unscored answer", "metadata": {}, "token_usage": {}})
+        "output": "Unscored answer", "metadata": {"tft_trace": {"tool_calls": [
+            {"name": "resolve_tft_names", "arguments": '{"names":["Veigar"]}',
+             "agent": "chat", "call_id": "call-1", "output": "PRIVATE TOOL RETURN"}]}}, "token_usage": {}})
 
     class Client:
         """Execute the SDK callbacks while recording the evaluator contract."""
@@ -178,6 +180,9 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
     assert report["passed"] and report.get("state") is None
     item = report["experiments"][0]["items"][0]
     assert item["scores"] == [] and item["execution_success"] and item["scoring"] == "none"
+    assert item["tool_calls"][0]["arguments"] == '{"names":["Veigar"]}'
+    assert "PRIVATE TOOL RETURN" not in json.dumps(report)
+    assert not item["result_is_execution_wrapper"]
 
 
 def test_portable_snapshot_binds_only_identities(fixture_bundle):

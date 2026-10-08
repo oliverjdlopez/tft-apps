@@ -77,6 +77,32 @@ will be unavailable while the legacy stack is stopped. The preserved legacy
 volumes are a recovery copy, not an execution target. Future experiments belong
 to the suite project on port 15510.
 
+On 2026-10-08, the latest preserved unit-expert run (2026-10-04,
+`adea170a7b476b85`) was re-exported without rerunning it. The prompt/final-output
+Markdown and verification receipt are under ignored
+`.migration/unit-expert-export-20261008/`. All 17 frozen inputs and complete
+responses match the archived job record; the inputs use the shorter player
+questions without the October 1 run's appended analysis instructions. All 17
+executions returned answers, with 12 grading passes and 5 grading failures.
+The export omits traces, tool calls, and grading commentary.
+
+The preserved `chattft-evals_minio` volume was subsequently inspected read-only.
+All 17 October 4 root observations retain `metadata.tft_trace`, including 181
+tool calls with JSON arguments. Their inputs and outputs match the archived
+job record. The recovered captures are saved separately as
+`.migration/unit-expert-export-20261008/recovered-tool-traces.json`, with a
+readable `UN4-1-C01-tool-arguments.md` example alongside it. These captures
+include resolver outputs but omit other tool returns and per-call timing;
+they are not complete observation exports. No legacy services were restarted.
+
+The combined
+`.migration/unit-expert-export-20261008/2026-10-04-unit-expert-prompts-outputs-and-tool-arguments.md`
+retains all 17 prompts and final responses, followed in each case by its tool
+calls in recorded order. All 181 calls have arguments rendered as Markdown
+lists, including nested fields and explicit nulls; tool return values are
+excluded. The adjacent `tool-arguments-artifact-verification.json` records the
+artifact hash and verified counts.
+
 The 2026-10-02 preservation of the older `tft-suite` checkout retains its
 remaining authored evaluation files, immutable snapshots and complete Git
 history without replacing this suite's active catalogue. See the
