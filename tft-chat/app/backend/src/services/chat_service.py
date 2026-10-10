@@ -207,7 +207,7 @@ async def stream_chat(
                     ),
                     instructions=agent.instructions,
                     model=model,
-                    model_settings=assistant_spec(assistant_name).model_settings(),
+                    model_settings=agent.model_settings,
                     tools=[],
                     handoffs=[],
                 )

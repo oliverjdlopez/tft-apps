@@ -579,7 +579,9 @@ def isolated_operation(payload: dict[str, Any], timeout: float) -> dict[str, Any
         Execution output and metadata, or raises for process/transport failures.
     """
     worker_environment = os.environ.copy()
-    if payload.get('operation') == 'evaluate':
+    if payload.get('config', {}).get('workspace_trial'):
+        payload = {**payload, 'parent_pid': os.getpid()}
+    if payload.get('operation') == 'evaluate' and not payload.get('config', {}).get('workspace_trial'):
         try:
             from opentelemetry import propagate, trace
             if trace.get_current_span().get_span_context().is_valid:

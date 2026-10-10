@@ -5,7 +5,12 @@ from typing import Any
 from agents import Runner
 from domain.assistants import create_assistant
 from domain.assistants.constants import AssistantName
-from domain.providers.context import MAX_CONTEXT_SNIPPETS, MAX_SELECTOR_CHARS, _rank_context_candidates, _ContextCandidate, _all_context_candidates, _context_selector_prompt, _selected_context_ids, _shortlist_context_candidates, discover_context_files
+from domain.providers.constants import MAX_CONTEXT_SNIPPETS, MAX_SELECTOR_CHARS
+from domain.providers.models import ContextCandidate as _ContextCandidate
+from domain.providers.context import discover_context_files
+from domain.providers.utils import (rank_context_candidates as _rank_context_candidates,
+    all_context_candidates as _all_context_candidates, context_selector_prompt as _context_selector_prompt,
+    selected_context_ids as _selected_context_ids, shortlist_context_candidates as _shortlist_context_candidates)
 from domain.assistants.models import ContextSelection
 
 from .utils import coverage, validate_cases, validate_payload, selected_candidates, local_selection

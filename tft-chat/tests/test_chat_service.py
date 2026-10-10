@@ -7,7 +7,7 @@ from contextlib import AbstractContextManager
 from types import SimpleNamespace
 
 import pytest
-from agents import MaxTurnsExceeded
+from agents import MaxTurnsExceeded, ModelSettings
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from api.routes.chat import ChatMessage, ChatRequest, router as chat_router
@@ -489,6 +489,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
             captured["agent_names"].append(self.name)
             assert kwargs["tools"] == [] and kwargs["handoffs"] == []
             assert kwargs["instructions"] is main_agent.instructions
+            assert kwargs["model_settings"] is main_agent.model_settings
 
     class FailingResult:
         async def stream_events(self):
@@ -507,7 +508,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
             )
 
     monkeypatch.setattr("services.chat_service.Agent", FakeAgent)
-    main_agent = SimpleNamespace(name=assistant_name, instructions=object())
+    main_agent = SimpleNamespace(name=assistant_name, instructions=object(), model_settings=object())
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks):
         captured.setdefault("contexts", []).append(context)
@@ -565,7 +566,7 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
     """HTTP consumer closure reaches the active main or fallback stream adapter."""
     contexts = []
     closed = []
-    main_agent = SimpleNamespace(name="chat", instructions="DURABLE ROOT")
+    main_agent = SimpleNamespace(name="chat", instructions="DURABLE ROOT", model_settings=ModelSettings())
     main_result, final_result = object(), object()
 
     async def prepared(_messages, **_kwargs):

@@ -218,6 +218,7 @@ class RepositoryContextProvider(ContextProvider):
         context_dir: Path = CONTEXT_DIR,
         *,
         relative_to: Path | None = None,
+        registry=None,
     ) -> None:
         """Configure source discovery and repository-relative display paths.
 
@@ -225,6 +226,7 @@ class RepositoryContextProvider(ContextProvider):
             context_dir: Context corpus directory to discover.
             relative_to: Optional root used to display source paths.
         """
+        self.registry = registry
         self.context_dir = context_dir
         self.relative_to = relative_to or (
             ROOT_DIR if context_dir == CONTEXT_DIR else context_dir
@@ -303,7 +305,7 @@ class RepositoryContextProvider(ContextProvider):
         try:
             if load_config().secrets.openai_api_key:
                 result = Runner.run_sync(
-                    _selector_agent(),
+                    _selector_agent(registry=self.registry) if self.registry is not None else _selector_agent(),
                     context_selector_prompt(
                         query, candidates, max_selected=max_snippets
                     ),
@@ -385,7 +387,7 @@ class RepositoryContextProvider(ContextProvider):
         try:
             if load_config().secrets.openai_api_key:
                 result = await Runner.run(
-                    _selector_agent(),
+                    _selector_agent(registry=self.registry) if self.registry is not None else _selector_agent(),
                     context_selector_prompt(
                         query, candidates, max_selected=max_snippets
                     ),

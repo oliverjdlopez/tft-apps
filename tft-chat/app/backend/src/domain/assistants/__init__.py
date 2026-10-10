@@ -145,6 +145,8 @@ def create_assistant(
     instructions: Any | None = None,
     instructions_by_name: Mapping[str, Any] | None = None,
     output_type: type[Any] | None = None,
+    registry: AssistantRegistry | None = None,
+    resolved_models: Mapping[str, str] | None = None,
 ) -> Agent[Any]:
     """Construct a fresh SDK graph with specification-owned prompt rendering.
 
@@ -160,20 +162,23 @@ def create_assistant(
         With AssistantRunContext they render permitted prepared resources;
         without it they return durable prompts. Explicit overrides take priority.
     """
-    _configure_tools()
+    if registry is None:
+        _configure_tools()
+        registry = _ASSISTANT_REGISTRY.snapshot()
     agent = _build_assistant(
-        _ASSISTANT_REGISTRY,
+        registry,
         name,
         model=model,
         instructions=instructions,
         instructions_by_name=instructions_by_name,
         output_type=output_type,
+        resolved_models=resolved_models,
     )
-    log_agent_graph(agent, task_prompt=_ASSISTANT_REGISTRY.get_spec(name).task_prompt)
+    log_agent_graph(agent, task_prompt=registry.get_spec(name).task_prompt)
     return agent
 
 
-def render_assistant_input(name: str, input_text: str) -> str:
+def render_assistant_input(name: str, input_text: str, *, registry: AssistantRegistry | None = None) -> str:
     """Apply an assistant's optional task wrapper to SDK run input.
 
     Args:
@@ -183,7 +188,7 @@ def render_assistant_input(name: str, input_text: str) -> str:
     Returns:
         Input text with the optional task prompt applied.
     """
-    return _render_input(_ASSISTANT_REGISTRY, name, input_text)
+    return _render_input(registry or _ASSISTANT_REGISTRY, name, input_text)
 
 
 __all__ = [

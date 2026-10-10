@@ -135,7 +135,7 @@ def render_json_value(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
-def context_selector_agent() -> Agent[None]:
+def context_selector_agent(*, registry=None) -> Agent[None]:
     """Build the context selector after provider modules finish loading.
 
     Returns:
@@ -145,11 +145,12 @@ def context_selector_agent() -> Agent[None]:
     from domain.assistants.models import ContextSelection
     from domain.assistants.registry import assistant_registry
 
-    spec = assistant_registry.get_spec(AssistantName.CONTEXT_SELECTOR)
+    registry = registry or assistant_registry
+    spec = registry.get_spec(AssistantName.CONTEXT_SELECTOR)
     return Agent(
         name=spec.name,
         instructions=spec.system_prompt,
-        model=spec.resolved_model(),
+        model=getattr(registry, 'resolved_models', {}).get(spec.name, spec.resolved_model()),
         model_settings=spec.model_settings(),
         output_type=ContextSelection,
     )
@@ -700,7 +701,7 @@ _SKILL_STOPWORDS = frozenset(
 )
 
 
-def skill_selector_agent() -> Agent[None]:
+def skill_selector_agent(*, registry=None) -> Agent[None]:
     """Build the skill selector after provider modules finish loading.
 
     Returns:
@@ -710,11 +711,12 @@ def skill_selector_agent() -> Agent[None]:
     from domain.assistants.models import CandidateIdSelection
     from domain.assistants.registry import assistant_registry
 
-    spec = assistant_registry.get_spec(AssistantName.SKILL_SELECTOR)
+    registry = registry or assistant_registry
+    spec = registry.get_spec(AssistantName.SKILL_SELECTOR)
     return Agent(
         name=spec.name,
         instructions=spec.system_prompt,
-        model=spec.resolved_model(),
+        model=getattr(registry, 'resolved_models', {}).get(spec.name, spec.resolved_model()),
         model_settings=spec.model_settings(),
         output_type=CandidateIdSelection,
     )

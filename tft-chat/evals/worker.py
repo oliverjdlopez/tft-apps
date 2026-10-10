@@ -29,7 +29,25 @@ def run_assistant(prompt: str, config: dict[str, Any], identity: dict[str, Any])
     from domain.assistants import create_assistant, render_assistant_input
 
     name = config["assistant"]
-    target = resolve_eval_target(config.get("database"))
+    target = resolve_eval_target(config.get("database"), require_explicit=bool(config.get("captured_graph")))
+    if config.get('captured_graph'):
+        from domain.assistants.execution import run_captured
+        from common.provenance import source_provenance
+        from common.paths import find_repo_root
+        provenance = source_provenance(find_repo_root())
+        with eval_database_override(target):
+            result, metadata = run_captured(prompt, config)
+        metadata['execution_provenance'] = provenance
+        if result is None:
+            return {'error': metadata['execution_error'], 'output': '', 'token_usage': {},
+                    'metadata': {**metadata, 'database': target.database, 'workspace_lineage': config.get('workspace_lineage')}}
+        captured = extract_trace(result)
+        usage = result.context_wrapper.usage
+        return {'output': result.final_output.model_dump(mode='json') if hasattr(result.final_output, 'model_dump') else result.final_output,
+                'token_usage': {'prompt': usage.input_tokens, 'completion': usage.output_tokens,
+                                'total': usage.total_tokens, 'numRequests': usage.requests},
+                'metadata': {**metadata, 'tft_trace': captured.to_dict(), 'trace_summary': captured.summary(),
+                             'database': target.database, 'workspace_lineage': config.get('workspace_lineage')}}
     with eval_database_override(target), trace("tft-eval-case", metadata={
         "suite": identity.get("suite", name), "case": identity.get("case", ""), "assistant": name,
     }) as case_trace:
@@ -139,12 +157,28 @@ def main() -> None:
     import signal
     signal.signal(signal.SIGTERM, terminate_worker)
     payload = json.load(sys.stdin)
+    if payload.get('config', {}).get('workspace_trial'):
+        # A restarted backend cannot supervise an orphan's communicate timeout.
+        # Trials disable tracing, so parent death can stop the child immediately.
+        if sys.platform.startswith('linux'):
+            import ctypes
+            if ctypes.CDLL(None, use_errno=True).prctl(1, signal.SIGKILL, 0, 0, 0) != 0:
+                raise OSError(ctypes.get_errno(), 'Unable to bind trial lifetime to its backend')
+        if payload.get('parent_pid') and os.getppid() != payload['parent_pid']:
+            raise SystemExit(124)
+        signal.signal(signal.SIGALRM, terminate_worker)
+        signal.alarm(180)
     try:
-        from common.langfuse_tracing import worker_trace
-        with redirect_stdout(sys.stderr), worker_trace(payload.get('trace_context'),
-                payload.get('config', {}).get('prompt_candidates', {})):
+        from contextlib import nullcontext
+        config = payload.get('config', {})
+        if config.get('workspace_trial'):
+            trace_scope = nullcontext()
+        else:
+            from common.langfuse_tracing import worker_trace
+            trace_scope = worker_trace(payload.get('trace_context'), config.get('trace_prompts', config.get('prompt_candidates', {})))
+        with redirect_stdout(sys.stderr), trace_scope:
             result = execute(payload)
-            if payload.get("config", {}).get("execution") == "live":
+            if config.get("execution") == "live" and not config.get('workspace_trial'):
                 from agents.tracing import get_trace_provider
                 get_trace_provider().force_flush()
     except Exception as exc:

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from typing import Any
+import threading
 
 from domain.assistants.specs import AssistantSpec, discover_assistants_specs
 
@@ -23,13 +24,35 @@ def _tool_name(tool: Any) -> str:
 class AssistantRegistry:
     """Store assistant specs and resolve their graph and tool metadata."""
 
-    def __init__(self) -> None:
+    def __init__(self, specs: list[AssistantSpec] | None = None) -> None:
         """Load all assistant specifications into the registry."""
+        self._snapshot_lock = threading.RLock()
         self._specs: dict[str, AssistantSpec] = {}
         self._get_tool: Callable[[str], Any] | None = None
         self._get_tool_group: Callable[[str], Any] | None = None
         self._list_tools: Callable[[], list[Any]] | None = None
-        self.reload()
+        if specs is None:
+            self.reload()
+        else:
+            self._specs = {spec.name: spec for spec in specs}
+        if specs is not None:
+            self.source_files: dict[str, dict[str, str]] = {}
+
+    def snapshot(self) -> AssistantRegistry:
+        """Capture immutable specs and tool resolvers for one invocation."""
+        with self._snapshot_lock:
+            registry = AssistantRegistry(list(self._specs.values()))
+            registry.source_files = {name: dict(files) for name, files in self.source_files.items()}
+        registry._get_tool = self._get_tool
+        registry._get_tool_group = self._get_tool_group
+        registry._list_tools = self._list_tools
+        return registry
+
+    def install(self, registry: AssistantRegistry) -> None:
+        """Install a complete validated snapshot without changing captured graphs."""
+        with self._snapshot_lock:
+            self._specs = dict(registry._specs)
+            self.source_files = {name: dict(files) for name, files in registry.source_files.items()}
 
     def configure_tools(
         self,
@@ -202,10 +225,17 @@ class AssistantRegistry:
 
     def reload(self) -> None:
         """Reload assistant specifications from their source files."""
-        self._specs.clear()
-        self._specs.update(
-            {spec.name: spec for spec in discover_assistants_specs()}
-        )
+        specs = {spec.name: spec for spec in discover_assistants_specs()}
+        from domain.assistants.specs import ROOT_DIR
+        from pathlib import Path
+        source_files = {spec.name: {
+            filename: (ROOT_DIR / Path(spec.path).parent / filename).read_bytes().decode('utf-8')
+            for filename in ('system.md', 'agent.json', 'task.md')
+            if (ROOT_DIR / Path(spec.path).parent / filename).is_file()
+        } for spec in specs.values()}
+        with self._snapshot_lock:
+            self._specs = specs
+            self.source_files = source_files
 
 
 assistant_registry = AssistantRegistry()

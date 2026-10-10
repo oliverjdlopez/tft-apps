@@ -37,6 +37,13 @@ def execute_attempt(suite: dict, item: dict, variant: dict, prompts: dict) -> di
         else:
             config = {**suite, "database": database, "model": variant.get("model"),
                       "prompt_candidates": {**prompts, **variant.get("prompts", {})}}
+            if suite.get('captured_graphs'):
+                config['captured_graph'] = suite['captured_graphs'][variant['name']]
+                config['workspace_lineage'] = suite.get('workspace_lineage')
+                # Managed prompt copies describe captured bases. Only explicit
+                # historical overrides replace those bases during execution.
+                config['prompt_candidates'] = variant.get('prompts', {})
+                config['trace_prompts'] = {**prompts, **variant.get('prompts', {})}
             payload = {"operation": "evaluate", "config": config, "input": item["input"],
                        "identity": item.get("metadata", {})}
             result = isolated_operation(payload, resolve_eval_operation_timeout(suite.get("operation_timeout")))

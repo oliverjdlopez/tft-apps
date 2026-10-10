@@ -40,6 +40,7 @@ class RepositorySkillProvider(SkillProvider):
         skills_dir: Path = SKILLS_DIR,
         *,
         relative_to: Path | None = None,
+        registry=None,
     ) -> None:
         """Configure skill discovery and load the available definitions.
 
@@ -47,6 +48,7 @@ class RepositorySkillProvider(SkillProvider):
             skills_dir: Directory containing skill subdirectories.
             relative_to: Optional root used to display skill source paths.
         """
+        self.registry = registry
         self._skills_dir = skills_dir
         self._relative_to = relative_to or (
             ROOT_DIR if skills_dir == SKILLS_DIR else skills_dir
@@ -103,7 +105,7 @@ class RepositorySkillProvider(SkillProvider):
         try:
             if load_config().secrets.openai_api_key:
                 result = Runner.run_sync(
-                    _selector_agent(),
+                    _selector_agent(registry=self.registry) if self.registry is not None else _selector_agent(),
                     skill_selector_prompt(query, skills, max_selected=max_skills),
                     max_turns=1,
                 )
@@ -160,7 +162,7 @@ class RepositorySkillProvider(SkillProvider):
         try:
             if load_config().secrets.openai_api_key:
                 result = await Runner.run(
-                    _selector_agent(),
+                    _selector_agent(registry=self.registry) if self.registry is not None else _selector_agent(),
                     skill_selector_prompt(query, skills, max_selected=max_skills),
                     max_turns=1,
                 )

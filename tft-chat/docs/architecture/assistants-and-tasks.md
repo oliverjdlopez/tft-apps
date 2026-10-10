@@ -175,3 +175,14 @@ used by application execution, preserving dynamic context and skill restrictions
 Candidates never change normal conversations. Suite discovery reads the exported
 local catalog and works when Langfuse is stopped. See
 [Tests and evaluations](../development/testing-and-evals.md).
+
+## Captured definitions and Specs drafts
+
+The [assistant workspace](../development/assistant-workspace.md) separates saved
+drafts from active repository behavior. `AssistantRegistry` can be constructed from
+immutable specs, captured per invocation, and installed as a complete snapshot.
+`domain/assistants/capture.py` validates full graphs and freezes model defaults.
+Captured worker execution threads this isolated registry through graph building,
+task wrapping, resource selectors, and instruction callbacks. Typed invocation
+context, per-assistant access policy, activity, and evidence handling use the normal
+application pipeline. Draft execution never substitutes the global registry.

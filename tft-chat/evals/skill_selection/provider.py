@@ -9,8 +9,8 @@ from domain.providers.skills import (
     MAX_SELECTED_SKILLS,
     SkillDefinition,
     _discover_skills,
-    _selected_skill_ids,
-    _skill_selector_prompt,
+    selected_skill_ids as _selected_skill_ids,
+    skill_selector_prompt as _skill_selector_prompt,
     select_skills,
 )
 from domain.assistants.models import CandidateIdSelection

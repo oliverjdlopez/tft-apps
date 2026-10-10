@@ -30,6 +30,7 @@ def build_assistant(
     instructions: Any | None = None,
     instructions_by_name: Mapping[str, Any] | None = None,
     output_type: type[Any] | None = None,
+    resolved_models: Mapping[str, str] | None = None,
 ) -> Agent[Any]:
     """Construct a fresh graph with each agent's context policy installed.
 
@@ -81,7 +82,7 @@ def build_assistant(
                 if candidate in instruction_map
                 else instruction_callback(spec, root=not path)
             ),
-            model=spec.resolved_model() if model is None else model,
+            model=(resolved_models or {}).get(candidate, spec.resolved_model()) if model is None else model,
             model_settings=spec.model_settings(),
             tools=registry.resolve_tools(spec),
             handoffs=handoffs,
@@ -122,6 +123,7 @@ def build_assistant_instructions(
     base_instructions: str | None = None,
     set_number: int | None = None,
     references: Sequence[ContextSnippet] | None = None,
+    registry: AssistantRegistry | None = None,
 ) -> str:
     """Render one assistant's durable and request-specific instructions.
 
@@ -138,7 +140,7 @@ def build_assistant_instructions(
     Returns:
         The assembled instruction text for the assistant invocation.
     """
-    spec = assistant_registry.get_spec(assistant_name)
+    spec = (registry or assistant_registry).get_spec(assistant_name)
     selected_references: tuple[ContextSnippet, ...] = ()
     if spec.repository_context and query.strip():
         if references is not None:
