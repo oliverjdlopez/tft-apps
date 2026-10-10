@@ -31,15 +31,16 @@ function start(spec) {
   });
   child.stdin.on("error", () => {});
   child.on("error", () => {
-    emitEvent("error", { message: "WSL service executable was not found. Run uv sync --locked and npm --prefix app/frontend ci in WSL, or check --python." });
+    emitEvent("error", { message: "WSL container worker could not start. Check Linux Node, Docker access, and the desktop setup in this checkout." });
     process.exit(1);
   });
-  child.on("exit", (code) => {
+  child.on("exit", (code, signal) => {
     clearTimeout(deadline);
     // The service may exit before a native build subprocess finishes. The
     // process-group ID stays scoped to this service and is never reused by us.
     try { process.kill(-child.pid, "SIGKILL"); } catch { /* Group already gone. */ }
-    process.exit(stopping ? 0 : (code ?? 1));
+    if (signal) emitEvent("cleanup_error", { message: "The WSL container worker was terminated before confirming cleanup." });
+    process.exit(signal ? 1 : stopping ? 0 : (code ?? 1));
   });
 }
 
@@ -50,7 +51,8 @@ function stop() {
   if (!child) { process.exit(0); return; }
   child.stdin.end("shutdown\n");
   deadline = setTimeout(() => {
+    emitEvent("cleanup_error", { message: "Timed out stopping the WSL container worker; check owned Docker services before restarting." });
     try { process.kill(-child.pid, "SIGKILL"); } catch { /* Process already gone. */ }
     process.exit(1);
-  }, 12000);
+  }, 45000);
 }

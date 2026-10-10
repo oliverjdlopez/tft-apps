@@ -9,7 +9,7 @@ from collections.abc import AsyncIterator, Mapping, Sequence
 from contextlib import aclosing
 from typing import Any
 
-from agents import Agent, MaxTurnsExceeded, Runner
+from agents import MaxTurnsExceeded, Runner
 from domain.tools.evidence import EvidenceStore
 from agents.run_internal.items import run_items_to_input_items
 from agents.tracing import trace
@@ -23,11 +23,8 @@ from domain.assistants import (
     assistant_tool_names,
     create_assistant,
     list_assistants,
-    prepare_resources,
 )
 from domain.assistants.constants import AssistantName
-from domain.providers.context import DEFAULT_CONTEXT_PROVIDER
-from domain.providers.skills import DEFAULT_SKILL_PROVIDER
 from domain.runtime import AssistantRunContext, RuntimeSettings
 from domain.runtime.activity import ActivityRunHooks, finalize_activity
 from domain.model_catalog import chat_model_specs
@@ -35,8 +32,6 @@ from domain.tools import list_tool_group_metadata, list_tool_metadata
 from services.streaming import stream_agent_events, stream_event
 
 logger = logging.getLogger(__name__)
-
-CHAT_ASSISTANT_NAME = AssistantName.CHAT
 
 ChatMessage = Mapping[str, str]
 
@@ -58,7 +53,7 @@ async def stream_chat(
     model: Any,
     max_tool_rounds: int,
     request_id: str | None = None,
-    assistant_name: str = CHAT_ASSISTANT_NAME,
+    assistant_name: str = AssistantName.CHAT,
     timing: dict[str, Any] | None = None,
 ) -> AsyncIterator[str]:
     """Prepare and execute one routed chat request as text and UI events.
@@ -78,13 +73,9 @@ async def stream_chat(
     """
     config = load_config()
     request_label = request_id or "unknown"
-    resources = await prepare_resources(
-        messages,
-        context_provider=DEFAULT_CONTEXT_PROVIDER,
-        skill_provider=DEFAULT_SKILL_PROVIDER,
-        set_number=config.chat.set_number,
-        timing=timing,
-    )
+    construction_started = time.perf_counter()
+    agent = create_assistant(assistant_name, model=model)
+    construction_ms = (time.perf_counter() - construction_started) * 1000
     run_context = AssistantRunContext(
         runtime=RuntimeSettings(
             request_id=request_label,
@@ -92,12 +83,10 @@ async def stream_chat(
             root_assistant=assistant_name,
             system=system,
         ),
-        resources=resources,
-        context_provider=DEFAULT_CONTEXT_PROVIDER,
-        skill_provider=DEFAULT_SKILL_PROVIDER,
         evidence=EvidenceStore(),
         timing=timing,
     )
+    resources = await agent.prepare_resources(messages, run_context)
     references, skills = resources.references, resources.skills
     for reference in references:
         yield stream_event(
@@ -149,10 +138,6 @@ async def stream_chat(
         yield stream_event(
             {"type": "trace", "name": chat_trace.name, "trace_id": trace_label}
         )
-        agent = create_assistant(
-            assistant_name,
-            model=model,
-        )
         hooks = ActivityRunHooks()
         result = Runner.run_streamed(
             agent,
@@ -163,7 +148,7 @@ async def stream_chat(
         )
         if timing is not None:
             timing["agent_setup_ms"] = round(
-                (time.perf_counter() - setup_started) * 1000, 3
+                construction_ms + (time.perf_counter() - setup_started) * 1000, 3
             )
 
         def mark_model_event() -> None:
@@ -199,15 +184,12 @@ async def stream_chat(
                     trace_label,
                     (time.perf_counter() - started_at) * 1000,
                 )
-                final_agent = Agent(
+                final_agent = agent.clone(
                     name=(
-                        "chat_tft_final_response"
-                        if assistant_name == CHAT_ASSISTANT_NAME
+                        AssistantName.CHAT_FINAL_RESPONSE
+                        if assistant_name == AssistantName.CHAT
                         else f"{assistant_name}_final_response"
                     ),
-                    instructions=agent.instructions,
-                    model=model,
-                    model_settings=assistant_spec(assistant_name).model_settings(),
                     tools=[],
                     handoffs=[],
                 )
@@ -215,7 +197,7 @@ async def stream_chat(
                 new_items = getattr(run_data, "new_items", None)
                 replay_items = run_items_to_input_items(new_items) if new_items else []
                 stop_prompt = (
-                    SPECS_DIR / CHAT_ASSISTANT_NAME / "tool-loop-stop.md"
+                    SPECS_DIR / AssistantName.CHAT / "tool-loop-stop.md"
                 ).read_text(encoding="utf-8").strip()
                 final_result = Runner.run_streamed(
                     final_agent,
@@ -265,7 +247,7 @@ def resolve_chat_assistant(header_value: str | None) -> str:
         LookupError: If a supplied header is blank or names no assistant.
     """
     if header_value is None:
-        return CHAT_ASSISTANT_NAME
+        return AssistantName.CHAT
     assistant_name = header_value.strip()
     if not assistant_name:
         raise LookupError("X-Chat-Assistant must name a registered assistant.")
@@ -291,12 +273,12 @@ def chat_config(
     """
     config = load_config()
     model_specs = chat_model_specs(config)
-    tool_names = assistant_reachable_tool_names(CHAT_ASSISTANT_NAME)
+    tool_names = assistant_reachable_tool_names(AssistantName.CHAT)
     tools = list_tool_metadata(tool_names)
     return {
         "composition_workbench": config.chat.composition_workbench,
         "flowchart_source": config.chat.flowchart_source,
-        "default_assistant": CHAT_ASSISTANT_NAME,
+        "default_assistant": AssistantName.CHAT,
         "assistants": list_assistants(),
         "default_model": config.models.openai_model,
         "models": [

@@ -16,7 +16,7 @@ test("WSL wrapper uses native PATH and service env/cwd travels through the pipe"
   const hooks = registerHooks({
     resolve(specifier, context, next) {
       if (specifier !== "./utils.mjs" || !context.parentURL?.endsWith("runtime.mjs?environment-fixture")) return next(specifier, context);
-      return { shortCircuit: true, url: "data:text/javascript,export const {abortable,ownedProcess,processFailure,stopProcess,waitForHttp,waitForRecord,wslCommand,waitForIdentity,serviceEnvironment}=globalThis.suiteEnvironmentFixture" };
+      return { shortCircuit: true, url: "data:text/javascript,export const {assertPortAvailable,ownedProcess,processFailure,stopProcess,waitForHttp,waitForRecord,wslCommand,waitForIdentity,serviceEnvironment}=globalThis.suiteEnvironmentFixture" };
     },
   });
   t.after(() => { hooks.deregister(); delete globalThis.suiteEnvironmentFixture; });
@@ -24,7 +24,7 @@ test("WSL wrapper uses native PATH and service env/cwd travels through the pipe"
   const wsl = { root: "/home/dev/tft-apps", node: "/linux/node", distro: "Ubuntu", user: "dev",
     env: { PATH: "/linux/bin", SUITE_FIXTURE: "private value" } };
   const runtime = new DesktopRuntime(wsl.root, wsl.node, {}, wsl);
-  runtime.spawn("/linux/python", ["literal $argument"], "Python backend");
+  runtime.spawn("/linux/node", ["literal $argument"], "ChatTFT containers");
   assert.equal(invocation.command, "wsl.exe");
   assert.equal(invocation.options.env, process.env);
   assert.equal(specification.env.PATH, "/linux/bin");

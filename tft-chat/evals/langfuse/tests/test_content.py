@@ -11,6 +11,7 @@ from evals.langfuse.content import (export_snapshot, fetch_bundle, load_catalog,
                                     load_snapshot, seed_content,
                                     validate_bundle)
 from evals.langfuse.utils import catalog_revision
+from domain.assistants.constants import AssistantName
 
 ROOT = Path(__file__).resolve().parents[1] / "snapshots"
 
@@ -93,7 +94,7 @@ def test_committed_inventory_preserves_authored_checks():
     ]
     assert sum(a["kind"] == "trace" for a in assertions) == 248
     assert sum(a["kind"] == "rubric" for a in assertions) == 13
-    assert next(b for b in bundles if b["suite"]["name"] == "analyze_transcript")["items"] == []
+    assert next(b for b in bundles if b["suite"]["name"] == AssistantName.ANALYZE_TRANSCRIPT)["items"] == []
     assert all("file://" not in json.dumps(b) for b in bundles)
     assert next(a for a in assertions if a.get("selector") == "payload_reduction")["threshold"] == .75
 
@@ -144,16 +145,16 @@ def test_ui_edits_archives_and_deletions_survive_reseeding(tmp_path):
     client = FakeClient()
     first = seed_content(client, tmp_path)
     assert first["datasets"] == 1 and first["items"] == 1
-    client.prompts["chattft/assistants/chat"].prompt = "UI candidate"
-    item = client.datasets["chattft/dummy_assistant"].items[0]
+    client.prompts[f"chattft/assistants/{AssistantName.CHAT}"].prompt = "UI candidate"
+    item = client.datasets[f"chattft/{AssistantName.DUMMY_ASSISTANT}"].items[0]
     item.input["input"] = "UI-edited question"
     item.status = "ARCHIVED"
     assert seed_content(client, tmp_path) == {"datasets": 0, "items": 0, "prompts": 0}
-    assert client.datasets["chattft/dummy_assistant"].items[0].input["input"] == "UI-edited question"
-    client.datasets["chattft/dummy_assistant"].items.clear()
+    assert client.datasets[f"chattft/{AssistantName.DUMMY_ASSISTANT}"].items[0].input["input"] == "UI-edited question"
+    client.datasets[f"chattft/{AssistantName.DUMMY_ASSISTANT}"].items.clear()
     seed_content(client, tmp_path)
-    assert client.datasets["chattft/dummy_assistant"].items == []
-    assert client.prompts["chattft/assistants/chat"].prompt == "UI candidate"
+    assert client.datasets[f"chattft/{AssistantName.DUMMY_ASSISTANT}"].items == []
+    assert client.prompts[f"chattft/assistants/{AssistantName.CHAT}"].prompt == "UI candidate"
 
 
 def test_freeze_captures_remote_identity_and_versions(tmp_path):
@@ -161,18 +162,18 @@ def test_freeze_captures_remote_identity_and_versions(tmp_path):
     export_snapshot(fixture_bundle(), tmp_path)
     client = FakeClient()
     seed_content(client, tmp_path)
-    client.prompts["chattft/assistants/chat"].version = 7
-    client.prompts["chattft/assistants/chat"].resolution_graph = {"child": {"version": 2}}
-    frozen = fetch_bundle(client, "chattft/dummy_assistant", {"dataset_version": "2026-09-13T00:00:00Z"}, tmp_path)
-    assert frozen["dataset_id"] == "chattft/dummy_assistant"
+    client.prompts[f"chattft/assistants/{AssistantName.CHAT}"].version = 7
+    client.prompts[f"chattft/assistants/{AssistantName.CHAT}"].resolution_graph = {"child": {"version": 2}}
+    frozen = fetch_bundle(client, f"chattft/{AssistantName.DUMMY_ASSISTANT}", {"dataset_version": "2026-09-13T00:00:00Z"}, tmp_path)
+    assert frozen["dataset_id"] == f"chattft/{AssistantName.DUMMY_ASSISTANT}"
     assert frozen["items"][0]["remote_id"]
-    assert frozen["prompts"]["chat"]["version"] == 7
-    assert frozen["prompts"]["chat"]["resolution_graph"]["child"]["version"] == 2
+    assert frozen["prompts"][AssistantName.CHAT]["version"] == 7
+    assert frozen["prompts"][AssistantName.CHAT]["resolution_graph"]["child"]["version"] == 2
     assert client.read_versions[-1].isoformat() == "2026-09-13T00:00:00+00:00"
-    client.datasets["chattft/dummy_assistant"].items[0].input["input"] = "later edit"
-    client.prompts["chattft/assistants/chat"].prompt = "later prompt"
+    client.datasets[f"chattft/{AssistantName.DUMMY_ASSISTANT}"].items[0].input["input"] = "later edit"
+    client.prompts[f"chattft/assistants/{AssistantName.CHAT}"].prompt = "later prompt"
     assert frozen["items"][0]["input"]["input"] != "later edit"
-    assert frozen["prompts"]["chat"]["text"] != "later prompt"
+    assert frozen["prompts"][AssistantName.CHAT]["text"] != "later prompt"
 
 
 def test_malformed_ui_checks_fail_before_execution():
@@ -207,7 +208,7 @@ def test_frozen_config_rejects_unresolved_candidates_and_invalid_limits():
     with pytest.raises(ValueError):
         validate_bundle(bundle)
     bundle = fixture_bundle()
-    bundle["config"]["variants"][0]["prompts"] = {"chat": {"name": "chattft/assistants/chat", "label": "latest"}}
+    bundle["config"]["variants"][0]["prompts"] = {AssistantName.CHAT: {"name": f"chattft/assistants/{AssistantName.CHAT}", "label": "latest"}}
     with pytest.raises(ValueError, match="resolved"):
         validate_bundle(bundle)
 

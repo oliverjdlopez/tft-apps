@@ -94,6 +94,9 @@ header renders them in an **Assistant** selector immediately left of the Model
 selector, persists the user's choice locally, and supplies that name through
 the routing header on each request. On narrow screens, the header actions wrap
 so both selectors and conversation controls remain reachable.
+Built-in assistant defaults and fixtures use the browser `AssistantName` enum
+mapping, checked against the Python enum. Server-provided catalogues continue to
+support custom names; navigation tab identifiers are independent of assistants.
 The adapter emits a `text_part_complete` event after each Responses API output
 text part. The browser buffers its deltas until that semantic boundary, then
 appends the complete part with two leading line breaks, a
@@ -104,7 +107,12 @@ boundaries.
 Chat Activity trace links open the encoded trace-detail URL rather than the
 dashboard index.
 
-Chat supplies one typed `AssistantRunContext` to the runner and stream adapter.
+Chat constructs an `AssistantAgent` graph and prepares resources once through
+its root before emitting resource events. The graph owns provider defaults;
+`AssistantRunContext` can supply per-invocation overrides. Chat supplies that
+same typed context to the runner and stream adapter. Its maximum-turn fallback
+clones the root with empty tools and handoffs, preserving the subclass and its
+provider resolution.
 `domain.runtime.activity.ActivityRunHooks` records tool-call IDs, owning agent,
 arguments, actual execution timestamps, and handoffs in that context. These
 records remain internal: SDK stream events still determine browser ordering,

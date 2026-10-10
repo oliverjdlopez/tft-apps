@@ -20,6 +20,7 @@ from domain.providers.skills import (
 from domain.tools import list_tool_names, resolve_tool_names
 from domain.types import AssistantSpec
 from services.chat_service import ChatMessage, ChatRequest, build_chat_instructions
+from domain.assistants.constants import AssistantName
 
 
 def _load_spec(tmp_path: Path, config: dict) -> AssistantSpec:
@@ -183,6 +184,6 @@ def test_chat_root_suppresses_skills_and_all_reachable_handoffs_receive_them() -
     )
 
     assert "SELECTED SKILL BODY" not in root
-    assert list(handoffs) == assistant_reachable_names("chat")
+    assert list(handoffs) == assistant_reachable_names(AssistantName.CHAT)
     assert all("SELECTED SKILL BODY" in instructions for instructions in handoffs.values())
     assert selected == (skill,)

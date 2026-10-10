@@ -10,7 +10,7 @@ const fixture = fileURLToPath(new URL("./fixtures/service.mjs", import.meta.url)
 
 test("healthy Langfuse is reused without launching or reseeding Docker", async () => {
   let cancelled = false;
-  assert.equal(await ensureLangfuse("/repo", "/repo/.venv/bin/python", {
+  assert.equal(await ensureLangfuse("/repo", {
     request: async () => ({ ok: true, body: { cancel: async () => { cancelled = true; } } }),
     runnerReady: async () => true,
     spawnProcess: () => { assert.fail("Healthy Langfuse must not be restarted"); },
@@ -22,11 +22,11 @@ test("healthy Langfuse is reused without launching or reseeding Docker", async (
 test("unavailable Langfuse starts through the checkout launcher and waits for completion", async () => {
   for (const unavailable of [async () => { throw new Error("ECONNREFUSED"); }, async () => ({ ok: false })]) {
     const child = new EventEmitter();
-    const result = ensureLangfuse("/checkout with spaces", "/custom env/python", {
+    const result = ensureLangfuse("/checkout with spaces", {
       request: unavailable, log: () => {},
       spawnProcess: (command, args, options) => {
-        assert.equal(command, "/custom env/python");
-        assert.deepEqual(args, ["-m", "evals", "up", "--no-browser"]);
+        assert.equal(command, process.execPath);
+        assert.deepEqual(args, ["/checkout with spaces/desktop/docker.mjs", "langfuse-up"]);
         assert.equal(options.cwd, "/checkout with spaces/tft-chat");
         assert.equal(options.shell, false);
         assert.equal(options.stdio, "inherit");
@@ -38,10 +38,10 @@ test("unavailable Langfuse starts through the checkout launcher and waits for co
   }
 });
 
-test("Docker failure or missing Python warns without preventing desktop startup", async () => {
+test("Docker failure or missing Node warns without preventing desktop startup", async () => {
   for (const event of ["close", "error"]) {
     const warnings = [];
-    assert.equal(await ensureLangfuse("/repo", "missing-python", {
+    assert.equal(await ensureLangfuse("/repo", {
       request: async () => { throw new Error("offline"); }, log: () => {},
       warn: (message) => warnings.push(message),
       spawnProcess: () => {
@@ -147,9 +147,9 @@ test("unresponsive owned child is forcefully stopped after its grace period", as
   assert.equal(child.ended, true);
 });
 
-test("healthy Langfuse web with a stopped host runner invokes startup", async () => {
+test("healthy Langfuse web with a stopped container runner invokes startup", async () => {
   let launched = false;
-  assert.equal(await ensureLangfuse("/repo", "/python", {
+  assert.equal(await ensureLangfuse("/repo", {
     request: async () => ({ ok: true }), runnerReady: async () => false, log: () => {},
     spawnProcess: () => {
       launched = true;

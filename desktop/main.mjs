@@ -201,7 +201,7 @@ async function restartApplication() {
   showStatus("Restarting ChatTFT…");
   try {
     // Fully stop the old process tree before constructing a fresh interpreter.
-    // This also rebuilds production assets and renews the dev proxy when needed.
+    // This starts the prepared production image or renews the development containers.
     await runtime.stop();
     if (!quitting) await startApplication();
   } catch (error) {

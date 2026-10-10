@@ -1,6 +1,7 @@
 from __future__ import annotations
 import json
 from pathlib import Path
+import re
 
 import pytest
 
@@ -37,6 +38,16 @@ from domain.tools.db_tools.deltas import DELTA_TOOL_GROUP
 from domain.tools.db_tools.ranking_tools import RANKING_TOOL_GROUP
 from domain.tools.context import CONTEXT_TOOL_GROUP
 from domain.tools.rolldown import PROBABILITY_TOOL_GROUP
+from domain.assistants.constants import AssistantName
+
+
+def test_browser_assistant_enum_matches_python_names() -> None:
+    """Keep browser defaults and test fixtures aligned with Python identifiers."""
+    source = (
+        Path(__file__).resolve().parents[1] / "app/frontend/src/assistant-names.js"
+    ).read_text(encoding="utf-8")
+    browser_names = dict(re.findall(r'^  ([A-Z_]+): "([a-z_]+)",$', source, re.MULTILINE))
+    assert browser_names == {name.name: name.value for name in AssistantName}
 
 
 def test_assistant_spec_coerces_model_and_reasoning_enums() -> None:
@@ -58,7 +69,7 @@ def test_assistant_spec_coerces_model_and_reasoning_enums() -> None:
 
 
 def test_loaded_assistant_specs_include_model_and_reasoning() -> None:
-    spec = assistant_spec("chat")
+    spec = assistant_spec(AssistantName.CHAT)
 
     assert spec.model is None
     assert spec.resolved_model() == load_config().models.openai_model
@@ -122,22 +133,22 @@ def test_instruction_rendering_enforces_skill_allowlist(monkeypatch) -> None:
 
 
 def test_assistant_specs_declare_prompt_context_policy() -> None:
-    assert assistant_spec("chat").repository_context is True
-    assert assistant_spec("data_analyst").repository_context is True
+    assert assistant_spec(AssistantName.CHAT).repository_context is True
+    assert assistant_spec(AssistantName.DATA_ANALYST).repository_context is True
     for name in (
-        "comp_expert",
-        "item_expert",
-        "meta_expert",
-        "theorizer",
-        "unit_expert",
+        AssistantName.COMP_EXPERT,
+        AssistantName.ITEM_EXPERT,
+        AssistantName.META_EXPERT,
+        AssistantName.THEORIZER,
+        AssistantName.UNIT_EXPERT,
     ):
         assert assistant_spec(name).repository_context is True
-    for name in ("clean_transcript", "compact_transcript", "analyze_transcript"):
+    for name in (AssistantName.CLEAN_TRANSCRIPT, AssistantName.COMPACT_TRANSCRIPT, AssistantName.ANALYZE_TRANSCRIPT):
         assert assistant_spec(name).repository_context is False
 
 
 def test_factory_builds_sdk_agent_with_spec_model_settings() -> None:
-    agent = create_assistant("chat")
+    agent = create_assistant(AssistantName.CHAT)
 
     assert isinstance(agent, Agent)
     assert agent.model == load_config().models.openai_model
@@ -165,8 +176,8 @@ def test_render_assistant_input_uses_spec_task_prompt(monkeypatch) -> None:
 
 
 def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
-    first = create_assistant("chat")
-    second = create_assistant("chat")
+    first = create_assistant(AssistantName.CHAT)
+    second = create_assistant(AssistantName.CHAT)
     first_handoffs = {agent.name: agent for agent in first.handoffs}
     second_handoffs = {agent.name: agent for agent in second.handoffs}
 
@@ -177,14 +188,14 @@ def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
 
 def test_create_agent_applies_target_instructions_during_construction() -> None:
     agent = create_assistant(
-        "chat",
+        AssistantName.CHAT,
         instructions="ROOT INSTRUCTIONS",
-        instructions_by_name={"data_analyst": "ANALYST INSTRUCTIONS"},
+        instructions_by_name={AssistantName.DATA_ANALYST: "ANALYST INSTRUCTIONS"},
     )
 
     assert agent.instructions == "ROOT INSTRUCTIONS"
     handoffs = {handoff.name: handoff for handoff in agent.handoffs}
-    assert handoffs["data_analyst"].instructions == "ANALYST INSTRUCTIONS"
+    assert handoffs[AssistantName.DATA_ANALYST].instructions == "ANALYST INSTRUCTIONS"
 
 
 def test_instruction_token_log_records_counts_without_prompt_contents(monkeypatch) -> None:
@@ -217,12 +228,12 @@ def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
     records: list[str] = []
     monkeypatch.setattr(token_logging.prompt_token_logger, "info", records.append)
 
-    create_assistant("chat")
+    create_assistant(AssistantName.CHAT)
 
     payload = json.loads(records[0])
     root = payload["agents"][0]
     assert payload["event"] == "agent_graph"
-    assert root["assistant"] == "chat"
+    assert root["assistant"] == AssistantName.CHAT
     assert root["tool_count"] > 0
     assert root["handoff_count"] > 0
     assert root["tokens"]["tools"] > 0
@@ -254,7 +265,7 @@ def test_instructions_render_references_and_skill_in_order(monkeypatch) -> None:
             return "SKILL: SKILL WORKFLOW"
 
     rendered = build_assistant_instructions(
-        "comp_expert",
+        AssistantName.COMP_EXPERT,
         "Analyze Riven",
         context_provider=FakeContextProvider(),
         skill_provider=FakeSkillProvider(),
@@ -282,13 +293,13 @@ def test_instructions_obey_assistant_context_policy() -> None:
             return []
 
     analyst = build_assistant_instructions(
-        "data_analyst",
+        AssistantName.DATA_ANALYST,
         "Analyze Riven",
         context_provider=FakeContextProvider(),
         set_number=17,
     )
     transcript = build_assistant_instructions(
-        "clean_transcript",
+        AssistantName.CLEAN_TRANSCRIPT,
         "Riven transcript",
         context_provider=FakeContextProvider(),
         set_number=17,
@@ -300,20 +311,20 @@ def test_instructions_obey_assistant_context_policy() -> None:
 
 
 def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
-    spec = assistant_spec("data_analyst")
+    spec = assistant_spec(AssistantName.DATA_ANALYST)
     ranking_names = [tool.name for tool in RANKING_TOOL_GROUP.tools]
     cohort_names = [tool.name for tool in COHORT_TOOL_GROUP.tools]
     delta_names = [tool.name for tool in DELTA_TOOL_GROUP.tools]
     context_names = [tool.name for tool in CONTEXT_TOOL_GROUP.tools]
 
-    assert "data_analyst" in list_assistants()
+    assert AssistantName.DATA_ANALYST in list_assistants()
     assert spec.tool_group_keys == ("ranking", "query_cohorts", "deltas", "context")
-    assert assistant_tool_names("data_analyst") == (
+    assert assistant_tool_names(AssistantName.DATA_ANALYST) == (
         ranking_names + cohort_names + delta_names + context_names
     )
-    assert assistant_handoff_names("data_analyst") == ["final_responder"]
+    assert assistant_handoff_names(AssistantName.DATA_ANALYST) == [AssistantName.FINAL_RESPONDER]
     assert spec.task_prompt == ""
-    assert render_assistant_input("data_analyst", "Which carry is better?") == (
+    assert render_assistant_input(AssistantName.DATA_ANALYST, "Which carry is better?") == (
         "Which carry is better?"
     )
     assert "Select the narrowest ranking projection" in spec.system_prompt
@@ -335,13 +346,13 @@ def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
 
 
 def test_item_and_unit_experts_receive_an_unfiltered_data_view() -> None:
-    for name in ("item_expert", "unit_expert"):
+    for name in (AssistantName.ITEM_EXPERT, AssistantName.UNIT_EXPERT):
         prompt = assistant_spec(name).system_prompt
         assert "aggregate" in prompt
 
 
 @pytest.mark.parametrize(
-    "name", ["comp_expert", "item_expert", "unit_expert", "data_analyst"]
+    "name", [AssistantName.COMP_EXPERT, AssistantName.ITEM_EXPERT, AssistantName.UNIT_EXPERT, AssistantName.DATA_ANALYST]
 )
 def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> None:
     """Keep cohort guidance consistent with the registered item-condition schema.
@@ -366,22 +377,22 @@ def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> N
 
 
 def test_prompt_evidence_guidance_matches_assistant_ownership() -> None:
-    """Reserve display policy for the responder and histogram retrieval for the analyst."""
-    chat = assistant_spec("chat").system_prompt
-    analyst = assistant_spec("data_analyst").system_prompt
-    responder = assistant_spec("final_responder").system_prompt
+    """Keep display policy with terminal assistants and retrieval with the analyst."""
+    chat = assistant_spec(AssistantName.CHAT).system_prompt
+    analyst = assistant_spec(AssistantName.DATA_ANALYST).system_prompt
+    responder = assistant_spec(AssistantName.FINAL_RESPONDER).system_prompt
     assert "## Evidence displays" not in chat
     assert "no direct match-data tools" not in chat
     assert "Your direct analytical tools are bounded rankings" in chat
     assert "Preserve these" not in analyst
     assert "`compare_cohorts`; a mean does not establish a distribution" in analyst
-    assert "handoff to `final_responder`" in analyst
+    assert f"handoff to `{AssistantName.FINAL_RESPONDER}`" in analyst
     assert "Use present_evidence once" in responder
 
 
 def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
-    spec = assistant_spec("chat")
-    tool_names = assistant_tool_names("chat")
+    spec = assistant_spec(AssistantName.CHAT)
+    tool_names = assistant_tool_names(AssistantName.CHAT)
 
     context_names = [tool.name for tool in CONTEXT_TOOL_GROUP.tools]
     ranking_names = [tool.name for tool in RANKING_TOOL_GROUP.tools]
@@ -390,7 +401,7 @@ def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
     delta_names = [tool.name for tool in DELTA_TOOL_GROUP.tools]
     assert spec.tool_group_keys == ("context", "ranking", "probability")
     assert tool_names == context_names + ranking_names + probability_names
-    assert assistant_reachable_tool_names("chat") == (
+    assert assistant_reachable_tool_names(AssistantName.CHAT) == (
         context_names
         + ranking_names
         + probability_names
@@ -401,37 +412,53 @@ def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
 
 def test_final_responder_owns_evidence_presentation() -> None:
     """Keep numerical presentation grounded in evidence references."""
-    spec = assistant_spec("final_responder")
+    spec = assistant_spec(AssistantName.FINAL_RESPONDER)
 
     assert spec.repository_context is True
     assert "Markdown table" in spec.system_prompt
     assert spec.tool_group_keys == ("evidence",)
-    assert assistant_tool_names("final_responder") == ["present_evidence"]
-    assert assistant_handoff_names("final_responder") == []
-    assert assistant_reachable_tool_names("final_responder") == ["present_evidence"]
+    assert assistant_tool_names(AssistantName.FINAL_RESPONDER) == ["present_evidence"]
+    assert assistant_handoff_names(AssistantName.FINAL_RESPONDER) == []
+    assert assistant_reachable_tool_names(AssistantName.FINAL_RESPONDER) == ["present_evidence"]
+
+
+def test_unit_expert_can_present_its_own_analytical_evidence() -> None:
+    """Expose display selection on the real terminal unit-expert factory graph."""
+    spec = assistant_spec(AssistantName.UNIT_EXPERT)
+    agent = create_assistant(AssistantName.UNIT_EXPERT)
+    expected = (
+        [tool.name for tool in RANKING_TOOL_GROUP.tools]
+        + [tool.name for tool in COHORT_TOOL_GROUP.tools]
+        + ["present_evidence"]
+    )
+
+    assert spec.tool_group_keys == ("ranking", "query_cohorts", "evidence")
+    assert [tool.name for tool in agent.tools] == expected
+    assert assistant_reachable_tool_names(AssistantName.UNIT_EXPERT) == expected
+    assert agent.handoffs == []
 
 
 def test_chat_hands_off_to_data_analyst() -> None:
-    assert assistant_handoff_names("chat") == ["data_analyst", "final_responder"]
+    assert assistant_handoff_names(AssistantName.CHAT) == [AssistantName.DATA_ANALYST, AssistantName.FINAL_RESPONDER]
 
-    agents = create_assistant("chat").handoffs
-    assert [agent.name for agent in agents] == ["data_analyst", "final_responder"]
+    agents = create_assistant(AssistantName.CHAT).handoffs
+    assert [agent.name for agent in agents] == [AssistantName.DATA_ANALYST, AssistantName.FINAL_RESPONDER]
 
 
 def test_chat_handoff_preserves_request_model_provider() -> None:
     request_model = LitellmModel(model="anthropic/test-model", api_key="test-key")
 
-    analyst = create_assistant("chat", model=request_model).handoffs[0]
+    analyst = create_assistant(AssistantName.CHAT, model=request_model).handoffs[0]
 
     assert analyst.model is request_model
-    assert [handoff.name for handoff in analyst.handoffs] == ["final_responder"]
+    assert [handoff.name for handoff in analyst.handoffs] == [AssistantName.FINAL_RESPONDER]
     assert analyst.handoffs[0].model is request_model
-    assert [tool.name for tool in analyst.tools] == assistant_tool_names("data_analyst")
-    assert create_assistant("data_analyst").model == load_config().models.openai_model
+    assert [tool.name for tool in analyst.tools] == assistant_tool_names(AssistantName.DATA_ANALYST)
+    assert create_assistant(AssistantName.DATA_ANALYST).model == load_config().models.openai_model
 
 
 def test_specialists_hand_off_to_data_analyst() -> None:
-    assert assistant_handoff_names("meta_expert") == ["data_analyst"]
-    assert assistant_handoff_names("theorizer") == ["data_analyst"]
+    assert assistant_handoff_names(AssistantName.META_EXPERT) == [AssistantName.DATA_ANALYST]
+    assert assistant_handoff_names(AssistantName.THEORIZER) == [AssistantName.DATA_ANALYST]
     # The analyst gathers evidence, then transfers to the terminal synthesizer.
-    assert assistant_handoff_names("data_analyst") == ["final_responder"]
+    assert assistant_handoff_names(AssistantName.DATA_ANALYST) == [AssistantName.FINAL_RESPONDER]

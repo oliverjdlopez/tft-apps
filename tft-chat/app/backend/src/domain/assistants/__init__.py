@@ -5,8 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from agents import Agent
-
+from domain.assistants.agent import AssistantAgent
 from domain.assistants.assistants import (
     build_assistant as _build_assistant,
     build_assistant_instructions,
@@ -21,6 +20,7 @@ from domain.assistants.specs import (
     load_assistant_spec,
 )
 from domain.assistants.token_logging import log_agent_graph
+from domain.providers.models import ContextProvider, SkillProvider
 
 
 _ASSISTANT_REGISTRY = assistant_registry
@@ -145,7 +145,9 @@ def create_assistant(
     instructions: Any | None = None,
     instructions_by_name: Mapping[str, Any] | None = None,
     output_type: type[Any] | None = None,
-) -> Agent[Any]:
+    context_provider: ContextProvider | None = None,
+    skill_provider: SkillProvider | None = None,
+) -> AssistantAgent:
     """Construct a fresh SDK graph with specification-owned prompt rendering.
 
     Args:
@@ -154,6 +156,8 @@ def create_assistant(
         instructions: Optional root instruction override.
         instructions_by_name: Optional instruction overrides by assistant name.
         output_type: Optional structured output type for the root agent.
+        context_provider: Optional factual provider default shared by the graph.
+        skill_provider: Optional workflow provider default shared by the graph.
 
     Returns:
         A fresh SDK agent and handoffs with built-in instruction callbacks.
@@ -168,6 +172,8 @@ def create_assistant(
         instructions=instructions,
         instructions_by_name=instructions_by_name,
         output_type=output_type,
+        context_provider=context_provider,
+        skill_provider=skill_provider,
     )
     log_agent_graph(agent, task_prompt=_ASSISTANT_REGISTRY.get_spec(name).task_prompt)
     return agent
@@ -188,6 +194,7 @@ def render_assistant_input(name: str, input_text: str) -> str:
 
 __all__ = [
     "ASSISTANT_SPECS_DIR",
+    "AssistantAgent",
     "SPECS_DIR",
     "AssistantRegistry",
     "assistant_handoff_names",

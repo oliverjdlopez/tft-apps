@@ -3,9 +3,9 @@ import { EventEmitter } from "node:events";
 import path from "node:path";
 import { launcherPaths } from "./paths.mjs";
 import { randomUUID } from "node:crypto";
-import { abortable, ownedProcess, processFailure, stopProcess, waitForHttp, waitForRecord, wslCommand, waitForIdentity, serviceEnvironment } from "./utils.mjs";
+import { assertPortAvailable, ownedProcess, processFailure, stopProcess, waitForHttp, waitForRecord, wslCommand, waitForIdentity, serviceEnvironment } from "./utils.mjs";
 
-/** Coordinate frontend builds, service readiness, cancellation, and shutdown. */
+/** Coordinate an owned container worker, readiness, cancellation, and shutdown. */
 export class DesktopRuntime extends EventEmitter {
   /**
    * Configure the checkout without starting any child processes.
@@ -22,6 +22,10 @@ export class DesktopRuntime extends EventEmitter {
     this.paths = wsl ? path.posix : path;
     this.roots = launcherPaths(root, this.paths);
     this.cwd = this.roots.chat;
+    this.service = "chat";
+    this.backendPort = options.port ?? 8300;
+    this.frontendPort = options.mode === "dev" ? (options.devPort ?? 5173) : this.backendPort;
+    this.healthPath = "/api/config";
     this.identity = randomUUID();
     this.children = [];
     this.controller = new AbortController();
@@ -29,11 +33,17 @@ export class DesktopRuntime extends EventEmitter {
   }
 
   /**
-   * Start current frontend sources and the existing backend, then await HTTP.
+   * Share one container startup across concurrent requests for this application.
    * Returns:
    *   The owned frontend URL; rejects on failure or timeout after cleanup.
    */
-  async start() {
+  start() {
+    this.startPromise ??= this.startServices();
+    return this.startPromise;
+  }
+
+  /** Start the app's container worker and verify both owned HTTP endpoints. */
+  async startServices() {
     this.state = "starting";
     const signal = this.controller.signal;
     const timer = setTimeout(() => this.controller.abort(new Error(
@@ -42,31 +52,31 @@ export class DesktopRuntime extends EventEmitter {
         : "Startup timed out. Check the launch terminal and configuration, or increase --startup-timeout (seconds).",
     )), this.options.startupTimeout);
     try {
-      if (this.options.mode === "production") {
-        this.emit("progress", "Building the current frontend…");
-        const build = this.spawn(this.node, [this.paths.join(this.roots.desktop, "frontend.mjs"), "production"], "Frontend build", true);
-        const result = await abortable(build.finished, signal);
-        if (result.code !== 0 || result.error) throw processFailure(build);
+      if (!this.wsl) {
+        // Refuse another checkout's listener before starting our own project.
+        // The worker also enforces ownership on the Docker/WSL side.
+        for (const port of new Set([this.backendPort, this.frontendPort])) {
+          await assertPortAvailable(port);
+          signal.throwIfAborted();
+        }
       }
       signal.throwIfAborted();
-      this.emit("progress", "Starting the Python backend…");
-      const args = ["-u", this.paths.join(this.roots.desktop, "backend.py")];
-      if (this.options.port !== undefined) args.push("--port", String(this.options.port));
-      const backend = this.spawn(this.options.python, args, "Python backend");
-      const bound = await waitForRecord(backend, "bound", signal);
-      if (!Number.isInteger(bound.port) || bound.port < 1 || bound.port > 65535) throw new Error("Backend reported an invalid port.");
-      const backendUrl = `http://127.0.0.1:${bound.port}`;
-      if (this.wsl) await waitForIdentity(backendUrl, this.identity, signal);
-      // The bound event precedes probes so an unrelated server cannot satisfy
-      // readiness when the requested backend failed to acquire its socket.
-      await waitForHttp(`${backendUrl}/api/config`, signal);
-      let frontendUrl = backendUrl;
-      if (this.options.mode === "dev") {
-        this.emit("progress", "Starting frontend hot reload…");
-        const frontend = this.spawn(this.node, [this.paths.join(this.roots.desktop, "frontend.mjs"), "dev", String(this.options.devPort), String(bound.port)], "Vite development server");
-        await waitForRecord(frontend, "listening", signal);
-        frontendUrl = `http://127.0.0.1:${this.options.devPort}`;
-        if (this.wsl) await waitForIdentity(frontendUrl, this.identity, signal);
+      const label = this.service === "chat" ? "ChatTFT containers" : "VOD containers";
+      this.emit("progress", `Starting ${label}…`);
+      const worker = this.spawn(this.node, [this.paths.join(this.roots.desktop, "container-worker.mjs"),
+        "--service", this.service, "--mode", this.options.mode ?? "production",
+        "--backend-port", String(this.backendPort), "--frontend-port", String(this.frontendPort),
+        "--identity", this.identity], label);
+      const bound = await waitForRecord(worker, "bound", signal);
+      if (bound.port !== this.backendPort) throw new Error("Container worker reported an unexpected backend port.");
+      const backendUrl = `http://127.0.0.1:${this.backendPort}`;
+      await waitForIdentity(backendUrl, this.identity, signal);
+      await waitForHttp(`${backendUrl}${this.healthPath}`, signal);
+      const listening = await waitForRecord(worker, "listening", signal);
+      if (listening.port !== this.frontendPort) throw new Error("Container worker reported an unexpected frontend port.");
+      const frontendUrl = `http://127.0.0.1:${this.frontendPort}`;
+      if (frontendUrl !== backendUrl) {
+        await waitForIdentity(frontendUrl, this.identity, signal);
       }
       this.emit("progress", "Waiting for the application…");
       await waitForHttp(frontendUrl, signal);
@@ -74,8 +84,11 @@ export class DesktopRuntime extends EventEmitter {
       this.state = "running";
       return frontendUrl;
     } catch (error) {
+      // HTTP retry delays throw AbortError; retain the worker's concrete failure
+      // or startup timeout that cancelled those probes before stop() runs.
+      const failure = signal.aborted ? signal.reason : error;
       await this.stop();
-      throw error;
+      throw failure;
     } finally { clearTimeout(timer); }
   }
 
@@ -111,7 +124,14 @@ export class DesktopRuntime extends EventEmitter {
     if (this.stopPromise) return this.stopPromise;
     this.state = "stopping";
     this.controller.abort(new Error("Desktop is shutting down."));
-    this.stopPromise = Promise.allSettled(this.children.map((child) => stopProcess(child, this.wsl ? 20000 : 12000))).then((results) => {
+    this.stopPromise = Promise.allSettled(this.children.map(async (child) => {
+      // Compose must finish tearing down its project before a retry can own the
+      // same ports. A killed guardian does not prove its containers were stopped.
+      await stopProcess(child, 60000);
+      if (child.records.has("cleanup_error") || child.result?.signal === "SIGKILL") {
+        throw new Error("Container cleanup did not complete.");
+      }
+    })).then((results) => {
       this.state = "stopped";
       const failures = results.filter((result) => result.status === "rejected");
       if (failures.length) throw new Error("A desktop service could not be stopped. Check the launch terminal before restarting.");

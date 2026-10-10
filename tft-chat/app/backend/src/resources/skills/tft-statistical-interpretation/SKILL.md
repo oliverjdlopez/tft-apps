@@ -9,15 +9,15 @@ description: Interpret TFT statistics as conditional decision-context evidence u
 
 TFT data is conditional. A statistic is only meaningful after understanding the situation that produced it.
 
-Always ask:
+Consider internally when relevant to the question:
 
 1. **What population is this statistic drawn from?**
 2. **What decision was available to the player at that point?**
 3. **What hidden filters or survivorship effects may be present?**
 4. **Is the observed result caused by the object itself, or by the conditions under which it is usually selected?**
-5. **Would this finding still hold after controlling for patch, rank, stage, placement, itemization, star level, board state, economy, and contesting?**
+5. **Which observed differences in itemization, star level, or board context could change the conclusion, and which can the tools actually control?**
 
-A TFT database should be treated as a record of **decision contexts**, not merely a leaderboard of game objects.
+Treat final-board statistics as observations of completed boards. They may help evaluate a decision, but they do not record every decision context or establish which options were available earlier.
 
 ### Delta / Lift
 
@@ -36,10 +36,10 @@ Use sample size thresholds appropriate to the question:
 
 * Broad meta trend: needs large samples.
 * Common augment/item/unit comparison: moderate to large samples.
-* Rare capped board or niche interaction: smaller samples may be acceptable, but confidence should be lower.
+* Rare capped board or niche interaction: a reportable smaller sample may support a tentative observation, but never bypass the tool's minimum sample or suppression rules.
 * Exploratory hypothesis: low samples can generate questions, not final conclusions.
 
-When sample size is low, say so clearly.
+When sample size changes the conclusion, say so once beside the result. A suppressed or missing estimate is unavailable evidence, not zero or evidence that a build is bad. If the exact requested comparison is unavailable, explain that directly without substituting a different comparison.
 
 
 
@@ -52,9 +52,9 @@ Artifacts, Radiants, and Emblems are often are correlated with other factors, wh
 
 ### Survivorship Bias
 
-Final-board stats only include players who survived long enough to make those boards.
+Conditioning on a completed high-investment board selects players who reached that board.
 
-A capped board with excellent stats may not be a good line to force because failed attempts are missing or undercounted.
+A capped board with excellent stats does not establish how reliably a player can reach it. Players who failed to reach it fall outside that selected cohort even if their final boards exist elsewhere in the store.
 
 ### Selection Bias
 
@@ -81,5 +81,12 @@ Board counts are necessary context for headline metrics. Other important limits 
 - Average placement is better when lower, and 4.5 is the lobby baseline.
 - Final-board data does not reveal item acquisition order, component availability, slam timing, roll timing, or the early-game plan. It therefore cannot establish early-slam advice or causation.
 - A board-presence comparison does not bind an item to a unit. An item-holder row supports allocation association.
+- Unit presence does not establish a main-tank or carry role. Use observed item investment and upgrades as a disclosed proxy; item count alone does not prove combat role. A single AP or AD item likewise does not classify the whole build or cover all builds of that type.
 - A high-performing item may be a proxy for high-roll boards, player intent, or survivorship. Comparable samples reduce, but do not eliminate, that uncertainty.
+
+## Present the finding
+
+Apply these checks internally and expose only the evidence and limitations that affect the answer. Lead with the practical conclusion or the specific reason it remains unresolved. Assume an intermediate player; explain a statistical distinction only when it changes their reading of the result.
+
+Put supporting numbers and board samples in one compact table or an available evidence display when comparing several values. Select the relevant metric columns rather than repeating average placement, top-four rate, win rate, and deltas in every paragraph. Do not restate the same figures in prose, repeat generic correlation caveats, or append a follow-up offer by default. End when the question is answered.
 

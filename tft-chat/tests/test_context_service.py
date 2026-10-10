@@ -14,6 +14,7 @@ from domain.providers.context import (
     render_context_files,
     select_context_snippets,
 )
+from domain.assistants.constants import AssistantName
 
 
 @pytest.fixture(autouse=True)
@@ -157,11 +158,11 @@ def test_context_provider_async_selection_uses_async_selector(
     )
     monkeypatch.setattr(
         "domain.providers.context._selector_agent",
-        lambda: SimpleNamespace(name="context_selector"),
+        lambda: SimpleNamespace(name=AssistantName.CONTEXT_SELECTOR),
     )
 
     async def fake_run(agent, prompt, *, max_turns):
-        assert agent.name == "context_selector"
+        assert agent.name == AssistantName.CONTEXT_SELECTOR
         assert '"query": "What role does Riven play?"' in prompt
         assert max_turns == 1
         return SimpleNamespace(final_output='{"selected_ids": [0]}')

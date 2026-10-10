@@ -77,7 +77,7 @@ class EvidenceBundle(EvidenceModel):
 
 
 class DisplaySpec(EvidenceModel):
-    """Let the responder choose a view using references, never copied cells."""
+    """Let responding assistants choose a view by reference, never copied cells."""
 
     evidence_ref: str = Field(min_length=1, max_length=80)
     dataset_ref: str = Field(min_length=1, max_length=40)

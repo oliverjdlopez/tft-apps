@@ -1,23 +1,25 @@
 # Suite desktop architecture and setup
 
-`desktop/paths.mjs` and `desktop/paths.py` resolve the suite, desktop, ChatTFT and
-VOD roots. Commands work independently of the current terminal directory. The
-Electron shell owns separate Python interpreters in `tft-chat/.venv/` and
-`vod-review/.venv/`; dependencies are never combined.
+`desktop/paths.mjs` resolves the suite, desktop, ChatTFT and VOD roots.
+Electron runs natively; separate Docker images own each application's Python
+runtime and frontend dependencies. Their dependency locks remain independent.
 
-Run `python3 scripts/setup.py` from the suite root. It installs locked Python
-extras (evals, compositions and transcription for ChatTFT; transcription for VOD)
-and locked Node dependencies for both frontends and desktop. It starts no service.
-Installers and packaging are outside this migration.
+Run `node scripts/setup.mjs` from the suite root. It installs only the native
+Electron shell on the host and builds the application and development images.
+`python3 scripts/setup.py` remains a compatibility wrapper. Setup starts no app.
+Host prerequisites are Node 22.12+ within Node 22, Docker Engine/Compose, and
+configured NVIDIA container access for GPU VOD processing. Use
+`TFT_DOCKER_GPU=0 npm start` for explicit CPU operation.
 
-From `desktop/`, `npm start` builds ChatTFT's production frontend and serves it
-through FastAPI; `npm run dev` uses Vite hot reload. VOD retains its Vite serving
-mode in both desktop modes. One sandboxed persistent VOD Review
-view loads `http://localhost:5174/` from its frontend and backend on port 8000.
-A shared startup promise coalesces concurrent requests and retries. Failure marks
-VOD Review unavailable; retry cleans up before creating a new runtime. Quit
-stops only the owned service trees. The former Wisps tab and workspace were
-removed; see [VOD scope](vod-review-scope.md).
+From `desktop/`, `npm start` launches the prepared images. ChatTFT serves its
+built frontend and API at port 8300. VOD serves its built frontend and API at
+both local ports 8000 and 5174. `npm run dev` runs Vite inside separate containers
+on ports 5173 and 5174, proxying to their respective Python services.
+Each app has a unique Compose project for its desktop lifetime. Readiness checks
+verify its fresh identity; failure and quit clean up only that project's
+containers and network, retaining all mounted data. VOD Review remains one
+persistent view. See [container lifecycle](docker-desktop.md) for supervision,
+recovery, image rebuilds and validation. The former Wisps tab was removed.
 
 The **Media** tab (Ctrl/Cmd+9) browses the suite-owned shared media
 catalogue through ChatTFT's owned backend, in both production and development
@@ -33,19 +35,19 @@ whether the VOD tab is visible. The schedule persists in the app-local VOD datab
 closing the desktop stops its poller, with the most recent missed daily window
 checked on restart. See [automatic creator imports](../vod-review/docs/creator-imports.md).
 
-ChatTFT uses its copied configured backend port (normally 8300); dev Vite uses
-5173. Pass `--port`, `--dev-port`, `--python` or `--startup-timeout` after npm's
-`--` separator. VOD retains fixed ports 8000 and 5174. Occupied application ports
+ChatTFT defaults to backend port 8300 and development frontend port 5173.
+Pass `--port`, `--dev-port` or `--startup-timeout` after npm's `--` separator.
+The legacy `--python` option is accepted but unused for container services. VOD retains fixed ports 8000 and 5174. Occupied application ports
 fail explicitly; compatible servers from the original checkouts are never adopted.
 Socket binding, strict Vite ports and per-launch identity checks enforce ownership.
 
 Electron stores profiles and Windows shell caches under the `tft-apps` application
 data identity. Renderer sandboxing, navigation checks, context isolation, shell
 IPC checks, readiness probes and pipe shutdown remain enabled. WSL forwards the
-exact Linux suite root, interpreter, process working directory, distribution,
+exact Linux suite root, Node worker, process working directory, distribution,
 user and environment over private pipes. Run `npm run setup:wsl` once from
 `desktop/` using Linux Node with Windows Node 22 installed. Python and frontend
-dependencies remain in WSL. Windows GUI validation is reported separately.
+dependencies live in the Docker images; Docker commands run in WSL. Windows GUI validation is reported separately.
 Windows shell staging includes both media scripts; the renderer requests
 catalogue resources over the existing owned backend URL across the WSL bridge.
 
@@ -69,6 +71,9 @@ an existing session, and otherwise signs in before opening the project page.
 The credentials are never passed to the hosted renderer. Set
 `LANGFUSE_DESKTOP_AUTO_LOGIN=false` for manual sign-in; a failed automatic
 sign-in also leaves the normal sign-in page available.
+
+Host virtual environments remain optional for contributor tests and standalone
+troubleshooting; normal desktop startup does not use them.
 
 Use the [ChatTFT backend guide](../tft-chat/docs/architecture/web-runtime.md) or
 [VOD guide](../vod-review/README.md) for standalone troubleshooting commands. Run

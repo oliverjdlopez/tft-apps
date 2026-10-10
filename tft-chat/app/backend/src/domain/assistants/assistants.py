@@ -5,11 +5,10 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from agents import Agent
-
 from core.config import load_config
+from domain.assistants.agent import AssistantAgent
 from domain.assistants.registry import AssistantRegistry, assistant_registry
-from domain.assistants.utils import instruction_callback, render_instruction_layers
+from domain.assistants.utils import render_instruction_layers
 from domain.providers.context import (
     DEFAULT_CONTEXT_PROVIDER,
     ContextProvider,
@@ -30,7 +29,9 @@ def build_assistant(
     instructions: Any | None = None,
     instructions_by_name: Mapping[str, Any] | None = None,
     output_type: type[Any] | None = None,
-) -> Agent[Any]:
+    context_provider: ContextProvider | None = None,
+    skill_provider: SkillProvider | None = None,
+) -> AssistantAgent:
     """Construct a fresh graph with each agent's context policy installed.
 
     Args:
@@ -40,6 +41,8 @@ def build_assistant(
         instructions: Optional root instruction override.
         instructions_by_name: Optional instruction overrides by assistant name.
         output_type: Optional structured output type for the root agent.
+        context_provider: Optional factual provider default for the entire graph.
+        skill_provider: Optional workflow provider default for the entire graph.
 
     Returns:
         A fresh SDK agent and handoffs with default instruction renderers.
@@ -52,7 +55,13 @@ def build_assistant(
     if instructions is not None:
         instruction_map[name] = instructions
 
-    def build(candidate: str, path: tuple[str, ...]) -> Agent[Any]:
+    provider_defaults: dict[str, Any] = {}
+    if context_provider is not None:
+        provider_defaults["context_provider"] = context_provider
+    if skill_provider is not None:
+        provider_defaults["skill_provider"] = skill_provider
+
+    def build(candidate: str, path: tuple[str, ...]) -> AssistantAgent:
         """Build one assistant and its handoff descendants.
 
         Args:
@@ -73,19 +82,18 @@ def build_assistant(
             build(handoff_name, (*path, candidate))
             for handoff_name in registry.get_handoff_names(candidate)
         ]
-        return Agent(
+        return AssistantAgent(
+            spec=spec,
+            is_root=not path,
             name=spec.name,
             handoff_description=spec.handoff_description,
-            instructions=(
-                instruction_map[candidate]
-                if candidate in instruction_map
-                else instruction_callback(spec, root=not path)
-            ),
+            instructions=instruction_map.get(candidate),
             model=spec.resolved_model() if model is None else model,
             model_settings=spec.model_settings(),
             tools=registry.resolve_tools(spec),
             handoffs=handoffs,
             output_type=output_type if candidate == name else None,
+            **provider_defaults,
         )
 
     return build(name, ())

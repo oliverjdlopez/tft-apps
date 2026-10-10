@@ -121,14 +121,20 @@ references. Tool calls can fetch additional collections. References are rendered
 as facts, never instructions; private analyst schema and procedural skills remain
 separate. Requests for another set cannot retrieve Set 18 sources.
 
-Chat prepares its initial selections once and stores them in
-`AssistantRunContext.resources`; each agent's factory-installed instruction
-callback only renders those selections under its own specification's permissions,
-including nested handoffs. Without typed context the callback returns the durable
-prompt without selection. `request_additional_context` receives SDK tool context and uses the
-invocation's `context_provider` and `runtime.set_number`. It returns newly fetched
-collections as tool output without replacing the initial prompt resources.
-Callers without the typed context retain the default provider and configured set.
+Chat calls the root `AssistantAgent.prepare_resources` once and stores its
+initial selections in `AssistantRunContext.resources`. Every factory-built agent
+owns provider defaults; a non-`None` provider on the invocation context overrides
+those defaults. Selection, instruction rendering, and additional-context tools
+use this same precedence. The factory propagates supplied provider defaults to
+all nested handoffs.
+
+Each agent renders initial selections under its own specification's permissions
+without retrieving again. Without typed context, instructions remain the durable
+prompt. `request_additional_context` uses the active SDK tool-context agent's
+resolved provider and the invocation's `runtime.set_number`. It returns fetched
+collections as tool output without replacing initial prompt resources. Calls
+without an `AssistantAgent` use an explicit invocation provider when available,
+otherwise the repository default; untyped contexts retain the configured set.
 The model-facing request schema and complete-collection result format are unchanged.
 
 ## Verification

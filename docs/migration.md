@@ -108,3 +108,13 @@ remaining authored evaluation files, immutable snapshots and complete Git
 history without replacing this suite's active catalogue. See the
 [retirement record](retiring-tft-suite.md) for archive locations, worktree
 handling, recovery and the current relocation status.
+
+## Container runtime implementation
+
+The `docker` branch moves application execution and evaluation execution into
+separate app images while retaining native Electron. Shared media, VOD data,
+models, evaluation artifacts and all existing Langfuse volumes remain local.
+The launcher requires an idle queue and verified legacy host ownership before
+handing the queue to its container. See [Docker lifecycle](docker-desktop.md) for
+setup, recovery and validation; implementation alone does not establish a live
+GPU or native Windows acceptance result.

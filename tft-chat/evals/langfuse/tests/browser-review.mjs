@@ -1,3 +1,4 @@
+import {AssistantName} from '../../../app/frontend/src/assistant-names.js';
 /** Verify native case authoring, evaluator editing, human review, and regression capture. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -76,7 +77,7 @@ try {
   assert.notEqual(edited.versionId,evaluator.versionId);
   assert.ok(JSON.stringify(edited.prompt).includes(stamp));
   console.log('Native evaluator edit created a new frozen version.');
-  const baselinePrompt=await api(`v2/prompts/${encodeURIComponent('chattft/assistants/chat')}`,{label:'baseline'});
+  const baselinePrompt=await api(`v2/prompts/${encodeURIComponent(`chattft/assistants/${AssistantName.CHAT}`)}`,{label:'baseline'});
   await page.goto(`${base}/project/tft-apps-evals/prompts/${encodeURIComponent(baselinePrompt.name)}`);
   await page.getByRole('button',{name:'New version',exact:true}).click();
   await edit(page.locator('.cm-content').first(),`${baselinePrompt.prompt}\nCandidate acceptance ${stamp}.`);
@@ -90,7 +91,7 @@ try {
   await page.getByRole('button',{name:'Playground',exact:true}).click();
   await page.getByText('Fresh playground',{exact:true}).click();
   await page.getByRole('combobox').first().click();
-  await page.getByRole('option',{name:'ChatTFT backend: chattft/chat',exact:true}).click();
+  await page.getByRole('option',{name:`ChatTFT backend: chattft/${AssistantName.CHAT}`,exact:true}).click();
   await edit(page.locator('.cm-content').first(),`Playground unsaved draft ${stamp}`);
   await page.getByRole('button',{name:'Message',exact:true}).click();
   await edit(page.locator('.cm-content').nth(1),'Hello from the backend Playground smoke test.');
@@ -107,8 +108,8 @@ try {
     if(!draftRun) await page.waitForTimeout(1000);
   }
   assert.ok(draftRun?.traceId,'Draft run must retain its inspection trace');
-  assert.equal(draftRun.metadata.assistant,'chat');
-  assert.equal(draftRun.metadata.prompt_overrides.chat.text,`Playground unsaved draft ${stamp}`);
+  assert.equal(draftRun.metadata.assistant,AssistantName.CHAT);
+  assert.equal(draftRun.metadata.prompt_overrides[AssistantName.CHAT].text,`Playground unsaved draft ${stamp}`);
   console.log('Native Playground executes an unsaved draft through the backend with an inspection trace.');
 
   const report=JSON.parse(fs.readFileSync('/tmp/chattft-native-judge-report.json'));
@@ -145,12 +146,12 @@ try {
   assert.deepEqual(captured.input,source.input);
   console.log('Development observation captured natively with source links and unchanged conversation.');
 
-  await trigger(dataset,{cases:[`chat/${authored.id}`,`chat/${captured.id}`],variants:[
-    {name:`${stamp}-baseline`},{name:`${stamp}-candidate`,prompts:{chat:{name:candidatePrompt.name,version:candidatePrompt.version}}}
+  await trigger(dataset,{cases:[`${AssistantName.CHAT}/${authored.id}`,`${AssistantName.CHAT}/${captured.id}`],variants:[
+    {name:`${stamp}-baseline`},{name:`${stamp}-candidate`,prompts:{[AssistantName.CHAT]:{name:candidatePrompt.name,version:candidatePrompt.version}}}
   ]});
   const snapshots=process.env.LANGFUSE_BROWSER_SNAPSHOTS || 'evals/langfuse/snapshots';
   const catalog=JSON.parse(fs.readFileSync(`${snapshots}/catalog.json`));
-  const snapshot=catalog.suites.find(row=>row.name==='chat').snapshot;
+  const snapshot=catalog.suites.find(row=>row.name===AssistantName.CHAT).snapshot;
   const frozen=JSON.parse(fs.readFileSync(`${snapshots}/${snapshot}.json`));
   assert.ok(frozen.items.some(item=>item.source_observation_id===source.id));
   assert.equal(frozen.grading.evaluators.answer_quality.versionId,edited.versionId);

@@ -14,6 +14,7 @@ from evals.langfuse.contracts import legacy_execution_item
 from evals.langfuse.utils import validate_case_semantics
 from evals.trace import evaluate_trace_check
 from evals.utils import isolated_operation
+from domain.assistants.constants import AssistantName
 
 ROOT = Path(__file__).resolve().parents[1] / "evals" / "langfuse" / "snapshots"
 
@@ -28,8 +29,8 @@ def test_all_cases_and_original_assertions_are_migrated() -> None:
     """Protect the complete inventory, including the intentionally empty suite."""
     suites = load_eval_suites()
     assert {s.name: len(s.tests) for s in suites} == {
-        "analyze_transcript": 0, "chat": 28, "clean_transcript": 1,
-        "compact_transcript": 1, "data_analyst": 7, "dummy_assistant": 1,
+        AssistantName.ANALYZE_TRANSCRIPT: 0, AssistantName.CHAT: 28, AssistantName.CLEAN_TRANSCRIPT: 1,
+        AssistantName.COMPACT_TRANSCRIPT: 1, AssistantName.DATA_ANALYST: 7, AssistantName.DUMMY_ASSISTANT: 1,
         "context_selection": 11, "skill_selection": 12,
     }
     assertions = [a for s in suites for t in s.tests if t.get("metadata", {}).get("scoring") != "none" for a in t.get("metadata", {}).get("legacy_definition", t)["expected_output"]["assertions"]]
@@ -39,7 +40,7 @@ def test_all_cases_and_original_assertions_are_migrated() -> None:
 
 def test_preflight_rejects_invalid_suite_routing() -> None:
     """Reject cases pointing outside their parent suite before execution."""
-    bundle = suite_bundle("chat")
+    bundle = suite_bundle(AssistantName.CHAT)
     bundle["items"][0]["id"] = "wrong/case"
     with pytest.raises(ValueError, match="within their suite"):
         validate_bundle(bundle)
@@ -49,7 +50,7 @@ def test_preflight_rejects_stale_tool_and_malformed_regex() -> None:
     """Preserve graph reachability and Python regex validation."""
     for check, message in [({"type": "tool_called", "value": "removed_tool"}, "unavailable tool"),
                            ({"type": "regex", "value": "["}, "invalid regex")]:
-        bundle = suite_bundle("chat")
+        bundle = suite_bundle(AssistantName.CHAT)
         item = next(item for item in bundle["items"] if item.get("metadata", {}).get("scoring") != "none")
         if bundle['schema_version'] in {2, 3}:
             item['metadata']['deterministic_checks'] = [{"kind": "trace", "name": "check", "check": check}]
@@ -63,7 +64,7 @@ def test_preflight_rejects_stale_tool_and_malformed_regex() -> None:
 def test_fixture_and_trace_assertions_do_not_need_credentials(monkeypatch) -> None:
     """The fixture bypasses model clients, database access, and worker processes."""
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    bundle = suite_bundle("dummy_assistant")
+    bundle = suite_bundle(AssistantName.DUMMY_ASSISTANT)
     item = bundle["items"][0]
     response = execution.execute_attempt(bundle["suite"], item, {}, bundle["prompts"])
     scores = execution.score_attempt(item, response, bundle["prompts"])
@@ -79,7 +80,7 @@ def test_live_execution_uses_neutral_worker_protocol(monkeypatch) -> None:
         calls.append((payload, timeout))
         return {"output": "native call"}
     monkeypatch.setattr(execution, "isolated_operation", operation)
-    bundle = suite_bundle("chat")
+    bundle = suite_bundle(AssistantName.CHAT)
     item = bundle["items"][0]
     result = execution.execute_attempt(bundle["suite"], item, {}, bundle["prompts"])
     assert result["output"] == "native call"
@@ -130,7 +131,7 @@ def test_assistant_execution_uses_real_assembly_and_scoped_target(monkeypatch) -
         """Stand in for network execution while preserving the SDK result shape."""
         assert calls["in_scope"]
         calls["run"] = kwargs
-        return SimpleNamespace(final_output="answer", new_items=[], last_agent=SimpleNamespace(name="chat"),
+        return SimpleNamespace(final_output="answer", new_items=[], last_agent=SimpleNamespace(name=AssistantName.CHAT),
             context_wrapper=SimpleNamespace(usage=SimpleNamespace(input_tokens=10, output_tokens=2, total_tokens=12, requests=1)))
 
     monkeypatch.setattr(worker, "resolve_eval_target", lambda _: SimpleNamespace(database="eval-snapshot"))
@@ -141,10 +142,10 @@ def test_assistant_execution_uses_real_assembly_and_scoped_target(monkeypatch) -
     monkeypatch.setattr(assistants, "render_assistant_input", lambda name, prompt: "wrapped " + prompt)
     monkeypatch.setattr(agents.Runner, "run_sync", run)
     monkeypatch.setattr(agents.tracing, "trace", trace_scope)
-    response = worker.run_assistant("question", {"assistant": "chat", "model": "candidate", "prompt_candidates": {"chat": {"text": "new instructions"}}, "max_turns": 7}, {})
+    response = worker.run_assistant("question", {"assistant": AssistantName.CHAT, "model": "candidate", "prompt_candidates": {AssistantName.CHAT: {"text": "new instructions"}}, "max_turns": 7}, {})
     assert response["output"] == "answer"
     assert response["metadata"]["tft_trace"]["trace_id"] == "trace_test"
-    assert calls["create"][1] == {"model": "candidate", "instructions": "assembled prompt", "instructions_by_name": {"chat": "assembled prompt"}}
+    assert calls["create"][1] == {"model": "candidate", "instructions": "assembled prompt", "instructions_by_name": {AssistantName.CHAT: "assembled prompt"}}
     assert calls["instructions"][2]["base_instructions"] == "new instructions"
     assert calls["run"] == {"input": "wrapped question", "max_turns": 7}
     assert not calls["in_scope"]
@@ -153,7 +154,7 @@ def test_assistant_execution_uses_real_assembly_and_scoped_target(monkeypatch) -
 @pytest.mark.parametrize("output", ["5%", "five percent", "1 in 20", "0.05"])
 def test_probability_case_keeps_python_regex_contract(output) -> None:
     """Equivalent probability forms retain their existing case semantics."""
-    case = next(t for t in suite_bundle("chat")["items"] if t["metadata"]["case"] == "context_six_anima_thiefs_gloves_odds")
+    case = next(t for t in suite_bundle(AssistantName.CHAT)["items"] if t["metadata"]["case"] == "context_six_anima_thiefs_gloves_odds")
     assertion = next(a for a in legacy_execution_item(case)["expected_output"]["assertions"] if a.get("check", {}).get("type") == "regex")
     assert evaluate_trace_check(assertion["check"], None, output).passed
     assert not evaluate_trace_check(assertion["check"], None, "0.5% and 15%").passed

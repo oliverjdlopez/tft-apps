@@ -1,3 +1,4 @@
+import { AssistantName } from "../assistant-names.js";
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 import SpecsTab from "./SpecsTab.jsx";
@@ -5,9 +6,9 @@ import SpecsTab from "./SpecsTab.jsx";
 describe("SpecsTab after Promptfoo migration", () => {
   beforeEach(() => {
     global.fetch = vi.fn(async (path, options = {}) => {
-      const document = {id: "doc", assistant: "chat", label: "system.md", path: "system.md", language: "markdown",
-        content: options.method === "PUT" ? "Edited prompt" : "Original prompt", revision: "revision", test_suites: ["chat"]};
-      const data = path === "/api/specs" ? {assistants: [{name: "chat", description: "Chat", model: "default", eval_suites: ["chat"],
+      const document = {id: "doc", assistant: AssistantName.CHAT, label: "system.md", path: "system.md", language: "markdown",
+        content: options.method === "PUT" ? "Edited prompt" : "Original prompt", revision: "revision", test_suites: [AssistantName.CHAT]};
+      const data = path === "/api/specs" ? {assistants: [{name: AssistantName.CHAT, description: "Chat", model: "default", eval_suites: [AssistantName.CHAT],
         sources: [{document_id: "doc", label: "system.md", path: "system.md"}]}]} : document;
       return {ok: true, text: async () => JSON.stringify(data)};
     });

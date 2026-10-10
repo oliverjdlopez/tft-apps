@@ -1,3 +1,4 @@
+import { AssistantName } from "./assistant-names.js";
 import { MessageSquare, Sparkles, ListChecks, Database, Info, X, Copy, Send, ChevronRight, PanelRight, RefreshCw, Search, Zap, TriangleAlert, Check, Trash2, Menu, ArrowLeft, ArrowRight, Play } from "lucide-react";
 import { SidebarProvider, Sidebar as SidebarPrimitive, SidebarHeader, SidebarContent, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -1025,7 +1026,7 @@ function ChatView({ config, reloadConfig, isActive }) {
   const onlyGreeting = messages.length <= 1;
   const assistantNames = config?.assistants?.length
     ? config.assistants
-    : [config?.default_assistant || "chat"];
+    : [config?.default_assistant || AssistantName.CHAT];
   const assistantName = assistantNames.includes(selectedAssistant)
     ? selectedAssistant
     : assistantNames.includes(config?.default_assistant)

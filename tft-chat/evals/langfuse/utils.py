@@ -293,39 +293,52 @@ def deterministic_score_type(check: dict) -> str:
 
 
 # ===========================================================================
-# Host runner lifecycle
-# The launcher owns a detached process; Docker forwards over its Unix socket.
-# Keep credentials in the environment and verify PID ownership before signals.
+# Container migration and legacy host runner retirement
+# Read queue state without initializing or modifying its SQLite database.
+# A legacy PID receipt is trusted only when its command owns this checkout.
 # ===========================================================================
 
-def host_runner_environment(root: Path) -> dict[str, str]:
-    """Build the host runner environment using local application and platform settings."""
-    from dotenv import dotenv_values
-    checkout = root.parent.parent
-    environment = {**{k: v for k, v in dotenv_values(checkout / '.env').items() if v is not None},
-                   **os.environ}
-    environment.update({k: v for k, v in dotenv_values(root / '.env').items()
-                        if v is not None and k.startswith('LANGFUSE_')})
-    environment.update(LANGFUSE_BASE_URL='http://localhost:15510',
-                       LANGFUSE_PUBLIC_URL='http://localhost:15510',
-                       LANGFUSE_RUNTIME_DIR=str(root / '.runtime'),
-                       LANGFUSE_SNAPSHOT_DIR=str(root / 'snapshots'),
-                       PYTHONDONTWRITEBYTECODE='1')
-    environment['PYTHONPATH'] = os.pathsep.join([str(checkout), str(checkout / 'app/backend'),
-        str(checkout / 'app/backend/src'), environment.get('PYTHONPATH', '')])
-    return environment
+def runner_queue_status(runtime: Path) -> dict[str, Any]:
+    """Read pending work without creating a queue or changing stored jobs.
+
+    Args:
+        runtime: Existing runtime directory shared with the experiment container.
+
+    Returns:
+        Pending flag and stable identities of queued, running, or grading jobs.
+
+    Raises:
+        ValueError: An existing queue cannot be inspected safely.
+    """
+    import sqlite3
+
+    database = runtime / 'jobs.sqlite3'
+    if not database.exists():
+        return {'pending': False, 'jobs': []}
+    try:
+        # mode=ro also prevents a typo or missing mount from creating a new,
+        # apparently idle database next to the actual durable queue.
+        with sqlite3.connect(database.resolve().as_uri() + '?mode=ro', uri=True) as connection:
+            rows = connection.execute(
+                "SELECT id, state FROM jobs WHERE state IN ('queued', 'running', 'awaiting_scores') ORDER BY created, id"
+            ).fetchall()
+    except sqlite3.Error as error:
+        raise ValueError('Cannot verify that the evaluation queue is idle') from error
+    jobs = [{'id': identity, 'state': state} for identity, state in rows]
+    return {'pending': bool(jobs), 'jobs': jobs}
 
 
-def host_runner_python(root: Path) -> str:
-    """Select an eval-capable interpreter without modifying the application's venv."""
-    import importlib.util
-    import sys
-    if importlib.util.find_spec('langfuse') is not None:
-        return sys.executable
-    dedicated = root / '.runtime/host-venv/bin/python'
-    if dedicated.is_file():
-        return str(dedicated)
-    raise ValueError('Host evaluations require uv sync --locked --extra evals before startup')
+def require_idle_runner(runtime: Path) -> None:
+    """Refuse lifecycle changes while accepted evaluation work remains pending.
+
+    Args:
+        runtime: Runtime directory whose persistent queue must be idle.
+
+    Raises:
+        ValueError: A job is queued, running, or awaiting native grading.
+    """
+    if runner_queue_status(runtime)['pending']:
+        raise ValueError('Finish queued, running, or awaiting-scores experiments before changing the runner')
 
 
 def host_runner_pid(root: Path) -> int | None:
@@ -339,15 +352,6 @@ def host_runner_pid(root: Path) -> int | None:
         pass
     return None
 
-
-def host_runner_ready(root: Path) -> bool:
-    """Check the actual queue consumer through its private local socket."""
-    import httpx
-    try:
-        with httpx.Client(transport=httpx.HTTPTransport(uds=str(root / '.runtime/runner.sock')), timeout=2) as client:
-            return client.get('http://runner/health').status_code == 200
-    except httpx.HTTPError:
-        return False
 
 # ===========================================================================
 # Playground request translation and completion streaming

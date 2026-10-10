@@ -1,82 +1,52 @@
 # Local Langfuse deployment
 
 The evaluation platform lives under `evals/langfuse/`. Docker Compose runs
-Langfuse web and worker, PostgreSQL, ClickHouse, Redis, MinIO, and a small
-webhook forwarder. The Python ChatTFT experiment service runs on the Linux/WSL
-host, using the same local database connections as the application. The application itself does not depend on this stack.
-The deployment follows [Langfuse's official Compose setup](https://langfuse.com/self-hosting/deployment/docker-compose).
+Langfuse web/worker, PostgreSQL, ClickHouse, Redis, MinIO and the real Python
+experiment server. The experiment server shares the ChatTFT application image;
+its tools and per-run subprocesses execute inside the container. External RDS
+and hosted model providers retain their existing roles.
 
 ## Start and stop
 
-Desktop `npm start` and `npm run dev` automatically check both web and host-runner health
-and invoke this launcher with `--no-browser` when unavailable. Docker must be
-running. Healthy web and runner deployments are reused; desktop Quit leaves the stack and
-its data running. See [desktop startup](../apps/desktop.md#desktop-workspace-tabs)
-for failure recovery and startup timing.
-
-Install Docker Engine and the Compose plugin, and ensure `docker info` works
-for your user. From the repository root:
+From the suite root, build images with `node desktop/docker.mjs build`, then use:
 
 ```bash
-uv sync --locked --extra evals
-uv run --extra evals chat-tft-evals up
-uv run --extra evals chat-tft-evals down
+node desktop/docker.mjs langfuse-up
+node desktop/docker.mjs eval-restart
+node desktop/docker.mjs eval-down
 ```
 
-The UI opens at <http://localhost:15510>. First startup downloads images, builds
-the forwarding image, waits for schema migrations, seeds missing evaluation content
-from the host interpreter, and starts the detached host experiment listener. Later startup preserves content edited in
-Langfuse. `up --no-browser` starts the same services without opening a browser.
+Desktop startup checks both the web service and the actual container runner's
+command, health and project ownership. It starts missing services through the
+Node launcher. Desktop quit leaves Langfuse running. The legacy Python CLI
+`chat-tft-evals up/down/restart-runner` delegates to the same Node lifecycle.
 
-This is the canonical evaluation project. After the 2026-10-06 cutover, the
-legacy `chattft-evals` stack on port 15500 is stopped with its volumes retained.
-Its October 4 unit-expert result is preserved under the suite's ignored
-`.migration/legacy-langfuse-cutover-20261006/` archive. New runs use the
-`tft-apps-evals` project and this checkout's host runner. The historical run
-was exported for review, not recreated as a native suite experiment.
+The UI remains at <http://localhost:15510>. The existing `tft-apps-evals`
+project, volumes, generated `.env` keys, hosted content, snapshots and job
+artifacts are retained. Keys are created only when absent; never replace them
+while retaining existing encrypted data. Credentials stay outside images and
+renderer JavaScript. Setup seeds missing definitions without making model calls.
 
-Sign in with `LANGFUSE_INIT_USER_EMAIL` and `LANGFUSE_INIT_USER_PASSWORD`
-from the generated `evals/langfuse/.env` file. The default email is
-`evals@chattft.local`. The launcher creates random credentials once with
-owner-only permissions and prints the configured email and password location,
-never the password value. The suite desktop tab can use these fields for
-automatic sign-in; see [suite desktop setup](../../../docs/desktop.md).
-Do not replace this file while retaining the existing volumes: database
-passwords, encryption keys, and API credentials must stay paired with their data.
+Only the UI is published. Existing authenticated webhooks target
+`http://experiments/experiments` on internal port 80. That service now executes
+the request directly. It reads complete typed `RDS_EVAL_*` settings and model
+credentials from the application `.env` plus process overrides, and uses the
+internal Langfuse hostname. Result links retain the public localhost URL.
+A host-only database/tunnel needs a container-reachable address; `localhost`
+inside the container refers to that container. No external RDS data is migrated.
 
-Only the UI is published to loopback. Langfuse sends its authenticated webhook
-requests to `http://experiments/experiments` on internal port 80. That container
-forwards requests to the host through `.runtime/runner.sock`; no host TCP port
-is opened. Existing dataset webhook URLs and credentials remain valid.
+The migration checks the persistent queue read-only before changing ownership.
+Queued, running or awaiting-score jobs block migration/restart/shutdown. It
+stops ingress, checks again, and retires only a verified legacy host process
+whose command owns this suite's exact socket. A live process hidden by a PID
+namespace blocks migration instead of starting a second consumer. The queue and
+artifacts stay under `.runtime/`. No new paid run is submitted.
 
-The host runner uses the invoking Python interpreter with the `evals` extra.
-It reads model credentials and typed `RDS_EVAL_*` settings from the repository
-`.env` and process environment. `127.0.0.1` now means the host, so a local
-PostgreSQL listener works without changing database networking. Each evaluation
-still runs in an isolated subprocess. The Unix socket is restricted to the host
-user/group, and the proxy runs with the configured `HOST_UID`/`HOST_GID`.
-
-`up` reuses a healthy owned runner. `down` stops it and Compose while retaining
-history. After editing Python code or database settings, use:
-
-```bash
-uv run --extra evals chat-tft-evals restart-runner
-```
-
-Restart only when no experiment is running; interrupted work requires explicit
-replay. Runner output is in `evals/langfuse/.runtime/runner.log`; PID ownership is
-verified before shutdown. Docker proxy health includes host queue readiness.
-Desktop exit leaves these services running; desktop startup recovers a stopped
-runner. This local host lifecycle targets Linux, including WSL.
-
-For a separate dependency environment without altering the app's virtualenv:
-
-```bash
-UV_PROJECT_ENVIRONMENT=evals/langfuse/.runtime/host-venv uv sync --locked --extra evals
-```
-
-The launcher uses that environment as a fallback when its selected interpreter
-lacks Langfuse. This environment is ignored runtime state, not a backup artifact.
+`node desktop/docker.mjs eval-compose logs --tail 100 experiments` shows runner
+logs. Use `eval-restart` after Python source/config edits and rebuild the shared
+image after dependency changes. Desktop restarts recover stopped containers.
+The earlier `chattft-evals` project remains retired with its historical volumes
+and exports preserved. See [suite Docker lifecycle](../../../docs/docker-desktop.md).
 
 ## Validation and troubleshooting
 
@@ -92,7 +62,7 @@ Docker executable, daemon permission failure, occupied port 15510, failed image
 pull, or unhealthy migration stops startup with the underlying command error.
 Stop an older Promptfoo viewer before starting this stack on the same port.
 
-If **via Webhook** reports HTTP 503, inspect `.runtime/runner.log` and the `experiments` forwarding service logs.
+If **via Webhook** reports HTTP 503, inspect the `experiments` container logs.
 A healthy `/health` response only confirms the queue consumer is alive; content
 preparation can still fail. After Python source changes, an `ImportError` may
 indicate that the running process has cached an older module. Once no experiment
@@ -124,7 +94,7 @@ intentionally deleting platform history; Git snapshots restore definitions but
 cannot restore results, annotations, or UI edit history.
 
 The launcher captures the host Git revision and a content fingerprint covering
-tracked differences plus untracked source content. The host runner can also read the checkout directly when recording per-job provenance.
+tracked differences plus untracked source content. The captured values are passed to the container for per-job provenance.
 The captured values remain available to container-based CI, where the external
 Git directory may not be mounted. Restart through the launcher after editing code
 to refresh this provenance. Running raw Compose commands without these values
@@ -156,8 +126,7 @@ The browser CI job exercises native item/prompt/evaluator editing, Custom Experi
 
 The native Playground's **ChatTFT backend** connection is installed by normal
 `chat-tft-evals up` seeding. After adapter code changes, run
-`uv run --extra evals chat-tft-evals restart-runner` and restart the `experiments`
-Compose proxy if its code changed. Existing installations also need
+`uv run --extra evals chat-tft-evals restart-runner`. Existing installations also need
 `chat-tft-evals up` to apply the internal LLM hostname allowlist and seed the new
 connection. Prompt edits in Playground require neither restart. See the
 [edit/run/inspect walkthrough](langfuse-onboarding.md#edit--run--inspect-in-playground).

@@ -2,7 +2,6 @@
 services:
   experiments:
     # CI's mock model and disposable database stay inside the isolated stack.
-    command: ["python", "-m", "uvicorn", "evals.langfuse.server:app", "--host", "0.0.0.0", "--port", "80"]
     environment:
       LANGFUSE_TEST_DEPLOYMENT: "1"
       OPENAI_API_KEY: mock-key

@@ -11,6 +11,7 @@ from evals.langfuse.dataset_registration import register_dataset
 from evals.langfuse.grading import seed_grading
 from evals.langfuse.tests.test_content import FakeClient
 from evals.langfuse.utils import default_config
+from domain.assistants.constants import AssistantName
 
 
 def test_register_dataset_seeds_json_cases_and_keeps_ui_edits(tmp_path):
@@ -25,7 +26,7 @@ def test_register_dataset_seeds_json_cases_and_keeps_ui_edits(tmp_path):
     ]}))
     snapshots = tmp_path / "snapshots"
     first = register_dataset(name="manual_probe", dataset_name="chattft/manual-probe",
-        assistant="chat", description="Manual investigations.", items_path=cases,
+        assistant=AssistantName.CHAT, description="Manual investigations.", items_path=cases,
         database=None, max_turns=10, snapshots=snapshots)
     bundle = load_snapshot(first["snapshot"], snapshots)
     assert load_catalog(snapshots)[0]["managed_workflow"] is True
@@ -44,7 +45,7 @@ def test_register_dataset_seeds_json_cases_and_keeps_ui_edits(tmp_path):
         "datasets": 0, "items": 0, "prompts": 0}
     assert hosted.items[0].input == "Edited in Langfuse."
     again = register_dataset(name="manual_probe", dataset_name="chattft/manual-probe",
-        assistant="chat", description="Manual investigations.", items_path=cases,
+        assistant=AssistantName.CHAT, description="Manual investigations.", items_path=cases,
         database=None, max_turns=10, snapshots=snapshots)
     assert again["created"] is False
 
@@ -62,7 +63,7 @@ def test_invalid_initial_items_leave_catalog_untouched(tmp_path, items):
     snapshots = tmp_path / "snapshots"
     with pytest.raises(ValueError):
         register_dataset(name="manual_probe", dataset_name="chattft/manual-probe",
-            assistant="chat", description="Manual investigations.", items_path=cases,
+            assistant=AssistantName.CHAT, description="Manual investigations.", items_path=cases,
             database=None, max_turns=10, snapshots=snapshots)
     assert not (snapshots / "catalog.json").exists()
 
@@ -110,7 +111,7 @@ def test_grading_adds_managed_dataset_without_resetting_rule(monkeypatch, tmp_pa
     ] for _, _, body in workspace.patches)
 
 
-@pytest.mark.parametrize("assistant", [None, "unit_expert"])
+@pytest.mark.parametrize("assistant", [None, AssistantName.UNIT_EXPERT])
 def test_registered_dataset_reaches_frozen_experiment_bundle(monkeypatch, tmp_path, assistant):
     """The webhook freezes hosted cases and the run's selected entry assistant."""
     from evals.langfuse import grading, prompts, utils
@@ -120,7 +121,7 @@ def test_registered_dataset_reaches_frozen_experiment_bundle(monkeypatch, tmp_pa
     cases.write_text(json.dumps([{"case": "probe", "input": "Explain this cohort.",
         "expected_output": {"requirements": ["Use the scoped population."]}}]))
     register_dataset(name="manual_probe", dataset_name="chattft/manual-probe",
-        assistant="chat", description="Manual investigations.", items_path=cases,
+        assistant=AssistantName.CHAT, description="Manual investigations.", items_path=cases,
         database=None, max_turns=10, snapshots=snapshots)
     client = FakeClient()
     seed_content(client, snapshots, natural=True)
@@ -160,9 +161,9 @@ def test_registered_dataset_reaches_frozen_experiment_bundle(monkeypatch, tmp_pa
     config = {**default_config(), "assistant": assistant} if assistant else default_config()
     bundle = fetch_bundle(client, "chattft/manual-probe", config, snapshots)
     assert bundle["dataset_name"] == "chattft/manual-probe"
-    assert bundle["suite"]["assistant"] == "chat"
+    assert bundle["suite"]["assistant"] == AssistantName.CHAT
     assert bundle["config"].get("assistant") == assistant
-    assert selected == [assistant or "chat"]
+    assert selected == [assistant or AssistantName.CHAT]
     assert bundle["items"][0]["id"] == "manual_probe/probe"
     assert bundle["items"][0]["metadata"]["quality_profile"] == "answer_quality"
 
@@ -171,13 +172,13 @@ def test_run_assistant_selection_validates_prompt_targets():
     """Run JSON accepts registered roots and limits candidates to their graph."""
     from evals.langfuse.utils import validate_frozen_config
 
-    suite = {"family": "assistant", "execution": "live", "assistant": "chat"}
-    config = {**default_config(), "assistant": "unit_expert"}
-    config["variants"][0]["prompts"] = {"unit_expert": {
-        "name": "chattft/assistants/unit_expert", "version": 1, "text": "Test prompt."}}
+    suite = {"family": "assistant", "execution": "live", "assistant": AssistantName.CHAT}
+    config = {**default_config(), "assistant": AssistantName.UNIT_EXPERT}
+    config["variants"][0]["prompts"] = {AssistantName.UNIT_EXPERT: {
+        "name": f"chattft/assistants/{AssistantName.UNIT_EXPERT}", "version": 1, "text": "Test prompt."}}
     validate_frozen_config(config, suite)
-    config["variants"][0]["prompts"] = {"chat": {
-        "name": "chattft/assistants/chat", "version": 1, "text": "Test prompt."}}
+    config["variants"][0]["prompts"] = {AssistantName.CHAT: {
+        "name": f"chattft/assistants/{AssistantName.CHAT}", "version": 1, "text": "Test prompt."}}
     with pytest.raises(ValueError, match="unreachable assistants"):
         validate_frozen_config(config, suite)
     config["variants"][0]["prompts"] = {}
@@ -198,10 +199,10 @@ def test_run_bundle_passes_selected_assistant_to_task(tmp_path):
     cases.write_text(json.dumps([{"case": "probe", "input": "Name one unit.",
         "metadata": {"scoring": "none"}}]))
     registered = register_dataset(name="manual_probe", dataset_name="chattft/manual-probe",
-        assistant="chat", description="Manual investigations.", items_path=cases,
+        assistant=AssistantName.CHAT, description="Manual investigations.", items_path=cases,
         database=None, max_turns=10, snapshots=snapshots)
     bundle = load_snapshot(registered["snapshot"], snapshots)
-    bundle["config"]["assistant"] = "unit_expert"
+    bundle["config"]["assistant"] = AssistantName.UNIT_EXPERT
     bundle.update(dataset_id="dataset", dataset_version=datetime.now(timezone.utc).isoformat())
     bundle["items"][0]["remote_id"] = "remote-case"
     bundle["suite"]["scoring"] = "none"
@@ -211,8 +212,8 @@ def test_run_bundle_passes_selected_assistant_to_task(tmp_path):
         dataset_run_id=None, dataset_run_url="", item_results=[])
     run_bundle(bundle, client=client)
     task = client.run_experiment.call_args.kwargs["task"]
-    assert bundle["suite"]["assistant"] == "chat"
-    assert task.keywords["suite"]["assistant"] == "unit_expert"
+    assert bundle["suite"]["assistant"] == AssistantName.CHAT
+    assert task.keywords["suite"]["assistant"] == AssistantName.UNIT_EXPERT
 
 
 def test_pending_jobs_prevent_runner_restarts(tmp_path):
@@ -233,7 +234,7 @@ def test_registered_dataset_gets_authenticated_custom_experiment(monkeypatch, tm
 
     snapshots = tmp_path / "snapshots"
     register_dataset(name="manual_probe", dataset_name="chattft/manual-probe",
-        assistant="chat", description="Manual investigations.", items_path=None,
+        assistant=AssistantName.CHAT, description="Manual investigations.", items_path=None,
         database=None, max_turns=10, snapshots=snapshots)
     client = FakeClient()
     seed_content(client, snapshots, natural=True)
@@ -266,7 +267,7 @@ def test_registration_rejects_unrelated_existing_dataset(tmp_path):
     """A same-name UI dataset without the runner contract cannot appear ready."""
     snapshots = tmp_path / "snapshots"
     register_dataset(name="manual_probe", dataset_name="chattft/manual-probe",
-        assistant="chat", description="Manual investigations.", items_path=None,
+        assistant=AssistantName.CHAT, description="Manual investigations.", items_path=None,
         database=None, max_turns=10, snapshots=snapshots)
     client = FakeClient()
     client.create_dataset(name="chattft/manual-probe", metadata={})

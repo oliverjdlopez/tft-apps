@@ -4,6 +4,10 @@ Normal entry point: run `python3 scripts/setup.py` from the suite root, then
 `npm start` or `npm run dev` from `../desktop/`. See [suite setup](../docs/desktop.md).
 Standalone commands below remain available for testing and troubleshooting.
 
+The suite's container packaging preserves local media and GPU access while
+keeping Electron native. See [VOD containers](docs/docker.md) for image contents,
+frontend serving, persisted paths, model caches and GPU requirements.
+
 
 Local app for uploading a video—or downloading one from a Twitch or YouTube URL—drawing one fixed analysis region, and classifying the round shown in that crop at a configurable snapshot interval.
 

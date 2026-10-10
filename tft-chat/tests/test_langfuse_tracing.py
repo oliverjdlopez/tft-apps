@@ -2,6 +2,7 @@
 from types import SimpleNamespace
 
 from common import langfuse_tracing as tracing
+from domain.assistants.constants import AssistantName
 
 
 def test_disabled_development_tracing_never_initializes(monkeypatch):
@@ -42,12 +43,12 @@ class Span:
 def test_generation_prompt_ownership_and_concurrency():
     """Handoffs and concurrent traces never inherit another agent's prompt."""
     processor = tracing.PromptLineageProcessor()
-    token = tracing.PROMPTS.set({'chat': {'name': 'chat-prompt', 'version': 2},
-                                'final_responder': {'name': 'final-prompt', 'version': 4}})
+    token = tracing.PROMPTS.set({AssistantName.CHAT: {'name': 'chat-prompt', 'version': 2},
+                                AssistantName.FINAL_RESPONDER: {'name': 'final-prompt', 'version': 4}})
     try:
-        chat = Span(1, 1, None, 'chat', 'AGENT')
-        responder = Span(1, 2, 1, 'final_responder', 'AGENT')
-        other = Span(2, 2, None, 'chat', 'AGENT')
+        chat = Span(1, 1, None, AssistantName.CHAT, 'AGENT')
+        responder = Span(1, 2, 1, AssistantName.FINAL_RESPONDER, 'AGENT')
+        other = Span(2, 2, None, AssistantName.CHAT, 'AGENT')
         for span in [chat, responder, other]:
             processor.on_start(span)
         output = Span(1, 3, 2, 'response', 'LLM')
@@ -79,19 +80,20 @@ from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanE
 from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 from agents import trace, agent_span, generation_span, function_span, handoff_span
 from common.langfuse_tracing import ScopedSampler, PromptLineageProcessor, PROMPTS, ACTIVE
+from domain.assistants.constants import AssistantName
 provider = TracerProvider(sampler=ScopedSampler())
 exporter = InMemorySpanExporter()
 provider.add_span_processor(PromptLineageProcessor())
 provider.add_span_processor(SimpleSpanProcessor(exporter))
 OpenAIAgentsInstrumentor().instrument(tracer_provider=provider, exclusive_processor=False)
 active = ACTIVE.set(True)
-prompts = PROMPTS.set({'chat': {'name': 'chat', 'version': 2}, 'final_responder': {'name': 'final', 'version': 3}})
+prompts = PROMPTS.set({AssistantName.CHAT: {'name': 'chat', 'version': 2}, AssistantName.FINAL_RESPONDER: {'name': 'final', 'version': 3}})
 with provider.get_tracer('test').start_as_current_span('experiment-parent'):
     with trace('application'):
-        with agent_span('chat'):
+        with agent_span(AssistantName.CHAT):
             with generation_span(model='mock', usage={'input_tokens': 10, 'output_tokens': 2}): pass
-            with handoff_span(from_agent='chat', to_agent='final_responder'): pass
-        with agent_span('final_responder'):
+            with handoff_span(from_agent=AssistantName.CHAT, to_agent=AssistantName.FINAL_RESPONDER): pass
+        with agent_span(AssistantName.FINAL_RESPONDER):
             with generation_span(model='mock', usage={'input_tokens': 20, 'output_tokens': 4}): pass
             with function_span('present_inline_data', input='{"rows":[1,2]}', output='displayed'): pass
 PROMPTS.reset(prompts)
@@ -101,11 +103,11 @@ assert len({span.context.trace_id for span in spans}) == 1
 llms = [span for span in spans if span.attributes.get('openinference.span.kind') == 'LLM']
 assert [(span.attributes['langfuse.prompt.name'], span.attributes['langfuse.prompt.version']) for span in llms] == [('chat',2),('final',3)]
 assert [span.attributes['llm.token_count.prompt'] for span in llms] == [10,20]
-assert any(span.name == 'handoff to final_responder' for span in spans)
+assert any(span.name == f'handoff to {AssistantName.FINAL_RESPONDER}' for span in spans)
 assert any(span.name == 'present_inline_data' and 'rows' in span.attributes['input.value'] for span in spans)
 count = len(spans)
 with trace('disabled-conversation'):
-    with agent_span('chat'): pass
+    with agent_span(AssistantName.CHAT): pass
 assert len(exporter.get_finished_spans()) == count
 '''
     result = subprocess.run([sys.executable, '-c', script], capture_output=True, text=True, timeout=20)

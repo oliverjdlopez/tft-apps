@@ -10,6 +10,7 @@ from evals.langfuse.artifacts import render_run_artifact, write_run_artifact
 from evals.langfuse.jobs import JobStore
 from evals.langfuse.server import ExperimentService
 from evals.langfuse.utils import artifact_execution_fields
+from domain.assistants.constants import AssistantName
 
 
 @pytest.fixture
@@ -25,7 +26,7 @@ def run_records():
         {"name": "compare_cohorts", "arguments": json.dumps({
             "target": {"units": [{"name": "Veigar", "star_level": 3}]},
             "shared": None, "enabled": False, "range": [0, 20]}),
-         "agent": "unit_expert", "output": "PRIVATE TOOL RETURN"}]}}}
+         "agent": AssistantName.UNIT_EXPERT, "output": "PRIVATE TOOL RETURN"}]}}}
     row = {"id": "unit/a", "result": "**Exact response**\n\nNo paraphrasing.",
            **artifact_execution_fields(captured)}
     report = {"passed": False, "state": "awaiting_scores", "experiments": [
@@ -148,7 +149,7 @@ def test_offline_cli_runs_real_fixture_and_exports(tmp_path, monkeypatch, capsys
     export_snapshot(bundle, snapshots)
     monkeypatch.setattr(launcher, "SNAPSHOT_ROOT", snapshots)
     monkeypatch.setenv("LANGFUSE_RUNTIME_DIR", str(tmp_path / "runtime"))
-    assert launcher.run("dummy_assistant", offline=True) == 0
+    assert launcher.run(AssistantName.DUMMY_ASSISTANT, offline=True) == 0
     report = json.loads(capsys.readouterr().out)
     artifact = report["markdown_artifact"]
     text = Path(artifact["path"]).read_text()

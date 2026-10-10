@@ -11,6 +11,7 @@ from evals.langfuse.consolidation import plan_consolidation, apply_consolidation
 from evals.langfuse.content import load_catalog, load_snapshot, validate_bundle
 from evals.langfuse.contracts import dataset_schemas, legacy_execution_item, validate_natural_item
 from evals.langfuse.experiments import evaluate_item, run_item_task
+from domain.assistants.constants import AssistantName
 
 ROOT = Path(__file__).parents[1] / 'snapshots'
 
@@ -19,7 +20,7 @@ def test_string_containing_input_is_never_mistaken_for_legacy_object():
     """Treat ordinary words and JSON-looking text as literal user content."""
     for text in ['input', '{"input": "hello"}', 'Compare two units.']:
         item = {'input': text, 'expected_output': 'Ground the answer.', 'metadata': {}}
-        validate_natural_item({'name': 'chat', 'family': 'assistant'}, item, version=3)
+        validate_natural_item({'name': AssistantName.CHAT, 'family': 'assistant'}, item, version=3)
         assert legacy_execution_item(item)['input']['input'] == text
 
 
@@ -28,13 +29,13 @@ def test_string_containing_input_is_never_mistaken_for_legacy_object():
 def test_string_schema_rejects_every_nonstring(value):
     """New hosted contracts cannot silently accept old object-shaped inputs."""
     with pytest.raises(ValidationError):
-        validate_natural_item({'name': 'chat', 'family': 'assistant'},
+        validate_natural_item({'name': AssistantName.CHAT, 'family': 'assistant'},
                               {'input': value, 'expected_output': '', 'metadata': {}}, version=3)
 
 
 def test_unscored_case_requires_explicit_metadata():
     """Missing reference data cannot silently disable grading for a scored case."""
-    suite = {'name': 'chat', 'family': 'assistant'}
+    suite = {'name': AssistantName.CHAT, 'family': 'assistant'}
     item = {'input': 'hello', 'expected_output': None, 'metadata': {}}
     with pytest.raises(ValueError, match='require expected output'):
         validate_natural_item(suite, item, version=3)
@@ -66,7 +67,7 @@ def test_missing_reference_still_rejects_cases_without_deterministic_scoring():
     item['metadata']['deterministic_checks'] = [
         {'name': 'topic', 'kind': 'trace', 'check': {'type': 'regex', 'value': 'hello'}}]
     with pytest.raises(ValueError, match='require expected output'):
-        validate_natural_item({'name': 'chat', 'family': 'assistant'}, item, version=3)
+        validate_natural_item({'name': AssistantName.CHAT, 'family': 'assistant'}, item, version=3)
 
 
 def test_unscored_trace_does_not_schedule_quality_grading(monkeypatch):
@@ -75,14 +76,14 @@ def test_unscored_trace_does_not_schedule_quality_grading(monkeypatch):
     client = Mock()
     run_item_task(item={'input': 'input question', 'expected_output': None,
                        'metadata': {'scoring': 'none'}},
-                  suite={'name': 'chat', 'execution': 'live'}, variant={}, prompts={}, client=client)
+                  suite={'name': AssistantName.CHAT, 'execution': 'live'}, variant={}, prompts={}, client=client)
     assert client.update_current_span.call_args.kwargs['metadata']['quality_profile'] == 'none'
 
 
 def consolidation_fixture():
     """Build source-shaped cases using repository execution and prompt definitions."""
     baselines = {entry['name']: load_snapshot(entry['snapshot'], ROOT)
-                 for entry in load_catalog(ROOT) if entry['name'] in {'chat', 'data_analyst'}}
+                 for entry in load_catalog(ROOT) if entry['name'] in {AssistantName.CHAT, AssistantName.DATA_ANALYST}}
     datasets = []
     for index, name in enumerate(['chattft/chat/end-to-end', 'chattft/chat/data-analysis',
                                   'chattft/intake/unscored-prompts', 'set18-buildout', 'unrelated']):

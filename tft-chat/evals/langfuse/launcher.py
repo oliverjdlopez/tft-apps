@@ -89,6 +89,10 @@ def compose(arguments: list[str], root: Path = PLATFORM_ROOT) -> None:
         arguments: Compose subcommand and options.
         root: Directory containing the platform configuration.
     """
+    if os.environ.get("LANGFUSE_TEST_DEPLOYMENT") != "1":
+        subprocess.run(["node", str(root.parent.parent.parent / "desktop/docker.mjs"),
+                        "eval-compose", *arguments], check=True)
+        return
     environment = os.environ.copy()
     environment.update(capture_provenance(root.parent.parent))
     if environment.get("LANGFUSE_TEST_DEPLOYMENT") == "1":
@@ -107,27 +111,19 @@ def up(*, open_browser: bool = True) -> None:
     Args:
         open_browser: Whether to open the platform in the default browser.
     """
-    host_python = None
     if os.environ.get("LANGFUSE_TEST_DEPLOYMENT") != "1":
-        from .utils import host_runner_python
-        host_python = host_runner_python(PLATFORM_ROOT)
+        subprocess.run(["node", str(PLATFORM_ROOT.parent.parent.parent / "desktop/docker.mjs"),
+                        "langfuse-up"], check=True)
+        if open_browser:
+            webbrowser.open(PUBLIC_URL)
+        return
     subprocess.run(["docker", "info", "--format", "{{.ServerVersion}}"], check=True)
     subprocess.run(["docker", "compose", "version"], check=True)
     environment = prepare_environment()
     compose(["up", "-d", "--wait", "--wait-timeout", "600", "langfuse-web", "langfuse-worker"])
     compose(["build", "experiments"])
-    if os.environ.get("LANGFUSE_TEST_DEPLOYMENT") == "1":
-        compose(["--profile", "test", "up", "-d", "mock-model"])
-        compose(["run", "--rm", "--no-deps", "experiments", "python", "-m", "evals.langfuse.seed"])
-    else:
-        from .host_runner import start
-        from .utils import host_runner_environment
-        # The old container and the host must never consume the same job queue.
-        compose(["stop", "experiments"])
-        subprocess.run([host_python, "-m", "evals.langfuse.seed"],
-                       cwd=PLATFORM_ROOT.parent.parent,
-                       env=host_runner_environment(PLATFORM_ROOT), check=True)
-        start(PLATFORM_ROOT)
+    compose(["--profile", "test", "up", "-d", "mock-model"])
+    compose(["run", "--rm", "--no-deps", "experiments", "python", "-m", "evals.langfuse.seed"])
     compose(["up", "-d", "--wait", "--wait-timeout", "120", "experiments"])
     from dotenv import dotenv_values
     login_email = dotenv_values(environment).get("LANGFUSE_INIT_USER_EMAIL") or "evals@chattft.local"
@@ -141,9 +137,11 @@ def down() -> None:
     if not (PLATFORM_ROOT / ".env").exists():
         print("No local Langfuse environment has been created.")
         return
-    from .host_runner import stop
-    stop(PLATFORM_ROOT)
-    compose(["down"])
+    if os.environ.get("LANGFUSE_TEST_DEPLOYMENT") == "1":
+        compose(["down"])
+        return
+    subprocess.run(["node", str(PLATFORM_ROOT.parent.parent.parent / "desktop/docker.mjs"),
+                    "eval-down"], check=True)
 
 
 def restart_runner() -> None:
@@ -151,9 +149,8 @@ def restart_runner() -> None:
     if os.environ.get("LANGFUSE_TEST_DEPLOYMENT") == "1":
         compose(["restart", "experiments"])
         return
-    from .host_runner import start, stop
-    stop(PLATFORM_ROOT)
-    start(PLATFORM_ROOT)
+    subprocess.run(["node", str(PLATFORM_ROOT.parent.parent.parent / "desktop/docker.mjs"),
+                    "eval-restart"], check=True)
 
 
 def validate() -> None:
@@ -283,6 +280,7 @@ def main(argv: list[str] | None = None) -> int:
     start.add_argument("--no-browser", action="store_true")
     commands.add_parser("down", help="Stop services and retain their volumes")
     commands.add_parser("restart-runner", help="Reload experiment Python code and configuration")
+    commands.add_parser("runner-status", help="Read pending queue identities without starting a worker")
     commands.add_parser("validate", help="Validate exported evaluation definitions")
     evaluate = commands.add_parser("run", help="Run an exported definition")
     evaluate.add_argument("--suite", default=AssistantName.DUMMY_ASSISTANT)
@@ -325,14 +323,17 @@ def main(argv: list[str] | None = None) -> int:
             down()
         elif args.command == "restart-runner":
             restart_runner()
+        elif args.command == "runner-status":
+            from .utils import runner_queue_status
+            runtime = Path(os.environ.get("LANGFUSE_RUNTIME_DIR", str(PLATFORM_ROOT / ".runtime")))
+            print(json.dumps(runner_queue_status(runtime)))
         elif args.command == "validate":
             validate()
         elif args.command == 'create-dataset':
             from .dataset_registration import register_dataset
             if not args.register_only:
-                from .jobs import JobStore
-                if JobStore(PLATFORM_ROOT / '.runtime').has_pending():
-                    raise ValueError('Finish queued, running, or awaiting-scores experiments before registering a dataset')
+                from .utils import require_idle_runner
+                require_idle_runner(PLATFORM_ROOT / '.runtime')
             result = register_dataset(
                 name=args.name, dataset_name=args.dataset_name or f'chattft/{args.name}',
                 assistant=args.assistant, description=args.description,

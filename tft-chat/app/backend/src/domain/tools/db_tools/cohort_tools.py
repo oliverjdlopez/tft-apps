@@ -385,7 +385,8 @@ async def compare_cohorts(
             warnings.append(
                 analysis_warning(
                     "empty_cohort",
-                    "One cohort is empty; resolve names and widen the population.",
+                    "One cohort is empty; no comparison estimate is available for "
+                    "the requested filters.",
                 )
             )
         elif min(n_target, n_baseline) < MIN_PUBLIC_BOARDS:

@@ -4,17 +4,24 @@ import path from "node:path";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { launcherPaths } from "../paths.mjs";
-import { launchOptions, ensureLangfuse, wslCommand, serviceEnvironment } from "../utils.mjs";
+import { ensureLangfuse, wslCommand, serviceEnvironment } from "../utils.mjs";
+import { DesktopRuntime } from "../runtime.mjs";
 import { VideoRuntime } from "../video-runtime.mjs";
 
-test("launch from another directory uses the suite's independent interpreters", () => {
+test("launch from another directory resolves suite container workers without interpreters", () => {
   const roots = launcherPaths("/tmp/suite with spaces");
   assert.equal(roots.chat, "/tmp/suite with spaces/tft-chat");
   assert.equal(roots.vod, "/tmp/suite with spaces/vod-review");
-  assert.equal(launchOptions([], roots.suite).python, `${roots.chat}/.venv/bin/python`);
+  const chat = new DesktopRuntime(roots.suite, process.execPath, {});
+  assert.equal(chat.backendPort, 8300);
+  assert.equal(chat.frontendPort, 8300);
+  assert.equal(chat.service, "chat");
   const runtime = new VideoRuntime(roots.suite, process.execPath, {});
   assert.equal(runtime.repo, roots.vod);
-  assert.equal(runtime.python, `${roots.vod}/.venv/bin/python`);
+  assert.equal(runtime.service, "vod");
+  assert.equal(runtime.backendPort, 8000);
+  assert.equal(runtime.frontendPort, 5174);
+  assert.equal(runtime.python, undefined);
   assert.equal(runtime.cwd, roots.vod);
 });
 
@@ -22,7 +29,8 @@ test("WSL paths remain Linux paths when the native shell runs on Windows", () =>
   const suite = "/home/dev/tft-apps";
   const wsl = { root: suite, node: "/usr/bin/node", distro: "Ubuntu", user: "dev", env: { HOME: "/home/dev" } };
   const runtime = new VideoRuntime(suite, wsl.node, {}, wsl);
-  assert.equal(runtime.python, `${suite}/vod-review/.venv/bin/python`);
+  assert.equal(runtime.node, "/usr/bin/node");
+  assert.equal(runtime.cwd, `${suite}/vod-review`);
   assert.equal(runtime.roots.desktop, `${suite}/desktop`);
   assert.equal(wslCommand(wsl).args.at(-1), `${suite}/desktop/wsl-worker.mjs`);
   assert.equal(launcherPaths("C:\\suite", path.win32).chat, "C:\\suite\\tft-chat");
@@ -36,11 +44,11 @@ test("supporting services have suite-specific projects, volumes, and host ports"
   assert.match(evals, /name: tft-apps-evals/);
   assert.match(evals, /127.0.0.1:15510:3000/);
   assert.doesNotMatch(evals, /external: true|name: chattft-evals/);
-  await ensureLangfuse("/tmp/suite", "/python", {
+  assert.equal(await ensureLangfuse("/tmp/suite", {
     request: async (url) => { assert.equal(url, "http://127.0.0.1:15510/api/public/health"); return { ok: true }; },
     runnerReady: async () => true, log() {},
     spawnProcess: () => assert.fail("Ready destination service should be reused"),
-  });
+  }), true);
 });
 
 test("inherited original runtime paths and tracing keys cannot escape the destination", () => {

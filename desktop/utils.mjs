@@ -78,14 +78,14 @@ export function integerOption(value, name, maximum) {
 /**
  * Start an unavailable Langfuse workspace before launching the desktop shell.
  * Args:
- *   root: Checkout root; python: selected checkout interpreter;
+ *   root: Checkout root;
  *   dependencies: Optional HTTP/process/log adapters for isolated launch tests.
  * Returns:
  *   Whether Langfuse was already healthy or its launcher completed successfully.
  */
-export async function ensureLangfuse(root, python, {
+export async function ensureLangfuse(root, {
   request = fetch, spawnProcess = spawn, log = console.log, warn = console.warn,
-  runnerReady = hostExperimentReady,
+  runnerReady = containerExperimentReady,
 } = {}) {
   try {
     const response = await request("http://127.0.0.1:15510/api/public/health", {
@@ -103,7 +103,7 @@ export async function ensureLangfuse(root, python, {
     // Reuse credential creation, migration checks, and seeding from the official
     // repository launcher rather than bringing up an incomplete Compose stack.
     await new Promise((resolve, reject) => {
-      const child = spawnProcess(python, ["-m", "evals", "up", "--no-browser"], {
+      const child = spawnProcess(process.execPath, [path.join(launcherPaths(root).desktop, "docker.mjs"), "langfuse-up"], {
         cwd: launcherPaths(root).chat, shell: false, stdio: "inherit", timeout: 900000,
       });
       child.once("error", reject);
@@ -114,22 +114,23 @@ export async function ensureLangfuse(root, python, {
     });
     return true;
   } catch (error) {
-    warn(`[Langfuse] Could not start: ${error.message}. Ensure Docker is running, then run uv run --extra evals chat-tft-evals up --no-browser and retry the Langfuse tab. Continuing ChatTFT startup.`);
+    warn(`[Langfuse] Could not start: ${error.message}. Ensure Docker is running, then run node desktop/docker.mjs langfuse-up from the suite root and retry the Langfuse tab. Continuing ChatTFT startup.`);
     return false;
   }
 }
 
-/** Check the host evaluation queue over its private socket before desktop reuse. */
-export function hostExperimentReady(root) {
-  return new Promise((resolve) => {
-    const request = http.get({ socketPath: path.join(launcherPaths(root).chat, "evals/langfuse/.runtime/runner.sock"), path: "/health" }, (response) => {
-      response.resume();
-      resolve(response.statusCode === 200);
-    });
-    request.setTimeout(1500, () => request.destroy());
-    request.on("error", () => resolve(false));
-    request.on("close", () => resolve(false));
-  });
+/** Verify a healthy real container runner, excluding the retired proxy service. */
+export async function containerExperimentReady(root) {
+  try {
+    const { run } = await import("./docker.mjs");
+    const result = await run("docker", ["ps", "--filter", "label=com.docker.compose.project=tft-apps-evals",
+      "--filter", "label=com.docker.compose.service=experiments", "--format", "{{.ID}}"], { cwd: root, capture: true, timeout: 3000 });
+    if (!result || result.includes("\n")) return false;
+    const detail = JSON.parse(await run("docker", ["inspect", "--format", "{{json .}}", result], { cwd: root, capture: true, timeout: 3000 }));
+    return detail.State?.Running === true && detail.State?.Health?.Status === "healthy"
+      && detail.Config?.Cmd?.includes("evals.langfuse.server:app")
+      && detail.Config?.Labels?.["com.docker.compose.project.working_dir"] === path.join(launcherPaths(root).chat, "evals/langfuse");
+  } catch { return false; }
 }
 
 // ---------------------------------------------------------------------------
@@ -192,7 +193,7 @@ export function processFailure(handle) {
   const message = handle.records.get("error")?.message;
   if (message) return new Error(message);
   if (handle.result?.error?.code === "ENOENT") {
-    return new Error(`${handle.label} executable was not found. Install the checkout dependencies; use --python for a custom Python environment.`);
+    return new Error(`${handle.label} executable was not found. Run the suite setup and check that Node and Docker are available.`);
   }
   return new Error(`${handle.label} exited unexpectedly. Check the launch terminal for details, then retry.`);
 }

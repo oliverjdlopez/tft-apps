@@ -9,6 +9,7 @@ from langfuse import Langfuse
 from evals.langfuse.content import load_catalog, load_snapshot
 from evals.langfuse.experiments import run_item_task
 from evals.langfuse.utils import configured_workspace, atomic_write, canonical_json
+from domain.assistants.constants import AssistantName
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
         raise RuntimeError('Timeout acceptance requires an isolated mock deployment')
     os.environ['EVAL_OPERATION_TIMEOUT_SECONDS'] = '8'
     root = Path('evals/langfuse/snapshots')
-    entry = next(row for row in load_catalog(root) if row['name'] == 'chat')
+    entry = next(row for row in load_catalog(root) if row['name'] == AssistantName.CHAT)
     bundle = load_snapshot(entry['snapshot'], root)
     client = Langfuse()
     workspace = configured_workspace()
@@ -42,7 +43,7 @@ def main():
             if (completed and any('handoff' in span['name'] for span in spans)
                     and any(span['name'] == 'experiment-item-task' and span['level'] == 'ERROR' for span in spans)):
                 assert any(span.get('totalUsage') == 15 for span in completed), completed
-                assert any(span.get('promptName') == 'chattft/assistants/chat' for span in completed), completed
+                assert any(span.get('promptName') == f"chattft/assistants/{AssistantName.CHAT}" for span in completed), completed
                 atomic_write(Path('/tmp/chattft-timeout-trace.json'), canonical_json(spans))
                 print('Timeout retained completed generation usage, owning prompt, handoff, and root execution error.')
                 return

@@ -12,6 +12,13 @@ Skills contain task procedures. Factual game reference material belongs in the
 context corpus, while durable assistant behavior belongs in assistant
 `system.md` files.
 
+`AssistantAgent` owns the default skill provider; a non-`None`
+`AssistantRunContext.skill_provider` overrides it for one invocation. The root's
+`prepare_resources` method selects skills once, and every agent renders the
+shared selection using its resolved provider and its specification's allowlist.
+Context and skill overrides are independent. Handoffs and repeated model turns
+do not reselect skills.
+
 ## Skill frontmatter
 
 Selection uses only the protocol fields `name` and `description`:
@@ -53,6 +60,23 @@ could omit required constraints or sequencing.
 The `tft-unit-itemization` workflow distinguishes tank, fighter, and ranged
 damage itemization archetypes so holder analysis can account for each role's
 different balance of durability, offense, and resource generation.
+
+Itemization and statistical investigation workflows start with the exact
+question and use only exposed tools that can resolve it. Build-class comparisons
+inspect observed loadouts, retaining hybrid or unclassified builds rather than
+treating one signature item as the entire AP or AD population. Main-tank and
+carry comparisons require a stated proxy based on recorded investment; mere
+unit presence does not establish the role. These proxies describe allocation,
+not positioning or measured combat contribution.
+
+The statistical investigation, interpretation, and unit-itemization workflows
+keep planning and diagnostic checks internal. Follow-up queries are conditional
+on a material unresolved question, and an unavailable exact-build comparison
+ends with a concise limitation rather than a substitute investigation. Responses
+lead with the finding, use compact tables or available evidence displays for
+supporting metrics and board samples, and state only limitations that affect the
+conclusion. No workflow requires calls to every delta tool, a full set of outcome
+metrics, repeated caveats, or an automatic follow-up offer.
 
 Selected skills are injected only into contextualized handoffs. They are not
 added to the top-level chat prompt or exposed through frontend configuration.

@@ -9,6 +9,7 @@ from evals.langfuse.content import load_catalog, load_snapshot, validate_bundle
 from evals.langfuse.contracts import migrate_bundle, legacy_execution_item, validate_natural_item
 from evals.langfuse.grading import reconcile_report
 from evals.langfuse.jobs import JobStore
+from domain.assistants.constants import AssistantName
 
 ROOT = Path(__file__).parents[1] / 'snapshots'
 
@@ -45,7 +46,7 @@ def test_every_assertion_and_threshold_survives_conversion():
 
 def test_fixture_deterministic_parity_and_natural_output():
     """Keep Python regex, tool, and handoff checks equivalent across contracts."""
-    before = next(bundle for bundle in bundles() if bundle['suite']['name'] == 'dummy_assistant')
+    before = next(bundle for bundle in bundles() if bundle['suite']['name'] == AssistantName.DUMMY_ASSISTANT)
     after = migrate_bundle(before)
     result = execute_attempt(after['suite'], after['items'][0], {}, after['prompts'])
     old_scores = score_attempt(before['items'][0], result, before['prompts'])
@@ -57,7 +58,7 @@ def test_fixture_deterministic_parity_and_natural_output():
 
 def test_new_chat_case_requires_no_internal_assertions():
     """Accept replayable conversations and readable user-authored references."""
-    suite = {'name': 'chat', 'family': 'assistant'}
+    suite = {'name': AssistantName.CHAT, 'family': 'assistant'}
     item = {'input': {'messages': [{'role': 'user', 'content': 'Compare these.'},
                                   {'role': 'assistant', 'content': 'Which units?'},
                                   {'role': 'user', 'content': 'Riven and Jax.'}]},
@@ -71,7 +72,7 @@ def test_new_chat_case_requires_no_internal_assertions():
 
 def test_unscored_chat_cases_require_only_native_inputs():
     """Keep prompt-intake execution free of references and grading configuration."""
-    suite = {'name': 'chat_intake', 'assistant': 'chat', 'family': 'assistant',
+    suite = {'name': 'chat_intake', 'assistant': AssistantName.CHAT, 'family': 'assistant',
              'scoring': 'none'}
     item = {'input': {'messages': [{'role': 'user', 'content': 'Explore this question.'}]},
             'expected_output': None, 'metadata': {}}
@@ -257,4 +258,4 @@ def test_assistant_quality_cannot_be_disabled_with_null_metadata():
     item = {'input': {'messages': [{'role': 'user', 'content': 'Hello'}]},
             'expected_output': 'A greeting', 'metadata': {'quality_profile': None}}
     with pytest.raises(ValueError, match='require a native quality profile'):
-        validate_natural_item({'name': 'chat', 'family': 'assistant'}, item)
+        validate_natural_item({'name': AssistantName.CHAT, 'family': 'assistant'}, item)

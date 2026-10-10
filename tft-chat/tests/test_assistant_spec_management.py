@@ -8,6 +8,7 @@ import pytest
 
 from scripts.assistant_specs.main import create_spec, remove_spec
 from evals.langfuse import prompts
+from domain.assistants.constants import AssistantName
 
 
 @pytest.fixture
@@ -218,7 +219,7 @@ def test_natural_fetch_does_not_request_retired_snapshot_prompts(monkeypatch, tm
     from evals.langfuse.content import export_snapshot, fetch_bundle
     from evals.langfuse.tests.test_content import FakeClient
 
-    suite = {"name": "chat", "assistant": "chat", "family": "assistant",
+    suite = {"name": AssistantName.CHAT, "assistant": AssistantName.CHAT, "family": "assistant",
              "execution": "live", "description": "Prompt inventory regression", "scoring": "none"}
     schemas = {"input": {"type": "string"}, "expected_output": None}
     export_snapshot({"schema_version": 3, "suite": suite, "schemas": schemas,
@@ -228,12 +229,12 @@ def test_natural_fetch_does_not_request_retired_snapshot_prompts(monkeypatch, tm
     client = FakeClient()
     client.datasets["end-to-end"] = SimpleNamespace(id="dataset", items=[],
         metadata={"contract_version": 3}, input_schema=schemas["input"], expected_output_schema=None)
-    desired = {name: {"name": f"chattft/assistants/{name}"} for name in ("chat", "new")}
+    desired = {name: {"name": f"chattft/assistants/{name}"} for name in (AssistantName.CHAT, "new")}
     for row in desired.values():
         client.create_prompt(row["name"], "Current baseline")
     monkeypatch.setattr(prompts, "experiment_prompts", lambda suite: desired)
     monkeypatch.setattr(utils, "configured_native_workspace", lambda: SimpleNamespace(
         items=lambda *args, **kwargs: [], close=lambda: None))
     frozen = fetch_bundle(client, "end-to-end", {}, tmp_path)
-    assert set(frozen["prompts"]) == {"chat", "new"}
+    assert set(frozen["prompts"]) == {AssistantName.CHAT, "new"}
     assert frozen["prompts"]["new"]["text"] == "Current baseline"

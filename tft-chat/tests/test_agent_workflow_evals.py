@@ -7,6 +7,7 @@ from evals import database as eval_database
 from core.config import DatabaseTarget
 from db.session import resolve_database_target as resolve_runtime_database_target
 from evals.trace import EvalTrace, Handoff, TraceEvent, ToolCall, TraceCheckResult, evaluate_trace_check, extract_trace, trace_from_dict
+from domain.assistants.constants import AssistantName
 
 def _fake_tool_call(
     name: str,
@@ -65,7 +66,7 @@ def _fake_run_result(
     *,
     tool_names: tuple[str, ...] = (),
     handoffs: tuple[tuple[str, str], ...] = (),
-    final_agent: str = "chat",
+    final_agent: str = AssistantName.CHAT,
     turns: int = 3,
 ) -> SimpleNamespace:
     items = [_fake_tool_call(name) for name in tool_names]
@@ -164,7 +165,7 @@ def test_tool_checks_reject_invalid_argument_expectations() -> None:
                 "type": "tool_called",
                 "value": "rank_units",
                 "arguments": {"cost": 4},
-                "after_handoff": "data_analyst",
+                "after_handoff": AssistantName.DATA_ANALYST,
             },
             EvalTrace(),
         )
@@ -177,7 +178,7 @@ def test_tool_argument_resolved_tracks_candidate_into_later_call() -> None:
             ToolCall(
                 name="resolve_tft_names",
                 arguments=json.dumps({"names": ["jinx"]}),
-                agent="chat",
+                agent=AssistantName.CHAT,
                 output=json.dumps(
                     {
                         "results": [
@@ -192,7 +193,7 @@ def test_tool_argument_resolved_tracks_candidate_into_later_call() -> None:
             ToolCall(
                 name="rank_unit_loadouts",
                 arguments=json.dumps({"unit": "Jinx", "range": [0, 5]}),
-                agent="chat",
+                agent=AssistantName.CHAT,
             ),
         ]
     )
@@ -201,7 +202,7 @@ def test_tool_argument_resolved_tracks_candidate_into_later_call() -> None:
         {
             "type": "tool_argument_resolved",
             "value": "rank_unit_loadouts",
-            "agent": "chat",
+            "agent": AssistantName.CHAT,
             "query": "jinx",
             "argument": "unit",
             "arguments": {"range": [0, 5]},
@@ -271,7 +272,7 @@ def test_tool_argument_resolved_rejects_invalid_configuration() -> None:
                 "value": "rank_units",
                 "query": "rageblade",
                 "argument": "item",
-                "after_handoff": "data_analyst",
+                "after_handoff": AssistantName.DATA_ANALYST,
             },
             EvalTrace(),
         )
@@ -281,21 +282,21 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
     """Reject a tool call that is owned by the wrong agent or occurs too early."""
     trace = EvalTrace(
         tool_calls=[
-            ToolCall(name="rank_units", agent="chat"),
-            ToolCall(name="rank_units", agent="data_analyst"),
+            ToolCall(name="rank_units", agent=AssistantName.CHAT),
+            ToolCall(name="rank_units", agent=AssistantName.DATA_ANALYST),
         ],
-        handoffs=[Handoff(source="chat", target="data_analyst")],
+        handoffs=[Handoff(source=AssistantName.CHAT, target=AssistantName.DATA_ANALYST)],
         events=[
-            TraceEvent(type="tool_call", agent="chat", tool="rank_units"),
+            TraceEvent(type="tool_call", agent=AssistantName.CHAT, tool="rank_units"),
             TraceEvent(
                 type="handoff",
-                agent="chat",
-                source="chat",
-                target="data_analyst",
+                agent=AssistantName.CHAT,
+                source=AssistantName.CHAT,
+                target=AssistantName.DATA_ANALYST,
             ),
             TraceEvent(
                 type="tool_call",
-                agent="data_analyst",
+                agent=AssistantName.DATA_ANALYST,
                 tool="rank_units",
             ),
         ],
@@ -305,8 +306,8 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
         {
             "type": "tool_called",
             "value": "rank_units",
-            "agent": "data_analyst",
-            "after_handoff": "data_analyst",
+            "agent": AssistantName.DATA_ANALYST,
+            "after_handoff": AssistantName.DATA_ANALYST,
         },
         trace,
     ).passed
@@ -314,8 +315,8 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
         {
             "type": "tool_called",
             "value": "rank_units",
-            "agent": "chat",
-            "after_handoff": "data_analyst",
+            "agent": AssistantName.CHAT,
+            "after_handoff": AssistantName.DATA_ANALYST,
         },
         trace,
     ).passed
@@ -324,16 +325,16 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
 def test_tool_check_does_not_infer_order_from_aggregate_fields() -> None:
     """Require ordered events when a check claims a post-handoff tool call."""
     trace = EvalTrace(
-        tool_calls=[ToolCall(name="rank_units", agent="data_analyst")],
-        handoffs=[Handoff(source="chat", target="data_analyst")],
+        tool_calls=[ToolCall(name="rank_units", agent=AssistantName.DATA_ANALYST)],
+        handoffs=[Handoff(source=AssistantName.CHAT, target=AssistantName.DATA_ANALYST)],
         # This intentionally places the tool before the handoff.
         events=[
-            TraceEvent(type="tool_call", agent="data_analyst", tool="rank_units"),
+            TraceEvent(type="tool_call", agent=AssistantName.DATA_ANALYST, tool="rank_units"),
             TraceEvent(
                 type="handoff",
-                agent="chat",
-                source="chat",
-                target="data_analyst",
+                agent=AssistantName.CHAT,
+                source=AssistantName.CHAT,
+                target=AssistantName.DATA_ANALYST,
             ),
         ],
     )
@@ -342,8 +343,8 @@ def test_tool_check_does_not_infer_order_from_aggregate_fields() -> None:
         {
             "type": "tool_called",
             "value": "rank_units",
-            "agent": "data_analyst",
-            "after_handoff": "data_analyst",
+            "agent": AssistantName.DATA_ANALYST,
+            "after_handoff": AssistantName.DATA_ANALYST,
         },
         trace,
     )
@@ -355,21 +356,21 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
     """Reject a tool call that is owned by the wrong agent or occurs too early."""
     trace = EvalTrace(
         tool_calls=[
-            ToolCall(name="rank_units", agent="chat"),
-            ToolCall(name="rank_units", agent="data_analyst"),
+            ToolCall(name="rank_units", agent=AssistantName.CHAT),
+            ToolCall(name="rank_units", agent=AssistantName.DATA_ANALYST),
         ],
-        handoffs=[Handoff(source="chat", target="data_analyst")],
+        handoffs=[Handoff(source=AssistantName.CHAT, target=AssistantName.DATA_ANALYST)],
         events=[
-            TraceEvent(type="tool_call", agent="chat", tool="rank_units"),
+            TraceEvent(type="tool_call", agent=AssistantName.CHAT, tool="rank_units"),
             TraceEvent(
                 type="handoff",
-                agent="chat",
-                source="chat",
-                target="data_analyst",
+                agent=AssistantName.CHAT,
+                source=AssistantName.CHAT,
+                target=AssistantName.DATA_ANALYST,
             ),
             TraceEvent(
                 type="tool_call",
-                agent="data_analyst",
+                agent=AssistantName.DATA_ANALYST,
                 tool="rank_units",
             ),
         ],
@@ -379,8 +380,8 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
         {
             "type": "tool_called",
             "value": "rank_units",
-            "agent": "data_analyst",
-            "after_handoff": "data_analyst",
+            "agent": AssistantName.DATA_ANALYST,
+            "after_handoff": AssistantName.DATA_ANALYST,
         },
         trace,
     ).passed
@@ -388,8 +389,8 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
         {
             "type": "tool_called",
             "value": "rank_units",
-            "agent": "chat",
-            "after_handoff": "data_analyst",
+            "agent": AssistantName.CHAT,
+            "after_handoff": AssistantName.DATA_ANALYST,
         },
         trace,
     ).passed
@@ -398,16 +399,16 @@ def test_tool_checks_can_require_agent_ownership_after_handoff() -> None:
 def test_tool_check_does_not_infer_order_from_aggregate_fields() -> None:
     """Require ordered events when a check claims a post-handoff tool call."""
     trace = EvalTrace(
-        tool_calls=[ToolCall(name="rank_units", agent="data_analyst")],
-        handoffs=[Handoff(source="chat", target="data_analyst")],
+        tool_calls=[ToolCall(name="rank_units", agent=AssistantName.DATA_ANALYST)],
+        handoffs=[Handoff(source=AssistantName.CHAT, target=AssistantName.DATA_ANALYST)],
         # This intentionally places the tool before the handoff.
         events=[
-            TraceEvent(type="tool_call", agent="data_analyst", tool="rank_units"),
+            TraceEvent(type="tool_call", agent=AssistantName.DATA_ANALYST, tool="rank_units"),
             TraceEvent(
                 type="handoff",
-                agent="chat",
-                source="chat",
-                target="data_analyst",
+                agent=AssistantName.CHAT,
+                source=AssistantName.CHAT,
+                target=AssistantName.DATA_ANALYST,
             ),
         ],
     )
@@ -416,8 +417,8 @@ def test_tool_check_does_not_infer_order_from_aggregate_fields() -> None:
         {
             "type": "tool_called",
             "value": "rank_units",
-            "agent": "data_analyst",
-            "after_handoff": "data_analyst",
+            "agent": AssistantName.DATA_ANALYST,
+            "after_handoff": AssistantName.DATA_ANALYST,
         },
         trace,
     )
@@ -429,8 +430,8 @@ def test_extract_trace_from_sdk_like_run_result() -> None:
     run_result = _fake_run_result(
         "final",
         tool_names=("resolve_tft_names", "rank_units", "rank_units"),
-        handoffs=(("chat", "data_analyst"),),
-        final_agent="data_analyst",
+        handoffs=((AssistantName.CHAT, AssistantName.DATA_ANALYST),),
+        final_agent=AssistantName.DATA_ANALYST,
         turns=6,
     )
 
@@ -438,8 +439,8 @@ def test_extract_trace_from_sdk_like_run_result() -> None:
 
     assert trace.tool_names == ["resolve_tft_names", "rank_units", "rank_units"]
     assert trace.tool_call_count("rank_units") == 2
-    assert trace.handoff_targets == ["data_analyst"]
-    assert trace.final_agent == "data_analyst"
+    assert trace.handoff_targets == [AssistantName.DATA_ANALYST]
+    assert trace.final_agent == AssistantName.DATA_ANALYST
     assert trace.turns == 6
     assert "rank_units x2" in trace.summary()
 
@@ -451,7 +452,7 @@ def test_extract_trace_pairs_tool_outputs_by_call_id() -> None:
             _fake_tool_call(
                 "resolve_tft_names",
                 '{"names":["jinx"]}',
-                agent="chat",
+                agent=AssistantName.CHAT,
                 call_id="call-resolution",
             ),
             _fake_tool_output(
@@ -472,8 +473,8 @@ def test_extract_trace_from_installed_agents_sdk_items() -> None:
     from agents.items import HandoffOutputItem, ToolCallItem
     from openai.types.responses import ResponseFunctionToolCall
 
-    source = Agent(name="chat", instructions="Route requests.")
-    target = Agent(name="data_analyst", instructions="Analyze data.")
+    source = Agent(name=AssistantName.CHAT, instructions="Route requests.")
+    target = Agent(name=AssistantName.DATA_ANALYST, instructions="Analyze data.")
     tool_call = ToolCallItem(
         agent=target,
         raw_item=ResponseFunctionToolCall(
@@ -501,24 +502,25 @@ def test_extract_trace_from_installed_agents_sdk_items() -> None:
         ToolCall(
             name="rank_units",
             arguments='{"range":[0,1]}',
-            agent="data_analyst",
+            agent=AssistantName.DATA_ANALYST,
             call_id="call_1",
         )
     ]
-    assert trace.handoffs == [Handoff(source="chat", target="data_analyst")]
-    assert trace.final_agent == "data_analyst"
+    assert trace.handoffs == [Handoff(source=AssistantName.CHAT, target=AssistantName.DATA_ANALYST)]
+    assert trace.final_agent == AssistantName.DATA_ANALYST
     assert trace.turns == 1
     assert trace.events == [
-        TraceEvent(type="tool_call", agent="data_analyst", tool="rank_units"),
+        TraceEvent(type="tool_call", agent=AssistantName.DATA_ANALYST, tool="rank_units"),
         TraceEvent(
             type="handoff",
-            agent="chat",
-            source="chat",
-            target="data_analyst",
+            agent=AssistantName.CHAT,
+            source=AssistantName.CHAT,
+            target=AssistantName.DATA_ANALYST,
         ),
     ]
     assert (
-        "ordered events: data_analyst called rank_units; chat -> data_analyst"
+        f"ordered events: {AssistantName.DATA_ANALYST} called rank_units; "
+        f"{AssistantName.CHAT} -> {AssistantName.DATA_ANALYST}"
         in trace.summary()
     )
 
@@ -535,22 +537,22 @@ def test_trace_from_dict_accepts_string_and_object_forms() -> None:
     trace = trace_from_dict(
         {
             "tool_calls": ["rank_units", {"name": "compare_cohorts", "arguments": {"patch": "16.12"}}],
-            "handoffs": ["data_analyst", {"source": "chat", "target": "meta_expert"}],
-            "final_agent": "meta_expert",
+            "handoffs": [AssistantName.DATA_ANALYST, {"source": AssistantName.CHAT, "target": AssistantName.META_EXPERT}],
+            "final_agent": AssistantName.META_EXPERT,
             "turns": 2,
         }
     )
 
     assert trace.tool_names == ["rank_units", "compare_cohorts"]
-    assert trace.handoff_targets == ["data_analyst", "meta_expert"]
-    assert trace.final_agent == "meta_expert"
+    assert trace.handoff_targets == [AssistantName.DATA_ANALYST, AssistantName.META_EXPERT]
+    assert trace.final_agent == AssistantName.META_EXPERT
 
 
 def test_trace_checks_pass_and_fail_on_behavior() -> None:
     trace = EvalTrace(
         tool_calls=[ToolCall(name="rank_units"), ToolCall(name="compare_cohorts")],
-        handoffs=[Handoff(source="chat", target="data_analyst")],
-        final_agent="data_analyst",
+        handoffs=[Handoff(source=AssistantName.CHAT, target=AssistantName.DATA_ANALYST)],
+        final_agent=AssistantName.DATA_ANALYST,
     )
 
     assert evaluate_trace_check({"type": "tool_called", "value": "rank_units"}, trace).passed
@@ -568,10 +570,10 @@ def test_trace_checks_pass_and_fail_on_behavior() -> None:
     assert not evaluate_trace_check(
         {"type": "tool_not_called", "value": "rank_units"}, trace
     ).passed
-    assert evaluate_trace_check({"type": "handoff_to", "value": "data_analyst"}, trace).passed
+    assert evaluate_trace_check({"type": "handoff_to", "value": AssistantName.DATA_ANALYST}, trace).passed
     assert not evaluate_trace_check({"type": "no_handoff"}, trace).passed
-    assert evaluate_trace_check({"type": "final_agent", "value": "data_analyst"}, trace).passed
-    assert not evaluate_trace_check({"type": "final_agent", "value": "chat"}, trace).passed
+    assert evaluate_trace_check({"type": "final_agent", "value": AssistantName.DATA_ANALYST}, trace).passed
+    assert not evaluate_trace_check({"type": "final_agent", "value": AssistantName.CHAT}, trace).passed
 
 
 def test_trace_checks_fail_gracefully_without_a_trace() -> None:

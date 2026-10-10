@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
+import {AssistantName} from '../../../app/frontend/src/assistant-names.js';
 
 const {chromium} = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || '/tmp/chattft-browser/node_modules/playwright/index.mjs').href);
 const root = path.resolve('evals/langfuse');
@@ -49,13 +50,13 @@ async function editCase(input) {
 
 /** Create a real version in the native prompt editor. */
 async function editPrompt(text) {
-  await page.goto(`${base}/project/${project}/prompts/${encodeURIComponent('chattft/assistants/chat')}`);
+  await page.goto(`${base}/project/${project}/prompts/${encodeURIComponent(`chattft/assistants/${AssistantName.CHAT}`)}`);
   await page.getByRole('button',{name:'New version',exact:true}).click();
   await page.locator('.cm-content').first().waitFor();
   await replaceEditor(page.locator('.cm-content').first(),text);
   await page.getByRole('button',{name:'Save new prompt version',exact:true}).click();
   await page.getByRole('button',{name:'New version',exact:true}).waitFor();
-  const saved=await api(`v2/prompts/${encodeURIComponent('chattft/assistants/chat')}`,{label:'latest'});
+  const saved=await api(`v2/prompts/${encodeURIComponent(`chattft/assistants/${AssistantName.CHAT}`)}`,{label:'latest'});
   assert.equal(saved.prompt,text);
   return saved.version;
 }
@@ -101,8 +102,8 @@ try {
   await page.waitForURL(url=>!url.pathname.includes('auth'));
   dataset=await api(`v2/datasets/${encodeURIComponent('internal/fixtures/deterministic-trace')}`);
   originalItem=structuredClone((await api('dataset-items',{datasetName:dataset.name})).data[0]);
-  originalPrompt=await api(`v2/prompts/${encodeURIComponent('chattft/assistants/chat')}`,{label:'baseline'});
-  originalLatestPrompt=await api(`v2/prompts/${encodeURIComponent('chattft/assistants/chat')}`,{label:'latest'});
+  originalPrompt=await api(`v2/prompts/${encodeURIComponent(`chattft/assistants/${AssistantName.CHAT}`)}`,{label:'baseline'});
+  originalLatestPrompt=await api(`v2/prompts/${encodeURIComponent(`chattft/assistants/${AssistantName.CHAT}`)}`,{label:'latest'});
   const input={...originalItem.input,text:`${originalItem.input.text} [${stamp}]`};
   changedCase=true;
   await editCase(input);
@@ -111,10 +112,10 @@ try {
   console.log('Native dataset and prompt edits saved.');
   await trigger({action:'run',variants:[{name:`${stamp}-baseline`},{name:`${stamp}-candidate`}],repetitions:1});
   const catalog=JSON.parse(fs.readFileSync(path.join(snapshots,'catalog.json'),'utf8'));
-  const snapshot=catalog.suites.find(entry=>entry.name==='dummy_assistant').snapshot;
+  const snapshot=catalog.suites.find(entry=>entry.name===AssistantName.DUMMY_ASSISTANT).snapshot;
   const frozen=JSON.parse(fs.readFileSync(path.join(snapshots,`${snapshot}.json`),'utf8'));
   assert.equal(frozen.items[0].input.text,input.text);
-  assert.equal(frozen.prompts.chat.version,originalPrompt.version);
+  assert.equal(frozen.prompts[AssistantName.CHAT].version,originalPrompt.version);
   assert.ok(promptVersion > originalPrompt.version, "Candidate versions leave the baseline label stable");
   await persistedRuns(2);
   console.log('Two UI variants persisted all fixture scores and frozen edits.');
@@ -144,7 +145,7 @@ try {
     assert.ok(restored.ok(),'Restore fixture content');
   }
   if(changedPrompt) {
-    const restored=await page.request.post(`${base}/api/public/v2/prompts`,{headers:publicHeaders,data:{name:'chattft/assistants/chat',type:'text',prompt:originalLatestPrompt.prompt,config:originalLatestPrompt.config,tags:originalLatestPrompt.tags}});
+    const restored=await page.request.post(`${base}/api/public/v2/prompts`,{headers:publicHeaders,data:{name:`chattft/assistants/${AssistantName.CHAT}`,type:'text',prompt:originalLatestPrompt.prompt,config:originalLatestPrompt.config,tags:originalLatestPrompt.tags}});
     assert.ok(restored.ok(),'Restore grading prompt');
   }
   if(dataset && changedCase) await trigger({action:'export'});

@@ -9,11 +9,12 @@ from evals.langfuse.models import PlaygroundRequest
 from evals.langfuse.playground import configure_connection
 from evals.langfuse.server import create_app
 from evals.langfuse.utils import playground_payload
+from domain.assistants.constants import AssistantName
 
 
 def request_body(**overrides):
     """Build a representative request from the native prompt Playground."""
-    return {"model": "chattft/unit_expert", "messages": [
+    return {"model": f"chattft/{AssistantName.UNIT_EXPERT}", "messages": [
         {"role": "system", "content": "Draft instructions"},
         {"role": "user", "content": "Compare two units"}], **overrides}
 
@@ -24,7 +25,7 @@ def test_translation_keeps_draft_out_of_conversation():
     body['messages'].insert(1, {'role': 'assistant', 'content': 'Earlier answer'})
     payload = playground_payload(PlaygroundRequest(**body))
     assert payload['config']['prompt_candidates'] == {
-        'unit_expert': {'text': 'Draft instructions', 'native_reference': None}}
+        AssistantName.UNIT_EXPERT: {'text': 'Draft instructions', 'native_reference': None}}
     assert payload['input']['messages'] == body['messages'][1:]
     assert payload['config']['model_settings'] == {'temperature': 0.2, 'max_tokens': 800}
     assert 'database' not in payload['config']
@@ -89,7 +90,7 @@ def test_connection_is_separate_from_judge():
     assert body['provider'] == 'ChatTFT backend'
     assert body['baseURL'] == 'http://experiments/v1'
     assert body['withDefaultModels'] is False
-    assert 'chattft/unit_expert' in body['customModels']
+    assert f"chattft/{AssistantName.UNIT_EXPERT}" in body['customModels']
     assert body['customModels'][0] == 'chattft/chat'
     assert 'chattft/AGENTS' not in body['customModels']
 

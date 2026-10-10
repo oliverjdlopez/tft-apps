@@ -8,15 +8,16 @@ from domain.tasks import transcript
 from domain.assistants import render_assistant_input
 from domain.assistants import assistant_spec
 from services import task_service
+from domain.assistants.constants import AssistantName
 
 
 def test_transcription_pipeline_runs_the_three_assistants_in_order(monkeypatch) -> None:
     original = '{"id": 1, "text": "um hello"}\n{"id": 2, "text": "world"}'
     calls: list[tuple[str, str]] = []
     outputs = {
-        "clean_transcript": '{"edits": [{"id": 1, "text": "hello"}]}',
-        "compact_transcript": "compact transcript",
-        "analyze_transcript": "analysis",
+        AssistantName.CLEAN_TRANSCRIPT: '{"edits": [{"id": 1, "text": "hello"}]}',
+        AssistantName.COMPACT_TRANSCRIPT: "compact transcript",
+        AssistantName.ANALYZE_TRANSCRIPT: "analysis",
     }
 
     monkeypatch.setattr(
@@ -38,17 +39,17 @@ def test_transcription_pipeline_runs_the_three_assistants_in_order(monkeypatch) 
 
     assert transcript.run_transcription_pipeline(original) == "analysis"
     assert calls == [
-        ("clean_transcript", render_assistant_input("clean_transcript", original)),
+        (AssistantName.CLEAN_TRANSCRIPT, render_assistant_input(AssistantName.CLEAN_TRANSCRIPT, original)),
         (
-            "compact_transcript",
+            AssistantName.COMPACT_TRANSCRIPT,
             render_assistant_input(
-                "compact_transcript",
+                AssistantName.COMPACT_TRANSCRIPT,
                 '{"id": 1, "text": "hello"}\n{"id": 2, "text": "world"}',
             ),
         ),
         (
-            "analyze_transcript",
-            render_assistant_input("analyze_transcript", "compact transcript"),
+            AssistantName.ANALYZE_TRANSCRIPT,
+            render_assistant_input(AssistantName.ANALYZE_TRANSCRIPT, "compact transcript"),
         ),
     ]
 

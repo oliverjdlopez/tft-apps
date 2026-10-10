@@ -1,0 +1,387 @@
+{
+  "config": {
+    "action": "run",
+    "cases": [],
+    "concurrency": 4,
+    "data_snapshot_label": null,
+    "dataset_version": null,
+    "repetitions": 1,
+    "selection_live": false,
+    "snapshot": null,
+    "variants": [
+      {
+        "model": null,
+        "name": "baseline",
+        "prompts": {}
+      }
+    ]
+  },
+  "dataset_name": "chattft/unit-expert-review",
+  "items": [
+    {
+      "expected_output": {
+        "reference": "Assess the response together with its execution evidence against the original short player question. No numerical outcome or winner is fixed. Requirements about investigation describe analytical validity, not mandatory unstated filters or an answer outline. A grounded explanation of unavailable evidence after relevant retrieval can satisfy an unsupported comparison. Review visual evidence where emitted, without requiring a display when there is no useful comparison.",
+        "requirements": [
+          "Lead with the answer to the original player question or the specific unresolved comparison. Assume an intermediate player; give the reason and the evidence needed to judge that answer without a running account of the investigation. An unresolved answer must follow relevant evidence retrieval rather than an assumed lack of data.",
+          "Treat the original short question as authoritative. Preserve the holders, stars, item multiplicity and contexts it actually specifies. Do not silently require unstated stars, exact triplets, fixed rosters, ordinary-only items or trait thresholds. Choose additional analytical strata only when justified by the question and available data, disclose material assumptions, and explain coverage limits they introduce.",
+          "Use returned scoped Set 18 standard-ranked evidence. Final-board associations cannot establish causal effects, item acquisition, positioning or actual combat roles. Missing or suppressed support is unknown, not zero or evidence of illegality. Do not manufacture an unsupported comparison by imposing unnecessary restrictions.",
+          "Show only evidence that supports or materially changes the conclusion. For a useful numeric comparison, prefer a compact grounded visual or table with clear populations and sample sizes; retain material scope and uncertainty. Avoid redundant interpretation columns, repeating every displayed number in prose, and boilerplate caveats. A concise evidence-backed limitation may need no visual.",
+          "Once the question is answered, stop. A missing requested sample can justify a short limitation; do not replace the requested comparison with a lengthy analysis of different stars, holders, builds or questions. Any broader context must be clearly labeled and directly useful. Do not require a follow-up offer, fixed answer length, fixed tool sequence or a predetermined winner.",
+          "Keep the primary comparison two-star Master Yi versus one-star Draven, each holding the named trio: Flickerblade, radiant Quicksilver and Edge of Night. Resolve ordinary versus radiant variants without substituting a different item. Any different star or item combination is broader context rather than the requested head-to-head.",
+          "Retrieve evidence relevant to the requested holder/star/trio groups and establish whether each is reportable before interpreting performance. If the requested sample is missing or suppressed, say that the head-to-head cannot be established and why. Partial-item or different-star outcomes cannot establish the requested winner.",
+          "Where supported, inspect the rest-of-board differences that could materially change the comparison. Do not count a board containing both candidates as an independent observation in each exclusive arm or imply that all other board strength was matched. Report relevant counts, outcomes and uncertainty selectively."
+        ]
+      },
+      "id": "unit_expert_review/UN4-1-C02",
+      "input": "With Flickerblade, radiant Quicksilver and Edge of Night, is two-star Master Yi or one-star Draven the better carry? How much does the rest of the board change that?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-1-C02",
+        "case_id": "unit_expert_review/UN4-1-C02",
+        "grading_scope": "review_requirements_against_response_and_execution_evidence",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-1-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "review_focus": "Exact sample unavailable; answer first",
+        "review_source": {
+          "general_comment_pages": [
+            1
+          ],
+          "input_case_id": "unit-expert/UN4-1-C02",
+          "input_snapshot": "evals/langfuse/snapshots/8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b.json",
+          "page_numbering": "one-based PDF pages",
+          "pages": [
+            11,
+            12
+          ],
+          "pdf": "artifacts/2026-10-04-unit-expert-prompts-outputs-and-tool-arguments.md.pdf",
+          "run_date": "2026-10-04",
+          "run_id": "adea170a7b476b85"
+        },
+        "set_number": 18,
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-1/cases.md",
+        "source_case_id": "UN4-1-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "b9f9c4e8576f5ede6aca421b5193fdf67f458d1e4b74216b00e2bff19fc27551",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-1-C02",
+        "suite": "unit_expert_review"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "reference": "Assess the response together with its execution evidence against the original short player question. No numerical outcome or winner is fixed. Requirements about investigation describe analytical validity, not mandatory unstated filters or an answer outline. A grounded explanation of unavailable evidence after relevant retrieval can satisfy an unsupported comparison. Review visual evidence where emitted, without requiring a display when there is no useful comparison.",
+        "requirements": [
+          "Lead with the answer to the original player question or the specific unresolved comparison. Assume an intermediate player; give the reason and the evidence needed to judge that answer without a running account of the investigation. An unresolved answer must follow relevant evidence retrieval rather than an assumed lack of data.",
+          "Treat the original short question as authoritative. Preserve the holders, stars, item multiplicity and contexts it actually specifies. Do not silently require unstated stars, exact triplets, fixed rosters, ordinary-only items or trait thresholds. Choose additional analytical strata only when justified by the question and available data, disclose material assumptions, and explain coverage limits they introduce.",
+          "Use returned scoped Set 18 standard-ranked evidence. Final-board associations cannot establish causal effects, item acquisition, positioning or actual combat roles. Missing or suppressed support is unknown, not zero or evidence of illegality. Do not manufacture an unsupported comparison by imposing unnecessary restrictions.",
+          "Show only evidence that supports or materially changes the conclusion. For a useful numeric comparison, prefer a compact grounded visual or table with clear populations and sample sizes; retain material scope and uncertainty. Avoid redundant interpretation columns, repeating every displayed number in prose, and boilerplate caveats. A concise evidence-backed limitation may need no visual.",
+          "Once the question is answered, stop. A missing requested sample can justify a short limitation; do not replace the requested comparison with a lengthy analysis of different stars, holders, builds or questions. Any broader context must be clearly labeled and directly useful. Do not require a follow-up offer, fixed answer length, fixed tool sequence or a predetermined winner.",
+          "Compare AP-oriented and AD-oriented builds on two-star Nidalee using a justified item classification grounded in the active catalogue and observed builds. Keep mixed or ambiguous builds identifiable; item orientation does not verify Nidalee form. The question does not require exactly three ordinary items or any named trait stratum.",
+          "A single AP or AD marker does not represent all builds of that type; absence of an AP marker does not establish an AD build. Check how much of the relevant population the classification covers, including unclassified or overlapping builds when available, and limit conclusions to the builds actually compared.",
+          "Investigate whether relevant surrounding-board differences change the observed AP-versus-AD comparison, choosing supported contexts from the data. Explain material shifts and remaining comparability limits without claiming a causal build effect. A grounded unresolved answer is acceptable if relevant retrieval cannot support the requested comparison."
+        ]
+      },
+      "id": "unit_expert_review/UN4-2-C01",
+      "input": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-2-C01",
+        "case_id": "unit_expert_review/UN4-2-C01",
+        "grading_scope": "review_requirements_against_response_and_execution_evidence",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-2-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "review_focus": "AP and AD marker coverage",
+        "review_source": {
+          "general_comment_pages": [
+            1
+          ],
+          "input_case_id": "unit-expert/UN4-2-C01",
+          "input_snapshot": "evals/langfuse/snapshots/8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b.json",
+          "page_numbering": "one-based PDF pages",
+          "pages": [
+            30,
+            31
+          ],
+          "pdf": "artifacts/2026-10-04-unit-expert-prompts-outputs-and-tool-arguments.md.pdf",
+          "run_date": "2026-10-04",
+          "run_id": "adea170a7b476b85"
+        },
+        "set_number": 18,
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_case_id": "UN4-2-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "3ed1035984831ae54eaed1373270f7c1f94fccc0e096b384c3615af708241307",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-2-C01",
+        "suite": "unit_expert_review"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "reference": "Assess the response together with its execution evidence against the original short player question. No numerical outcome or winner is fixed. Requirements about investigation describe analytical validity, not mandatory unstated filters or an answer outline. A grounded explanation of unavailable evidence after relevant retrieval can satisfy an unsupported comparison. Review visual evidence where emitted, without requiring a display when there is no useful comparison.",
+        "requirements": [
+          "Lead with the answer to the original player question or the specific unresolved comparison. Assume an intermediate player; give the reason and the evidence needed to judge that answer without a running account of the investigation. An unresolved answer must follow relevant evidence retrieval rather than an assumed lack of data.",
+          "Treat the original short question as authoritative. Preserve the holders, stars, item multiplicity and contexts it actually specifies. Do not silently require unstated stars, exact triplets, fixed rosters, ordinary-only items or trait thresholds. Choose additional analytical strata only when justified by the question and available data, disclose material assumptions, and explain coverage limits they introduce.",
+          "Use returned scoped Set 18 standard-ranked evidence. Final-board associations cannot establish causal effects, item acquisition, positioning or actual combat roles. Missing or suppressed support is unknown, not zero or evidence of illegality. Do not manufacture an unsupported comparison by imposing unnecessary restrictions.",
+          "Show only evidence that supports or materially changes the conclusion. For a useful numeric comparison, prefer a compact grounded visual or table with clear populations and sample sizes; retain material scope and uncertainty. Avoid redundant interpretation columns, repeating every displayed number in prose, and boilerplate caveats. A concise evidence-backed limitation may need no visual.",
+          "Once the question is answered, stop. A missing requested sample can justify a short limitation; do not replace the requested comparison with a lengthy analysis of different stars, holders, builds or questions. Any broader context must be clearly labeled and directly useful. Do not require a follow-up offer, fixed answer length, fixed tool sequence or a predetermined winner.",
+          "Preserve the concise, grounded style praised in the annotated example while independently checking the claim. Compare Nidalee holding a Rapidfire Emblem with ordinary AP Nidalee builds using a justified AP-build definition; keep mixed or ambiguous builds identifiable. Do not require a particular star, identical AP pair, exact item count or additional emblem exclusions that the player did not specify.",
+          "Use retrieved evidence relevant to AP builds and the emblem on Nidalee. Broad emblem or Nidalee averages alone cannot establish AP-build superiority, and item labels do not verify form. Explain classification coverage or sample limitations when they materially constrain the conclusion.",
+          "Inspect observable differences in surrounding board strength, such as level, upgrades or other item investment, where available and useful. Explain only differences that affect the answer; they cannot prove equal board strength or a causal emblem effect. Do not convert the historical answer or numbers into gold."
+        ]
+      },
+      "id": "unit_expert_review/UN4-2-C03",
+      "input": "Does AP Nidalee with a Rapidfire emblem actually outperform ordinary AP builds, or is it mainly showing up on much stronger endgame boards?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-2-C03",
+        "case_id": "unit_expert_review/UN4-2-C03",
+        "grading_scope": "review_requirements_against_response_and_execution_evidence",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-2-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "review_focus": "Positive example: concise evidence and grounded conclusion",
+        "review_source": {
+          "general_comment_pages": [
+            1
+          ],
+          "input_case_id": "unit-expert/UN4-2-C03",
+          "input_snapshot": "evals/langfuse/snapshots/8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b.json",
+          "page_numbering": "one-based PDF pages",
+          "pages": [
+            54,
+            55
+          ],
+          "pdf": "artifacts/2026-10-04-unit-expert-prompts-outputs-and-tool-arguments.md.pdf",
+          "run_date": "2026-10-04",
+          "run_id": "adea170a7b476b85"
+        },
+        "set_number": 18,
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_case_id": "UN4-2-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "891a85a1f2483cd904a3c20a81dd10c391a7e3eda438a8e778def2014dbe757c",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-2-C03",
+        "suite": "unit_expert_review"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "reference": "Assess the response together with its execution evidence against the original short player question. No numerical outcome or winner is fixed. Requirements about investigation describe analytical validity, not mandatory unstated filters or an answer outline. A grounded explanation of unavailable evidence after relevant retrieval can satisfy an unsupported comparison. Review visual evidence where emitted, without requiring a display when there is no useful comparison.",
+        "requirements": [
+          "Lead with the answer to the original player question or the specific unresolved comparison. Assume an intermediate player; give the reason and the evidence needed to judge that answer without a running account of the investigation. An unresolved answer must follow relevant evidence retrieval rather than an assumed lack of data.",
+          "Treat the original short question as authoritative. Preserve the holders, stars, item multiplicity and contexts it actually specifies. Do not silently require unstated stars, exact triplets, fixed rosters, ordinary-only items or trait thresholds. Choose additional analytical strata only when justified by the question and available data, disclose material assumptions, and explain coverage limits they introduce.",
+          "Use returned scoped Set 18 standard-ranked evidence. Final-board associations cannot establish causal effects, item acquisition, positioning or actual combat roles. Missing or suppressed support is unknown, not zero or evidence of illegality. Do not manufacture an unsupported comparison by imposing unnecessary restrictions.",
+          "Show only evidence that supports or materially changes the conclusion. For a useful numeric comparison, prefer a compact grounded visual or table with clear populations and sample sizes; retain material scope and uncertainty. Avoid redundant interpretation columns, repeating every displayed number in prose, and boilerplate caveats. A concise evidence-backed limitation may need no visual.",
+          "Once the question is answered, stop. A missing requested sample can justify a short limitation; do not replace the requested comparison with a lengthy analysis of different stars, holders, builds or questions. Any broader context must be clearly labeled and directly useful. Do not require a follow-up offer, fixed answer length, fixed tool sequence or a predetermined winner.",
+          "Investigate two-star Ahri holding double Blue Buff against two-star Ahri holding a single mana item and two damage items. Verify that double Blue Buff represents two copies on the same Ahri. Identify the observed comparison builds without mandating an identical damage item, ordinary-only items or named trait thresholds.",
+          "Retrieve relevant build evidence and establish whether the double-Blue-Buff sample is reportable. An absent or suppressed row establishes neither illegality nor weak performance. The simulator is motivation, not numerical gold; separate any mechanics or legality claim from what the observed data establishes without requiring unrelated legality research.",
+          "If double Blue Buff lacks a reportable sample after relevant retrieval, lead with that limitation and end after the evidence needed to substantiate it. Do not expand into a single-Blue-Buff-versus-Shojin study as the answer. If the requested comparison is supported, inspect surrounding-board contexts that could materially change it."
+        ]
+      },
+      "id": "unit_expert_review/UN4-2-C04",
+      "input": "A simulator suggested double Blue Buff for Ahri. Do two-star Ahri endgame boards with that build actually hold up against a single mana item and two damage items, and does the surrounding board change the comparison?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-2-C04",
+        "case_id": "unit_expert_review/UN4-2-C04",
+        "grading_scope": "review_requirements_against_response_and_execution_evidence",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "review_focus": "Double Blue Buff: stop at the supported answer",
+        "review_source": {
+          "general_comment_pages": [
+            1
+          ],
+          "input_case_id": "unit-expert/UN4-2-C04",
+          "input_snapshot": "evals/langfuse/snapshots/8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b.json",
+          "page_numbering": "one-based PDF pages",
+          "pages": [
+            69,
+            70
+          ],
+          "pdf": "artifacts/2026-10-04-unit-expert-prompts-outputs-and-tool-arguments.md.pdf",
+          "run_date": "2026-10-04",
+          "run_id": "adea170a7b476b85"
+        },
+        "set_number": 18,
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_case_id": "UN4-2-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "e240956b481a31aab2ad2d5a91ff1c0fdfca8c930b0a8b364c510a3dd79c1388",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-2-C04",
+        "suite": "unit_expert_review"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "reference": "Assess the response together with its execution evidence against the original short player question. No numerical outcome or winner is fixed. Requirements about investigation describe analytical validity, not mandatory unstated filters or an answer outline. A grounded explanation of unavailable evidence after relevant retrieval can satisfy an unsupported comparison. Review visual evidence where emitted, without requiring a display when there is no useful comparison.",
+        "requirements": [
+          "Lead with the answer to the original player question or the specific unresolved comparison. Assume an intermediate player; give the reason and the evidence needed to judge that answer without a running account of the investigation. An unresolved answer must follow relevant evidence retrieval rather than an assumed lack of data.",
+          "Treat the original short question as authoritative. Preserve the holders, stars, item multiplicity and contexts it actually specifies. Do not silently require unstated stars, exact triplets, fixed rosters, ordinary-only items or trait thresholds. Choose additional analytical strata only when justified by the question and available data, disclose material assumptions, and explain coverage limits they introduce.",
+          "Use returned scoped Set 18 standard-ranked evidence. Final-board associations cannot establish causal effects, item acquisition, positioning or actual combat roles. Missing or suppressed support is unknown, not zero or evidence of illegality. Do not manufacture an unsupported comparison by imposing unnecessary restrictions.",
+          "Show only evidence that supports or materially changes the conclusion. For a useful numeric comparison, prefer a compact grounded visual or table with clear populations and sample sizes; retain material scope and uncertainty. Avoid redundant interpretation columns, repeating every displayed number in prose, and boilerplate caveats. A concise evidence-backed limitation may need no visual.",
+          "Once the question is answered, stop. A missing requested sample can justify a short limitation; do not replace the requested comparison with a lengthy analysis of different stars, holders, builds or questions. Any broader context must be clearly labeled and directly useful. Do not require a follow-up offer, fixed answer length, fixed tool sequence or a predetermined winner.",
+          "Compare Ahri and Sivir as carry partners on Morgana boards using evidence of carry investment where available. Popularity and raw unit-presence averages alone do not establish the best carry partner. Choose useful star, item or board strata from the data without requiring exact triplets or a specific star level absent from the question.",
+          "Account for material comparability issues, including boards with both partners when relevant, and inspect surrounding-board differences that could affect the answer. Board size or item budget cannot alone establish matched strength or a causal partner swap. Do not require an exhaustive roster or stratification analysis.",
+          "Put the partner conclusion first, then use a compact grounded comparison display when supported. Do not add a separate Read column that repeats the conclusion or pack every metric into prose. A concise unresolved answer is acceptable when relevant retrieval finds inadequate or incomparable evidence."
+        ]
+      },
+      "id": "unit_expert_review/UN4-3-C01",
+      "input": "Is Ahri actually Morgana’s best carry partner, or do Morgana boards do just as well with Sivir?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C01",
+        "case_id": "unit_expert_review/UN4-3-C01",
+        "grading_scope": "review_requirements_against_response_and_execution_evidence",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-3-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "review_focus": "Morgana partner comparison: selective visual evidence",
+        "review_source": {
+          "general_comment_pages": [
+            1
+          ],
+          "input_case_id": "unit-expert/UN4-3-C01",
+          "input_snapshot": "evals/langfuse/snapshots/8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b.json",
+          "page_numbering": "one-based PDF pages",
+          "pages": [
+            81,
+            82
+          ],
+          "pdf": "artifacts/2026-10-04-unit-expert-prompts-outputs-and-tool-arguments.md.pdf",
+          "run_date": "2026-10-04",
+          "run_id": "adea170a7b476b85"
+        },
+        "set_number": 18,
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "3e348906f65298628a3e0c466910c3048bacaf28a5b6547eef52b0f3c99a4e4e",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C01",
+        "suite": "unit_expert_review"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "reference": "Assess the response together with its execution evidence against the original short player question. No numerical outcome or winner is fixed. Requirements about investigation describe analytical validity, not mandatory unstated filters or an answer outline. A grounded explanation of unavailable evidence after relevant retrieval can satisfy an unsupported comparison. Review visual evidence where emitted, without requiring a display when there is no useful comparison.",
+        "requirements": [
+          "Lead with the answer to the original player question or the specific unresolved comparison. Assume an intermediate player; give the reason and the evidence needed to judge that answer without a running account of the investigation. An unresolved answer must follow relevant evidence retrieval rather than an assumed lack of data.",
+          "Treat the original short question as authoritative. Preserve the holders, stars, item multiplicity and contexts it actually specifies. Do not silently require unstated stars, exact triplets, fixed rosters, ordinary-only items or trait thresholds. Choose additional analytical strata only when justified by the question and available data, disclose material assumptions, and explain coverage limits they introduce.",
+          "Use returned scoped Set 18 standard-ranked evidence. Final-board associations cannot establish causal effects, item acquisition, positioning or actual combat roles. Missing or suppressed support is unknown, not zero or evidence of illegality. Do not manufacture an unsupported comparison by imposing unnecessary restrictions.",
+          "Show only evidence that supports or materially changes the conclusion. For a useful numeric comparison, prefer a compact grounded visual or table with clear populations and sample sizes; retain material scope and uncertainty. Avoid redundant interpretation columns, repeating every displayed number in prose, and boilerplate caveats. A concise evidence-backed limitation may need no visual.",
+          "Once the question is answered, stop. A missing requested sample can justify a short limitation; do not replace the requested comparison with a lengthy analysis of different stars, holders, builds or questions. Any broader context must be clearly labeled and directly useful. Do not require a follow-up offer, fixed answer length, fixed tool sequence or a predetermined winner.",
+          "Fiddlesticks presence alone does not establish tanking. Define and verify a defensive-item investment proxy on Fiddlesticks in the relevant Spellweaver boards. The proxy need not require one exact full loadout or a fixed star; disclose material limits and do not label a presence-only cohort as a tanking cohort.",
+          "Discover additional Defender and non-Defender carry or support choices from the eligible boards. Compare supported options using justified checks for material surrounding-board or carry-investment differences, without inventing a fixed roster, mandatory level or trait threshold.",
+          "State whether the retrieved evidence answers the tank-investment question or remains unresolved. Same final level or board size cannot prove a one-for-one slot swap, full-roster match or damage absorbed. If relevant retrieval cannot establish the defensive-investment proxy, explain that limit instead of drawing a tanking conclusion from broader presence evidence."
+        ]
+      },
+      "id": "unit_expert_review/UN4-3-C04",
+      "input": "For finished Spellweaver boards with Fiddlesticks tanking, does adding another Defender actually outperform using that slot for another carry or support?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C04",
+        "case_id": "unit_expert_review/UN4-3-C04",
+        "grading_scope": "review_requirements_against_response_and_execution_evidence",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "review_focus": "Fiddlesticks tank investment must be observed",
+        "review_source": {
+          "general_comment_pages": [
+            1
+          ],
+          "input_case_id": "unit-expert/UN4-3-C04",
+          "input_snapshot": "evals/langfuse/snapshots/8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b.json",
+          "page_numbering": "one-based PDF pages",
+          "pages": [
+            109,
+            110
+          ],
+          "pdf": "artifacts/2026-10-04-unit-expert-prompts-outputs-and-tool-arguments.md.pdf",
+          "run_date": "2026-10-04",
+          "run_id": "adea170a7b476b85"
+        },
+        "set_number": 18,
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "3e1f62bf929f84bf73bc105a5f49300bae6b56494b9c0c9ede188769e7f942f1",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C04",
+        "suite": "unit_expert_review"
+      },
+      "status": "ACTIVE"
+    }
+  ],
+  "prompts": {},
+  "schema_version": 3,
+  "schemas": {
+    "expected_output": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "reference": {
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "input": {
+      "type": "string"
+    }
+  },
+  "suite": {
+    "assistant": "unit_expert",
+    "database": null,
+    "description": "Six original player questions with review requirements from the annotated October 4 unit expert evaluation.",
+    "execution": "live",
+    "family": "assistant",
+    "managed_workflow": true,
+    "max_turns": 40,
+    "name": "unit_expert_review"
+  }
+}

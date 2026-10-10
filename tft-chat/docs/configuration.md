@@ -174,3 +174,11 @@ switch affects only Compositions; no RDS settings or other application database
 operations are redirected. No DSN setting or credentials reach the renderer.
 Fixture display itself needs no database.
 See the [composition guide](architecture/compositions/index.md).
+
+## Container diagnostic storage
+
+When `XDG_STATE_HOME` is set, prompt-token and ranking-tool rotating logs are
+written under its `tft-chat/` subdirectory. Images set it to
+`/home/app/state`, backed by persistent local storage. Without that
+standard platform variable, standalone runs retain their existing log paths.
+The logger creates the state directory but delays opening files until logging.

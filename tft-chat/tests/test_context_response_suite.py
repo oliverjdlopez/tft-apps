@@ -9,6 +9,7 @@ from evals.execution import score_attempt
 from evals.langfuse.content import load_catalog, load_snapshot, validate_bundle
 from evals.langfuse.contracts import ACTIVE_WORKFLOW_SUITES, DATASET_NAMES, legacy_execution_item
 from evals.langfuse.utils import validate_case_semantics
+from domain.assistants.constants import AssistantName
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "evals/datasets/context_response_smoke.json"
@@ -59,7 +60,7 @@ def test_suite_is_registered_portable_and_has_exactly_thirty_single_checks() -> 
     assert len(bundle["items"]) == 30
     assert len({item["input"] for item in bundle["items"]}) == 30
     assert bundle["schemas"]["input"] == {"type": "string"}
-    assert bundle["suite"]["assistant"] == "chat"
+    assert bundle["suite"]["assistant"] == AssistantName.CHAT
     assert "context_response_smoke" in ACTIVE_WORKFLOW_SUITES
     assert DATASET_NAMES["context_response_smoke"] == bundle["dataset_name"] == "context-response"
     snapshots = ROOT / "evals/langfuse/snapshots"

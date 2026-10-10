@@ -159,6 +159,18 @@
       "max_turns": 40,
       "name": "unit-expert",
       "snapshot": "8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b"
+    },
+    {
+      "assistant": "unit_expert",
+      "case_count": 6,
+      "database": null,
+      "description": "Six original player questions with review requirements from the annotated October 4 unit expert evaluation.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 40,
+      "name": "unit_expert_review",
+      "snapshot": "472c551b20e4795e03b9a9f11936da39b5e8358f608de4b30c3865860646aebe"
     }
   ]
 }

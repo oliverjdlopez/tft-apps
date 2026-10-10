@@ -10,6 +10,7 @@ from evals import execution, worker
 from evals.langfuse.content import load_snapshot
 from evals.langfuse.experiments import run_bundle
 from evals.utils import eval_graph_instructions, render_judge_prompt
+from domain.assistants.constants import AssistantName
 
 
 @pytest.fixture
@@ -91,7 +92,7 @@ def test_neutral_worker_protocol(monkeypatch):
 def test_native_sdk_receives_frozen_hosted_items(fixture_bundle):
     """Native dataset IDs and version survive without refetching edited UI content."""
     pytest.importorskip("langfuse")
-    fixture_bundle.update(dataset_id="dataset", dataset_name="chattft/dummy_assistant", dataset_version="2026-09-13T00:00:00+00:00")
+    fixture_bundle.update(dataset_id="dataset", dataset_name=f"chattft/{AssistantName.DUMMY_ASSISTANT}", dataset_version="2026-09-13T00:00:00+00:00")
     fixture_bundle["items"][0]["remote_id"] = "remote-item"
     original = deepcopy(fixture_bundle)
     class Client:
@@ -129,7 +130,7 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
 
     bundle = {
         "schema_version": 2,
-        "suite": {"name": "chat_intake", "assistant": "chat", "family": "assistant",
+        "suite": {"name": "chat_intake", "assistant": AssistantName.CHAT, "family": "assistant",
                   "execution": "live", "scoring": "none", "database": None,
                   "description": "Unscored prompt intake.", "max_turns": 7},
         "dataset_id": "intake-dataset",
@@ -141,7 +142,7 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
                    "expected_output": None,
                    "metadata": {"suite": "chat_intake", "case": "case",
                                 "case_id": "chat_intake/case"}, "status": "ACTIVE"}],
-        "prompts": {"chat": {"name": "chattft/assistants/chat", "version": 1,
+        "prompts": {AssistantName.CHAT: {"name": f"chattft/assistants/{AssistantName.CHAT}", "version": 1,
                               "text": "Answer the request."}},
         "config": {"action": "run", "cases": [], "variants": [{"name": "baseline",
                                                                     "model": None, "prompts": {}}],
@@ -151,7 +152,7 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
     monkeypatch.setattr(experiments, "execute_attempt", lambda *args: {
         "output": "Unscored answer", "metadata": {"tft_trace": {"tool_calls": [
             {"name": "resolve_tft_names", "arguments": '{"names":["Veigar"]}',
-             "agent": "chat", "call_id": "call-1", "output": "PRIVATE TOOL RETURN"}]}}, "token_usage": {}})
+             "agent": AssistantName.CHAT, "call_id": "call-1", "output": "PRIVATE TOOL RETURN"}]}}, "token_usage": {}})
 
     class Client:
         """Execute the SDK callbacks while recording the evaluator contract."""
@@ -211,7 +212,7 @@ def test_complete_hosted_snapshot_rebinds_on_a_fresh_platform(fixture_bundle):
     from evals.langfuse.experiments import bind_dataset_identity
     from datetime import datetime, timezone
     from unittest.mock import Mock
-    fixture_bundle.update(dataset_id="old-dataset", dataset_name="chattft/dummy_assistant",
+    fixture_bundle.update(dataset_id="old-dataset", dataset_name=f"chattft/{AssistantName.DUMMY_ASSISTANT}",
                           dataset_version="2025-01-01T00:00:00+00:00")
     fixture_bundle["items"][0]["remote_id"] = "old-remote-item"
     original = deepcopy(fixture_bundle)
@@ -236,7 +237,7 @@ def test_same_platform_replay_retains_historical_deleted_case(fixture_bundle):
     """Current dataset edits and deletions cannot replace same-platform history."""
     from evals.langfuse.experiments import bind_dataset_identity
     from unittest.mock import Mock
-    fixture_bundle.update(dataset_id="same", dataset_name="chattft/dummy_assistant",
+    fixture_bundle.update(dataset_id="same", dataset_name=f"chattft/{AssistantName.DUMMY_ASSISTANT}",
                           dataset_version="2025-01-01T00:00:00+00:00")
     fixture_bundle["items"][0]["remote_id"] = "deleted-in-current-version"
     client = Mock()
@@ -251,8 +252,8 @@ def test_relocated_prompt_links_only_matching_destination_text(matches):
     from unittest.mock import Mock
     from evals.langfuse.experiments import bind_prompt_references
     from evals.utils import frozen_langfuse_prompt, prompt_reference_key
-    source = {"name": "chattft/assistants/chat", "version": 4, "text": "exact frozen candidate"}
-    bundle = {"prompts": {"chat": source}, "config": {"variants": [{"prompts": {}}]}}
+    source = {"name": f"chattft/assistants/{AssistantName.CHAT}", "version": 4, "text": "exact frozen candidate"}
+    bundle = {"prompts": {AssistantName.CHAT: source}, "config": {"variants": [{"prompts": {}}]}}
     original = deepcopy(bundle)
     client = Mock()
     client.api.prompts.get.return_value = SimpleNamespace(
@@ -287,27 +288,27 @@ def test_native_generation_links_frozen_prompt_without_fetch(monkeypatch):
     client = Mock()
     client.start_as_current_observation.return_value = nullcontext()
     monkeypatch.setattr(experiments, "execute_attempt", lambda *args: {
-        "output": "answer", "metadata": {"model": "test", "instruction_hashes": {"chat": "hash"}},
+        "output": "answer", "metadata": {"model": "test", "instruction_hashes": {AssistantName.CHAT: "hash"}},
         "token_usage": {"prompt": 8, "completion": 2, "total": 10},
     })
-    baseline = {"name": "chattft/assistants/chat", "version": 1, "text": "old"}
-    candidate = {"name": "chattft/assistants/chat", "version": 3, "text": "candidate"}
-    handoff = {"name": "chattft/assistants/data_analyst", "version": 2, "text": "handoff"}
-    experiments.run_item_task(item={"input": {"input": "request"}}, suite={"assistant": "chat"},
-                              variant={"prompts": {"chat": candidate, "data_analyst": handoff}},
-                              prompts={"chat": baseline}, client=client)
+    baseline = {"name": f"chattft/assistants/{AssistantName.CHAT}", "version": 1, "text": "old"}
+    candidate = {"name": f"chattft/assistants/{AssistantName.CHAT}", "version": 3, "text": "candidate"}
+    handoff = {"name": f"chattft/assistants/{AssistantName.DATA_ANALYST}", "version": 2, "text": "handoff"}
+    experiments.run_item_task(item={"input": {"input": "request"}}, suite={"assistant": AssistantName.CHAT},
+                              variant={"prompts": {AssistantName.CHAT: candidate, AssistantName.DATA_ANALYST: handoff}},
+                              prompts={AssistantName.CHAT: baseline}, client=client)
     linked = client.start_as_current_observation.call_args.kwargs["prompt"]
     assert linked.name == candidate["name"] and linked.version == 3
     assert linked.prompt == "candidate" and not linked.is_fallback
     metadata = client.update_current_span.call_args.kwargs["metadata"]
-    assert metadata["prompt_versions"]["data_analyst"]["version"] == 2
+    assert metadata["prompt_versions"][AssistantName.DATA_ANALYST]["version"] == 2
     client.get_prompt.assert_not_called()
 
 
 @pytest.mark.parametrize("natural", [False, True])
 def test_case_databases_reach_isolated_workers_without_leaking(monkeypatch, natural):
     """Mixed-set cases keep their own target across attempts and preserve defaults."""
-    suite = {"name": "chat", "family": "assistant", "execution": "live", "database": "suite_db"}
+    suite = {"name": AssistantName.CHAT, "family": "assistant", "execution": "live", "database": "suite_db"}
     calls = []
 
     def capture(payload, timeout):

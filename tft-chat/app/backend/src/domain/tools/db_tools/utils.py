@@ -9,6 +9,7 @@ import json
 from importlib import import_module
 from itertools import permutations
 import logging
+import os
 import re
 import time
 from difflib import SequenceMatcher
@@ -769,7 +770,13 @@ def entity_delta_page(
 MIN_PUBLIC_BOARDS = 50
 TOOL_TIMEOUT_SECONDS = 30.0
 ANALYSIS_STATEMENT_TIMEOUT_MS = 40_000
-RANKING_LOG_PATH = Path(__file__).with_name("ranking_tools.log")
+# The image's source directory is read-only; diagnostic state has its own mount.
+RANKING_LOG_PATH = (
+    Path(os.environ["XDG_STATE_HOME"]) / "tft-chat" / "ranking_tools.log"
+    if os.environ.get("XDG_STATE_HOME") else Path(__file__).with_name("ranking_tools.log")
+)
+if os.environ.get("XDG_STATE_HOME"):
+    RANKING_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
 _DB_TOOL_EXECUTOR = ThreadPoolExecutor(thread_name_prefix="tft-db-tool")
 db_logger = logging.getLogger("tft.analysis.db")
 ranking_logger = logging.getLogger("tft.analysis.ranking_tools")
@@ -777,7 +784,7 @@ ranking_logger.setLevel(logging.DEBUG)
 ranking_logger.propagate = False
 # Module reloads and test imports may execute this block repeatedly. Reuse the
 # existing file handler so each event is written once, and delay opening the
-# log until the first event so importing model-facing tools has no file effect.
+# log until the first event until the first event; only the state directory is prepared at import.
 if not any(
     isinstance(handler, RotatingFileHandler)
     and Path(handler.baseFilename) == RANKING_LOG_PATH

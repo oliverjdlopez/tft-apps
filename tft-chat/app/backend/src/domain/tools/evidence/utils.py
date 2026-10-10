@@ -6,7 +6,11 @@ from uuid import uuid4
 
 from common.serialization import to_jsonable
 from domain.runtime.models import AssistantRunContext
-from domain.tools.db_tools.models import AnalysisComparisonResult, AnalysisTableResult
+from domain.tools.db_tools.models import (
+    AnalysisComparisonResult,
+    AnalysisPage,
+    AnalysisTableResult,
+)
 from .models import (
     DistributionDataset,
     DisplaySpec,
@@ -29,7 +33,20 @@ RANKING_FIELDS = {
     "rank_traits": "trait_name tier games avg_placement top4_rate win_rate pick_rate universe_games delta relative_delta",
     "rank_unit_loadouts": "unit_name star_level item_count item_1 item_2 item_3 boards avg_placement top4_rate win_rate unit_boards loadout_pick_rate delta relative_delta",
 }
-TEXT_FIELDS = {"tier", "unit_name", "item_name", "trait_name", "item_1", "item_2", "item_3"}
+COHORT_DIMENSIONS = {
+    "placement", "level", "board_size", "completed_item_count", "region", "platform",
+    "unit_name", "unit_star_level", "unit_cost", "unit_item_count", "unit_loadout_key",
+    "item_name", "item_slot", "trait_name", "trait_tier", "trait_style",
+    "trait_contributing_unit_count",
+}
+COHORT_METRICS = (
+    "distinct_boards", "distinct_lobbies", "avg_placement", "top4_rate", "win_rate",
+    "pick_rate",
+)
+TEXT_FIELDS = {
+    "tier", "unit_name", "item_name", "trait_name", "item_1", "item_2", "item_3",
+    "region", "platform", "unit_loadout_key", "trait_tier", "cohort",
+}
 FRACTION_FIELDS = {
     "top4_rate",
     "win_rate",
@@ -37,7 +54,10 @@ FRACTION_FIELDS = {
     "pick_rate_per_board",
     "loadout_pick_rate",
 }
-GROUP_FIELDS = {"unit_name", "trait_name", "star_level", "tier", "cost", "item_count"}
+GROUP_FIELDS = {
+    "unit_name", "trait_name", "star_level", "tier", "cost", "item_count",
+    *COHORT_DIMENSIONS, "cohort",
+}
 MAX_ROWS = 200
 
 
@@ -128,20 +148,38 @@ def capture_evidence(store: EvidenceStore, name: str, output: object) -> dict | 
     Unsupported or malformed evidence does not break the underlying analytical
     response. The assistant can still explain that result in prose.
     """
-    if name not in RANKING_FIELDS and name != "compare_cohorts":
+    if name not in RANKING_FIELDS and name not in {"query_cohort", "compare_cohorts"}:
         return None
     try:
         data = json.loads(output) if isinstance(output, str) else to_jsonable(output)
         ref = "evidence-" + uuid4().hex
-        if name in RANKING_FIELDS:
+        if name in RANKING_FIELDS or name == "query_cohort":
             result = AnalysisTableResult.model_validate(data)
-            keys = [
-                key
-                for key in RANKING_FIELDS[name].split()
-                if any(key in row for row in result.results)
-            ]
-            if not keys:
-                keys = RANKING_FIELDS[name].split()[:1]
+            if name == "query_cohort":
+                dimensions = result.context.group_by
+                if (
+                    not 1 <= len(dimensions) <= 3
+                    or len(set(dimensions)) != len(dimensions)
+                    or not set(dimensions) <= COHORT_DIMENSIONS
+                ):
+                    raise ValueError("Unsupported cohort grouping dimensions")
+                keys = [*dimensions, *COHORT_METRICS]
+                for row in result.results[:MAX_ROWS]:
+                    if not set(dimensions) <= row.keys():
+                        raise ValueError("Cohort row is missing its grouping dimensions")
+                    boards = normalize_cell(
+                        field_definition("distinct_boards"), row.get("distinct_boards")
+                    )
+                    if boards is None or boards < result.context.minimum_reportable_boards:
+                        raise ValueError("Cohort row does not meet its reporting floor")
+            else:
+                keys = [
+                    key
+                    for key in RANKING_FIELDS[name].split()
+                    if any(key in row for row in result.results)
+                ]
+                if not keys:
+                    keys = RANKING_FIELDS[name].split()[:1]
             fields = tuple(field_definition(key) for key in keys)
             rows = tuple(
                 EvidenceRow(
@@ -181,9 +219,37 @@ def capture_evidence(store: EvidenceStore, name: str, output: object) -> dict | 
         else:
             result = AnalysisComparisonResult.model_validate(data)
             datasets = []
+            summary_fields = tuple(
+                field_definition(key)
+                for key in ("cohort", "boards", "avg_placement", "top4_rate", "win_rate")
+            )
+            summary_rows = []
             for key in ("target", "baseline"):
                 cohort = getattr(result, key)
-                available = not cohort.suppressed and cohort.histogram is not None
+                if not cohort.suppressed and (
+                    cohort.boards is None
+                    or 0 < cohort.boards < result.context.minimum_reportable_boards
+                ):
+                    raise ValueError("Comparison cohort does not meet its reporting floor")
+                empty = not cohort.suppressed and cohort.boards == 0
+                # Suppression is authoritative even if a malformed upstream
+                # result accidentally includes numerical summary fields. An
+                # explicitly empty cohort retains its zero sample, never rates.
+                summary_values = {
+                    field.key: (
+                        None if cohort.suppressed or (empty and field.key != "boards")
+                        else normalize_cell(field, getattr(cohort, field.key))
+                    )
+                    for field in summary_fields if field.key != "cohort"
+                }
+                summary_values["cohort"] = cohort.label
+                summary_rows.append(
+                    EvidenceRow(
+                        key=key,
+                        values=summary_values,
+                    )
+                )
+                available = not cohort.suppressed and not empty and cohort.histogram is not None
                 bins = ()
                 if available:
                     if set(cohort.histogram) != set(map(str, range(1, 9))):
@@ -203,10 +269,19 @@ def capture_evidence(store: EvidenceStore, name: str, output: object) -> dict | 
                         ref=key,
                         label=cohort.label,
                         bins=bins,
-                        boards=cohort.boards if available else None,
+                        boards=cohort.boards if available or empty else None,
                         unavailable=not available,
                     )
                 )
+            datasets.append(
+                RankingDataset(
+                    ref="summary",
+                    grain="One summary per target or baseline cohort; cohorts may overlap",
+                    fields=summary_fields,
+                    rows=tuple(summary_rows),
+                    page=AnalysisPage(offset=0, count=2, has_more=False),
+                )
+            )
             bundle = EvidenceBundle(
                 ref=ref,
                 source=name,
@@ -268,6 +343,20 @@ def resolve_presentation(
             or not set(spec.columns) <= fields.keys()
         ):
             raise ValueError("Select unique columns from the dataset fields")
+        if bundle.source == "compare_cohorts" and dataset.ref == "summary":
+            required_columns = {"cohort", "boards"}
+        elif bundle.source == "query_cohort":
+            # Each grouped row needs its complete grain and distinct-board
+            # denominator visible so different holder or star buckets cannot
+            # appear as anonymous or interchangeable measurements.
+            required_columns = (fields.keys() & COHORT_DIMENSIONS) | {"distinct_boards"}
+        else:
+            required_columns = set()
+        if not required_columns <= set(spec.columns):
+            raise ValueError(
+                "Keep cohort identity and board samples visible; include columns: "
+                + ", ".join(sorted(required_columns))
+            )
         if spec.sort_by is not None and spec.sort_by not in spec.columns:
             raise ValueError("Sort must reference a visible column")
         if spec.primary_metric is not None and (

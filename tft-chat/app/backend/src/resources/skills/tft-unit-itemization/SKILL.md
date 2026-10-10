@@ -1,6 +1,6 @@
 ---
 name: tft-unit-itemization
-description: Analyze generic TFT itemization for a named unit, including common craftable items, carry or frontline allocations, holder patterns, and notable artifact usage. Use for questions such as "Does Shen prefer tank or damage items?", "What are the best artifacts on Vi?", holder, or item-frequency questions.
+description: Analyze TFT itemization for a named unit, including observed loadouts, AP versus AD builds, carry or main-tank investment, common craftable items, holder patterns, and notable artifact usage. Use for build comparisons, tank-versus-damage allocations, artifact, holder, or item-frequency questions. Preserve exact requested builds and distinguish observed investment from combat role.
 ---
 # Itemization Investigation Workflow
 
@@ -8,21 +8,26 @@ description: Analyze generic TFT itemization for a named unit, including common 
 
 ## Crystallize the question and define the scope
 
-Cystallizing the question and emit a text part describing it in one sentence before you begin your investigation. Then, your investigation should follow this series of steps:
+Internally identify the exact question and the evidence needed to answer it. Keep planning out of the final answer and lead with the resulting practical read.
 
 1. The relevant analytical dimensions are the named unit and whether the subject is frequency, outcome performance, item role, artifact usage, or a comparison such as tank versus damage.
 2. Scope and constraints determine which evidence is relevant. A generic itemization analysis does not require transition paths, early-game slams, or unrelated composition choices.
-3. Resolve every player-language unit, item, and trait name used as a filter together in one `resolve_tft_names` call before every named-entity lookup. Use the exact stored names returned by that call. Do not resolve category words such as "craftable", "Artifact", or "tank" as entity names.
+3. Resolve the player-language unit, item, and trait names needed for the investigation together in one `resolve_tft_names` call. Resolve additional names only when needed, and reuse exact stored names already returned. Do not resolve category words such as "craftable", "Artifact", or "tank" as entity names.
 
 
 ## Initial Evidence Gathering
 
 ### Use ranking tools
 
-1. Use rank_items to ground your investigation. The rankings will give your a sense of direction. They may immediately show core patterns, but this is not the end of the investigation.
+1. Use the narrowest available tool that answers the question. `rank_items` with the named holder supports individual-item frequency and outcomes; `rank_unit_loadouts` supports observed build comparisons. Preserve any requested stars, item variants, and duplicate-item multiplicity. A supported answer can be sufficient without further investigation.
 
-### Use delta tools
-2. Emit at least one tool call to all of the delta tools, `get_cohort_unit_deltas`, `get_cohort_item_deltas`, `get_cohort_trait_deltas`. These will give you a sense of the context of the unit's itemization and how it compares to other units, items, and traits. 
+### Validate build and role definitions
+
+2. For AP versus AD, tank versus damage, or another build-class comparison, inspect observed full loadouts and classify them using supplied item effects. Keep hybrid and unclassified builds distinct. One signature item does not represent every build in that class; if only an item-defined subset is queryable, bound the conclusion to that subset and explain material coverage or overlap limits.
+3. For a main tank, carry, or split-investment question, use observed holder items, completed-item counts, and upgrades to define an investment proxy before comparing outcomes. Check other invested units when needed to distinguish the primary allocation. A unit-presence filter alone does not establish its job, and even an investment proxy does not reveal positioning, damage taken, or player intent.
+4. Use supported cohort comparisons, groupings, or delta tools only when their available dimensions can test a material board difference or resolve the question. Call only tools exposed to the current assistant; there is no mandatory tour of every tool family.
+
+If the requested exact build has no reportable sample, confirm the filters and give the concise limitation. Do not turn that result into a generic item guide, substitute a nearby build as the answer, or investigate unrelated board variants. Continue only when another supported query can answer a stated part of the question.
 
 ## Determining Direction for Further Investigation
 
@@ -34,6 +39,8 @@ There are several signals to look for. A single investigation may not have all o
 
 
 ### Itemization archetypes
+
+Use these general archetypes to choose what to investigate. Establish the actual unit abilities, item effects, and classifications from supplied context before applying them to a named unit; do not infer a unit's role from its name or presence.
 
 #### Tanks
 
@@ -120,3 +127,5 @@ Item-class preference and build rigidity depend on the distribution of allocatio
 ### Practical interpretation
 
 A practical itemization interpretation depends on the effective scope and board sample, the relevant item rankings, and the observed holder pattern. Craftable items, artifacts, and other special families belong to different acquisition contexts and should not be treated as one population. The most decision-relevant uncertainty usually comes from sample size, survivorship, or an unobserved acquisition and timing constraint.
+
+Lead with the answer to the player's question. Place supporting numbers and board samples in a compact table or an available evidence display, using only columns needed for that conclusion. Explain a material build-definition or sampling limitation once; keep investigation details internal, avoid repeating the table in prose, and stop when the question is answered.

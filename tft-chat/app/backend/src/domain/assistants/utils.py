@@ -3,15 +3,13 @@
 from __future__ import annotations
 
 import re
-import time
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from domain.runtime.models import AssistantRunContext
-
 if TYPE_CHECKING:
-    from agents import Agent, RunContextWrapper
+    from agents import RunContextWrapper
 
+    from domain.assistants.agent import AssistantAgent
     from domain.assistants.specs import AssistantSpec
     from domain.providers.models import (
         ContextProvider,
@@ -97,57 +95,17 @@ def render_instruction_layers(
 
 
 def instruction_callback(
-    spec: AssistantSpec, *, root: bool
-) -> Callable[[RunContextWrapper[Any], Agent[Any]], str]:
-    """Bind an agent's specification without capturing invocation state.
+    ctx: RunContextWrapper[Any], agent: AssistantAgent,
+) -> str:
+    """Dispatch SDK instruction rendering through the actual executing agent.
 
     Args:
-        spec: Specification snapshot belonging to this constructed agent.
-        root: Whether to apply root-only caller instructions and exclude skills.
+        ctx: SDK wrapper around the invocation's local context.
+        agent: Assistant requesting instructions for its next model turn.
 
     Returns:
-        A synchronous SDK callback that renders only preselected resources.
-        Legacy callers without typed context receive the durable prompt.
+        This agent's durable policy and permitted prepared resource layers.
     """
-    def render(
-        ctx: RunContextWrapper[Any],
-        agent: Agent[Any],
-    ) -> str:
-        """Render this target's instructions from its shared invocation context.
-
-        Args:
-            ctx: SDK wrapper around the application's explicit run context.
-            agent: SDK agent requesting instructions for its next model turn.
-
-        Returns:
-            Durable policy joined with this target's permitted request layers.
-        """
-        del agent
-        context = ctx.context
-        if not isinstance(context, AssistantRunContext):
-            return spec.system_prompt
-        started = time.perf_counter()
-        base_instructions = spec.system_prompt
-        if root and context.runtime.system:
-            base_instructions = f"{context.runtime.system}\n\n{base_instructions}"
-        instructions = render_instruction_layers(
-            spec,
-            context_provider=context.context_provider,
-            skill_provider=context.skill_provider,
-            skills=() if root else context.resources.skills,
-            base_instructions=base_instructions,
-            references=(
-                context.resources.references if context.resources.query.strip() else ()
-            ),
-        )
-        if context.timing is not None:
-            # SDK callbacks can run on every model step, so this metric includes
-            # each render while selection timings remain once per invocation.
-            context.timing["instruction_assembly_ms"] = round(
-                context.timing.get("instruction_assembly_ms", 0.0)
-                + (time.perf_counter() - started) * 1000,
-                3,
-            )
-        return instructions
-
-    return render
+    # A shared function follows SDK clones; a copied bound method could keep
+    # rendering through the original agent's specification or providers.
+    return agent.render_instructions(ctx.context)

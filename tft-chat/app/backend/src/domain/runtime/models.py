@@ -63,12 +63,13 @@ class AssistantRunContext:
     The SDK does not expose this object to the model. Consumers deliberately
     render permitted instructions, tool results, or browser events instead.
     Type-only imports keep this contract independent of registry initialization.
+    Provider overrides apply to the whole invocation; None uses agent defaults.
     """
 
     runtime: RuntimeSettings
-    resources: PreparedResources
-    context_provider: ContextProvider
-    skill_provider: SkillProvider
-    evidence: EvidenceStore | None
+    resources: PreparedResources = field(default_factory=PreparedResources)
+    context_provider: ContextProvider | None = None
+    skill_provider: SkillProvider | None = None
+    evidence: EvidenceStore | None = None
     activity: ActivityState = field(default_factory=ActivityState)
     timing: dict[str, Any] | None = None

@@ -1,3 +1,4 @@
+import { AssistantName } from "../assistant-names.js";
 import React from "react";
 import {
   cleanup,
@@ -27,8 +28,8 @@ it("streams evidence into its answer, preserves controls through navigation, and
   const requests = [];
   const requestHeaders = [];
   const config = {
-    default_assistant: "chat",
-    assistants: ["chat", "meta_expert"],
+    default_assistant: AssistantName.CHAT,
+    assistants: [AssistantName.CHAT, AssistantName.META_EXPERT],
     default_model: "fake",
     models: [{ id: "fake", label: "Fake", key_configured: true }],
     tools: [],
@@ -63,9 +64,9 @@ it("streams evidence into its answer, preserves controls through navigation, and
   const modelSelect = screen.getByLabelText("Chat model");
   expect(assistantSelect.compareDocumentPosition(modelSelect) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(assistantSelect.closest(".composer")).toBeNull();
-  expect(assistantSelect).toHaveValue("chat");
-  expect(screen.getByRole("option", { name: "meta_expert" })).toBeInTheDocument();
-  fireEvent.change(assistantSelect, { target: { value: "meta_expert" } });
+  expect(assistantSelect).toHaveValue(AssistantName.CHAT);
+  expect(screen.getByRole("option", { name: AssistantName.META_EXPERT })).toBeInTheDocument();
+  fireEvent.change(assistantSelect, { target: { value: AssistantName.META_EXPERT } });
   fireEvent.change(input, { target: { value: "Rank units" } });
   fireEvent.keyDown(input, { key: "Enter" });
   await screen.findByText("62.5%");
@@ -80,7 +81,7 @@ it("streams evidence into its answer, preserves controls through navigation, and
   fireEvent.click(screen.getByRole("button", { name: "Chat", exact: true }));
   expect(screen.getByLabelText("Search loaded rows")).toHaveValue("Jinx");
   expect(requests).toHaveLength(1);
-  expect(requestHeaders[0]["X-Chat-Assistant"]).toBe("meta_expert");
+  expect(requestHeaders[0]["X-Chat-Assistant"]).toBe(AssistantName.META_EXPERT);
   fireEvent.change(input, { target: { value: "Another view" } });
   fireEvent.keyDown(input, { key: "Enter" });
   await waitFor(() =>

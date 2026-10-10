@@ -1,4 +1,4 @@
-"""Let the final responder select an initial view of backend-owned evidence."""
+"""Let responding assistants select an initial view of backend-owned evidence."""
 
 from typing import Any
 from agents import function_tool
@@ -16,12 +16,15 @@ async def present_evidence(
 
     Use only evidence references returned during this invocation. Values, units,
     row identity, and source context are resolved on the backend, not supplied
-    by the assistant. Leave table options empty for a distribution.
+    by the assistant. Comparison summary tables must show cohort and boards;
+    grouped cohort tables must show every grouping dimension and distinct_boards.
+    Leave table options empty for a distribution.
     """
     store = resolve_evidence_store(ctx.context)
     if store is None:
         return {
-            "error": "Evidence presentation is unavailable on this execution surface; answer in prose."
+            "error": "Evidence presentation is unavailable on this execution surface; "
+            "use concise prose or a compact Markdown table with verified values."
         }
     try:
         presentation = resolve_presentation(store, request, ctx.tool_call_id)

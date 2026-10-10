@@ -86,6 +86,12 @@ For frequency-first entity breakouts within a cohort, use the separate
 ## Notes
 
 - Each board is counted once regardless of duplicate units or item copies.
+- Empty comparisons report the unavailable estimate without directing the
+  assistant to widen the user's filters. A missing exact-build result can be
+  the answer; changing the requested population is not an automatic fallback.
+- When the invocation supplies an evidence store, `query_cohort` registers its
+  bounded grouped rows and `compare_cohorts` registers a two-cohort summary
+  table alongside the existing histograms. See [Evidence displays](evidence.md).
 - All cohort membership predicates compile against anonymous board facts; there
   is no raw-table fallback.
 - Name-only conditions are the board-presence form; add condition fields only

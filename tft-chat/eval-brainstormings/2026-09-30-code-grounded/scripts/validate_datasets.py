@@ -25,6 +25,7 @@ from evals.models import EvalTrace, Handoff, ToolCall, TraceEvent
 from evals.trace import evaluate_trace_check
 from jsonschema import Draft202012Validator
 from artifact_validation.utils import partial_schema
+from domain.assistants.constants import AssistantName
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -65,7 +66,7 @@ def check_trace_assertion(assertion: dict) -> dict:
         count = config.get("min_count", 1)
         calls = [ToolCall(name=name, arguments=json.dumps(arguments), agent=actor) for _ in range(count)]
         prior = config.get("after_handoff")
-        events = ([TraceEvent(type="handoff", source="chat", target=prior)] if prior else [])
+        events = ([TraceEvent(type="handoff", source=AssistantName.CHAT, target=prior)] if prior else [])
         events += [TraceEvent(type="tool_call", tool=name, agent=actor) for _ in range(count)]
         positive = EvalTrace(tool_calls=calls, events=events)
     elif kind == "tool_argument_resolved":
@@ -84,13 +85,13 @@ def check_trace_assertion(assertion: dict) -> dict:
         positive = EvalTrace(tool_calls=[resolution, downstream])
         negative = EvalTrace(tool_calls=[downstream, resolution])
     elif kind == "handoff_to":
-        positive = EvalTrace(handoffs=[Handoff(source="chat", target=name)])
+        positive = EvalTrace(handoffs=[Handoff(source=AssistantName.CHAT, target=name)])
     elif kind == "final_agent":
         positive = EvalTrace(final_agent=name)
     elif kind == "tool_not_called":
         negative = EvalTrace(tool_calls=[ToolCall(name=name)])
     elif kind == "no_handoff":
-        negative = EvalTrace(handoffs=[Handoff(source="chat", target="data_analyst")])
+        negative = EvalTrace(handoffs=[Handoff(source=AssistantName.CHAT, target=AssistantName.DATA_ANALYST)])
     elif kind == "regex":
         # Regex correctness is checked by repository validation. No invented
         # answer is synthesized as evidence that a gameplay regex is meaningful.
@@ -131,7 +132,7 @@ def validate_import(path: Path, suite_name: str) -> dict:
 
     with patch.object(dataset_registration, "load_catalog", return_value=[]), patch.object(dataset_registration, "export_snapshot", side_effect=capture_export):
         dataset_registration.register_dataset(
-            name=suite_name, dataset_name="chattft/" + suite_name, assistant="chat",
+            name=suite_name, dataset_name="chattft/" + suite_name, assistant=AssistantName.CHAT,
             description="Brainstorming validation only", items_path=path,
             database=None, max_turns=40, snapshots=RUN / "validation/NEVER_WRITTEN",
         )

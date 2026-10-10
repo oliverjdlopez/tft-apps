@@ -32,8 +32,9 @@ No generic leaderboard, raw-row browser, match-store mutation, or ingestion
 tool is exposed. Ingestion and query-table rebuilds remain database/CLI
 responsibilities.
 
-The final responder owns the [Evidence displays](../tool_groups/evidence.md)
-group. `present_evidence` chooses a bounded initial view by backend reference;
+The final responder and terminal unit expert own the
+[Evidence displays](../tool_groups/evidence.md) group. `present_evidence`
+chooses a bounded initial view by backend reference;
 it cannot query the database or accept copied numerical datasets.
 
 ## Runtime boundary

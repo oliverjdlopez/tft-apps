@@ -199,3 +199,11 @@ Cross-backend tests invoke each application's own interpreter and actual HTTP
 routes with temporary state, synthesize a small local video, stub network
 downloads, and omit application lifespans. They do not call models, contact
 YouTube/Twitch, run GPU inference, or initialize application RDS databases.
+
+## Docker access
+
+Desktop containers bind-mount the same suite media directory at its original
+absolute path. VOD data and model caches remain local mounts as well. Both
+backends retain identical `TFT_MEDIA_DIR` values, POSIX locking and the existing
+catalogue protocol. Container replacement does not delete these directories.
+See [Docker lifecycle](docker-desktop.md).

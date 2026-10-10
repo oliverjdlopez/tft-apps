@@ -101,15 +101,15 @@ test("Linux guardian reports missing executables and exits without hanging", { s
   t.after(() => stopProcess(handle));
   handle.child.stdin.write(`${JSON.stringify({ command: "/does/not/exist", args: [], env: process.env })}\n`);
   assert.equal((await abortable(handle.finished, AbortSignal.timeout(5000))).code, 1);
-  assert.match(handle.records.get("error").message, /WSL service executable/);
+  assert.match(handle.records.get("error").message, /WSL container worker/);
 });
 
-test("Linux guardian bounds shutdown when a service ignores stdin", { skip: process.platform === "win32", timeout: 18000 }, async (t) => {
+test("Linux guardian bounds shutdown when a service ignores stdin", { skip: process.platform === "win32", timeout: 55000 }, async (t) => {
   const handle = ownedProcess(process.execPath, [worker], { cwd: root, label: "stuck WSL service" });
   t.after(() => stopProcess(handle));
   handle.child.stdin.write(`${JSON.stringify({ command: process.execPath, args: ["-e", "setInterval(() => {}, 1000)"], env: process.env })}\n`);
   handle.child.stdin.end();
-  assert.equal((await abortable(handle.finished, AbortSignal.timeout(15000))).code, 1);
+  assert.equal((await abortable(handle.finished, AbortSignal.timeout(50000))).code, 1);
 });
 
 test("Linux guardian forwards the selected application cwd and private environment", { skip: process.platform === "win32" }, async (t) => {

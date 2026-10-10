@@ -28,7 +28,13 @@ import tiktoken
 offline_encoding = tiktoken.get_encoding("o200k_base")
 
 
-PROMPT_TOKEN_LOG_PATH = Path(__file__).with_name("prompt_tokens.log")
+# Containers expose a writable state home while their application code is immutable.
+PROMPT_TOKEN_LOG_PATH = (
+    Path(os.environ["XDG_STATE_HOME"]) / "tft-chat" / "prompt_tokens.log"
+    if os.environ.get("XDG_STATE_HOME") else Path(__file__).with_name("prompt_tokens.log")
+)
+if os.environ.get("XDG_STATE_HOME"):
+    PROMPT_TOKEN_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
 prompt_token_logger = logging.getLogger("tft.assistants.prompt_tokens")
 prompt_token_logger.setLevel(logging.INFO)
 prompt_token_logger.propagate = False

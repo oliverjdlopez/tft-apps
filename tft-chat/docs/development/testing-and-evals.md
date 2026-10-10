@@ -36,14 +36,26 @@ changes to evidence ownership or transport. Grader execution evidence recognizes
 `present_evidence` and legacy `present_inline_data` calls from historical traces;
 frozen historical snapshots retain their original prompt and tool names.
 
-Invocation-context regression coverage lives in `tests/test_runtime_instructions.py`,
-`tests/test_runtime_tools.py`, and `tests/test_runtime_streaming.py`. These use
-fake providers, tools, and models to verify selection-once behavior, prompt
-parity, default factory rendering across nested handoffs, specification snapshots,
-explicit override precedence, dependency isolation, evidence precision, lifecycle
-identity, legacy callers, and stream cancellation without paid calls. Run them with the existing
-assistant, chat, context, skill, evidence, and tool suites. The context evaluation
-adapter has a pre-existing retired-symbol import mismatch that also blocks
+The [unit expert review](unit-expert-review.md) maps the annotated October 4
+report to current assistant behavior and a six-case portable review manifest.
+`tests/test_unit_expert_review.py` validates its schema, original question
+preservation, and isolated registration. It does not run a model or grade
+answer quality. The real unit-expert factory exposes evidence presentation;
+`tests/test_evidence.py` exercises SDK capture of grouped cohort tables and
+comparison summaries while preserving suppression, precision, and no-store
+Markdown fallback. Historical and hosted evaluation prompts remain frozen
+until a revised prompt version is explicitly selected.
+
+`tests/test_runtime_instructions.py` covers `AssistantAgent` graph construction,
+provider-default and invocation-override precedence, independent request state,
+resource selection once per invocation, clone dispatch, prompt permissions, and
+explicit instruction overrides. A fake model drives the real SDK runner through
+a handoff and additional-context call to verify the active agent's provider is
+used without paid calls. `tests/test_chat_service.py` covers the shared context
+and subclass-preserving tool-free fallback; tool and evidence behavior is also
+covered by `tests/test_openai_tools.py` and `tests/test_evidence.py`. Run these with
+the assistant, context, skill, and workflow suites. The context evaluation adapter
+has a pre-existing retired-symbol import mismatch that also blocks
 `chat-tft-evals validate`; report that limitation separately from runtime results.
 
 Current cohort and delta registry coverage is in `tests/test_cohort_facts.py`
@@ -251,3 +263,12 @@ search during routing/layout, and rejects console/page errors. The synthetic
 fixture allows overlap warnings where clear routes or labels are impossible.
 A Chromium smoke does not validate native Electron/Windows shell behavior;
 report that boundary separately from desktop unit tests.
+
+## Suite Docker runtime
+
+Normal desktop and evaluation services now use Docker images. Build and lifecycle
+commands are documented in [suite container lifecycle](../../../docs/docker-desktop.md).
+Contributor host environments remain usable for these tests. Container entrypoint
+tests run from this app root with `python -m pytest ../docker/tests -q`; desktop
+Node tests run from `desktop/`. The migration does not authorize paid evaluation
+runs, ingestion or database rebuilds as validation.

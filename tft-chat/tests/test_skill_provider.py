@@ -8,6 +8,7 @@ from domain.providers.skills import (
     SkillDefinition,
     select_skills,
 )
+from domain.assistants.constants import AssistantName
 
 
 def test_skill_resources_are_raw_markdown_files() -> None:
@@ -179,11 +180,11 @@ def test_skill_provider_async_selection_uses_async_selector(
     )
     monkeypatch.setattr(
         "domain.providers.skills._selector_agent",
-        lambda: SimpleNamespace(name="skill_selector"),
+        lambda: SimpleNamespace(name=AssistantName.SKILL_SELECTOR),
     )
 
     async def fake_run(agent, prompt, *, max_turns):
-        assert agent.name == "skill_selector"
+        assert agent.name == AssistantName.SKILL_SELECTOR
         assert '"query": "Compare board variants"' in prompt
         assert max_turns == 1
         return SimpleNamespace(final_output='{"selected_ids": [0]}')

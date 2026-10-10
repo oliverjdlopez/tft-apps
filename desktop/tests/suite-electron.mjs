@@ -47,13 +47,13 @@ async function stop() {
   return cleanup;
 }
 
-/** Load every product view with actual FastAPI/Vite services and sandboxed renderers. */
+/** Load every product view with owned containers and sandboxed renderers. */
 async function run() {
   await app.whenReady();
   const videoStart = video.start();
   assert.equal(videoStart, video.start(), "concurrent requests share one startup");
   const [origin] = await Promise.all([chat.start(), videoStart]);
-  assert.equal(video.children.length, 2);
+  assert.equal(video.children.length, 1);
   window = new BrowserWindow({ show: false, width: 1440, height: 960, webPreferences: {
     sandbox: true, contextIsolation: true, nodeIntegration: false,
     preload: fileURLToPath(new URL("../workspace-preload.cjs", import.meta.url)),

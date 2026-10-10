@@ -12,20 +12,21 @@ import pytest
 from evals.langfuse.jobs import JobStore
 from evals.langfuse.models import ExperimentTrigger, RunConfig
 from evals.langfuse.server import ExperimentService, create_app
+from domain.assistants.constants import AssistantName
 
 
 def test_native_payload_and_invalid_settings():
     """The actual pinned server body parses; invalid run controls are rejected."""
     trigger = ExperimentTrigger.model_validate({
-        "projectId": "tft-apps-evals", "datasetId": "dataset", "datasetName": "chattft/dummy_assistant",
+        "projectId": "tft-apps-evals", "datasetId": "dataset", "datasetName": f"chattft/{AssistantName.DUMMY_ASSISTANT}",
         "payload": json.dumps({"repetitions": 2}),
     })
     assert trigger.config.repetitions == 2
     selected = ExperimentTrigger.model_validate({
         "datasetName": "chattft/manual-probe",
-        "payload": json.dumps({"assistant": "unit_expert"}),
+        "payload": json.dumps({"assistant": AssistantName.UNIT_EXPERT}),
     })
-    assert selected.config.assistant == "unit_expert"
+    assert selected.config.assistant == AssistantName.UNIT_EXPERT
     for config in ({"concurrency": 0}, {"concurrency": 5}, {"repetitions": True},
                    {"action": "replay"}, {"variants": [{"name": "x"}, {"name": "x"}]},
                    {"arbitrary_file": "/tmp/code.py"}, {"assistant": 3}):
@@ -101,7 +102,7 @@ def test_http_auth_and_validation_before_submission():
     service.jobs.get.return_value = None
     with TestClient(create_app(service=service, token="private-test-token")) as http:
         assert http.get("/health").status_code == 200
-        payload = {"datasetName": "chattft/dummy_assistant", "payload": "{}"}
+        payload = {"datasetName": f"chattft/{AssistantName.DUMMY_ASSISTANT}", "payload": "{}"}
         assert http.post("/experiments", json=payload).status_code == 401
         headers = {"authorization": "Bearer private-test-token"}
         assert http.post("/experiments", headers=headers, json={**payload, "payload": "not JSON"}).status_code == 422
@@ -115,7 +116,7 @@ def test_export_and_replay_use_frozen_content(tmp_path, monkeypatch):
     """Export calls no evaluator and later replay reads original immutable inputs."""
     from evals.langfuse import content
     source = Path(__file__).resolve().parents[1] / "snapshots"
-    entry = next(e for e in content.load_catalog(source) if e["name"] == "dummy_assistant")
+    entry = next(e for e in content.load_catalog(source) if e["name"] == AssistantName.DUMMY_ASSISTANT)
     bundle = content.load_snapshot("12919b463fd2b4bd5fdda2765fe6f7745191fcd4668a062576ff8a923f493591", source)
     bundle["dataset_id"] = "dataset"
     remote = deepcopy(bundle)
@@ -123,10 +124,10 @@ def test_export_and_replay_use_frozen_content(tmp_path, monkeypatch):
     monkeypatch.setattr(content, "fetch_bundle", lambda *args: deepcopy(remote))
     service = ExperimentService(tmp_path / "snapshots", tmp_path / "runtime", Mock)
     service.client = Mock()
-    exported = service.submit(ExperimentTrigger(datasetName="chattft/dummy_assistant", config={"action": "export"}))
+    exported = service.submit(ExperimentTrigger(datasetName=f"chattft/{AssistantName.DUMMY_ASSISTANT}", config={"action": "export"}))
     assert service.jobs.get(exported["job_id"])["state"] == "exported"
     remote["items"][0]["input"]["input"] = "later UI edit"
-    replay = service.submit(ExperimentTrigger(datasetName="chattft/dummy_assistant", config={"action": "replay", "snapshot": exported["snapshot"]}))
+    replay = service.submit(ExperimentTrigger(datasetName=f"chattft/{AssistantName.DUMMY_ASSISTANT}", config={"action": "replay", "snapshot": exported["snapshot"]}))
     job = service.jobs.claim()
     assert job["id"] == replay["job_id"]
     assert job["bundle"]["items"][0]["input"]["input"] == bundle["items"][0]["input"]["input"]
@@ -137,7 +138,7 @@ def test_slow_preparation_never_schedules_after_webhook_expiry(tmp_path, monkeyp
     """A timed-out preparation cannot unexpectedly start paid work after UI failure."""
     from evals.langfuse import content, server
     source = Path(__file__).resolve().parents[1] / "snapshots"
-    entry = next(entry for entry in content.load_catalog(source) if entry["name"] == "dummy_assistant")
+    entry = next(entry for entry in content.load_catalog(source) if entry["name"] == AssistantName.DUMMY_ASSISTANT)
     bundle = content.load_snapshot("12919b463fd2b4bd5fdda2765fe6f7745191fcd4668a062576ff8a923f493591", source)
     bundle["dataset_id"] = "dataset"
     monkeypatch.setattr(content, "fetch_bundle", lambda *args: deepcopy(bundle))
@@ -146,6 +147,6 @@ def test_slow_preparation_never_schedules_after_webhook_expiry(tmp_path, monkeyp
     service = ExperimentService(tmp_path / "snapshots", tmp_path / "runtime", Mock)
     service.client = Mock()
     with pytest.raises(ValueError, match="no evaluation was scheduled"):
-        service.submit(ExperimentTrigger(datasetName="chattft/dummy_assistant"))
+        service.submit(ExperimentTrigger(datasetName=f"chattft/{AssistantName.DUMMY_ASSISTANT}"))
     assert service.jobs.claim() is None
     assert not service.wakeup.is_set()

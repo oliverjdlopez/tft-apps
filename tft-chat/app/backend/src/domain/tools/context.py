@@ -55,11 +55,20 @@ async def request_additional_context(
     """
     query = request.query.strip()
     run_context = ctx.context
-    if isinstance(run_context, AssistantRunContext):
+    # Resolve through the executing agent so custom graph defaults also govern
+    # tool retrieval. Import lazily because assistant construction uses tools.
+    from domain.assistants.agent import AssistantAgent
+
+    agent = getattr(ctx, "agent", None)
+    if isinstance(agent, AssistantAgent):
+        provider = agent.resolve_context_provider(run_context)
+    elif isinstance(run_context, AssistantRunContext) and run_context.context_provider is not None:
         provider = run_context.context_provider
-        set_number = run_context.runtime.set_number
     else:
         provider = _context_provider()
+    if isinstance(run_context, AssistantRunContext):
+        set_number = run_context.runtime.set_number
+    else:
         set_number = load_config().chat.set_number
     snippets = await provider.aselect(
         query,
