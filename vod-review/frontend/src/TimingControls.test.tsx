@@ -9,7 +9,7 @@ const video: VideoRecord = { id: "v", original_name: "clip.mp4", mime_type: "vid
 function mockApi() {
   return vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
     const url = String(input);
-    const payload = url.endsWith("/resumable-download") ? null : url.endsWith("/videos") ? [video] : url.endsWith("/from-url") ? { status: "failed", error: "Stopped test download" } : url.endsWith("/playback") ? { status: "failed", error: "Test playback unavailable" } : video;
+    const payload = (url.endsWith("/resumable-download") || url.endsWith("/transcription")) ? null : url.endsWith("/videos") ? [video] : url.endsWith("/from-url") ? { status: "failed", error: "Stopped test download" } : url.endsWith("/playback") ? { status: "failed", error: "Test playback unavailable" } : video;
     return { ok: true, status: 200, json: async () => payload } as Response;
   });
 }

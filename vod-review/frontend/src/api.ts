@@ -130,23 +130,27 @@ export type DownloadMediaType = "video" | "audio";
 
 export type ReplaySchedule = {
   enabled: boolean; sources: string[]; daily_time: string; timezone: string;
-  window_hours: number; quality: DownloadQuality;
+  window_hours: number; quality: DownloadQuality; transcribe: boolean;
 };
 export type ReplayAutomationRun = {
   id: string; status: string; scheduled_at: string; window_start: string;
   started_at: string; finished_at: string | null; matched: number; imported: number;
-  skipped: number; errors: { source_url: string; message: string }[];
+  skipped: number; transcribed: number; errors: { source_url: string; message: string }[];
 };
 export type ReplayAutomationStatus = {
+  configured: boolean;
   settings: ReplaySchedule; next_run_at: string | null; runs: ReplayAutomationRun[];
   imports: { media_id: string; title: string; source_url: string; url: string;
-    status: string; progress: number | null; error: string | null; video_id: string | null }[];
+    status: string; progress: number | null; error: string | null; video_id: string | null;
+    transcription_task_id: string | null; transcription_status: TranscriptionTask["status"] | null;
+    transcription_error: string | null }[];
 };
 export const getReplayAutomation = () => request<ReplayAutomationStatus>("/api/replay-automation");
 export const saveReplayAutomation = (settings: ReplaySchedule) => request<ReplayAutomationStatus>("/api/replay-automation", {
   method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings),
 });
 export const runReplayAutomation = () => request<{ run_id: string; status: string }>("/api/replay-automation/run", { method: "POST" });
+export const getVideoTranscription = (videoId: string) => request<TranscriptionTask | null>(`/api/videos/${videoId}/transcription`);
 
 export const getDownloadTask = (taskId: string) => request<DownloadTask>(`/api/downloads/${taskId}`);
 export const getResumableDownload = () => request<DownloadTask | null>("/api/resumable-download");

@@ -5,7 +5,7 @@ import type { ReplayAutomationStatus } from "./api";
 
 /** Provide a persistent schedule response without contacting creator platforms. */
 function status(): ReplayAutomationStatus {
-  return { settings: { enabled: false, sources: [], daily_time: "09:00", timezone: "UTC", window_hours: 24, quality: "720p" }, next_run_at: null, runs: [], imports: [] };
+  return { configured: false, settings: { enabled: false, sources: [], daily_time: "09:00", timezone: "UTC", window_hours: 24, quality: "720p", transcribe: false }, next_run_at: null, runs: [], imports: [] };
 }
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.useRealTimers(); });
@@ -31,7 +31,7 @@ it("seeds existing creators and persists daily time, timezone and a window in da
   fireEvent.change(screen.getByLabelText("Automatic import quality"), { target: { value: "1080p" } });
   fireEvent.click(screen.getByRole("button", { name: "Save schedule" }));
   await screen.findByText("Schedule saved.");
-  expect(body).toEqual({ enabled: true, sources: ["https://www.youtube.com/@example"], daily_time: "03:30", timezone: "Asia/Tokyo", window_hours: 120, quality: "1080p" });
+  expect(body).toEqual({ enabled: true, sources: ["https://www.youtube.com/@example"], daily_time: "03:30", timezone: "Asia/Tokyo", window_hours: 120, quality: "1080p", transcribe: false });
   expect(screen.getByText(/Next scan:.*Asia\/Tokyo/)).toBeInTheDocument();
 });
 
@@ -57,7 +57,7 @@ it("saves before Run now and exposes backend validation errors", async () => {
 it("polls import progress without overwriting unsaved creators and refreshes the library", async () => {
   vi.useFakeTimers();
   const saved = status(); saved.settings.sources = ["https://www.youtube.com/@saved"];
-  saved.runs = [{ id: "run", status: "running", scheduled_at: "2026-09-30T12:00:00Z", window_start: "2026-09-29T12:00:00Z", started_at: "2026-09-30T12:00:00Z", finished_at: null, matched: 2, imported: 0, skipped: 0, errors: [] }];
+  saved.runs = [{ id: "run", status: "running", scheduled_at: "2026-09-30T12:00:00Z", window_start: "2026-09-29T12:00:00Z", started_at: "2026-09-30T12:00:00Z", finished_at: null, matched: 2, imported: 0, skipped: 0, transcribed: 0, errors: [] }];
   const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(async () => ({ ok: true, json: async () => structuredClone(saved) }) as Response);
   const refresh = vi.fn();
   let view: ReturnType<typeof render>;
@@ -87,4 +87,37 @@ it("rejects invalid windows before writing a schedule", async () => {
   fireEvent.submit(screen.getByRole("button", { name: "Save schedule" }).closest("form")!);
   await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("greater than zero"));
   expect(fetch).toHaveBeenCalledTimes(1);
+});
+
+it("saves automatic transcription alongside creator sources and preserves it during progress polling", async () => {
+  vi.useFakeTimers();
+  const saved = status();
+  const sourcesSaved = vi.fn();
+  vi.spyOn(globalThis, "fetch").mockImplementation(async (input, options) => {
+    if (options?.method === "PUT") saved.settings = JSON.parse(String(options.body));
+    return { ok: true, json: async () => String(input).endsWith("/run") ? { run_id: "run", status: "running" } : structuredClone(saved) } as Response;
+  });
+  await act(async () => { render(<ReplayAutomation sources={["https://www.twitch.tv/example"]} onClose={vi.fn()} onImported={vi.fn()} onSourcesSaved={sourcesSaved} />); });
+  fireEvent.click(screen.getByRole("checkbox", { name: "Automatically transcribe imported videos" }));
+  await act(async () => { fireEvent.click(screen.getByRole("button", { name: "Run now" })); });
+  expect(saved.settings.transcribe).toBe(true);
+  expect(sourcesSaved).toHaveBeenCalledWith(["https://www.twitch.tv/example"]);
+  expect(screen.getByText("Creator scan started. Videos and transcripts will appear in the library.")).toBeInTheDocument();
+  saved.imports = [{ media_id: "twitch:one", title: "Saved VOD", source_url: saved.settings.sources[0], url: "https://www.twitch.tv/videos/one", status: "completed", progress: 100, error: null, video_id: "one", transcription_task_id: "text", transcription_status: "running", transcription_error: null }];
+  await act(async () => { await vi.advanceTimersByTimeAsync(5000); });
+  expect(screen.getByText(/Video ready · Transcribing/)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("checkbox", { name: "Automatically transcribe imported videos" }));
+  saved.imports[0].transcription_status = "failed";
+  saved.imports[0].transcription_error = "No audio stream";
+  await act(async () => { await vi.advanceTimersByTimeAsync(5000); });
+  expect(screen.getByText(/Transcription failed · No audio stream/)).toBeInTheDocument();
+  expect(screen.getByRole("checkbox", { name: "Automatically transcribe imported videos" })).not.toBeChecked();
+});
+
+it("keeps a deliberately cleared creator list and saved timezone when reopened", async () => {
+  const saved = status(); saved.configured = true; saved.settings.timezone = "Asia/Tokyo";
+  vi.spyOn(globalThis, "fetch").mockResolvedValue({ ok: true, json: async () => saved } as Response);
+  render(<ReplayAutomation sources={["https://www.twitch.tv/old-browser-source"]} onClose={vi.fn()} onImported={vi.fn()} />);
+  expect(await screen.findByLabelText("Automatic import creators")).toHaveValue("");
+  expect(screen.getByLabelText("Import timezone")).toHaveValue("Asia/Tokyo");
 });

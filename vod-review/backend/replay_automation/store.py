@@ -37,7 +37,20 @@ def initialize() -> None:
                 task_id TEXT, video_id TEXT, status TEXT NOT NULL
             );
         """)
-        connection.execute("INSERT OR IGNORE INTO replay_schedule VALUES(1, ?, NULL)", (ReplaySchedule().model_dump_json(),))
+        columns = {row["name"] for row in connection.execute("PRAGMA table_info(replay_schedule)")}
+        if "configured" not in columns:
+            connection.execute("ALTER TABLE replay_schedule ADD COLUMN configured INTEGER NOT NULL DEFAULT 0")
+            existing = connection.execute("SELECT settings FROM replay_schedule WHERE id=1").fetchone()
+            if existing and ReplaySchedule.model_validate_json(existing["settings"]) != ReplaySchedule():
+                connection.execute("UPDATE replay_schedule SET configured=1 WHERE id=1")
+        # Existing schedules keep downloading only until transcription is enabled.
+        columns = {row["name"] for row in connection.execute("PRAGMA table_info(replay_runs)")}
+        if "transcribed" not in columns:
+            connection.execute("ALTER TABLE replay_runs ADD COLUMN transcribed INTEGER NOT NULL DEFAULT 0")
+        columns = {row["name"] for row in connection.execute("PRAGMA table_info(replay_imports)")}
+        if "transcription_task_id" not in columns:
+            connection.execute("ALTER TABLE replay_imports ADD COLUMN transcription_task_id TEXT")
+        connection.execute("INSERT OR IGNORE INTO replay_schedule(id,settings,next_run_at) VALUES(1, ?, NULL)", (ReplaySchedule().model_dump_json(),))
         connection.execute("UPDATE replay_runs SET status='interrupted', finished_at=? WHERE status='running'", (db.utc_now(),))
         # Existing downloads are recovered by init_db; keep completed associations
         # even if the service stopped between finishing a download and recording it.
@@ -58,7 +71,7 @@ def save_settings(settings: ReplaySchedule, now: datetime) -> None:
     """Apply changes to subsequent runs; an already claimed run keeps its snapshot."""
     next_run = next_occurrence(now, settings.daily_time, settings.timezone).isoformat() if settings.enabled else None
     with closing(db.get_db()) as connection, connection:
-        connection.execute("UPDATE replay_schedule SET settings=?, next_run_at=? WHERE id=1", (settings.model_dump_json(), next_run))
+        connection.execute("UPDATE replay_schedule SET settings=?, next_run_at=?, configured=1 WHERE id=1", (settings.model_dump_json(), next_run))
 
 
 def claim_run(now: datetime, manual: bool = False) -> dict | None:
@@ -86,11 +99,11 @@ def claim_run(now: datetime, manual: bool = False) -> dict | None:
         return run
 
 
-def update_run(run_id: str, *, matched: int, imported: int, skipped: int, errors: list[dict], status: str = "running") -> None:
+def update_run(run_id: str, *, matched: int, imported: int, skipped: int, errors: list[dict], status: str = "running", transcribed: int = 0) -> None:
     """Persist progress and source/download errors without obscuring successful imports."""
     with closing(db.get_db()) as connection, connection:
-        connection.execute("UPDATE replay_runs SET matched=?,imported=?,skipped=?,errors=?,status=?,finished_at=? WHERE id=?",
-                           (matched, imported, skipped, json.dumps(errors), status, db.utc_now() if status != "running" else None, run_id))
+        connection.execute("UPDATE replay_runs SET matched=?,imported=?,skipped=?,errors=?,status=?,finished_at=?,transcribed=? WHERE id=?",
+                           (matched, imported, skipped, json.dumps(errors), status, db.utc_now() if status != "running" else None, transcribed, run_id))
 
 
 def reserve_import(replay: dict, run_id: str) -> bool:
@@ -104,16 +117,28 @@ def reserve_import(replay: dict, run_id: str) -> bool:
             # Deleting a library video permits importing it again in a later window.
             if connection.execute("SELECT 1 FROM videos WHERE id=?", (row["video_id"],)).fetchone():
                 return False
-        manual_tasks = connection.execute("""SELECT url,status,video_id FROM download_tasks
+        manual_tasks = connection.execute("""SELECT id,url,status,video_id FROM download_tasks
             WHERE media_type='video' AND start_seconds IS NULL AND end_seconds IS NULL
             AND status IN ('queued','running','pausing','paused','completed')""").fetchall()
         for task in manual_tasks:
             if media_identity(task["url"] or "") == replay["id"]:
-                if task["status"] != "completed" or connection.execute("SELECT 1 FROM videos WHERE id=?", (task["video_id"],)).fetchone():
+                if task["status"] != "completed":
+                    return False
+                if connection.execute("SELECT 1 FROM videos WHERE id=?", (task["video_id"],)).fetchone():
+                    # Associate a full manual import so enabling transcription later
+                    # can process it without another transfer or library entry.
+                    connection.execute("""INSERT INTO replay_imports
+                        (media_id,run_id,title,url,source_url,published_at,status,task_id,video_id)
+                        VALUES(?,?,?,?,?,?,'completed',?,?) ON CONFLICT(media_id) DO UPDATE SET
+                        status='completed',task_id=excluded.task_id,video_id=excluded.video_id,
+                        transcription_task_id=CASE WHEN replay_imports.video_id=excluded.video_id
+                            THEN replay_imports.transcription_task_id ELSE NULL END""",
+                        (replay["id"], run_id, replay["title"], replay["url"], replay["source_url"],
+                         replay["published_at"], task["id"], task["video_id"]))
                     return False
         connection.execute("""INSERT INTO replay_imports(media_id,run_id,title,url,source_url,published_at,status)
             VALUES(?,?,?,?,?,?,'downloading') ON CONFLICT(media_id) DO UPDATE SET
-            run_id=excluded.run_id,status='downloading',task_id=NULL,video_id=NULL""",
+            run_id=excluded.run_id,status='downloading',task_id=NULL,video_id=NULL,transcription_task_id=NULL""",
             (replay["id"], run_id, replay["title"], replay["url"], replay["source_url"], replay["published_at"]))
         return True
 
@@ -125,15 +150,32 @@ def update_import(media_id: str, *, status: str, task_id: str | None = None, vid
                            (status, task_id, video_id, media_id))
 
 
+def imported_video_id(media_id: str) -> str | None:
+    """Find a completed library import, including adopted manual downloads."""
+    with closing(db.get_db()) as connection:
+        row = connection.execute("""SELECT i.video_id FROM replay_imports i
+            JOIN videos v ON v.id=i.video_id WHERE i.media_id=? AND i.status='completed'""", (media_id,)).fetchone()
+        return row["video_id"] if row else None
+
+
+def associate_transcription(media_id: str, task_id: str) -> None:
+    """Persist transcription separately so its failure never loses an imported video."""
+    with closing(db.get_db()) as connection, connection:
+        connection.execute("UPDATE replay_imports SET transcription_task_id=? WHERE media_id=?", (task_id, media_id))
+
+
 def status() -> dict:
     """Return schedule, recent runs, and standard download progress for the UI."""
     settings, next_run = get_settings()
     with closing(db.get_db()) as connection:
+        configured = bool(connection.execute("SELECT configured FROM replay_schedule WHERE id=1").fetchone()["configured"])
         runs = [dict(row) for row in connection.execute("SELECT * FROM replay_runs ORDER BY started_at DESC LIMIT 10")]
         for run in runs:
             run["errors"] = json.loads(run["errors"])
             del run["settings"]
-        items = [dict(row) for row in connection.execute("""SELECT i.*,d.progress,d.error
+        items = [dict(row) for row in connection.execute("""SELECT i.*,d.progress,d.error,
+            t.status AS transcription_status,t.error AS transcription_error
             FROM replay_imports i LEFT JOIN download_tasks d ON d.id=i.task_id
+            LEFT JOIN transcription_tasks t ON t.id=i.transcription_task_id
             ORDER BY i.rowid DESC LIMIT 100""")]
-    return {"settings": settings.model_dump(), "next_run_at": next_run, "runs": runs, "imports": items}
+    return {"settings": settings.model_dump(), "next_run_at": next_run, "runs": runs, "imports": items, "configured": configured}

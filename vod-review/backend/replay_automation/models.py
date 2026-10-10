@@ -21,6 +21,7 @@ class ReplaySchedule(BaseModel):
     timezone: str = Field(default="UTC", min_length=1, max_length=100)
     window_hours: float = Field(default=24, gt=0, le=24 * 90, allow_inf_nan=False)
     quality: DownloadQuality = "720p"
+    transcribe: bool = False
 
     @model_validator(mode="after")
     def validate_settings(self) -> "ReplaySchedule":

@@ -194,11 +194,14 @@ the sampled-frame cache, and timestamp selection remains independent of source F
 
 ## Automatic creator imports
 
-Use **Automatic imports** in the header to save a creator list, daily time,
+Use **Source settings** or **Automatic imports** in the header to configure
+creator sources and automation together. Save a creator list, daily time,
 timezone, and publication lookback window. The backend discovers and downloads
 eligible YouTube videos/completed streams/shorts and Twitch VODs into the normal
-library, preparing playback just like a manual upload. Imports are deduplicated;
-analysis remains a user action. Keep the desktop/backend running for scheduled
+library, preparing playback just like a manual upload. Imports are deduplicated. Enable **Automatically transcribe imported videos**
+to recognize speech after each download and read saved transcripts in the library.
+Failed transcriptions retry on later scans without another download; completed
+transcripts are reused. Round analysis remains a user action. Keep the desktop/backend running for scheduled
 work. See [creator scheduling and recovery](docs/creator-imports.md).
 
 ## Google Drive round clips

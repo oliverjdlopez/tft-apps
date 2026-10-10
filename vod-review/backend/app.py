@@ -55,6 +55,7 @@ WORKERS: ThreadPoolExecutor | None = None
 PLAYBACK_TASKS: dict[str, asyncio.Task[None]] = {}
 PLAYBACK_ERRORS: dict[str, str] = {}
 DOWNLOAD_TASKS: dict[str, asyncio.Task[None]] = {}
+TRANSCRIPTION_TASKS: dict[str, asyncio.Task[None]] = {}
 DOWNLOAD_PAUSE_REQUESTS: set[str] = set()
 ROOT = Path(__file__).resolve().parent.parent
 SAVE_PROCESSED_FRAMES = os.environ.get("VOD_SAVE_FRAMES", "").lower() in {"1", "true", "yes", "on"}
@@ -721,6 +722,9 @@ async def _run_transcription_task(task_id: str) -> None:
             return
         transcript, language = await asyncio.to_thread(_transcribe_audio_file, row["media_path"])
         db.update_transcription_task(task_id, status="completed", transcript=transcript, language=language)
+    except asyncio.CancelledError:
+        db.update_transcription_task(task_id, status="failed", error="Transcription was interrupted; retry this transcription.")
+        raise
     except HTTPException as exc:
         db.update_transcription_task(task_id, status="failed", error=str(exc.detail))
         return
@@ -728,6 +732,49 @@ async def _run_transcription_task(task_id: str) -> None:
         db.update_transcription_task(task_id, status="failed", error=str(exc))
         return
     await asyncio.to_thread(publish_completed_transcripts, task_id)
+
+
+def launch_video_transcription(video_id: str, *, reuse_completed: bool = False) -> tuple[dict, asyncio.Task | None]:
+    """Create or reuse a tracked transcription before yielding to concurrent requests.
+
+    Args:
+        video_id: Library video to transcribe from its existing media file.
+        reuse_completed: Return successful recognition instead of running Whisper again.
+
+    Returns:
+        The persisted task payload and its owned task, if recognition is needed.
+    """
+    path = db.video_path(video_id)
+    payload = db.find_video_transcription(video_id, reusable_only=True)
+    if payload and payload["status"] == "completed":
+        if reuse_completed:
+            return payload, None
+        latest = db.find_video_transcription(video_id)
+        payload = latest if latest and latest["status"] in {"queued", "running"} else None
+    if payload is None:
+        payload = db.create_transcription_task(uuid.uuid4().hex, str(path), video_id)
+    task_id = payload["task_id"]
+    task = TRANSCRIPTION_TASKS.get(task_id)
+    if task is None:
+        task = asyncio.create_task(_run_transcription_task(task_id), name=f"transcribe-video-{task_id}")
+        TRANSCRIPTION_TASKS[task_id] = task
+        task.add_done_callback(lambda completed: TRANSCRIPTION_TASKS.pop(task_id, None))
+    return payload, task
+
+
+async def transcribe_imported_video(video_id: str, media_id: str) -> None:
+    """Recognize an imported VOD, reusing completed/manual work and persisting retries."""
+    try:
+        from .replay_automation import store
+    except ImportError:
+        from replay_automation import store
+    payload, task = launch_video_transcription(video_id, reuse_completed=True)
+    store.associate_transcription(media_id, payload["task_id"])
+    if task is not None:
+        await asyncio.shield(task)
+    result = db.get_transcription_task(payload["task_id"])
+    if result["status"] != "completed":
+        raise RuntimeError(result["error"] or "Transcription did not complete")
 
 
 def _download_url_metadata(url: str) -> dict[str, Any]:
@@ -1119,7 +1166,7 @@ async def lifespan(application: FastAPI):
         except ImportError:  # Support the documented backend-directory launch.
             from replay_automation.discovery import discover_window
             from replay_automation.service import ReplayAutomation
-        automation = ReplayAutomation(discover_window, import_discovered_video)
+        automation = ReplayAutomation(discover_window, import_discovered_video, transcribe_imported_video)
         application.state.replay_automation = automation
         await automation.start()
         yield
@@ -1127,6 +1174,12 @@ async def lifespan(application: FastAPI):
         if automation is not None:
             await automation.stop()
         application.state.replay_automation = None
+        # Recognition tasks are owned even when a user closes the requesting view.
+        tasks = list(TRANSCRIPTION_TASKS.values())
+        for task in tasks:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+        TRANSCRIPTION_TASKS.clear()
         shutdown()
 
 
@@ -1327,12 +1380,15 @@ async def import_discovered_video(request: VideoUrlRequest, media_id: str) -> di
 
 @app.post("/api/videos/{video_id}/transcription", status_code=202)
 async def start_video_transcription(video_id: str) -> dict[str, Any]:
-    path = db.video_path(video_id)
-    task_id = uuid.uuid4().hex
-    payload = db.create_transcription_task(task_id, str(path), video_id)
-    task = asyncio.create_task(_run_transcription_task(task_id), name=f"transcribe-video-{task_id}")
-    task.add_done_callback(lambda completed: None)
+    payload, _task = launch_video_transcription(video_id)
     return payload
+
+
+@app.get("/api/videos/{video_id}/transcription")
+async def get_video_transcription(video_id: str) -> dict[str, Any] | None:
+    """Retrieve saved automatic/manual recognition when reopening a library video."""
+    db.video_path(video_id)
+    return db.find_video_transcription(video_id)
 
 
 @app.get("/api/transcriptions/{task_id}")

@@ -11,8 +11,14 @@ afterEach(() => {
 
 describe("replay discovery", () => {
   it("saves channel settings and lists discovered replays", async () => {
-    vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, options) => {
       const url = String(input);
+      if (url.endsWith("/api/replay-automation")) {
+        const settings = options?.method === "PUT" ? JSON.parse(String(options.body)) : {
+          enabled: false, sources: [], daily_time: "09:00", timezone: "UTC", window_hours: 24, quality: "720p", transcribe: false,
+        };
+        return { ok: true, json: async () => ({ settings, next_run_at: null, runs: [], imports: [] }) } as Response;
+      }
       if (url.endsWith("/api/resumable-download")) {
         return { ok: true, status: 200, json: async () => null } as Response;
       }
@@ -42,10 +48,12 @@ describe("replay discovery", () => {
     render(<App />);
     await screen.findByText("No videos yet");
     fireEvent.click(screen.getByRole("button", { name: "Replay source settings" }));
-    fireEvent.change(screen.getByLabelText("Replay sources"), {
+    fireEvent.change(await screen.findByLabelText("Automatic import creators"), {
       target: { value: "https://www.youtube.com/@example" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Save sources" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save schedule" }));
+    await screen.findByText("Schedule saved.");
+    fireEvent.click(screen.getByRole("button", { name: "Close source settings" }));
 
     expect(JSON.parse(window.localStorage.getItem("framewise.replaySources") ?? "[]")).toEqual([
       "https://www.youtube.com/@example",
@@ -65,7 +73,7 @@ describe("replay discovery", () => {
     render(<App />);
     await screen.findByText("No videos yet");
     fireEvent.click(screen.getByRole("button", { name: "Display new replays" }));
-    expect(screen.getByRole("dialog", { name: "Source settings" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Sources and automation" })).toBeInTheDocument();
   });
 });
 
@@ -100,7 +108,7 @@ describe("VOD download range", () => {
     fireEvent.click(screen.getByRole("button", { name: "Download video from link" }));
 
     expect(await screen.findByText("The end timestamp must be after the start timestamp.")).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith("/api/videos/from-url"))).toBe(false);
   });
 
   it("sends the optional checkpoint interval and exposes paused downloads", async () => {
@@ -353,4 +361,21 @@ it("features every stage 1 classification in either label format", () => {
     expect(isFeaturedRound(`1${round}`)).toBe(true);
     expect(isFeaturedRound(`1-${round}`)).toBe(true);
   }
+});
+
+it("reads an automatic transcript when reopening its library video", async () => {
+  const video: VideoRecord = { id: "automatic", original_name: "Automatic VOD.mp4", mime_type: "video/mp4", duration: 30, width: 32, height: 32, created_at: "2026-10-10", box: null, current_job: null, active_job: null, latest_job: null };
+  const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+    const url = String(input);
+    const payload = url.endsWith("/videos") ? [video] : url.endsWith("/videos/automatic") ? video : url.endsWith("/videos/automatic/transcription") ? {
+      task_id: "automatic-text", video_id: video.id, status: "completed", transcript: "Saved automatic transcript", language: "en", error: null,
+    } : url.endsWith("/replay-automation") ? {
+      settings: { enabled: true, sources: ["https://www.twitch.tv/example"], daily_time: "09:00", timezone: "UTC", window_hours: 24, quality: "720p", transcribe: true }, next_run_at: null, runs: [], imports: [],
+    } : url.endsWith("/playback") ? { status: "failed", error: "Test playback unavailable" } : null;
+    return { ok: true, json: async () => payload } as Response;
+  });
+  render(<App />);
+  fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: video.id } });
+  expect(await screen.findByLabelText("Raw transcript")).toHaveValue("Saved automatic transcript");
+  expect(fetch.mock.calls.some(([, options]) => options?.method === "POST")).toBe(false);
 });

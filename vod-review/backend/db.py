@@ -141,6 +141,11 @@ def init_db() -> None:
         "WHERE status IN ('queued', 'running', 'pausing')",
         (utc_now(),),
     )
+    connection.execute(
+        "UPDATE transcription_tasks SET status='failed', error='Interrupted by server restart; retry this transcription.', updated_at=? "
+        "WHERE status IN ('queued', 'running')",
+        (utc_now(),),
+    )
     connection.commit()
     connection.execute("PRAGMA optimize")
     connection.close()
@@ -420,6 +425,29 @@ def get_transcription_task(task_id: str, connection: sqlite3.Connection | None =
     if row is None:
         raise HTTPException(status_code=404, detail="Transcription task not found")
     return {"task_id": row["id"], "video_id": row["video_id"], "status": row["status"], "transcript": row["transcript"], "language": row["language"], "error": row["error"]}
+
+
+def find_video_transcription(video_id: str, *, reusable_only: bool = False) -> dict[str, Any] | None:
+    """Read a video's latest task, or prefer a successful/active reusable task.
+
+    Args:
+        video_id: Library video whose audio was recognized.
+        reusable_only: Ignore failed tasks and prefer completed recognition to new work.
+
+    Returns:
+        A persisted transcription payload, or None when no matching task exists.
+    """
+    connection = get_db()
+    try:
+        conditions = "AND status IN ('completed','queued','running')" if reusable_only else ""
+        order = "(status='completed') DESC," if reusable_only else ""
+        row = connection.execute(
+            f"SELECT id FROM transcription_tasks WHERE video_id=? {conditions} ORDER BY {order} created_at DESC,rowid DESC LIMIT 1",
+            (video_id,),
+        ).fetchone()
+        return get_transcription_task(row["id"], connection) if row else None
+    finally:
+        connection.close()
 
 
 def get_resumable_download_task() -> dict[str, Any] | None:

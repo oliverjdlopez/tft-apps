@@ -300,3 +300,197 @@ def test_backend_lifespan_runs_due_schedule_and_stops_its_owner(local_store, mon
 
     asyncio.run(exercise())
     assert len(shutdowns) == 2
+
+
+def test_transcription_failure_retries_without_downloading_and_reuses_success(local_store, monkeypatch):
+    """Keep videos after recognition failures and reuse successful text on later scans."""
+    store.save_settings(ReplaySchedule(sources=[SOURCE], transcribe=True), NOW)
+    downloads, recognition = [], []
+
+    async def discover(*args):
+        return [replay("one"), replay("two")], []
+
+    async def importer(request, media_id):
+        downloads.append(media_id)
+        return add_video(media_id.replace(":", "-"), local_store)
+
+    async def recognize(task_id):
+        task = db.get_transcription_task(task_id)
+        recognition.append(task["video_id"])
+        db.update_transcription_task(task_id, status="running")
+        if task["video_id"] == "youtube-one" and recognition.count("youtube-one") == 1:
+            db.update_transcription_task(task_id, status="failed", error="Recognition unavailable")
+        else:
+            db.update_transcription_task(task_id, status="completed", transcript="Recognized speech", language="en")
+
+    monkeypatch.setattr(app_module, "_run_transcription_task", recognize)
+
+    async def exercise():
+        owner = ReplayAutomation(discover, importer, app_module.transcribe_imported_video)
+        owner.run_now(NOW)
+        await owner.active
+        first = store.status()
+        assert first["runs"][0]["status"] == "completed_with_errors"
+        assert first["runs"][0]["transcribed"] == 1
+        assert all(item["status"] == "completed" for item in first["imports"])
+        assert {item["transcription_status"] for item in first["imports"]} == {"completed", "failed"}
+        assert any(item["transcription_error"] == "Recognition unavailable" for item in first["imports"])
+        owner.run_now(NOW + timedelta(seconds=1))
+        await owner.active
+        latest = store.status()["runs"][0]
+        assert (latest["imported"], latest["skipped"], latest["transcribed"]) == (0, 2, 2)
+        assert latest["status"] == "completed"
+        owner.run_now(NOW + timedelta(seconds=2))
+        await owner.active
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app_module.app), base_url="http://test") as client:
+            response = await client.get("/api/videos/youtube-one/transcription")
+            assert response.status_code == 200
+            assert response.json()["transcript"] == "Recognized speech"
+
+    asyncio.run(exercise())
+    assert downloads == ["youtube:one", "youtube:two"]
+    assert recognition == ["youtube-one", "youtube-two", "youtube-one"]
+    assert app_module.TRANSCRIPTION_TASKS == {}
+
+
+def test_enabling_transcription_adopts_manual_video_and_completed_transcript(local_store):
+    """A creator scan recognizes previously downloaded videos without another transfer."""
+    item = replay()
+    video = add_video("manual-video", local_store)
+    db.create_download_task("manual", url="https://youtu.be/one")
+    db.update_download_task("manual", status="completed", video_id=video["id"])
+    db.create_transcription_task("manual-text", str(local_store / "manual-video.mp4"), video["id"])
+    db.update_transcription_task("manual-text", status="completed", transcript="Existing transcript")
+    store.save_settings(ReplaySchedule(sources=[SOURCE], transcribe=True), NOW)
+
+    async def discover(*args):
+        return [item], []
+
+    async def exercise():
+        owner = ReplayAutomation(discover, None, app_module.transcribe_imported_video)
+        owner.run_now(NOW)
+        await owner.active
+
+    asyncio.run(exercise())
+    status = store.status()
+    assert (status["runs"][0]["imported"], status["runs"][0]["transcribed"]) == (0, 1)
+    assert status["imports"][0]["transcription_task_id"] == "manual-text"
+    assert status["imports"][0]["video_id"] == video["id"]
+
+
+def test_automatic_and_manual_transcription_share_active_task(local_store, monkeypatch):
+    """Simultaneous manual/automatic requests await one recognition task."""
+    video = add_video("shared", local_store)
+    assert store.reserve_import(replay(), "run")
+    store.update_import("youtube:one", status="completed", video_id=video["id"])
+    calls = []
+
+    async def exercise():
+        entered, finish = asyncio.Event(), asyncio.Event()
+
+        async def recognize(task_id):
+            calls.append(task_id)
+            db.update_transcription_task(task_id, status="running")
+            entered.set()
+            await finish.wait()
+            db.update_transcription_task(task_id, status="completed", transcript="Shared speech")
+
+        monkeypatch.setattr(app_module, "_run_transcription_task", recognize)
+        manual = await app_module.start_video_transcription(video["id"])
+        await entered.wait()
+        automatic = asyncio.create_task(app_module.transcribe_imported_video(video["id"], "youtube:one"))
+        await asyncio.sleep(0)
+        repeated = await app_module.start_video_transcription(video["id"])
+        assert repeated["task_id"] == manual["task_id"]
+        finish.set()
+        await automatic
+        assert store.status()["imports"][0]["transcription_task_id"] == manual["task_id"]
+
+    asyncio.run(exercise())
+    assert len(calls) == 1
+
+
+def test_legacy_settings_and_history_migrate_without_enabling_transcription(local_store):
+    """Migrate existing state in place while preserving download-only schedules."""
+    store.save_settings(ReplaySchedule(sources=[SOURCE]), NOW)
+    run = store.claim_run(NOW, manual=True)
+    store.update_run(run["id"], matched=1, imported=1, skipped=0, errors=[], status="completed")
+    with closing(db.get_db()) as connection, connection:
+        settings = json.loads(connection.execute("SELECT settings FROM replay_schedule").fetchone()["settings"])
+        settings.pop("transcribe")
+        connection.execute("UPDATE replay_schedule SET settings=?", (json.dumps(settings),))
+        connection.execute("ALTER TABLE replay_runs DROP COLUMN transcribed")
+        connection.execute("ALTER TABLE replay_imports DROP COLUMN transcription_task_id")
+        connection.execute("ALTER TABLE replay_schedule DROP COLUMN configured")
+    store.initialize()
+    status = store.status()
+    assert status["settings"]["transcribe"] is False
+    assert status["configured"] is True
+    assert status["runs"][0]["imported"] == 1
+    assert status["runs"][0]["transcribed"] == 0
+
+
+def test_restart_marks_transcription_interrupted_and_preserves_video(local_store):
+    """A stale running task can be retried instead of blocking recognition forever."""
+    video = add_video("restart", local_store)
+    db.create_transcription_task("stale", str(local_store / "restart.mp4"), video["id"])
+    db.update_transcription_task("stale", status="running")
+    db.init_db()
+    assert db.get_transcription_task("stale")["status"] == "failed"
+    assert db.find_video_transcription(video["id"], reusable_only=True) is None
+    assert db.video_path(video["id"]).exists()
+
+
+def test_scheduled_video_transcription_uses_saved_media_and_publishes_after_retry(local_store, monkeypatch):
+    """Exercise discovery through tracked downloads, real recognition orchestration, and publication."""
+    store.save_settings(ReplaySchedule(sources=[SOURCE], transcribe=True), NOW)
+    downloaded, prepared, recognized, published = [], [], [], []
+
+    def download(*args, **kwargs):
+        downloaded.append(args[0])
+        return add_video("pipeline", local_store)
+
+    def recognize(path):
+        recognized.append(path)
+        if len(recognized) == 1:
+            raise HTTPException(503, "Speech recognition unavailable")
+        return "Raw speech from the saved VOD", "en"
+
+    async def discover(*args):
+        return [replay()], []
+
+    monkeypatch.setattr(app_module, "download_video_url", download)
+    monkeypatch.setattr(app_module, "start_playback_preparation", prepared.append)
+    monkeypatch.setattr(app_module, "_transcribe_audio_file", recognize)
+    monkeypatch.setattr(app_module, "publish_completed_transcripts", published.append)
+
+    async def exercise():
+        owner = ReplayAutomation(discover, app_module.import_discovered_video, app_module.transcribe_imported_video)
+        owner.run_now(NOW)
+        await owner.active
+        first = store.status()["imports"][0]
+        assert first["status"] == "completed"
+        assert first["transcription_status"] == "failed"
+        assert first["transcription_error"] == "Speech recognition unavailable"
+        owner.run_now(NOW + timedelta(seconds=1))
+        await owner.active
+        completed = store.status()["imports"][0]
+        assert completed["transcription_status"] == "completed"
+        assert completed["transcription_error"] is None
+        assert db.get_transcription_task(completed["transcription_task_id"])["transcript"] == "Raw speech from the saved VOD"
+        assert published == [completed["transcription_task_id"]]
+
+    asyncio.run(exercise())
+    assert downloaded == [replay()["url"]]
+    assert prepared == ["pipeline"]
+    assert recognized == [str(local_store / "pipeline.mp4")] * 2
+
+
+def test_cleared_sources_remain_configured_after_restart(local_store):
+    """An explicitly empty source list must not be seeded from stale browser settings."""
+    assert store.status()["configured"] is False
+    store.save_settings(ReplaySchedule(sources=[SOURCE]), NOW)
+    store.save_settings(ReplaySchedule(), NOW)
+    store.initialize()
+    assert store.status()["configured"] is True
+    assert store.status()["settings"]["sources"] == []

@@ -12,7 +12,7 @@ import { Checkbox as UiCheckbox } from "@/components/ui/checkbox";
 import { ChangeEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Activity, Check, CircleHelp, Cpu, Crosshair, Download, Film, FolderOpen, Link2, ListVideo, LoaderCircle, Pause, Play, RefreshCcw, Save, ScanSearch, Settings, SkipBack, SkipForward, Trash2, TriangleAlert, Upload, X } from "lucide-react";
-import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
+import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getReplayAutomation, getVideoTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
 import DriveUpload from "./DriveUpload";
 import ReplayAutomation from "./ReplayAutomation";
 import { useOptimizedPlayback } from "./useOptimizedPlayback";
@@ -73,28 +73,6 @@ function loadReplaySources(): string[] {
     return Array.isArray(saved) ? saved.filter((source): source is string => typeof source === "string") : [];
   } catch {
     return [];
-  }
-}
-
-function parseReplaySources(value: string): string[] {
-  return [...new Set(value.split(/\r?\n/).map((source) => source.trim()).filter(Boolean))];
-}
-
-function isReplaySourceUrl(value: string): boolean {
-  try {
-    const parsed = new URL(value);
-    const host = parsed.hostname.toLowerCase();
-    const parts = parsed.pathname.split("/").filter(Boolean);
-    if (!["http:", "https:"].includes(parsed.protocol) || parsed.search || parsed.hash) return false;
-    if (host === "youtube.com" || host.endsWith(".youtube.com")) {
-      return parts[0]?.startsWith("@") || (["channel", "c", "user"].includes(parts[0]) && parts.length >= 2);
-    }
-    if (host === "twitch.tv" || host.endsWith(".twitch.tv")) {
-      return parts.length === 1 && !["videos", "directory", "downloads", "settings"].includes(parts[0].toLowerCase());
-    }
-    return false;
-  } catch {
-    return false;
   }
 }
 
@@ -243,16 +221,21 @@ function App() {
   const [downloadTask, setDownloadTask] = useState<DownloadTask | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [automationOpen, setAutomationOpen] = useState(false);
   const [replaySources, setReplaySources] = useState<string[]>(loadReplaySources);
-  const [replaySourceDraft, setReplaySourceDraft] = useState("");
-  const [settingsError, setSettingsError] = useState<string | null>(null);
   const [replays, setReplays] = useState<Replay[] | null>(null);
   const [replayErrors, setReplayErrors] = useState<{ source_url: string; message: string }[]>([]);
   const [discoveringReplays, setDiscoveringReplays] = useState(false);
   const [selectedReplayCreator, setSelectedReplayCreator] = useState("all");
   const analysisSidebarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void getReplayAutomation().then((result) => {
+      if (!cancelled && (result.configured || result.settings.sources.length)) setReplaySources(result.settings.sources);
+    }).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
 
   const refreshVideos = useCallback(async () => {
     const records = await listVideos();
@@ -293,6 +276,20 @@ function App() {
   useEffect(() => {
     setTranscription(null);
   }, [selectedId]);
+
+  useEffect(() => {
+    if (!selectedId || transcribing) return;
+    let cancelled = false;
+    const refresh = async () => {
+      try {
+        const task = await getVideoTranscription(selectedId);
+        if (!cancelled) setTranscription(task);
+      } catch { /* Preserve the displayed transcript during transient refresh errors. */ }
+    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 5000);
+    return () => { cancelled = true; window.clearInterval(timer); };
+  }, [selectedId, transcribing]);
 
   const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -417,13 +414,8 @@ function App() {
     setError(null);
     setTranscribing(true);
     try {
-      let task = await startTranscription(selected.id);
+      const task = await startTranscription(selected.id);
       setTranscription(task);
-      while (task.status === "queued" || task.status === "running") {
-        await new Promise((resolve) => window.setTimeout(resolve, 1000));
-        task = await getTranscription(task.task_id);
-        setTranscription(task);
-      }
       if (task.status === "failed") setError(task.error ?? "Transcription failed");
     } catch (reason: unknown) {
       setError(reason instanceof Error ? reason.message : "Could not transcribe this video");
@@ -479,34 +471,16 @@ function App() {
     }
   };
 
-  const openSettings = () => {
-    setReplaySourceDraft(replaySources.join("\n"));
-    setSettingsError(null);
-    setSettingsOpen(true);
-  };
+  const openSettings = () => setAutomationOpen(true);
 
-  const saveReplaySources = () => {
-    const sources = parseReplaySources(replaySourceDraft);
-    if (sources.length > 25) {
-      setSettingsError("Add no more than 25 sources.");
-      return;
-    }
-    if (sources.some((source) => !isReplaySourceUrl(source))) {
-      setSettingsError("Use YouTube channel home pages or Twitch streamer home pages, one per line.");
-      return;
-    }
-    try {
-      window.localStorage.setItem(REPLAY_SOURCES_STORAGE_KEY, JSON.stringify(sources));
-    } catch {
-      setSettingsError("These settings could not be saved in this browser.");
-      return;
-    }
+  const saveReplaySources = useCallback((sources: string[]) => {
+    // The backend owns saved sources; browser storage seeds older installations.
+    try { window.localStorage.setItem(REPLAY_SOURCES_STORAGE_KEY, JSON.stringify(sources)); } catch { /* Backend settings remain saved. */ }
     setReplaySources(sources);
     setReplays(null);
     setSelectedReplayCreator("all");
     setReplayErrors([]);
-    setSettingsOpen(false);
-  };
+  }, []);
 
   const handleDisplayReplays = async () => {
     if (replaySources.length === 0) {
@@ -561,8 +535,8 @@ function App() {
       </header>
 
       {error && <UiAlert variant="destructive" className="toast error-toast"><X size={16} /> {error}<UiButton variant="outline" onClick={() => setError(null)} aria-label="Dismiss error">Dismiss</UiButton></UiAlert>}
-      {automationOpen && <ReplayAutomation sources={replaySources} onClose={() => setAutomationOpen(false)} onImported={() => { void refreshVideos().catch(() => undefined); }} />}
-      {settingsOpen && <Modal title="Source settings" onOpenChange={() => setSettingsOpen(false)}><div className="settings-modal-heading"><div><p className="eyebrow">REPLAY DISCOVERY</p><h2 id="replay-settings-title">Source settings</h2></div><UiButton variant="outline" type="button" aria-label="Close replay source settings" onClick={() => setSettingsOpen(false)}><X size={17} /></UiButton></div><p>Add one YouTube channel home page or Twitch streamer home page per line. These stay in this browser.</p><label htmlFor="replay-source-list">Replay sources</label><UiTextarea id="replay-source-list" rows={7} value={replaySourceDraft} onChange={(event) => { setReplaySourceDraft(event.target.value); setSettingsError(null); }} placeholder={"https://www.youtube.com/@channel\nhttps://www.twitch.tv/streamer"} autoFocus />{settingsError && <div className="settings-error" role="alert"><TriangleAlert size={14} />{settingsError}</div>}<div className="confirm-modal-actions"><UiButton variant="outline" className="secondary-button" type="button" onClick={() => setSettingsOpen(false)}>Cancel</UiButton><UiButton variant="default" className="primary-button" type="button" onClick={saveReplaySources}>Save sources</UiButton></div></Modal>}
+      {automationOpen && <ReplayAutomation sources={replaySources} onClose={() => setAutomationOpen(false)} onSourcesSaved={saveReplaySources} onImported={() => { void refreshVideos().catch(() => undefined); }} />}
+
       {deleteTarget && <Modal title="Delete saved VOD?" destructive onOpenChange={() => { if (!deleting) setDeleteTarget(null); }}><div className="confirm-modal-icon"><Trash2 size={19} /></div><h2 id="delete-video-title">Delete saved VOD?</h2><p>“{deleteTarget.original_name}” and its analysis data will be permanently removed from this machine.</p><div className="confirm-modal-actions"><UiButton variant="outline" className="secondary-button" type="button" onClick={() => setDeleteTarget(null)} disabled={deleting}>Cancel</UiButton><UiButton variant="destructive" className="danger-button" type="button" onClick={() => void handleDeleteVideo()} disabled={deleting}>{deleting ? <LoaderCircle className="spin" size={14} /> : <Trash2 size={14} />}{deleting ? "Deleting…" : "Delete VOD"}</UiButton></div></Modal>}
 
       {replays !== null && <section className="replay-panel" aria-labelledby="new-replays-title"><div className="replay-panel-heading"><div><p className="eyebrow">DISCOVERED FROM {replaySources.length} {replaySources.length === 1 ? "SOURCE" : "SOURCES"}</p><h2 id="new-replays-title">New replays</h2></div><UiButton variant="outline" type="button" aria-label="Close new replays" onClick={() => { setReplays(null); setSelectedReplayCreator("all"); }}><X size={17} /></UiButton></div>{replays.length === 0 ? <div className="replay-empty"><ListVideo size={21} /><span>No recent videos or VODs were found.</span></div> : <><label className="replay-creator-filter">Creator<UiNativeSelect aria-label="Filter replays by creator" value={selectedReplayCreator} onChange={(event) => setSelectedReplayCreator(event.target.value)}><option value="all">All creators</option>{[...new Set(replays.map((replay) => replay.creator))].sort((a, b) => a.localeCompare(b)).map((creator) => <option key={creator} value={creator}>{creator}</option>)}</UiNativeSelect></label><div className="replay-list">{replays.filter((replay) => selectedReplayCreator === "all" || replay.creator === selectedReplayCreator).map((replay) => <article className="replay-card" key={replay.id}>{replay.thumbnail_url ? <img src={replay.thumbnail_url} alt="" /> : <div className={`replay-thumbnail ${replay.platform}`}><Play size={20} /></div>}<div className="replay-card-copy"><span className={`platform-pill ${replay.platform}`}>{replay.platform === "youtube" ? "YouTube" : "Twitch"}</span><h3>{replay.title}</h3><p>{replay.creator} · {formatReplayDate(replay.published_at)}{replay.duration_seconds ? ` · ${formatDuration(replay.duration_seconds)}` : ""}</p></div><UiButton variant="outline" className="secondary-button" type="button" onClick={() => useReplay(replay)}>Use replay</UiButton></article>)}</div></>}{replayErrors.length > 0 && <div className="replay-source-errors" role="status"><TriangleAlert size={14} /><span>{replayErrors.length} {replayErrors.length === 1 ? "source could" : "sources could"} not be checked. Open settings to review the URLs.</span></div>}</section>}
@@ -609,7 +583,7 @@ function App() {
             <label className="url-import-checkpoint">Checkpoint every <span><UiInput aria-label="Download checkpoint interval in minutes" type="number" min="1" max="360" step="1" inputMode="numeric" value={downloadCheckpointMinutes} onChange={(event) => setDownloadCheckpointMinutes(event.target.value)} placeholder="Off" disabled={downloading || downloadTask?.status === "paused"} /> minutes</span></label></>}
             {downloadTask && downloadTask.status !== "completed" && downloadTask.status !== "failed" && downloadTask.status !== "dismissed" && <div className="download-progress" role="status" aria-label={`Download progress: ${Math.round(downloadProgress)} percent`}><div className="download-progress-copy"><span>{downloadTask.status === "paused" ? "Download paused" : downloadTask.status === "pausing" ? "Pausing after this checkpoint…" : downloadTask.transcription?.status === "running" ? "Transcribing audio…" : "Downloading your VOD…"}</span><strong>{Math.round(downloadProgress)}%</strong></div><Progress aria-label="Download progress" value={downloadProgress} />{downloadTask.status === "paused" ? <div className="download-controls"><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleUsePausedDownload()}><Film size={11} /> Use saved footage</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleResumeDownload()}><Play size={11} /> Resume</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleDismissPausedDownload()}><X size={11} /> Dismiss</UiButton></div> : downloadCheckpointMinutes && <UiButton variant="outline" className="download-control" type="button" disabled={downloadTask.status === "pausing"} onClick={() => void handlePauseDownload()}><Pause size={11} /> {downloadTask.status === "pausing" ? "Pause requested" : "Pause"}</UiButton>}</div>}<span>{downloading ? "Completed checkpoints are kept if the download is interrupted." : downloadTask?.status === "paused" ? "Use the saved footage now or resume from the last checkpoint." : "Optional range and checkpoints · leave checkpoint blank for a standard download."}</span>
           </form>
-          {selected && <div className="download-progress"><div className="download-progress-copy"><span>Optional raw speech transcription</span></div><UiButton variant="outline" className="download-control" type="button" disabled={transcribing} onClick={() => void handleTranscribeVideo()}>{transcribing ? <><LoaderCircle className="spin" size={12} /> Transcribing…</> : "Transcribe selected video"}</UiButton>{transcription?.status === "completed" && <><span>{transcription.language ? `Detected language: ${transcription.language}` : "Transcript"}</span><UiTextarea aria-label="Raw transcript" value={transcription.transcript ?? ""} readOnly rows={6} /></>}</div>}
+          {selected && <div className="download-progress"><div className="download-progress-copy"><span>Optional raw speech transcription</span></div><UiButton variant="outline" className="download-control" type="button" disabled={transcribing || transcription?.status === "queued" || transcription?.status === "running"} onClick={() => void handleTranscribeVideo()}>{transcribing || transcription?.status === "queued" || transcription?.status === "running" ? <><LoaderCircle className="spin" size={12} /> Transcribing…</> : "Transcribe selected video"}</UiButton>{transcription?.status === "completed" && <><span>{transcription.language ? `Detected language: ${transcription.language}` : "Transcript"}</span><UiTextarea aria-label="Raw transcript" value={transcription.transcript ?? ""} readOnly rows={6} /></>}{transcription?.status === "failed" && <span role="alert">{transcription.error ?? "Transcription failed. Retry this video or run the next automatic scan."}</span>}</div>}
           {downloadTask?.media_type === "audio" && <div className="download-progress"><div className="download-progress-copy"><span>{downloadTask.status === "failed" ? (downloadTask.transcription?.error ?? downloadTask.error ?? "Audio transcription failed") : downloadTask.transcription?.status === "completed" ? `Transcription complete${downloadTask.transcription.language ? ` · ${downloadTask.transcription.language}` : ""}` : "Downloading and transcribing audio…"}</span></div>{downloadTask.transcription?.transcript && <UiTextarea aria-label="Raw audio transcript" value={downloadTask.transcription.transcript} readOnly rows={8} />}</div>}
           <div ref={analysisSidebarRef} className="analysis-sidebar-results" />
           <div className="library-footnote"><CircleHelp size={14} /> Your uploads stay on this machine.</div>
