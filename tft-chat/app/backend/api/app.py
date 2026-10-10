@@ -186,6 +186,9 @@ def _warm_database_at_startup() -> dict[str, object]:
 
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
+    from services.spec_service import initialize_workspace
+
+    await asyncio.to_thread(initialize_workspace)
     _install_local_trace_recorder()
     database_status = await asyncio.to_thread(_warm_database_at_startup)
     app.state.database_status = database_status

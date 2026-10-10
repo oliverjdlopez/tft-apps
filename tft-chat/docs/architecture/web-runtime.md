@@ -391,3 +391,15 @@ V1 reads normalize in memory without storage writes. Collapse and named focus
 views are personal localStorage state keyed by source and workspace. Clipboard
 uses browser events and validated fragments, keeping desktop renderers
 unprivileged. See [Flowchart commands and compatibility](../apps/flowchart.md).
+
+## Specs assistant workspace
+
+`/api/specs` exposes the [assistant workspace](../development/assistant-workspace.md):
+immutable local draft revisions, graph validation, bounded independent trials,
+optional Langfuse comparisons/import, history/restore, and recoverable Apply.
+Saving never writes application source. Document reads remain available; legacy
+direct document writes return 410. SQLite and recovery journals are checkout-owned
+under ignored `.runtime/assistant-workspace/`. Apply/refresh install complete
+validated registries; constructed SDK graphs retain their previous definitions.
+Optional experiments use the authenticated checkout host runner Unix socket;
+backend credentials never enter browser requests or results.
