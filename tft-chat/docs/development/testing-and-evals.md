@@ -251,3 +251,18 @@ search during routing/layout, and rejects console/page errors. The synthetic
 fixture allows overlap warnings where clear routes or labels are impossible.
 A Chromium smoke does not validate native Electron/Windows shell behavior;
 report that boundary separately from desktop unit tests.
+
+## Specs workspace acceptance
+
+See [assistant workspace](assistant-workspace.md) for the draft lifecycle and API.
+Focused acceptance tests cover SQLite revisions, invalid saves, source/runtime
+conflicts, optional files, rollback/restart recovery, restore/import, bounded local
+trials, exact graphs, and durable duplicate-submission handling.
+`evals/langfuse/tests/test_assistant_workspace.py` also executes the real SDK in a
+bounded worker against a local deterministic HTTP model, with an explicit `_test`
+database identity. It exercises frozen models/reasoning, handoffs, tools, wrappers,
+and instruction assembly without connecting to PostgreSQL or spending tokens.
+Frontend coverage exercises saved actions, conflicts, imports, and result links.
+Browser smoke verification should use disposable specs and mocked optional services.
+Live hosted grading and database tools are separate checks; report them explicitly
+when unavailable. Never use ingestion or projection rebuilds as validation.

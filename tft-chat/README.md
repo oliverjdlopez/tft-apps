@@ -19,6 +19,10 @@ Chat answers non-statistical conversation directly and hands every data-backed
 TFT question to `data_analyst`, which owns the investigation and answers with
 the minimum sufficient evidence.
 
+Edit, save, try, compare, and apply existing assistants in the
+[Specs workspace](docs/development/assistant-workspace.md). Langfuse owns scored
+experiments; saving a local draft leaves active application definitions unchanged.
+
 ## Agent-facing tools
 
 | Group | Tools | Purpose |
