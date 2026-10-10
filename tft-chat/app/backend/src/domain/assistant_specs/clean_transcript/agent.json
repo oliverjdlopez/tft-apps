@@ -1,0 +1,5 @@
+{
+  "name": "clean_transcript",
+  "description": "Clean noisy TFT stream transcripts while preserving intent.",
+  "handoff_description": "Clean noisy TFT stream transcripts while preserving speaker intent."
+}

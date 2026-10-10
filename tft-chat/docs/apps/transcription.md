@@ -44,6 +44,11 @@ stages synchronously:
 2. Python applies valid edits to the JSONL transcript.
 3. The compacting and analysis assistants produce the final result.
 
+The `clean_transcript`, `compact_transcript`, and `analyze_transcript` definitions
+use plain `system.md` instructions, descriptive `agent.json` configuration, and
+`task.md` input wrappers. These files preserve the system and input text previously
+loaded from assistant frontmatter; the pipeline and structured outputs are unchanged.
+
 Invalid or non-JSON cleaning output leaves the original transcript unchanged
 instead of terminating the pipeline.
 

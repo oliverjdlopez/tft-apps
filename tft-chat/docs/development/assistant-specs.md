@@ -7,6 +7,12 @@ equivalent command without refreshing installed entrypoints is
 Edit and test existing assistants in the [Specs workspace](assistant-workspace.md).
 Save draft never changes application behavior; Apply validates and installs it.
 
+Repository assistant instructions belong in plain `system.md` without frontmatter.
+Put names, descriptions, model settings, tools, and handoffs in `agent.json`;
+put an actual input wrapper in `task.md`. The three transcript assistants use
+this same format. Legacy frontmatter loading remains available for older saved
+drafts; skill and context formats are independent of assistant specifications.
+
 ## Create or copy
 
 Write the intended system instructions in a text file, then run:

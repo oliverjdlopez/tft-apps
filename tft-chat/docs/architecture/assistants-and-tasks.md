@@ -13,10 +13,16 @@ to create, copy, or remove specs and synchronize their Langfuse prompts.
 
 Each assistant lives under `app/backend/src/domain/assistant_specs/<name>/`:
 
-- `system.md` contains durable language and behavior policy.
+- `system.md` contains plain Markdown instructions without frontmatter.
 - `agent.json` optionally declares the description, model and reasoning
   overrides, tool groups, individual tools, skill access, and handoffs.
 - `task.md` optionally wraps task-style input. Most assistants do not need one.
+
+All current assistant definitions use this same layout. The transcript assistants
+keep their existing input instructions in `task.md`; their system instructions,
+names, and descriptions no longer live in `system.md` frontmatter. The loader
+retains legacy frontmatter compatibility for older saved drafts and imported
+definitions, but new repository definitions should use these explicit files.
 
 `domain.assistants.registry` discovers and caches immutable specifications.
 `domain.assistants.create_assistant` resolves the declared graph and constructs
