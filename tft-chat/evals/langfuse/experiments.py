@@ -131,6 +131,9 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
     for item in items:
         item["metadata"].setdefault("case_id", item["id"])
     suite = dict(bundle["suite"])
+    if bundle.get('execution'):
+        suite['captured_graphs'] = bundle['execution']['graphs']
+        suite['workspace_lineage'] = bundle['execution'].get('lineage')
     if config.get("assistant") is not None:
         suite["assistant"] = config["assistant"]
     if suite["family"] in {"context_selection", "skill_selection"}:
@@ -146,6 +149,7 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
     concurrency = min(config.get("concurrency", 4), cap)
     experiments = []
     for variant in config["variants"]:
+        variant_prompts = bundle.get('execution', {}).get('prompts', {}).get(variant['name'], bundle['prompts'])
         for repetition in range(1, config["repetitions"] + 1):
             name = (f"{variant['name']} · {started.isoformat(timespec='microseconds')} · r{repetition}" if natural
                     else f"{suite['name']}/{variant['name']}/{group_id}/r{repetition}")
@@ -153,7 +157,7 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
                 experiments.append({"name": name, "passed": True, "empty": True, "items": []})
                 continue
             if client is None:
-                task = partial(run_local_item, suite=suite, variant=variant, prompts=bundle["prompts"])
+                task = partial(run_local_item, suite=suite, variant=variant, prompts=variant_prompts)
                 with ThreadPoolExecutor(max_workers=concurrency) as pool:
                     results = list(pool.map(task, items))
                 experiments.append({"name": name, "passed": all(row["scores"][-1]["passed"] for row in results), "items": results})
@@ -169,16 +173,18 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
                                 created_at=version, updated_at=version, media_references=[]) for item in items]
             result_store = {}
             evaluators = [] if unscored else [partial(
-                evaluate_item, prompts=bundle["prompts"], result_store=result_store if natural else None,
+                evaluate_item, prompts=variant_prompts, result_store=result_store if natural else None,
                 score_configs=bundle.get("grading", {}).get("score_configs", {}),
             )]
             result = client.run_experiment(
                 name=name, run_name=name, data=data, _dataset_version=version,
-                task=partial(run_item_task, suite=suite, variant=variant, prompts=bundle["prompts"], client=client,
+                task=partial(run_item_task, suite=suite, variant=variant, prompts=variant_prompts, client=client,
                              native_prompt_references=bundle.get("native_prompt_references"), result_store=result_store),
                 evaluators=evaluators,
                 max_concurrency=concurrency,
                 metadata={"comparison_group": group_id, "variant": variant["name"], "repetition": str(repetition),
+                          "workspace_lineage": bundle.get('execution', {}).get('lineage', {}),
+                          "assistant_graph_hash": bundle.get('execution', {}).get('graphs', {}).get(variant['name'], {}).get('hash'),
                           "snapshot": bundle.get("snapshot_id") or config.get("snapshot") or "",
                           **{key: str(value) for key, value in bundle.get("provenance", {}).items()}, "dataset_version": bundle["dataset_version"],
                           "data_snapshot_label": config.get("data_snapshot_label") or ""},

@@ -77,18 +77,19 @@ def test_dead_consumer_makes_health_unavailable(tmp_path):
 def test_provenance_tracks_untracked_content_and_container_fallback(tmp_path, monkeypatch):
     """Changing a new source file changes provenance before it is Git-tracked."""
     from evals.langfuse import server
+    from common import provenance
     monkeypatch.setattr(server, "__file__", str(tmp_path / "evals" / "langfuse" / "server.py"))
     new_file = tmp_path / "new.py"
     new_file.write_text("first")
     def git_output(command, **kwargs):
         """Supply deterministic Git identity and a single untracked path."""
         return b"revision" if "rev-parse" in command else b"new.py\0" if "ls-files" in command else b""
-    monkeypatch.setattr(server.subprocess, "check_output", git_output)
+    monkeypatch.setattr(provenance.subprocess, "check_output", git_output)
     service = ExperimentService(tmp_path / "snapshots", tmp_path / "runtime", Mock)
     first = service.provenance()
     new_file.write_text("second")
     assert first["working_tree_fingerprint"] != service.provenance()["working_tree_fingerprint"]
-    monkeypatch.setattr(server.subprocess, "check_output", Mock(side_effect=OSError("no git")))
+    monkeypatch.setattr(provenance.subprocess, "check_output", Mock(side_effect=OSError("no git")))
     monkeypatch.setenv("CHAT_TFT_GIT_REVISION", "built-revision")
     monkeypatch.setenv("CHAT_TFT_WORKING_TREE_FINGERPRINT", "built-fingerprint")
     assert service.provenance() == {"git_revision": "built-revision", "working_tree_fingerprint": "built-fingerprint"}

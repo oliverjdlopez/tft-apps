@@ -235,5 +235,9 @@ def test_natural_fetch_does_not_request_retired_snapshot_prompts(monkeypatch, tm
     monkeypatch.setattr(utils, "configured_native_workspace", lambda: SimpleNamespace(
         items=lambda *args, **kwargs: [], close=lambda: None))
     frozen = fetch_bundle(client, "end-to-end", {}, tmp_path)
-    assert set(frozen["prompts"]) == {"chat", "new"}
-    assert frozen["prompts"]["new"]["text"] == "Current baseline"
+    graph = frozen['execution']['graphs']['Active']
+    assert set(frozen['prompts']) == set(graph['specs'])
+    assert 'retired' not in frozen['prompts'] and 'new' not in frozen['prompts']
+    assert frozen['prompts']['chat']['text'] == graph['specs']['chat']['system_prompt']
+    assert all('/workspace/' in row['name'] for row in frozen['prompts'].values())
+    assert client.prompts['chattft/assistants/new'].prompt == 'Current baseline'

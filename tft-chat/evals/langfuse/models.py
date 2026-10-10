@@ -38,7 +38,7 @@ class RunConfig(BaseModel):
     action: Literal["run", "replay", "export"] = "run"
     assistant: str | None = None
     cases: list[str] = Field(default_factory=list)
-    variants: list[Variant] = Field(default_factory=lambda: [Variant()], min_length=1, max_length=10)
+    variants: list[Variant] = Field(default_factory=lambda: [Variant(name="Active")], min_length=1, max_length=10)
     dataset_version: str | None = None
     concurrency: int = Field(default=4, ge=1, le=4)
     repetitions: int = Field(default=1, ge=1, le=20)

@@ -42,13 +42,21 @@ def configure_triggers(client: Any, snapshots: Path, *, base_url: str, email: st
                             if entry.get("managed_workflow") else DATASET_NAMES[entry['name']])
             dataset = client.get_dataset(dataset_name)
             identity = {"datasetId": dataset.id}
-            if native.call('getRemoteExperiment', identity, read=True) is not None:
-                continue
+            existing = native.call('getRemoteExperiment', identity, read=True)
+            if existing is not None:
+                try:
+                    previous_payload = json.loads(existing.get('defaultPayload', '{}'))
+                except (ValueError, TypeError):
+                    continue
+                # Migrate only the exact owned legacy default. Authored settings
+                # and other webhook endpoints remain operator-owned.
+                if existing.get('url') != 'http://experiments/experiments' or previous_payload != {'variants': [{'name': 'baseline'}]}:
+                    continue
             native.call('upsertRemoteExperiment', {
                 **identity, "url": "http://experiments/experiments",
-                "defaultPayload": json.dumps({"variants": [{"name": "baseline"}]}, indent=2),
-                "enabled": True, "signingEnabled": False,
-                "requestHeaders": {"Authorization": {"value": f"Bearer {token}", "secret": True}},
+                "defaultPayload": json.dumps({"variants": [{"name": "Active"}]}, indent=2),
+                "enabled": existing.get("enabled", True) if existing else True, "signingEnabled": existing.get("signingEnabled", False) if existing else False,
+                "requestHeaders": existing.get("requestHeaders", {"Authorization": {"value": f"Bearer {token}", "secret": True}}) if existing else {"Authorization": {"value": f"Bearer {token}", "secret": True}},
             })
             configured += 1
     finally:

@@ -71,7 +71,7 @@ def atomic_write(path: Path, data: bytes) -> None:
 
 def default_config() -> dict[str, Any]:
     """Return isolated native webhook defaults shared by seeded datasets."""
-    return {"action": "run", "cases": [], "variants": [{"name": "baseline", "model": None, "prompts": {}}],
+    return {"action": "run", "cases": [], "variants": [{"name": "Active", "model": None, "prompts": {}}],
             "dataset_version": None, "concurrency": 4, "repetitions": 1,
             "selection_live": False, "data_snapshot_label": None, "snapshot": None}
 
@@ -144,7 +144,7 @@ def resolved_prompt(client: Any, reference: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any]) -> None:
+def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captured_names: set[str] | None = None) -> None:
     """Validate frozen run controls and candidate targets without remote requests."""
     from .models import RunConfig
     inbound = deepcopy(config)
@@ -164,13 +164,17 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any]) -> Non
         if suite["family"] != "assistant" or suite["execution"] != "live":
             raise ValueError("Assistant selection requires a live assistant suite")
         from .prompts import repository_prompts
-        if config["assistant"] not in repository_prompts():
+        if config["assistant"] not in (captured_names if captured_names is not None else repository_prompts()):
             raise ValueError(f"Unknown assistant: {config['assistant']}")
     candidates = {target for variant in config.get("variants", []) for target in variant.get("prompts", {})}
     if not candidates:
         return
     if suite["family"] != "assistant" or suite["execution"] != "live":
         raise ValueError("Prompt candidates require a live assistant suite")
+    if captured_names is not None:
+        if candidates - captured_names:
+            raise ValueError('Prompt candidates target uncaptured assistants')
+        return
     from domain.assistants.registry import assistant_registry
     reachable = set()
     pending = [assistant]
@@ -196,7 +200,8 @@ def validate_case_semantics(suite: dict[str, Any], items: list[dict[str, Any]]) 
         cases = [{**item["input"]["expected"], "name": item["metadata"]["case"], "query": item["input"]["input"]} for item in items]
         if suite["family"] == "context_selection":
             from evals.context_selection.utils import validate_cases
-            from domain.providers.context import _all_context_candidates, discover_context_files
+            from domain.providers.context import discover_context_files
+            from domain.providers.utils import all_context_candidates as _all_context_candidates
             validate_cases(cases, _all_context_candidates(discover_context_files(), set_number=None))
         else:
             from evals.skill_selection.utils import validate_cases, ignore_unknown_skill_references

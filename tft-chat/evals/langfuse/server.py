@@ -2,12 +2,10 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-import hashlib
 import hmac
 import logging
 import os
 from pathlib import Path
-import subprocess
 import threading
 from time import perf_counter
 from typing import Any, Callable
@@ -111,20 +109,8 @@ class ExperimentService:
 
     def provenance(self) -> dict[str, str]:
         """Record source identity without copying repository content into traces."""
-        root = Path(__file__).resolve().parents[2]
-        try:
-            revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, stderr=subprocess.DEVNULL).decode().strip()
-            diff = subprocess.check_output(["git", "diff", "--binary", "HEAD"], cwd=root, stderr=subprocess.DEVNULL)
-            untracked = subprocess.check_output(["git", "ls-files", "--others", "--exclude-standard", "-z"], cwd=root, stderr=subprocess.DEVNULL)
-            fingerprint = hashlib.sha256(diff)
-            for raw in sorted(part for part in untracked.split(b"\0") if part):
-                path = root / os.fsdecode(raw)
-                fingerprint.update(raw + b"\0")
-                fingerprint.update(hashlib.sha256(os.fsencode(os.readlink(path)) if path.is_symlink() else path.read_bytes()).digest())
-            return {"git_revision": revision, "working_tree_fingerprint": fingerprint.hexdigest()}
-        except (OSError, subprocess.CalledProcessError):
-            return {"git_revision": os.environ.get("CHAT_TFT_GIT_REVISION", "unavailable"),
-                    "working_tree_fingerprint": os.environ.get("CHAT_TFT_WORKING_TREE_FINGERPRINT", "unavailable")}
+        from common.provenance import source_provenance
+        return source_provenance(Path(__file__).resolve().parents[2])
 
     def consume(self) -> None:
         """Execute one job at a time so per-run concurrency is also a service cap."""
@@ -250,6 +236,8 @@ def create_app(*, service: ExperimentService | None = None, token: str | None = 
 
     from .playground import router
     app.include_router(router)
+    from .assistant_workspace import router as workspace_router
+    app.include_router(workspace_router)
     return app
 
 

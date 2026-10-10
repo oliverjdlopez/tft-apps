@@ -21,6 +21,19 @@ class JobStore:
                 id TEXT PRIMARY KEY, state TEXT NOT NULL, created REAL NOT NULL,
                 snapshot TEXT NOT NULL, bundle TEXT NOT NULL, result TEXT,
                 error TEXT, updated REAL NOT NULL)""")
+            connection.execute('''CREATE TABLE IF NOT EXISTS workspace_submissions (
+                id TEXT PRIMARY KEY, request_hash TEXT NOT NULL, value TEXT NOT NULL)''')
+
+    def submission(self, identity: str) -> dict | None:
+        """Read a persistent submission receipt before preparing another run."""
+        with self.connect() as connection:
+            row = connection.execute('SELECT request_hash,value FROM workspace_submissions WHERE id=?', (identity,)).fetchone()
+        return {'request_hash': row['request_hash'], **json.loads(row['value'])} if row else None
+
+    def put_submission(self, identity: str, request_hash: str, value: dict) -> None:
+        """Persist preparation intent or failure without scheduling execution."""
+        with self.connect() as connection:
+            connection.execute('INSERT OR REPLACE INTO workspace_submissions VALUES (?,?,?)', (identity, request_hash, json.dumps(value)))
 
     def connect(self) -> sqlite3.Connection:
         """Open an independent connection for one atomic operation."""
@@ -36,7 +49,7 @@ class JobStore:
             ).fetchone()
         return row is not None
 
-    def submit(self, bundle: dict[str, Any], snapshot: str, *, exported: bool = False, awaiting_result: dict | None = None) -> str:
+    def submit(self, bundle: dict[str, Any], snapshot: str, *, exported: bool = False, awaiting_result: dict | None = None, submission_id: str | None = None) -> str:
         """Persist a run or terminal export atomically before acknowledging the UI."""
         job_id = uuid.uuid4().hex
         now = time.time()
@@ -45,6 +58,9 @@ class JobStore:
                 job_id, "awaiting_scores" if awaiting_result is not None else "exported" if exported else "queued", now, snapshot, json.dumps(bundle),
                 json.dumps(awaiting_result) if awaiting_result is not None else json.dumps({"snapshot": snapshot}) if exported else None, None, now,
             ))
+            if submission_id:
+                receipt = {'state': 'queued', 'job_id': job_id, 'snapshot': snapshot, 'status_url': f'/jobs/{job_id}'}
+                connection.execute('UPDATE workspace_submissions SET value=? WHERE id=?', (json.dumps(receipt), submission_id))
         return job_id
 
     def claim(self) -> dict[str, Any] | None:

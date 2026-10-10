@@ -4,6 +4,9 @@ Use `uv run chat-tft-specs` to create and retire repository assistants. The
 equivalent command without refreshing installed entrypoints is
 `.venv/bin/python -m scripts.assistant_specs`. Neither command runs a model.
 
+Edit and test existing assistants in the [Specs workspace](assistant-workspace.md).
+Save draft never changes application behavior; Apply validates and installs it.
+
 ## Create or copy
 
 Write the intended system instructions in a text file, then run:
@@ -55,7 +58,7 @@ that directory to its original path to undo the local removal, provided the name
 has not since been reused. Backups must be outside the assistant-spec directory.
 The command rejects specs containing symlinks.
 
-## Synchronize Langfuse prompts
+## Create missing Langfuse prompts
 
 ```bash
 uv run --extra evals chat-tft-specs sync-langfuse
@@ -84,17 +87,18 @@ evaluators, traces, and experiment results are untouched. Local and hosted chang
 are separate steps: a stopped Langfuse workspace cannot roll back a local removal.
 Sync failures exit nonzero and can be retried once connectivity is restored.
 
-Normal Langfuse startup also creates missing prompts from current repository specs,
-not old snapshot prompt inventories. Fresh natural-dataset experiments fetch only
-their current assistant/handoff graph's prompts. Removing an unrelated prompt
+Normal Langfuse startup also creates missing prompts from current repository specs.
+This CLI creates missing authored prompts; it does not synchronize existing edits
+and is not part of ordinary editing. Fresh assistant experiments capture current
+repository definitions and publish concrete managed prompt versions. Removing an unrelated prompt
 therefore neither breaks those experiments nor causes startup to recreate it.
 Frozen replay continues to use its recorded definitions and still requires the
 corresponding executable assistant code.
 
 ## Reload and validate
 
-Restart the application backend after terminal edits because its registry is
-cached. In Electron, **View → Force Reload** (`Ctrl+Shift+R`) restarts the backend;
+After terminal edits, use **Refresh active definitions** in Specs to validate
+the complete graph and refresh its cached registry, or restart the backend. In Electron, **View → Force Reload** (`Ctrl+Shift+R`) restarts the backend;
 this interrupts in-flight work. Refresh a browser page after restarting its backend.
 To refresh Langfuse's configured Playground model list and its experiment service:
 

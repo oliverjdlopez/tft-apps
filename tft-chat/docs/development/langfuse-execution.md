@@ -17,7 +17,7 @@ and is retained in the frozen snapshot, including replay. This is separate from
 Advanced options include named model/prompt variants, reachable handoff prompt
 overrides, subsets, repetitions, historical dataset versions, and offline/live
 selectors. Each variant/repetition creates a separate experiment named
-`baseline · <timestamp> · r1`. Job IDs and snapshot hashes live in metadata.
+`Active · <timestamp> · r1`. Job IDs and snapshot hashes live in metadata.
 Export and replay remain maintenance actions in the advanced payload and CLI.
 
 The root datasets `end-to-end` and `data-analysis` accept only string inputs.
@@ -26,6 +26,18 @@ The seven former intake prompts are now cases in `end-to-end`, marked with
 completion still requires an SDK result without an execution error. Scored cases
 in the same experiment retain their existing acceptance requirements. Historical
 execution-only suite snapshots remain readable.
+
+## Assistant drafts and captured definitions
+
+The [Specs workspace](assistant-workspace.md) owns edit/save/try/compare/apply.
+Fresh native assistant experiments capture current repository definitions rather
+than selecting hosted baseline labels. Workspace experiments use Active and Draft
+variants and exact revision lineage. An optional separately versioned `execution`
+section freezes configuration, instructions, wrappers, resolved models, reachable
+handoffs, selectors, and managed concrete prompt references. Legacy bundles retain
+their prompt-only execution path; explicit historical overrides and replay remain
+available. Draft trials bypass Langfuse and persist locally. Capturing specifications
+does not freeze resource files, tool implementation code, or database contents.
 
 ## Acceptance
 

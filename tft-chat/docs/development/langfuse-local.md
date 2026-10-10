@@ -90,7 +90,7 @@ docker compose --env-file evals/langfuse/.env -f evals/langfuse/compose.yaml log
 Validation and the offline fixture need no Docker or model credentials. A missing
 Docker executable, daemon permission failure, occupied port 15510, failed image
 pull, or unhealthy migration stops startup with the underlying command error.
-Stop an older Promptfoo viewer before starting this stack on the same port.
+Stop any older service occupying the configured port before starting this stack.
 
 If **via Webhook** reports HTTP 503, inspect `.runtime/runner.log` and the `experiments` forwarding service logs.
 A healthy `/health` response only confirms the queue consumer is alive; content

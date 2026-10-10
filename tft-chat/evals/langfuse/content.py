@@ -102,7 +102,18 @@ def validate_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
     selected = config.get("cases", [])
     if set(selected) - ids:
         raise ValueError(f"Unknown case IDs: {sorted(set(selected) - ids)}")
-    validate_frozen_config(config, suite)
+    captured_names = None
+    if value.get('execution'):
+        from domain.assistants.capture import from_capture, reachable
+        execution = value['execution']
+        if execution.get('version') != 1 or set(execution.get('graphs', {})) != {variant['name'] for variant in config['variants']}:
+            raise ValueError('Invalid captured execution version or variants')
+        captured_names = set()
+        entry = config.get('assistant') or suite['assistant']
+        for graph in execution['graphs'].values():
+            registry = from_capture(graph)
+            captured_names.update(reachable(registry, entry))
+    validate_frozen_config(config, suite, captured_names)
     return value
 
 
@@ -262,7 +273,7 @@ def seed_content(client: Any, root: Path, *, natural: bool = False, include_fixt
     return counts
 
 
-def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: Path) -> dict[str, Any]:
+def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: Path, *, captured_execution: dict | None = None) -> dict[str, Any]:
     """Freeze one hosted dataset version and every prompt before queue submission.
 
     Args:
@@ -340,16 +351,27 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
     value["config"] = {**default_config(), **deepcopy(config), "dataset_version": version.isoformat()}
     prompt_inventory = baseline["prompts"]
     selected_suite = {**value["suite"], "assistant": value["config"].get("assistant") or value["suite"].get("assistant")}
-    if natural:
+    if captured_execution is None and natural and selected_suite['family'] == 'assistant' and selected_suite['execution'] == 'live':
+        from .assistant_workspace import current_execution
+        captured_execution = current_execution(selected_suite, value['config']['variants'])
+    if natural and not captured_execution:
         from .prompts import experiment_prompts
         prompt_inventory = experiment_prompts(selected_suite)
-    value["prompts"] = {name: resolved_prompt(client, {"name": prompt["name"], "label": "baseline" if natural else "latest"})
-                        for name, prompt in prompt_inventory.items()}
+    if captured_execution:
+        from .assistant_workspace import publish_graph_prompts
+        value['execution'] = deepcopy(captured_execution)
+        graph_prompts = {variant: publish_graph_prompts(client, graph) for variant, graph in captured_execution['graphs'].items()}
+        value['prompts'] = graph_prompts[value['config']['variants'][0]['name']]
+    else:
+        value["prompts"] = {name: resolved_prompt(client, {"name": prompt["name"], "label": "baseline" if natural else "latest"})
+                            for name, prompt in prompt_inventory.items()}
     for variant in value["config"]["variants"]:
         for assistant, reference in variant.get("prompts", {}).items():
-            if assistant not in value["prompts"] or assistant == "judge":
+            if assistant not in (captured_execution['graphs'][variant['name']]['specs'] if captured_execution else value["prompts"]) or assistant == "judge":
                 raise ValueError(f"Unknown assistant prompt target: {assistant}")
             variant["prompts"][assistant] = resolved_prompt(client, reference)
+    if captured_execution:
+        value['execution']['prompts'] = graph_prompts
     if natural:
         from .contracts import migrate_item
         value['assertion_manifest'] = []
@@ -369,5 +391,6 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
             finally:
                 workspace.close()
     value = validate_bundle(value)
-    validate_case_semantics(selected_suite, value["items"])
+    if not captured_execution:
+        validate_case_semantics(selected_suite, value["items"])
     return value

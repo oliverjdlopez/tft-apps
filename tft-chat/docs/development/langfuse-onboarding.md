@@ -13,33 +13,20 @@ To create a separately named assistant dataset, use the
    to the item's **Metadata**, retaining existing fields. Old and new set cases
    can use different databases in the same experiment; see
    [database selection](langfuse-content.md#keep-cases-from-multiple-tft-sets).
-3. In **Prompts**, save a candidate version. Keep the reviewed `baseline` label
-   on the baseline version. Editing a candidate does not change the application.
-4. Open the dataset's **Experiments → Run experiment → via Webhook** dialog.
-   The default runs one baseline. To compare a candidate, use advanced JSON:
-
-   ```json
-   {
-     "assistant": "chat",
-     "variants": [
-       {"name":"baseline"},
-       {"name":"candidate","prompts":{"chat":{"name":"chattft/assistants/chat","version":2}}}
-     ]
-   }
-   ```
-
-   Replace `2` with your candidate's actual version. `assistant` selects the
-   entry assistant for this run; omit it to use the dataset default. For a
-   direct analyst run, use `"assistant": "data_analyst"` and target
-   `data_analyst` in the candidate prompt map. The Python service
-   executes the full workflow; this is not a prompt-only experiment.
-   Imported intake cases now live in **end-to-end**, with `scoring: "none"`
-   in metadata. They skip grading while other cases retain their normal checks.
+3. Open **Developer → Specs**, select the assistant, edit its instruction/configuration
+   files, and **Save draft**. **Try** runs a quick question without Langfuse.
+4. Choose **Run experiment**, select the registered dataset and optional cases,
+   then submit the **Active** and **Draft** comparison. Specs records the exact
+   tested revision and links to its Langfuse results. See the
+   [assistant workspace](assistant-workspace.md) for conflicts, restore/import,
+   and Apply. **Apply** changes application behavior after whole-graph validation;
+   experiments are optional. Fresh native webhook runs also use current repository
+   definitions. Historical prompt versions remain available through advanced JSON.
 5. For scored datasets, wait for scoring. Assistant completion can precede
    quality grades. Inspect
    `chattft-experiment-job` observations for `awaiting_scores`, final success,
    or a failure reason. Missing grades do not count as success.
-6. Select baseline and candidate experiments and choose **Compare**. Read actual
+6. Select Active and Draft experiments and choose **Compare**. Read actual
    outputs alongside quality dimensions, `execution_success`, `contract_pass`,
    and final `attempt_pass`. Use **Columns** to keep these acceptance scores
    prominent; individual diagnostics remain inspectable on each trace. Inspect
@@ -69,9 +56,10 @@ cases and evaluator definitions. Definition drift makes a run non-comparable;
 restore historical evaluators into an isolated replay project when necessary.
 Keep a separately [reviewed baseline](langfuse-content.md#reproducibility).
 
-## Edit → run → inspect in Playground
+## Advanced prompt-only trials in Playground
 
-For quick single-prompt iteration, open **Prompts → your assistant → Playground
+For the ordinary workflow, use Specs → Try to execute a saved assistant draft.
+For an advanced request-scoped instruction override, open **Prompts → your assistant → Playground
 → Fresh playground**. Select the **ChatTFT backend** connection and the matching
 model, for example **chattft/unit_expert**. Put the assistant instructions in a
 **System** message and add a **User** message with your test question. Edit the

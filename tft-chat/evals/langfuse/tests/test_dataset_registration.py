@@ -162,7 +162,10 @@ def test_registered_dataset_reaches_frozen_experiment_bundle(monkeypatch, tmp_pa
     assert bundle["dataset_name"] == "chattft/manual-probe"
     assert bundle["suite"]["assistant"] == "chat"
     assert bundle["config"].get("assistant") == assistant
-    assert selected == [assistant or "chat"]
+    frozen = bundle['execution']['graphs'][bundle['config']['variants'][0]['name']]
+    assert (assistant or 'chat') in frozen['specs']
+    assert selected == []  # No hosted baseline prompt inventory is fetched.
+    assert all('/workspace/' in row['name'] for row in bundle['prompts'].values())
     assert bundle["items"][0]["id"] == "manual_probe/probe"
     assert bundle["items"][0]["metadata"]["quality_profile"] == "answer_quality"
 
