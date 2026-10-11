@@ -14,6 +14,8 @@ import { ChangeEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, use
 import { createPortal } from "react-dom";
 import { Activity, Check, CircleHelp, Cpu, Crosshair, Download, Film, FolderOpen, Link2, ListVideo, LoaderCircle, Pause, Play, RefreshCcw, Save, ScanSearch, Settings, SkipBack, SkipForward, Trash2, TriangleAlert, Upload, X } from "lucide-react";
 import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getReplayAutomation, getVideoTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
+import { YouTubePlayer, PlayerAdapter } from "./YouTubePlayer";
+import { importOnlineVideo, setVideoMode, downloadOfflineVideo, getVideoFrame, getOfflineDownload } from "./api";
 import DriveUpload from "./DriveUpload";
 import ReplayAutomation from "./ReplayAutomation";
 import { useOptimizedPlayback } from "./useOptimizedPlayback";
@@ -199,6 +201,11 @@ function parseDownloadTime(hours: string, minutes: string): number | null {
   return parsedHours * 3600 + parsedMinutes * 60;
 }
 
+function isYouTubeUrl(value: string): boolean {
+  try { return /^(?:www\.|m\.)?(?:youtube\.com|youtu\.be)$/.test(new URL(value).hostname); }
+  catch { return false; }
+}
+
 function App() {
   const [videos, setVideos] = useState<VideoRecord[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -213,6 +220,7 @@ function App() {
   const [downloadEndMinutes, setDownloadEndMinutes] = useState("");
   const [downloadCheckpointMinutes, setDownloadCheckpointMinutes] = useState("");
   const [downloadFps, setDownloadFps] = useState("");
+  const [importMode, setImportMode] = useState<"online" | "offline">("online");
   const [downloadQuality, setDownloadQuality] = useState<DownloadQuality>("720p");
   const [downloadMediaType, setDownloadMediaType] = useState<DownloadMediaType>("video");
   const [transcription, setTranscription] = useState<TranscriptionTask | null>(null);
@@ -221,6 +229,8 @@ function App() {
   const [downloading, setDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloadTask, setDownloadTask] = useState<DownloadTask | null>(null);
+  const onlineForm = importMode === "online" && downloadMediaType === "video" && (!videoUrl.trim() || isYouTubeUrl(videoUrl));
+  const onlineImport = importMode === "online" && downloadMediaType === "video" && isYouTubeUrl(videoUrl);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [automationOpen, setAutomationOpen] = useState(false);
@@ -395,7 +405,7 @@ function App() {
       setError("The end timestamp must be after the start timestamp.");
       return;
     }
-    const checkpointMinutes = !audioOnly && downloadCheckpointMinutes.trim() ? Number(downloadCheckpointMinutes) : null;
+    const checkpointMinutes = !audioOnly && !onlineImport && downloadCheckpointMinutes.trim() ? Number(downloadCheckpointMinutes) : null;
     if (checkpointMinutes !== null && (!Number.isInteger(checkpointMinutes) || checkpointMinutes < 1 || checkpointMinutes > 360)) {
       setError("Enter a checkpoint interval from 1 to 360 whole minutes.");
       return;
@@ -404,6 +414,10 @@ function App() {
     setDownloading(true);
     setDownloadProgress(0);
     try {
+      if (onlineImport) {
+        finishDownload(await importOnlineVideo(url, startSeconds ?? undefined, endSeconds ?? undefined));
+        return;
+      }
       const task = await importVideoUrl(url, startSeconds ?? undefined, endSeconds ?? undefined, checkpointMinutes === null ? undefined : checkpointMinutes * 60, downloadQuality, !audioOnly && downloadFps ? Number(downloadFps) : undefined, downloadMediaType, audioOnly);
       await pollDownload(task);
     } catch (reason: unknown) {
@@ -572,12 +586,14 @@ function App() {
           )}
           <form className="url-import" onSubmit={(event) => { event.preventDefault(); void handleUrlImport(); }}>
             <label htmlFor="video-url"><Link2 size={13} /> Twitch or YouTube URL</label>
+            <label className="url-import-quality">Playback mode<UiNativeSelect aria-label="Import playback mode" value={importMode} onChange={(event) => setImportMode(event.target.value as "online" | "offline")} disabled={downloading || downloadMediaType === "audio"}><option value="online">Online · YouTube streaming</option><option value="offline">Offline · download video</option></UiNativeSelect></label>
+            <span>Online analyzes YouTube samples without saving the full video. Twitch and audio use offline downloads.</span>
             <label className="url-import-transcription" htmlFor="transcription-only">Transcription only<UiSwitch id="transcription-only" checked={downloadMediaType === "audio"} onCheckedChange={(checked) => setDownloadMediaType(checked ? "audio" : "video")} disabled={downloading || downloadTask?.status === "paused"} /></label>
             {downloadMediaType === "audio" && <span>Downloads only audio and automatically transcribes the full URL. Click View transcript when it finishes.</span>}
             <div className="url-import-row">
               <UiInput id="video-url" type="url" value={videoUrl} onChange={(event) => setVideoUrl(event.target.value)} placeholder="Paste a video link…" disabled={downloading || downloadTask?.status === "paused"} />
-              <UiButton variant="outline" type="submit" disabled={downloading || downloadTask?.status === "paused" || !videoUrl.trim()} aria-label={downloadMediaType === "audio" ? "Download and transcribe audio from link" : "Download video from link"}>
-                {downloading ? <LoaderCircle className="spin" size={15} /> : <Download size={15} />}
+              <UiButton variant="outline" type="submit" disabled={downloading || downloadTask?.status === "paused" || !videoUrl.trim()} aria-label={downloadMediaType === "audio" ? "Download and transcribe audio from link" : onlineImport ? "Open online video from link" : "Download video from link"}>
+                {downloading ? <LoaderCircle className="spin" size={15} /> : onlineImport ? <Play size={15} /> : <Download size={15} />}
               </UiButton>
             </div>
             {downloadMediaType === "video" && <div className="url-import-range">
@@ -587,20 +603,20 @@ function App() {
               <span aria-hidden="true">–</span>
               <fieldset><legend>End time</legend><div className="time-inputs"><label>Hours<UiInput aria-label="Download end hours" type="number" min="0" step="1" inputMode="numeric" value={downloadEndHours} onChange={(event) => setDownloadEndHours(event.target.value)} placeholder="0" disabled={downloading} /></label><label>Minutes<UiInput aria-label="Download end minutes" type="number" min="0" max="59" step="1" inputMode="numeric" value={downloadEndMinutes} onChange={(event) => setDownloadEndMinutes(event.target.value)} placeholder="0" disabled={downloading} /></label></div></fieldset>
             </div>}
-            {downloadMediaType === "video" && <><label className="url-import-quality">Video quality<UiNativeSelect aria-label="Download video quality" value={downloadQuality} onChange={(event) => setDownloadQuality(event.target.value as DownloadQuality)} disabled={downloading || downloadTask?.status === "paused"}><option value="480p">480p · fastest</option><option value="720p">720p · recommended</option><option value="1080p">1080p</option><option value="best">Best available</option></UiNativeSelect></label>
+            {downloadMediaType === "video" && !onlineForm && <><label className="url-import-quality">Video quality<UiNativeSelect aria-label="Download video quality" value={downloadQuality} onChange={(event) => setDownloadQuality(event.target.value as DownloadQuality)} disabled={downloading || downloadTask?.status === "paused"}><option value="480p">480p · fastest</option><option value="720p">720p · recommended</option><option value="1080p">1080p</option><option value="best">Best available</option></UiNativeSelect></label>
             <label className="url-import-quality">Saved video FPS<UiNativeSelect aria-label="Download target FPS" value={downloadFps} onChange={(event) => setDownloadFps(event.target.value)} disabled={downloading || downloadTask?.status === "paused"}><option value="">Native</option>{[10, 15, 24, 30, 60].map((fps) => <option key={fps} value={fps}>{fps} FPS</option>)}</UiNativeSelect></label>
             {downloadFps && <span>Converts the saved video to {downloadFps} FPS after downloading. This adds processing time.</span>}
             <label className="url-import-checkpoint">Checkpoint every <span><UiInput aria-label="Download checkpoint interval in minutes" type="number" min="1" max="360" step="1" inputMode="numeric" value={downloadCheckpointMinutes} onChange={(event) => setDownloadCheckpointMinutes(event.target.value)} placeholder="Off" disabled={downloading || downloadTask?.status === "paused"} /> minutes</span></label></>}
-            {downloadTask && downloadTask.status !== "completed" && downloadTask.status !== "failed" && downloadTask.status !== "dismissed" && <div className="download-progress" role="status" aria-label={`Download progress: ${Math.round(downloadProgress)} percent`}><div className="download-progress-copy"><span>{downloadTask.status === "paused" ? "Download paused" : downloadTask.status === "pausing" ? "Pausing after this checkpoint…" : downloadTask.transcription?.status === "running" ? "Transcribing audio…" : downloadTask.media_type === "audio" ? "Downloading audio…" : "Downloading your VOD…"}</span><strong>{Math.round(downloadProgress)}%</strong></div><Progress aria-label="Download progress" value={downloadProgress} />{downloadTask.status === "paused" ? <div className="download-controls"><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleUsePausedDownload()}><Film size={11} /> Use saved footage</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleResumeDownload()}><Play size={11} /> Resume</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleDismissPausedDownload()}><X size={11} /> Dismiss</UiButton></div> : downloadTask.media_type !== "audio" && downloadCheckpointMinutes && <UiButton variant="outline" className="download-control" type="button" disabled={downloadTask.status === "pausing"} onClick={() => void handlePauseDownload()}><Pause size={11} /> {downloadTask.status === "pausing" ? "Pause requested" : "Pause"}</UiButton>}</div>}{downloadMediaType === "video" && <span>{downloading ? "Completed checkpoints are kept if the download is interrupted." : downloadTask?.status === "paused" ? "Use the saved footage now or resume from the last checkpoint." : "Optional range and checkpoints · leave checkpoint blank for a standard download."}</span>}
+            {downloadTask && downloadTask.status !== "completed" && downloadTask.status !== "failed" && downloadTask.status !== "dismissed" && <div className="download-progress" role="status" aria-label={`Download progress: ${Math.round(downloadProgress)} percent`}><div className="download-progress-copy"><span>{downloadTask.status === "paused" ? "Download paused" : downloadTask.status === "pausing" ? "Pausing after this checkpoint…" : downloadTask.transcription?.status === "running" ? "Transcribing audio…" : downloadTask.media_type === "audio" ? "Downloading audio…" : "Downloading your VOD…"}</span><strong>{Math.round(downloadProgress)}%</strong></div><Progress aria-label="Download progress" value={downloadProgress} />{downloadTask.status === "paused" ? <div className="download-controls"><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleUsePausedDownload()}><Film size={11} /> Use saved footage</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleResumeDownload()}><Play size={11} /> Resume</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleDismissPausedDownload()}><X size={11} /> Dismiss</UiButton></div> : downloadTask.media_type !== "audio" && downloadCheckpointMinutes && <UiButton variant="outline" className="download-control" type="button" disabled={downloadTask.status === "pausing"} onClick={() => void handlePauseDownload()}><Pause size={11} /> {downloadTask.status === "pausing" ? "Pause requested" : "Pause"}</UiButton>}</div>}{downloadMediaType === "video" && <span>{downloading ? "Completed checkpoints are kept if the download is interrupted." : downloadTask?.status === "paused" ? "Use the saved footage now or resume from the last checkpoint." : onlineForm ? "Optional review range · leave blank for the full video" : "Optional range and checkpoints · leave checkpoint blank for a standard download."}</span>}
           </form>
-          {selected && <div className="download-progress"><div className="download-progress-copy"><span>Optional raw speech transcription</span></div><UiButton variant="outline" className="download-control" type="button" disabled={transcribing || transcription?.status === "queued" || transcription?.status === "running"} onClick={() => void handleTranscribeVideo()}>{transcribing || transcription?.status === "queued" || transcription?.status === "running" ? <><LoaderCircle className="spin" size={12} /> Transcribing…</> : "Transcribe selected video"}</UiButton>{transcription?.status === "completed" && <UiButton variant="outline" className="download-control" type="button" onClick={() => setTranscriptPreview(transcription)}>View transcript</UiButton>}{transcription?.status === "failed" && <span role="alert">{transcription.error ?? "Transcription failed. Retry this video or run the next automatic scan."}</span>}</div>}
+          {selected && <div className="download-progress"><div className="download-progress-copy"><span>Optional raw speech transcription{selected.mode === "online" ? " · Switch to Offline to transcribe" : ""}</span></div><UiButton variant="outline" className="download-control" type="button" disabled={selected.mode === "online" || transcribing || transcription?.status === "queued" || transcription?.status === "running"} onClick={() => void handleTranscribeVideo()}>{transcribing || transcription?.status === "queued" || transcription?.status === "running" ? <><LoaderCircle className="spin" size={12} /> Transcribing…</> : "Transcribe selected video"}</UiButton>{transcription?.status === "completed" && <UiButton variant="outline" className="download-control" type="button" onClick={() => setTranscriptPreview(transcription)}>View transcript</UiButton>}{transcription?.status === "failed" && <span role="alert">{transcription.error ?? "Transcription failed. Retry this video or run the next automatic scan."}</span>}</div>}
           {downloadTask?.media_type === "audio" && <div className="download-progress"><div className="download-progress-copy"><span>{downloadTask.status === "failed" ? (downloadTask.transcription?.error ?? downloadTask.error ?? "Audio transcription failed") : downloadTask.transcription?.status === "completed" ? `Transcription complete${downloadTask.transcription.language ? ` · ${downloadTask.transcription.language}` : ""}` : "Downloading and transcribing audio…"}</span></div>{downloadTask.transcription?.status === "completed" && <UiButton variant="outline" className="download-control" type="button" onClick={() => setTranscriptPreview(downloadTask.transcription ?? null)}>View transcript</UiButton>}</div>}
           <div ref={analysisSidebarRef} className="analysis-sidebar-results" />
           <div className="library-footnote"><CircleHelp size={14} /> Your uploads stay on this machine.</div>
         </UiCard>
 
         <UiCard as="section" id="workspace-panel" aria-label="Round analysis" tabIndex={0} className="analysis-panel panel block gap-0 p-4 sm:p-6 shadow-xs">
-          {selected ? <Analyzer video={selected} sidebarTarget={analysisSidebarRef.current} onUpdate={(record) => { setSelected(record); setVideos((current) => current.map((item) => item.id === record.id ? record : item)); }} onError={setError} /> : (
+          {selected ? <Analyzer key={selected.id} video={selected} sidebarTarget={analysisSidebarRef.current} onUpdate={(record) => { setSelected(record); setVideos((current) => current.map((item) => item.id === record.id ? record : item)); }} onError={setError} /> : (
             <div className="welcome-state">
               <div className="welcome-icon"><Film size={28} /></div>
               <p className="eyebrow">READY WHEN YOU ARE</p>
@@ -615,10 +631,29 @@ function App() {
   );
 }
 
+/** Keep sampling defaults separate when switching analysis strategies. */
+function initialAnalysisInterval(video: VideoRecord): number {
+  const mode = video.mode ?? "offline";
+  const fallback = mode === "online" ? 10 : 1;
+  return (video.latest_job?.strategy ?? "offline") === mode
+    ? video.latest_job?.sample_interval_seconds ?? fallback
+    : fallback;
+}
+
 function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRecord; sidebarTarget: HTMLDivElement | null; onUpdate: (video: VideoRecord) => void; onError: (message: string) => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const initialSeekPending = useRef(true);
-  const playback = useOptimizedPlayback(video.id, videoRef);
+  const online = video.mode === "online";
+  const youtubeRef = useRef<PlayerAdapter>(null);
+  const playback = useOptimizedPlayback(video.id, videoRef, !online);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [conversion, setConversion] = useState<DownloadTask | null>(null);
+  const [switching, setSwitching] = useState(false);
+  const previewRef = useRef<string | null>(null);
+  const mounted = useRef(true);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
+  useEffect(() => () => { if (previewRef.current) URL.revokeObjectURL(previewRef.current); }, [video.id]);
   const overlayRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [draftBox, setDraftBox] = useState<BoundingBox | null>(video.box);
@@ -628,7 +663,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
   const wasPlayingWhenHidden = useRef(false);
   const [saving, setSaving] = useState(false);
   const [starting, setStarting] = useState(false);
-  const [analysisInterval, setAnalysisInterval] = useState(String(video.latest_job?.sample_interval_seconds ?? 1));
+  const [analysisInterval, setAnalysisInterval] = useState(String(initialAnalysisInterval(video)));
   const [batchSize, setBatchSize] = useState(video.latest_job?.batch_size ?? 64);
   const [offsetSeconds, setOffsetSeconds] = useState("0");
   const [selectedGameIndex, setSelectedGameIndex] = useState(0);
@@ -640,7 +675,8 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
   const currentJob = video.current_job;
   const latestJob = video.latest_job ?? currentJob;
   const isProcessing = activeJob?.status === "queued" || activeJob?.status === "running";
-  const results = currentJob?.results ?? [];
+  const conversionBusy = switching || conversion?.status === "paused";
+  const results = online && isProcessing && activeJob?.results?.length ? activeJob.results : currentJob?.results ?? [];
   const games = useMemo(() => groupRoundTransitions(results), [results]);
   const selectedGameResults = games[selectedGameIndex]?.results ?? [];
   const selectedGameEnd = games[selectedGameIndex + 1]?.results[0]?.timestamp_seconds ?? video.duration;
@@ -651,7 +687,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
 
   useEffect(() => {
     initialSeekPending.current = true;
-  }, [video.id]);
+  }, [video.id, online]);
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -683,12 +719,15 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
   }, [video.id, video.box]);
 
   useEffect(() => {
-    setAnalysisInterval(String(video.latest_job?.sample_interval_seconds ?? 1));
     setBatchSize(video.latest_job?.batch_size ?? 64);
     setOffsetSeconds("0");
     setSelectedGameIndex(0);
     setShowAllRounds(false);
   }, [video.id]);
+
+  useEffect(() => {
+    setAnalysisInterval(String(initialAnalysisInterval(video)));
+  }, [video.id, online]);
 
   useEffect(() => {
     setShowAllRounds(false);
@@ -818,8 +857,8 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
 
   const process = async (reuseCachedCrops = false) => {
     const interval = Number(analysisInterval);
-    if (!analysisInterval.trim() || !Number.isFinite(interval) || interval < 0 || interval > 3600) {
-      onError("Enter an analysis interval from 0 to 3600 seconds; 0 analyzes every frame.");
+    if (!analysisInterval.trim() || !Number.isFinite(interval) || interval < (online ? 1 : 0) || interval > 3600) {
+      onError(online ? "Enter an online scan interval from 1 to 3600 seconds." : "Enter an analysis interval from 0 to 3600 seconds; 0 analyzes every frame.");
       return;
     }
     setStarting(true);
@@ -834,26 +873,93 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
     }
   };
 
-  const jumpTo = (result: SampleResult) => {
-    if (!videoRef.current) return;
-    const parsedOffset = Number(offsetSeconds);
-    const seekTime = getSeekTimestamp(
-      result.timestamp_seconds,
-      Number.isFinite(parsedOffset) ? parsedOffset : 0,
-      video.duration,
-    );
-    videoRef.current.currentTime = seekTime;
-    setCurrentTime(seekTime);
-    void videoRef.current.play().catch(() => undefined);
+  const seek = (time: number, play = false) => {
+    const clamped = getSeekTimestamp(time, 0, video.duration);
+    if (online) youtubeRef.current?.seek(clamped, play);
+    else if (videoRef.current) { videoRef.current.currentTime = clamped; if (play) void videoRef.current.play().catch(() => undefined); }
+    setCurrentTime(clamped);
   };
-
-  const skipPlayback = (seconds: number) => {
-    const element = videoRef.current;
-    if (!element) return;
-    const duration = Number.isFinite(element.duration) ? element.duration : video.duration;
-    const time = Math.max(0, Math.min(duration, element.currentTime + seconds));
-    element.currentTime = time;
-    setCurrentTime(time);
+  const jumpTo = (result: SampleResult) => {
+    const offset = Number(offsetSeconds);
+    seek(getSeekTimestamp(result.timestamp_seconds, Number.isFinite(offset) ? offset : 0, video.duration), true);
+  };
+  const skipPlayback = (seconds: number) => seek((online ? youtubeRef.current?.currentTime() ?? currentTime : videoRef.current?.currentTime ?? currentTime) + seconds);
+  const toggleDrawing = async () => {
+    setDrawing(null);
+    if (boxEditing) { setBoxEditing(false); return; }
+    if (!online) { setBoxEditing(true); return; }
+    youtubeRef.current?.pause();
+    setPreviewLoading(true);
+    try {
+      const frame = await getVideoFrame(video.id, youtubeRef.current?.currentTime() ?? currentTime);
+      if (!mounted.current) { URL.revokeObjectURL(frame.url); return; }
+      if (previewRef.current) URL.revokeObjectURL(previewRef.current);
+      previewRef.current = frame.url;
+      setPreview(frame.url);
+      setCurrentTime(frame.timestamp);
+      setBoxEditing(true);
+    } catch (reason) { onError(reason instanceof Error ? reason.message : "Could not fetch a preview frame"); }
+    finally { setPreviewLoading(false); }
+  };
+  const trackConversion = async (initial: DownloadTask) => {
+    let task = initial;
+    if (!mounted.current) return;
+    setConversion(task);
+    while (["queued", "running", "pausing"].includes(task.status)) {
+      await new Promise((resolve) => window.setTimeout(resolve, 750));
+      if (!mounted.current) return;
+      task = await getDownloadTask(task.task_id);
+      if (!mounted.current) return;
+      setConversion(task);
+    }
+    if (task.status === "paused") return;
+    if (task.status !== "completed") throw new Error(task.error ?? "Download did not complete. Online playback is still available; retry Offline.");
+    const ready = task.video ?? await getVideo(video.id);
+    if (!mounted.current) return;
+    setBoxEditing(false);
+    onUpdate(ready);
+    setConversion(null);
+  };
+  useEffect(() => {
+    let cancelled = false;
+    void getOfflineDownload(video.id).then(async (task) => {
+      if (cancelled || task?.target_video_id !== video.id) return;
+      setSwitching(true);
+      try { await trackConversion(task); }
+      catch (reason) { if (!cancelled) onError(reason instanceof Error ? reason.message : "Could not restore offline download"); }
+      finally { if (!cancelled) setSwitching(false); }
+    }).catch(() => undefined);
+    return () => { cancelled = true; };
+    // Resume discovery is tied to review selection, not changing progress callbacks.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [video.id]);
+  const resumeConversion = async () => {
+    if (!conversion) return;
+    setSwitching(true);
+    try { await trackConversion(await resumeDownload(conversion.task_id)); }
+    catch (reason) { onError(reason instanceof Error ? reason.message : "Could not resume offline download"); }
+    finally { setSwitching(false); }
+  };
+  const dismissConversion = async () => {
+    if (!conversion) return;
+    try { await dismissPausedDownload(conversion.task_id); setConversion(null); }
+    catch (reason) { onError(reason instanceof Error ? reason.message : "Could not dismiss offline download"); }
+  };
+  const changeMode = async (mode: "online" | "offline") => {
+    if (mode === (video.mode ?? "offline")) return;
+    setSwitching(true);
+    try {
+      if (mode === "offline" && !video.local_available) {
+        await trackConversion(await downloadOfflineVideo(video.id));
+        return;
+      }
+      setBoxEditing(false);
+      const updated = await setVideoMode(video.id, mode);
+      if (!mounted.current) return;
+      onUpdate(updated);
+      setConversion(null);
+    } catch (reason) { onError(reason instanceof Error ? reason.message : "Could not change playback mode"); }
+    finally { setSwitching(false); }
   };
 
   const toggleRoundSelection = (result: SampleResult) => {
@@ -898,16 +1004,21 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
   const deviceLabel = activeJob?.device ?? latestJob?.device;
   const timingError = currentJob?.max_timing_error_ms ?? null;
   const hasTimingWarning = timingError !== null && timingError > 100;
-  const roundTransitions = <div className="results-section"><DriveUpload key={video.id} videoId={video.id} offsetSeconds={offsetSeconds} onOffsetChange={setOffsetSeconds} enabled={currentJob?.status === "completed" && results.length > 0} disabledReason={isProcessing ? "Round classification is still running. Upload becomes available when round starts are ready." : currentJob?.status === "completed" ? "No round starts were detected. Check the round crop and process the video again." : "Process this video to detect round starts before uploading."} /><div className="results-heading"><div><p className="eyebrow">ROUND TRANSITIONS</p><h3>Confirmed round changes</h3></div><div className="result-statuses">{selectedGameResults.length > 0 && <UiButton variant="outline" className="round-export-button" type="button" disabled={selectedRoundCount === 0 || exportingRounds} onClick={() => void exportSelectedRounds()}>{exportingRounds ? <LoaderCircle className="spin" size={12} /> : <Download size={12} />}{exportingRounds ? "Building video…" : `Download selected (${selectedRoundCount})`}</UiButton>}{hiddenRoundCount > 0 && <UiButton variant="outline" className="round-visibility-button" type="button" aria-expanded={showAllRounds} onClick={() => setShowAllRounds((visible) => !visible)}>{showAllRounds ? "Show key rounds" : `Show ${hiddenRoundCount} more`}</UiButton>}{games.length > 1 && <label className="game-select"><span>Game</span><UiNativeSelect aria-label="Select game" value={selectedGameIndex} onChange={(event) => setSelectedGameIndex(Number(event.target.value))}>{games.map((game, index) => <option key={game.number} value={index}>Game {game.number} · {game.results.length} rounds</option>)}</UiNativeSelect></label>}{currentJob?.status === "completed" && timingError !== null && <span className={`timing-pill ${hasTimingWarning ? "warning" : ""}`}>{hasTimingWarning ? <TriangleAlert size={12} /> : <Check size={12} />} PTS ±{Math.round(timingError)} ms</span>}{latestJob?.status === "completed" && <UiBadge variant="secondary" className="complete-pill"><Check size={13} /> Complete</UiBadge>}</div></div>{results.length === 0 ? <div className="results-empty"><Activity size={20} /><span>{hasBox ? "Process the video to find confirmed round changes." : "Draw and save a box to enable processing."}</span></div> : <div className="results-list">{visibleResults.map((result) => <ResultRow key={result.scheduled_timestamp_seconds} result={result} selected={selectedRoundKeys.has(resultKey(result))} onSelectionChange={() => toggleRoundSelection(result)} onClick={() => jumpTo(result)} />)}</div>}</div>;
+  const roundTransitions = <div className="results-section"><DriveUpload key={video.id} videoId={video.id} offsetSeconds={offsetSeconds} onOffsetChange={setOffsetSeconds} enabled={!online && currentJob?.status === "completed" && results.length > 0} disabledReason={online ? "Switch to Offline to upload round clips." : isProcessing ? "Round classification is still running. Upload becomes available when round starts are ready." : currentJob?.status === "completed" ? "No round starts were detected. Check the round crop and process the video again." : "Process this video to detect round starts before uploading."} /><div className="results-heading"><div><p className="eyebrow">ROUND TRANSITIONS</p><h3>Confirmed round changes</h3></div><div className="result-statuses">{selectedGameResults.length > 0 && <UiButton variant="outline" className="round-export-button" type="button" disabled={online || conversionBusy || selectedRoundCount === 0 || exportingRounds} title={online ? "Switch to Offline to export round clips" : undefined} onClick={() => void exportSelectedRounds()}>{exportingRounds ? <LoaderCircle className="spin" size={12} /> : <Download size={12} />}{exportingRounds ? "Building video…" : `Download selected (${selectedRoundCount})`}</UiButton>}{hiddenRoundCount > 0 && <UiButton variant="outline" className="round-visibility-button" type="button" aria-expanded={showAllRounds} onClick={() => setShowAllRounds((visible) => !visible)}>{showAllRounds ? "Show key rounds" : `Show ${hiddenRoundCount} more`}</UiButton>}{games.length > 1 && <label className="game-select"><span>Game</span><UiNativeSelect aria-label="Select game" value={selectedGameIndex} onChange={(event) => setSelectedGameIndex(Number(event.target.value))}>{games.map((game, index) => <option key={game.number} value={index}>Game {game.number} · {game.results.length} rounds</option>)}</UiNativeSelect></label>}{currentJob?.status === "completed" && timingError !== null && <span className={`timing-pill ${hasTimingWarning ? "warning" : ""}`}>{hasTimingWarning ? <TriangleAlert size={12} /> : <Check size={12} />} PTS ±{Math.round(timingError)} ms</span>}{latestJob?.status === "completed" && <UiBadge variant="secondary" className="complete-pill"><Check size={13} /> Complete</UiBadge>}</div></div>{results.length === 0 ? <div className="results-empty"><Activity size={20} /><span>{hasBox ? "Process the video to find confirmed round changes." : "Draw and save a box to enable processing."}</span></div> : <div className="results-list">{visibleResults.map((result) => <ResultRow key={result.scheduled_timestamp_seconds} result={result} selected={selectedRoundKeys.has(resultKey(result))} onSelectionChange={() => toggleRoundSelection(result)} onClick={() => jumpTo(result)} />)}</div>}</div>;
 
   const sidebar = roundTransitions;
   return <><div className="analyzer">
     <div className="analyzer-heading"><div><p className="eyebrow">ROUND ANALYSIS</p><h2>{video.original_name}</h2></div><div className="video-meta"><span>{video.width} × {video.height}</span><span>{formatDuration(video.duration)}</span></div></div>
+    <label className="url-import-quality">Playback mode<UiNativeSelect aria-label="Review playback mode" value={video.mode ?? "offline"} disabled={isProcessing || starting || conversionBusy} onChange={(event) => void changeMode(event.target.value as "online" | "offline")}><option value="offline">Offline</option><option value="online" disabled={!video.source_id}>Online</option></UiNativeSelect></label>
+    {switching && <p role="status">{conversion ? `Downloading offline copy… ${Math.round(conversion.progress)}%` : "Switching playback…"} Online playback remains available until the copy is ready.</p>}
+    {conversion?.status === "paused" && <div role="status"><p>Offline download paused. Resume or dismiss it before changing modes or analyzing.</p><UiButton disabled={switching} onClick={() => void resumeConversion()}>Resume offline download</UiButton><UiButton disabled={switching} onClick={() => void dismissConversion()}>Dismiss offline download</UiButton></div>}
+    {online && <p className="analysis-note">Switch to Offline for transcription and clip exports. Coarse sampling may miss rounds shorter than the scan interval.</p>}
     <div className="video-stage-wrap">
       <div className="video-stage" ref={overlayRef} style={{ aspectRatio: `${video.width} / ${video.height}` }}>
-        <video ref={videoRef} controls playsInline preload="metadata" onPause={(event) => { setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const initialTime = video.box?.frame_time ?? 0; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); }} />
-        {playback.status === "preparing" && <div className="playback-status"><LoaderCircle className="spin" size={18} /><strong>Preparing fast playback…</strong><span>This one-time step makes startup and scrubbing responsive.</span></div>}
-        {playback.status === "failed" && playback.error && <div className="playback-warning"><span>{playback.error ?? "Optimized playback is unavailable."}</span><UiButton variant="outline" type="button" onClick={() => void playback.retry()}>Retry</UiButton></div>}
+        {online && video.source_id ? <YouTubePlayer ref={youtubeRef} sourceId={video.source_id} start={video.source_start_seconds ?? 0} duration={video.duration} initialTime={currentTime} onTime={(time) => { if (!boxEditing) setCurrentTime(time); }} onError={onError} /> : <video ref={videoRef} controls playsInline preload="metadata" onPause={(event) => { setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const initialTime = currentTime; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); }} />}
+        {online && boxEditing && preview && <img className="online-frame-preview" src={preview} alt="Still frame for drawing the round crop" />}
+        {!online && playback.status === "preparing" && <div className="playback-status"><LoaderCircle className="spin" size={18} /><strong>Preparing fast playback…</strong><span>This one-time step makes startup and scrubbing responsive.</span></div>}
+        {!online && playback.status === "failed" && playback.error && <div className="playback-warning"><span>{playback.error ?? "Optimized playback is unavailable."}</span><UiButton variant="outline" type="button" onClick={() => void playback.retry()}>Retry</UiButton></div>}
         <canvas ref={canvasRef} className={`box-canvas ${boxEditing ? "is-editing" : ""}`} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp} aria-label="Draw a bounding box on the video" />
         {boxEditing && !draftBox && <div className="canvas-hint"><span>+</span><strong>Draw an analysis region</strong><small>Click and drag on the video</small></div>}
       </div>
@@ -916,11 +1027,11 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
       <UiButton variant="outline" type="button" aria-label="Rewind 5 seconds" onClick={() => skipPlayback(-5)}><SkipBack size={16} /> 5 seconds</UiButton>
       <UiButton variant="outline" type="button" aria-label="Skip forward 5 seconds" onClick={() => skipPlayback(5)}>5 seconds <SkipForward size={16} /></UiButton>
     </div>
-    <div className="workspace-actions"><div className="frame-readout"><span className="status-dot" /> Current frame <strong>{formatDuration(currentTime)}</strong></div><div className="action-buttons"><UiButton variant={boxEditing ? "secondary" : "outline"} aria-pressed={boxEditing} className={`secondary-button ${boxEditing ? "active-tool" : ""}`} onClick={() => { setDrawing(null); setBoxEditing((current) => !current); }}><Crosshair size={16} />{boxEditing ? "Exit drawing" : hasBox ? "Edit box" : "Draw box"}</UiButton><UiButton variant="outline" className="secondary-button" disabled={!draftBox || saving} onClick={saveCurrentBox}>{saving ? <LoaderCircle className="spin" size={16} /> : <Save size={16} />}{saving ? "Saving…" : hasBox ? "Update box" : "Save box"}</UiButton><label className="batch-size-control" title="Elapsed time between analyzed frames. 0 checks every frame."><span>Interval (s)</span><UiInput aria-label="Analysis interval in seconds" type="number" min="0" max="3600" step="any" value={analysisInterval} disabled={isProcessing || starting} onChange={(event) => setAnalysisInterval(event.target.value)} /></label><label className="batch-size-control"><span>Batch</span><UiInput type="number" min="1" max="256" value={batchSize} disabled={isProcessing || starting} onChange={(event) => setBatchSize(Math.max(1, Math.min(256, Number(event.target.value) || 1)))} /></label><label className="offset-control"><span>Offset (s)</span><UiInput aria-label="Seek offset in seconds" type="number" step="1" value={offsetSeconds} onChange={(event) => setOffsetSeconds(event.target.value)} /></label>{latestJob?.status === "completed" && <UiButton variant="outline" className="secondary-button" disabled={isProcessing || starting} onClick={() => process(true)}><RefreshCcw size={16} /> Rerun OCR</UiButton>}<UiButton variant="default" className="primary-button" disabled={!hasBox || isProcessing || starting} onClick={() => process(false)}>{isProcessing ? <LoaderCircle className="spin" size={16} /> : <Play size={16} />}{isProcessing ? `${activeJob?.phase === "preparing" ? "Preparing" : "Analyzing"} ${progress}%` : latestJob?.status === "completed" ? "Analyze again" : latestJob?.status === "failed" ? "Retry analysis" : "Process video"}</UiButton></div></div>
+    <div className="workspace-actions"><div className="frame-readout"><span className="status-dot" /> Current frame <strong>{formatDuration(currentTime)}</strong></div><div className="action-buttons"><UiButton variant={boxEditing ? "secondary" : "outline"} aria-pressed={boxEditing} className={`secondary-button ${boxEditing ? "active-tool" : ""}`} disabled={previewLoading || conversionBusy || isProcessing} onClick={() => void toggleDrawing()}><Crosshair size={16} />{boxEditing ? "Exit drawing" : hasBox ? "Edit box" : "Draw box"}</UiButton><UiButton variant="outline" className="secondary-button" disabled={!draftBox || saving || conversionBusy || isProcessing} onClick={saveCurrentBox}>{saving ? <LoaderCircle className="spin" size={16} /> : <Save size={16} />}{saving ? "Saving…" : hasBox ? "Update box" : "Save box"}</UiButton><label className="batch-size-control" title="Elapsed time between analyzed frames. 0 checks every frame."><span>{online ? "Scan interval (s)" : "Interval (s)"}</span><UiInput aria-label="Analysis interval in seconds" type="number" min={online ? "1" : "0"} max="3600" step="any" value={analysisInterval} disabled={isProcessing || starting || conversionBusy} onChange={(event) => setAnalysisInterval(event.target.value)} /></label><label className="batch-size-control"><span>Batch</span><UiInput type="number" min="1" max="256" value={batchSize} disabled={isProcessing || starting || conversionBusy} onChange={(event) => setBatchSize(Math.max(1, Math.min(256, Number(event.target.value) || 1)))} /></label><label className="offset-control"><span>Offset (s)</span><UiInput aria-label="Seek offset in seconds" type="number" step="1" value={offsetSeconds} onChange={(event) => setOffsetSeconds(event.target.value)} /></label>{latestJob?.status === "completed" && <UiButton variant="outline" className="secondary-button" disabled={isProcessing || starting || conversionBusy} onClick={() => process(true)}><RefreshCcw size={16} /> Rerun OCR</UiButton>}<UiButton variant="default" className="primary-button" disabled={!hasBox || isProcessing || starting || conversionBusy} onClick={() => process(false)}>{isProcessing ? <LoaderCircle className="spin" size={16} /> : <Play size={16} />}{isProcessing ? `${activeJob?.phase === "scanning" ? "Scanning" : activeJob?.phase === "refining" ? "Refining" : activeJob?.phase === "preparing" ? "Preparing" : "Analyzing"} ${progress}%` : latestJob?.status === "completed" ? "Analyze again" : latestJob?.status === "failed" ? "Retry analysis" : "Process video"}</UiButton></div></div>
     <p className="analysis-note">Sampled frames are cached for reuse across round-analysis runs. Preparation and analysis show separate progress.</p>
     <p className="analysis-note">{Number(analysisInterval) > 0 ? `About ${Math.ceil(video.duration / Number(analysisInterval)).toLocaleString()} samples for this video, one every ${analysisInterval} seconds.` : "Every-frame mode: all source frames will be prepared and analyzed."}</p>
-    <p className="analysis-note">Analysis interval: 0 checks every frame; 0.1 samples about 10 frames per second. Timestamp clicks use the actual selected frame.</p>
-    {isProcessing && <div className="progress-card"><div className="progress-copy"><div><span className="eyebrow">{activeJob?.sample_interval_seconds === 0 ? "EVERY FRAME" : `EVERY ${activeJob?.sample_interval_seconds} SECONDS`} · BATCH SIZE {activeJob?.batch_size}</span><strong>{activeJob?.status === "queued" ? "Queued for processing" : activeJob?.phase === "preparing" ? "Preparing sampled frames for reuse" : activeJob?.phase === "collecting" ? "Reading and classifying video frames" : "Confirming round transitions"}</strong></div><span>{progress}%</span></div><Progress aria-label="Processing progress" value={progress} /><div className="progress-foot"><span>{(activeJob?.phase === "preparing" || activeJob?.phase === "collecting") ? `${activeJob.collected_samples} of ${activeJob.total_samples || "…"} frames read` : `${activeJob?.progress ?? 0} of ${activeJob?.total_samples || "…"} frames processed`}</span><span><Cpu size={13} /> {deviceLabel ? (deviceLabel === "dummy" ? "Dummy predictor" : deviceLabel === "cuda" ? "CUDA" : deviceLabel === "mps" ? "Apple Metal (MPS)" : deviceLabel === "cpu" ? "CPU fallback" : deviceLabel) : "Selecting device"}</span></div></div>}
+    <p className="analysis-note">{online ? "Online scans refine candidate changes at one-second intervals. Timestamp clicks use the original video timeline." : "Analysis interval: 0 checks every frame; 0.1 samples about 10 frames per second. Timestamp clicks use the actual selected frame."}</p>
+    {isProcessing && <div className="progress-card"><div className="progress-copy"><div><span className="eyebrow">{activeJob?.sample_interval_seconds === 0 ? "EVERY FRAME" : `EVERY ${activeJob?.sample_interval_seconds} SECONDS`} · BATCH SIZE {activeJob?.batch_size}</span><strong>{activeJob?.status === "queued" ? "Queued for processing" : activeJob?.phase === "scanning" ? "Scanning remote round samples" : activeJob?.phase === "refining" ? "Refining candidate round changes" : activeJob?.phase === "preparing" ? "Preparing sampled frames for reuse" : activeJob?.phase === "collecting" ? "Reading and classifying video frames" : "Confirming round transitions"}</strong></div><span>{progress}%</span></div><Progress aria-label="Processing progress" value={progress} /><div className="progress-foot"><span>{(activeJob?.phase === "preparing" || activeJob?.phase === "collecting") ? `${activeJob.collected_samples} of ${activeJob.total_samples || "…"} frames read` : `${activeJob?.progress ?? 0} of ${activeJob?.total_samples || "…"} frames processed`}</span><span><Cpu size={13} /> {deviceLabel ? (deviceLabel === "dummy" ? "Dummy predictor" : deviceLabel === "cuda" ? "CUDA" : deviceLabel === "mps" ? "Apple Metal (MPS)" : deviceLabel === "cpu" ? "CPU fallback" : deviceLabel) : "Selecting device"}</span></div></div>}
     {latestJob?.status === "failed" && <div className="job-error"><X size={16} /><span>{latestJob.error ?? "Processing failed"}</span><UiButton variant="outline" onClick={() => process(false)}>Retry</UiButton></div>}
     {hasTimingWarning && <div className="timing-warning"><TriangleAlert size={16} /><span><strong>Playback timing warning.</strong> The nearest available frame deviated by up to {Math.round(timingError)} ms. Result clicks use the actual frame timestamps.</span></div>}
   </div>{sidebarTarget ? createPortal(sidebar, sidebarTarget) : sidebar}</>;

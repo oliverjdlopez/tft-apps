@@ -12,6 +12,7 @@ type MediaState = {
 export function useOptimizedPlayback(
   videoId: string,
   videoRef: RefObject<HTMLVideoElement | null>,
+  enabled = true,
 ): PlaybackStatus & { retry: () => Promise<void> } {
   const [playback, setPlayback] = useState<PlaybackStatus>({
     status: "preparing",
@@ -22,6 +23,7 @@ export function useOptimizedPlayback(
   const fallbackState = useRef<MediaState | null>(null);
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
     let timer: number | undefined;
 
@@ -50,9 +52,10 @@ export function useOptimizedPlayback(
       cancelled = true;
       if (timer !== undefined) window.clearTimeout(timer);
     };
-  }, [videoId, refreshGeneration]);
+  }, [videoId, refreshGeneration, enabled]);
 
   useEffect(() => {
+    if (!enabled) return;
     const element = videoRef.current;
     if (!element) return;
 
@@ -128,7 +131,7 @@ export function useOptimizedPlayback(
       fallBackToOriginal();
     });
     return () => hls.destroy();
-  }, [playback.status, playback.manifest_url, videoId, videoRef]);
+  }, [playback.status, playback.manifest_url, videoId, videoRef, enabled]);
 
   const retry = async () => {
     setPlayback({ status: "preparing", manifest_url: null, error: null });

@@ -18,7 +18,7 @@ dependencies = [
     "torch>=2.4",
     "ultralytics>=8.4",
     "uvicorn[standard]>=0.30",
-    "yt-dlp>=2026.8.19",
+    "yt-dlp[default]>=2026.8.19",
 ]
 
 [project.optional-dependencies]

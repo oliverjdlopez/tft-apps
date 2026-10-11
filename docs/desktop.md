@@ -19,6 +19,14 @@ VOD Review unavailable; retry cleans up before creating a new runtime. Quit
 stops only the owned service trees. The former Wisps tab and workspace were
 removed; see [VOD scope](vod-review-scope.md).
 
+VOD Review can embed public prerecorded YouTube videos in **Online** mode, with
+backend-owned sparse frame analysis and an **Offline** download option. The
+iframe uses the local VOD frontend origin and a cross-origin referrer for
+YouTube's player identity. Backend CORS permits both standalone port 5173 and
+desktop port 5174 and exposes the actual preview-frame timestamp. No renderer
+privileges or top-level navigation exceptions are added. Live embedding requires
+internet access; see [online review](../vod-review/docs/online-review.md).
+
 The **Media** tab (Ctrl/Cmd+9) browses the suite-owned shared media
 catalogue through ChatTFT's owned backend, in both production and development
 modes. Browse video, audio, images, text/transcripts and data; select a resource

@@ -232,6 +232,10 @@ class RoundTransitionDetector:
         self._window: deque[tuple[float, str, float]] = deque(maxlen=self.window_size)
         self._current_label: str | None = None
 
+    def reset_window(self) -> None:
+        """Discard sparse voting history while retaining the last confirmed round."""
+        self._window.clear()
+
     def observe(self, timestamp: float, label: str, confidence: float) -> tuple[float, str, float] | None:
         self._window.append((timestamp, label, confidence))
         if len(self._window) < self.window_size:

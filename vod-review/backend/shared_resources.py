@@ -22,9 +22,10 @@ router = APIRouter(prefix="/api/videos", tags=["shared-media"])
 def publish_video(video_id: str) -> dict:
     """Copy an existing VOD into the catalogue while preserving its review state."""
     video = db.get_video(video_id)
+    path = db.video_path(video_id)
     with resource_errors():
         resource = required_store().publish(
-            db.video_path(video_id), kind="video", source="vod-review:" + video_id,
+            path, kind="video", source="vod-review:" + video_id,
             name=video["original_name"], content_type=video["mime_type"],
             metadata={"video_id": video_id},
         )

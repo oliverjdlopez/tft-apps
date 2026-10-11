@@ -103,6 +103,7 @@ describe("VOD download range", () => {
     render(<App />);
     await screen.findByText("No videos yet");
     fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
+    fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
     fireEvent.change(screen.getByLabelText("Download start timestamp"), { target: { value: "2:00" } });
     fireEvent.change(screen.getByLabelText("Download end timestamp"), { target: { value: "1:00" } });
     fireEvent.click(screen.getByRole("button", { name: "Download video from link" }));
@@ -138,6 +139,7 @@ describe("VOD download range", () => {
     render(<App />);
     await screen.findByText("No videos yet");
     fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
+    fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
     fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "5" } });
     expect(screen.getByLabelText("Download video quality")).toHaveValue("720p");
     fireEvent.change(screen.getByLabelText("Download video quality"), { target: { value: "480p" } });
@@ -173,6 +175,7 @@ describe("transcription only URL import", () => {
     expect(toggle).not.toBeChecked();
     fireEvent.change(screen.getByLabelText("Download start hours"), { target: { value: "2" } });
     fireEvent.change(screen.getByLabelText("Download end hours"), { target: { value: "1" } });
+    fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
     fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "400" } });
     fireEvent.change(screen.getByLabelText("Download target FPS"), { target: { value: "15" } });
     fireEvent.click(toggle);

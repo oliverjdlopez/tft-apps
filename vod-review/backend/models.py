@@ -82,8 +82,8 @@ class ReplayDiscoveryRequest(BaseModel):
 class ProcessingRequest(BaseModel):
     batch_size: int = Field(default=DEFAULT_BATCH_SIZE, ge=MIN_BATCH_SIZE, le=MAX_BATCH_SIZE)
     reuse_cached_crops: bool = False
-    sample_interval_seconds: float = Field(
-        default=SAMPLE_INTERVAL_SECONDS,
+    sample_interval_seconds: float | None = Field(
+        default=None,
         ge=0,
         allow_inf_nan=False,
         le=MAX_SAMPLE_INTERVAL_SECONDS,
@@ -116,3 +116,33 @@ class RoundExportRequest(BaseModel):
         if total_duration > 30 * 60:
             raise ValueError("The combined export must be no longer than 30 minutes")
         return self
+
+
+class OnlineVideoRequest(BaseModel):
+    """Import a supported remote video without downloading a local copy."""
+
+    url: str = Field(min_length=8, max_length=2048)
+    start_seconds: float | None = Field(default=None, ge=0, allow_inf_nan=False)
+    end_seconds: float | None = Field(default=None, gt=0, allow_inf_nan=False)
+    quality: DownloadQuality = "720p"
+
+    @model_validator(mode="after")
+    def has_valid_range(self) -> "OnlineVideoRequest":
+        """Require an increasing source range when both endpoints are supplied."""
+        if self.start_seconds is not None and self.end_seconds is not None and self.end_seconds <= self.start_seconds:
+            raise ValueError("Review end must be after its start")
+        return self
+
+
+class VideoModeRequest(BaseModel):
+    """Select online streaming or offline local playback."""
+
+    mode: Literal["online", "offline"]
+
+
+class OfflineDownloadRequest(BaseModel):
+    """Download the existing review's source range into the same library record."""
+
+    quality: DownloadQuality = "720p"
+    target_fps: float | None = Field(default=None, ge=1, le=120, allow_inf_nan=False)
+    checkpoint_interval_seconds: float | None = Field(default=None, ge=60, le=6 * 60 * 60)

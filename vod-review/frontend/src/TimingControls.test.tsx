@@ -18,6 +18,7 @@ it("sends download FPS alongside quality and checkpoint settings", async () => {
   render(<App />);
   await screen.findByRole("combobox", { name: "Recent videos" });
   fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
+  fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
   fireEvent.change(screen.getByLabelText("Download target FPS"), { target: { value: "30" } });
   fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "2" } });
   fireEvent.click(screen.getByRole("button", { name: "Download video from link" }));

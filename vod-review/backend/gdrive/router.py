@@ -101,8 +101,8 @@ async def start_upload(video_id: str, request: Request, background: BackgroundTa
     if request.headers.get("content-type", "").split(";")[0].strip() != "application/json":
         raise HTTPException(415, "Upload requests must use application/json.")
     video = db.get_video(video_id)
-    clips = round_clips(video, options)
     source = db.video_path(video_id)
+    clips = round_clips(video, options)
     if not source.is_file():
         raise HTTPException(404, "The source video is missing.")
     await asyncio.to_thread(access_token)

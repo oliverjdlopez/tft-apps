@@ -7,6 +7,16 @@ Standalone commands below remain available for testing and troubleshooting.
 
 Local app for uploading a video—or downloading one from a Twitch or YouTube URL—drawing one fixed analysis region, and classifying the round shown in that crop at a configurable snapshot interval.
 
+YouTube links now default to **Online** review: the embedded player streams the
+video while the backend scans remote frames every **10 seconds**, refining
+observed round changes at **one-second** spacing. **Draw box** fetches a still
+at the current player position. Round clicks seek the original source video.
+Switch to **Offline** to download a local copy into the same review, preserving
+its crop and round results. Local playback becomes active after preparation
+succeeds; returning to Online retains the saved copy. Twitch and uploads retain
+the existing Offline workflow. Transcription and clip tools require Offline.
+See [online review, transport requirements, and accuracy limits](docs/online-review.md).
+
 The review page opens directly into round analysis. Draw and save a fixed crop,
 choose an analysis interval (one second by default), and process selected frames
 in batches of 64 (configurable from 1–256). Round labels live in

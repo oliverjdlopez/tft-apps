@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import json
 import math
 import mimetypes
@@ -20,7 +21,7 @@ from pathlib import Path
 from typing import Any, Callable
 from urllib.parse import urlparse
 
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from round_classifier.predict import get_ocr_classifier
@@ -35,13 +36,15 @@ try:
         PROGRESS_WRITE_INTERVAL_SECONDS,
         SAMPLE_INTERVAL_SECONDS,
     )
-    from .models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest
+    from .models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest, OnlineVideoRequest, VideoModeRequest, OfflineDownloadRequest
+    from . import online
 except ImportError:  # Running with `uvicorn app:app` from the backend directory.
     import frame_cache
     import db
     from shared_transcripts import publish_completed_transcripts
     from constants import DEFAULT_BATCH_SIZE, MAX_COLLECTION_PROGRESS_UPDATES, PROGRESS_WRITE_INTERVAL_SECONDS, SAMPLE_INTERVAL_SECONDS
-    from models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest
+    from models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest, OnlineVideoRequest, VideoModeRequest, OfflineDownloadRequest
+    import online
 
 try:
     from .processor import process_cached_crops, process_video_all_frames
@@ -244,8 +247,15 @@ def probe_video(path: Path) -> dict[str, Any]:
         container.close()
 
 
-def persist_video(path: Path, original_name: str, mime_type: str, video_id: str) -> dict[str, Any]:
+def persist_video(path: Path, original_name: str, mime_type: str, video_id: str,
+                  existing_review: bool = False) -> dict[str, Any]:
+    """Validate downloaded bytes and attach them without replacing review state."""
     metadata = probe_video(path)
+    if existing_review:
+        review = db.get_video(video_id)
+        if metadata["duration"] + 1.5 < review["duration"]:
+            raise HTTPException(400, "The local download does not cover this review's complete range")
+        return db.bind_local_copy(video_id, path, mime_type, metadata["width"], metadata["height"])
     return db.create_video(
         video_id,
         original_name,
@@ -276,8 +286,9 @@ def playback_is_ready(video_id: str) -> bool:
 
 def build_playback_assets(video_id: str) -> None:
     """Build an atomic, stream-copy HLS representation for responsive browser seeking."""
-    source = db.video_path(video_id)
-    if not source.exists():
+    # Conversion prepares local playback while the review still plays online.
+    source = db.physical_video_path(video_id)
+    if source is None or not source.exists():
         raise FileNotFoundError("Video file is missing")
 
     playback_root = db.DATA_DIR / "playback"
@@ -532,11 +543,12 @@ def download_video_url_local(
     progress_callback: Callable[[float], None] | None = None,
     quality: DownloadQuality = "720p",
     target_fps: float | None = None,
+    target_video_id: str | None = None,
 ) -> dict[str, Any]:
     if not is_supported_video_url(url):
         raise HTTPException(status_code=400, detail="Enter a valid Twitch or YouTube video URL")
 
-    video_id = uuid.uuid4().hex
+    video_id = target_video_id or uuid.uuid4().hex
     saved = False
     output_template = str(db.VIDEO_DIR / f"{video_id}.%(ext)s")
     command = [
@@ -632,7 +644,8 @@ def download_video_url_local(
         safe_title = Path(title.replace("\x00", "")).name[:180] or "Downloaded video"
         original_name = safe_title if Path(safe_title).suffix else f"{safe_title}{path.suffix}"
         apply_download_fps(path, target_fps)
-        payload = persist_video(path, original_name, mimetypes.guess_type(path.name)[0] or "video/mp4", video_id)
+        payload = persist_video(path, original_name, mimetypes.guess_type(path.name)[0] or "video/mp4", video_id,
+                                existing_review=target_video_id is not None)
         saved = True
         return payload
     except FileNotFoundError as exc:
@@ -891,6 +904,7 @@ def download_video_url_checkpointed_local(
     should_pause: Callable[[], bool],
     quality: DownloadQuality = "720p",
     target_fps: float | None = None,
+    target_video_id: str | None = None,
 ) -> dict[str, Any]:
     """Download durable time slices, then join them into the library video."""
     if not is_supported_video_url(url):
@@ -924,6 +938,9 @@ def download_video_url_checkpointed_local(
             parts.append(path)
             progress_callback(((index + 1) / chunk_count) * 95.0)
             if should_pause():
+                if target_video_id is not None:
+                    # Partial coverage cannot replace an online review's timeline.
+                    raise DownloadPaused(db.get_video(target_video_id))
                 raise DownloadPaused(_publish_download_checkpoints(
                     task_id,
                     parts,
@@ -940,7 +957,8 @@ def download_video_url_checkpointed_local(
         raw_title = str(metadata.get("title") or "Downloaded video")
         safe_title = Path(raw_title.replace("\x00", "")).name[:180] or "Downloaded video"
         original_name = safe_title if Path(safe_title).suffix else f"{safe_title}.mp4"
-        payload = persist_video(final_path, original_name, "video/mp4", task_id)
+        payload = persist_video(final_path, original_name, "video/mp4", target_video_id or task_id,
+                                existing_review=target_video_id is not None)
         shutil.rmtree(checkpoint_dir, ignore_errors=True)
         return payload
     except DownloadPaused:
@@ -963,6 +981,8 @@ def download_video_url(
     end_seconds: float | None = None,
     progress_callback: Callable[[float], None] | None = None,
     quality: DownloadQuality = "720p",
+    target_fps: float | None = None,
+    target_video_id: str | None = None,
 ) -> dict[str, Any]:
     """Download or reuse a shared source while retaining the existing UI contract."""
     try:
@@ -971,7 +991,10 @@ def download_video_url(
         from shared_media import download_shared_video
     return download_shared_video(
         url, start_seconds, end_seconds, quality,
-        lambda: download_video_url_local(url, start_seconds, end_seconds, progress_callback, quality),
+        lambda: download_video_url_local(url, start_seconds, end_seconds, progress_callback, quality,
+                                         **({"target_fps": target_fps} if target_fps is not None else {}),
+                                         **({"target_video_id": target_video_id} if target_video_id is not None else {})),
+        **({"target_video_id": target_video_id} if target_video_id is not None else {}),
     )
 
 
@@ -984,6 +1007,8 @@ def download_video_url_checkpointed(
     progress_callback: Callable[[float], None],
     should_pause: Callable[[], bool],
     quality: DownloadQuality = "720p",
+    target_fps: float | None = None,
+    target_video_id: str | None = None,
 ) -> dict[str, Any]:
     """Reuse completed media or preserve the original checkpoint/pause workflow."""
     try:
@@ -995,7 +1020,10 @@ def download_video_url_checkpointed(
         lambda: download_video_url_checkpointed_local(
             task_id, url, start_seconds, end_seconds, checkpoint_interval_seconds,
             progress_callback, should_pause, quality,
+            **({"target_fps": target_fps} if target_fps is not None else {}),
+            **({"target_video_id": target_video_id} if target_video_id is not None else {}),
         ),
+        **({"target_video_id": target_video_id} if target_video_id is not None else {}),
     )
 
 
@@ -1059,7 +1087,22 @@ def run_job(job_id: str) -> None:
     try:
         round_labels = load_round_labels()
         classifier = get_ocr_classifier(round_labels)
-        if job["reuse_cached_crops"]:
+        if job["strategy"] == "online":
+            def online_progress(phase: str, processed: int, total: int) -> None:
+                """Report adaptive stages without changing the completed result set."""
+                db.update_online_progress(job_id, phase, processed, total, classifier.device_label)
+
+            def online_results(results: list[tuple[float, float, str, float]]) -> None:
+                """Publish cumulative confirmed rounds on the active job."""
+                pending_results[:] = results
+                db.store_partial_results(job_id, results)
+
+            processed, device = online.analyze_online(
+                dict(video), box, job["batch_size"], job["sample_interval_seconds"],
+                classifier, ocr_cache_dir() / "online", online_progress, online_results,
+                reuse_cached=bool(job["reuse_cached_crops"]),
+            )
+        elif job["reuse_cached_crops"]:
             cache_dir = ocr_cache_dir() / str(job["source_job_id"])
             processed, device = process_cached_crops(
                 cache_dir,
@@ -1204,10 +1247,11 @@ app.include_router(shared_media_router)
 app.include_router(shared_video_router)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Frame-Timestamp"],
 )
 
 
@@ -1318,6 +1362,7 @@ async def _run_download_task(task_id: str, request: VideoUrlRequest) -> None:
                 **({"target_fps": request.target_fps} if request.target_fps is not None else {}),
             )
         start_playback_preparation(video["id"])
+        db.update_source_metadata(video["id"], request.url, request.start_seconds, request.end_seconds, request.quality)
         db.update_download_task(task_id, status="completed", progress=100, video_id=video["id"])
     except DownloadPaused as paused:
         start_playback_preparation(paused.video["id"])
@@ -1356,6 +1401,151 @@ async def import_video_url(request: VideoUrlRequest) -> dict[str, Any]:
     DOWNLOAD_TASKS[task_id] = task
     task.add_done_callback(lambda completed: DOWNLOAD_TASKS.pop(task_id, None) if DOWNLOAD_TASKS.get(task_id) is completed else None)
     return payload
+
+
+def active_conversion(video_id: str) -> dict[str, Any] | None:
+    """Find a conversion still owning this review, including saved checkpoints."""
+    connection = db.get_db()
+    row = connection.execute(
+        "SELECT id FROM download_tasks WHERE target_video_id=? AND status IN ('queued','running','pausing','paused') ORDER BY created_at DESC LIMIT 1",
+        (video_id,),
+    ).fetchone()
+    connection.close()
+    return db.get_download_task(row["id"]) if row else None
+
+
+def require_idle_review(video_id: str) -> dict[str, Any]:
+    """Prevent source or playback changes while a worker owns the review."""
+    video = db.get_video(video_id)
+    if video["active_job"] is not None or active_conversion(video_id) is not None:
+        raise HTTPException(409, "Finish analysis or resume/dismiss the offline download first")
+    return video
+
+
+@app.post("/api/videos/online", status_code=201)
+async def import_online_video(request: OnlineVideoRequest) -> dict[str, Any]:
+    """Create a source-backed review without saving full video bytes."""
+    try:
+        metadata = await asyncio.to_thread(online.resolve_metadata, request.url, request.quality)
+        metadata["source_quality"] = request.quality
+        return db.create_online_video(uuid.uuid4().hex, metadata, request.start_seconds, request.end_seconds)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(502, "YouTube metadata could not be loaded; retry or choose Offline mode") from exc
+
+
+@app.get("/api/videos/{video_id}/frame")
+async def preview_frame(video_id: str, timestamp: float = Query(ge=0, allow_inf_nan=False)) -> Response:
+    """Return a still for crop editing, expressed on the review timeline."""
+    video = db.get_video(video_id)
+    if timestamp >= video["duration"]:
+        raise HTTPException(400, "Preview timestamp must be inside this review")
+
+    def render() -> tuple[bytes, float]:
+        from PIL import Image
+        if video["mode"] == "online":
+            rgb, actual = online.fetch_preview(video, timestamp)
+        else:
+            import av
+            try:
+                from .processor import decode_frame_at_timestamp
+            except ImportError:
+                from processor import decode_frame_at_timestamp
+            with av.open(str(db.video_path(video_id))) as container:
+                frame, actual = decode_frame_at_timestamp(container, container.streams.video[0], timestamp)
+                rgb = frame.to_ndarray(format="rgb24")
+        output = io.BytesIO()
+        Image.fromarray(rgb).save(output, format="PNG")
+        return output.getvalue(), actual
+
+    try:
+        content, actual = await asyncio.to_thread(render)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(502, "Preview could not be loaded; retry or choose Offline mode") from exc
+    return Response(content, media_type="image/png", headers={"X-Frame-Timestamp": str(actual)})
+
+
+@app.patch("/api/videos/{video_id}/mode")
+async def change_review_mode(video_id: str, request: VideoModeRequest) -> dict[str, Any]:
+    """Switch available playback without discarding either representation."""
+    video = require_idle_review(video_id)
+    if request.mode == "offline":
+        if not video["local_available"]:
+            raise HTTPException(409, "Download a local copy before selecting Offline")
+        if not playback_is_ready(video_id):
+            await asyncio.to_thread(build_playback_assets, video_id)
+    return db.set_video_mode(video_id, request.mode)
+
+
+async def run_offline_conversion(task_id: str, request: VideoUrlRequest, video_id: str) -> None:
+    """Keep online playback active until complete local playback is prepared."""
+    db.update_download_task(task_id, status="running", video_id=video_id)
+    try:
+        video = db.get_video(video_id)
+        if not video["local_available"]:
+            if request.checkpoint_interval_seconds is not None:
+                await asyncio.to_thread(
+                    download_video_url_checkpointed, task_id, request.url, request.start_seconds,
+                    request.end_seconds, request.checkpoint_interval_seconds,
+                    lambda percent: db.update_download_task(task_id, progress=percent),
+                    lambda: task_id in DOWNLOAD_PAUSE_REQUESTS, request.quality,
+                    target_fps=request.target_fps, target_video_id=video_id,
+                )
+            else:
+                await asyncio.to_thread(
+                    download_video_url, request.url, request.start_seconds, request.end_seconds,
+                    lambda percent: db.update_download_task(task_id, progress=percent), request.quality,
+                    target_fps=request.target_fps, target_video_id=video_id,
+                )
+        await asyncio.to_thread(build_playback_assets, video_id)
+        db.set_video_mode(video_id, "offline")
+        db.update_download_task(task_id, status="completed", progress=100, error="")
+    except DownloadPaused:
+        db.update_download_task(task_id, status="paused", error="")
+    except asyncio.CancelledError:
+        db.update_download_task(task_id, status="paused" if request.checkpoint_interval_seconds else "failed",
+                                error="Offline download interrupted; resume or retry")
+        raise
+    except Exception as exc:
+        detail = str(exc.detail) if isinstance(exc, HTTPException) else "Offline download failed; retry this conversion"
+        db.update_download_task(task_id, status="failed", error=detail)
+    finally:
+        DOWNLOAD_PAUSE_REQUESTS.discard(task_id)
+
+
+@app.post("/api/videos/{video_id}/offline-download", status_code=202)
+async def download_offline_copy(video_id: str, request: OfflineDownloadRequest) -> dict[str, Any]:
+    """Download into one review and coalesce repeated conversion requests."""
+    existing = active_conversion(video_id)
+    if existing is not None:
+        return existing
+    video = require_idle_review(video_id)
+    if not video["source_url"]:
+        raise HTTPException(409, "This review has no source URL")
+    task_id = uuid.uuid4().hex
+    download = VideoUrlRequest(
+        url=video["source_url"], start_seconds=video["source_start_seconds"],
+        end_seconds=video["source_end_seconds"], quality=request.quality,
+        target_fps=request.target_fps, checkpoint_interval_seconds=request.checkpoint_interval_seconds,
+    )
+    db.create_download_task(task_id, **download.model_dump(), target_video_id=video_id)
+    db.update_download_task(task_id, video_id=video_id)
+    task = asyncio.create_task(run_offline_conversion(task_id, download, video_id), name=f"offline-video-{task_id}")
+    DOWNLOAD_TASKS[task_id] = task
+    task.add_done_callback(lambda completed: DOWNLOAD_TASKS.pop(task_id, None) if DOWNLOAD_TASKS.get(task_id) is completed else None)
+    return db.get_download_task(task_id)
+
+
+@app.get("/api/videos/{video_id}/offline-download")
+async def get_offline_download(video_id: str) -> dict[str, Any] | None:
+    """Recover this review's conversion even when another review also downloads."""
+    db.get_video(video_id)
+    return active_conversion(video_id)
 
 
 async def import_discovered_video(request: VideoUrlRequest, media_id: str) -> dict[str, Any]:
@@ -1435,7 +1625,9 @@ async def resume_download_task(task_id: str) -> dict[str, Any]:
     request = VideoUrlRequest(**request_data)
     DOWNLOAD_PAUSE_REQUESTS.discard(task_id)
     db.update_download_task(task_id, status="queued", error="")
-    task = asyncio.create_task(_run_download_task(task_id, request), name=f"download-video-{task_id}")
+    target_video_id = request_data.get("target_video_id")
+    runner = run_offline_conversion(task_id, request, target_video_id) if target_video_id else _run_download_task(task_id, request)
+    task = asyncio.create_task(runner, name=f"download-video-{task_id}")
     DOWNLOAD_TASKS[task_id] = task
     task.add_done_callback(lambda completed: DOWNLOAD_TASKS.pop(task_id, None) if DOWNLOAD_TASKS.get(task_id) is completed else None)
     return db.get_download_task(task_id)
@@ -1443,6 +1635,8 @@ async def resume_download_task(task_id: str) -> dict[str, Any]:
 
 @app.post("/api/downloads/{task_id}/save", status_code=201)
 async def save_paused_download(task_id: str) -> dict[str, Any]:
+    if db.get_download_request(task_id).get("target_video_id"):
+        raise HTTPException(409, "Resume the complete offline download to preserve this review's timeline")
     payload = db.get_download_task(task_id)
     if payload["status"] != "paused":
         raise HTTPException(status_code=409, detail="Only a paused download can be saved")
@@ -1466,13 +1660,14 @@ async def save_paused_download(task_id: str) -> dict[str, Any]:
 
 @app.delete("/api/videos/{video_id}", status_code=204)
 async def delete_video(video_id: str) -> None:
+    require_idle_review(video_id)
     task = PLAYBACK_TASKS.pop(video_id, None)
     if task is not None and not task.done():
         task.cancel()
     PLAYBACK_ERRORS.pop(video_id, None)
     shared_media = db.video_is_shared(video_id)
     path = db.delete_video(video_id)
-    if not shared_media:
+    if not shared_media and path is not None:
         path.unlink(missing_ok=True)
         frame_cache.remove(path)
     shutil.rmtree(playback_directory(video_id), ignore_errors=True)
@@ -1485,7 +1680,7 @@ async def get_video(video_id: str) -> dict[str, Any]:
 
 @app.get("/api/videos/{video_id}/playback")
 async def get_playback(video_id: str) -> dict[str, str | None]:
-    db.get_video(video_id)
+    db.video_path(video_id)
     if playback_is_ready(video_id):
         return {
             "status": "ready",
@@ -1503,7 +1698,7 @@ async def get_playback(video_id: str) -> dict[str, str | None]:
 
 @app.post("/api/videos/{video_id}/playback")
 async def retry_playback(video_id: str) -> dict[str, str | None]:
-    db.get_video(video_id)
+    db.video_path(video_id)
     PLAYBACK_ERRORS.pop(video_id, None)
     start_playback_preparation(video_id)
     return {"status": "preparing", "manifest_url": None, "error": None}
@@ -1511,6 +1706,7 @@ async def retry_playback(video_id: str) -> dict[str, str | None]:
 
 @app.get("/api/videos/{video_id}/playback/{asset_name}", response_model=None)
 async def playback_asset(video_id: str, asset_name: str) -> FileResponse:
+    db.video_path(video_id)
     allowed = (
         asset_name in {"index.m3u8", "init.mp4"}
         or (asset_name.startswith("segment-") and asset_name.endswith(".m4s") and asset_name[8:-4].isdigit())
@@ -1614,7 +1810,16 @@ async def start_processing(video_id: str, request: ProcessingRequest | None = No
     global WORKERS
     job_id = uuid.uuid4().hex
     batch_size = request.batch_size if request else DEFAULT_BATCH_SIZE
-    sample_interval_seconds = request.sample_interval_seconds if request else SAMPLE_INTERVAL_SECONDS
+    video = db.get_video(video_id)
+    if active_conversion(video_id) is not None:
+        raise HTTPException(409, "Finish or dismiss the offline download before analysis")
+    sample_interval_seconds = request.sample_interval_seconds if request else None
+    if sample_interval_seconds is None:
+        sample_interval_seconds = 10.0 if video["mode"] == "online" else SAMPLE_INTERVAL_SECONDS
+    if video["mode"] == "online" and sample_interval_seconds < 1:
+        raise HTTPException(400, "Online scan interval must be at least one second")
+    if video["mode"] != "online":
+        db.video_path(video_id)
     reuse_cached_crops = request.reuse_cached_crops if request else False
     payload, created = db.create_processing_job(
         video_id, job_id, batch_size, sample_interval_seconds, reuse_cached_crops

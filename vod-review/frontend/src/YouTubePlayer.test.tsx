@@ -1,0 +1,28 @@
+import { act, cleanup, render, waitFor } from "@testing-library/react";
+import { createRef } from "react";
+import { afterEach, expect, it, vi } from "vitest";
+import { PlayerAdapter, YouTubePlayer } from "./YouTubePlayer";
+afterEach(() => { cleanup(); delete window.YT; vi.restoreAllMocks(); });
+it("maps review seeks to source time, clamps them, configures the iframe and destroys the player", async () => {
+  const player = { seekTo: vi.fn(), playVideo: vi.fn(), pauseVideo: vi.fn(), getCurrentTime: () => 615, destroy: vi.fn() };
+  let ready: (() => void) | undefined;
+  const construct = vi.fn(function(_element: HTMLElement, options: { events: { onReady: () => void } }) { ready = options.events.onReady; return player; });
+  window.YT = { Player: construct as unknown as NonNullable<typeof window.YT>["Player"] };
+  const adapter = createRef<PlayerAdapter>();
+  const { container, unmount } = render(<YouTubePlayer ref={adapter} sourceId="example1234" start={600} duration={120} initialTime={3.5} onTime={vi.fn()} onError={vi.fn()} />);
+  await waitFor(() => expect(construct).toHaveBeenCalledOnce());
+  expect(container.querySelector("iframe")).toHaveAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+  expect(container.querySelector("iframe")?.src).toContain("enablejsapi=1");
+  act(() => ready?.());
+  expect(player.seekTo).toHaveBeenLastCalledWith(603.5, true);
+  act(() => adapter.current?.seek(17, true));
+  expect(player.seekTo).toHaveBeenLastCalledWith(617, true);
+  expect(player.playVideo).toHaveBeenCalledOnce();
+  act(() => adapter.current?.seek(-20));
+  expect(player.seekTo).toHaveBeenLastCalledWith(600, true);
+  act(() => adapter.current?.seek(1000));
+  expect(player.seekTo).toHaveBeenLastCalledWith(720, true);
+  expect(adapter.current?.currentTime()).toBe(15);
+  unmount();
+  expect(player.destroy).toHaveBeenCalledOnce();
+});

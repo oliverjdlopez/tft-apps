@@ -32,7 +32,9 @@ export type Job = {
   sample_interval_seconds: number;
   reuse_cached_crops: boolean;
   source_job_id: string | null;
-  phase: "queued" | "preparing" | "collecting" | "processing" | "completed" | "failed";
+  strategy?: "online" | "offline";
+  refinement_interval_seconds?: number | null;
+  phase: "scanning" | "refining" | "queued" | "preparing" | "collecting" | "processing" | "completed" | "failed";
   max_timing_error_ms: number | null;
   device: string | null;
   error: string | null;
@@ -42,6 +44,12 @@ export type Job = {
 };
 
 export type VideoRecord = {
+  mode?: "online" | "offline";
+  source_url?: string | null;
+  source_id?: string | null;
+  source_start_seconds?: number;
+  source_end_seconds?: number | null;
+  local_available?: boolean;
   id: string;
   original_name: string;
   mime_type: string;
@@ -124,7 +132,7 @@ export async function uploadVideo(file: File): Promise<VideoRecord> {
 }
 
 export type TranscriptionTask = { task_id: string; video_id: string | null; status: "queued" | "running" | "completed" | "failed"; transcript: string | null; language: string | null; error: string | null };
-export type DownloadTask = { task_id: string; status: "queued" | "running" | "pausing" | "paused" | "completed" | "failed" | "dismissed"; progress: number; video?: VideoRecord | null; error?: string | null; media_type?: "video" | "audio"; transcription_task_id?: string | null; transcription?: TranscriptionTask | null };
+export type DownloadTask = { task_id: string; target_video_id?: string | null; status: "queued" | "running" | "pausing" | "paused" | "completed" | "failed" | "dismissed"; progress: number; video?: VideoRecord | null; error?: string | null; media_type?: "video" | "audio"; transcription_task_id?: string | null; transcription?: TranscriptionTask | null };
 export type DownloadQuality = "480p" | "720p" | "1080p" | "best";
 export type DownloadMediaType = "video" | "audio";
 
@@ -204,3 +212,20 @@ export const connectDriveUrl = `${API_BASE}/api/gdrive/connect`;
 
 /** Read saved Google authorization without exposing server credentials. */
 export const getDriveConnection = () => request<{ connected: boolean }>("/api/gdrive/status");
+
+export const importOnlineVideo = (url: string, startSeconds?: number, endSeconds?: number) =>
+  request<VideoRecord>("/api/videos/online", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url, start_seconds: startSeconds, end_seconds: endSeconds, quality: "720p" }) });
+export const setVideoMode = (id: string, mode: "online" | "offline") =>
+  request<VideoRecord>(`/api/videos/${id}/mode`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mode }) });
+export const downloadOfflineVideo = (id: string) =>
+  request<DownloadTask>(`/api/videos/${id}/offline-download`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ quality: "720p" }) });
+export async function getVideoFrame(id: string, timestamp: number): Promise<{ url: string; timestamp: number }> {
+  const response = await fetch(`${API_BASE}/api/videos/${id}/frame?timestamp=${timestamp}`);
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({ detail: response.statusText }));
+    throw new Error(payload.detail ?? "Could not fetch a preview frame");
+  }
+  return { url: URL.createObjectURL(await response.blob()), timestamp: Number(response.headers.get("X-Frame-Timestamp") ?? timestamp) };
+}
+
+export const getOfflineDownload = (id: string) => request<DownloadTask | null>(`/api/videos/${id}/offline-download`);

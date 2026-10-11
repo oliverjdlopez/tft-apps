@@ -20,7 +20,8 @@ except ImportError:
 
 
 def download_shared_video(url: str, start: float | None, end: float | None,
-                          quality: str, download: Callable[[], dict]) -> dict:
+                          quality: str, download: Callable[[], dict],
+                          target_video_id: str | None = None) -> dict:
     """Bind an app-owned review record to shared immutable media, without uploads."""
     store = MediaStore.from_env()
     if store is None:
@@ -31,7 +32,7 @@ def download_shared_video(url: str, start: float | None, end: float | None,
         """Retain the existing downloader's progress, checkpoint, and pause logic."""
         video = download()
         created.append(video)
-        return db.video_path(video["id"])
+        return db.physical_video_path(video["id"])
 
     path = store.obtain(MediaRequest(
         url=url, kind="video", start=start or 0.0, end=end,
@@ -41,7 +42,7 @@ def download_shared_video(url: str, start: float | None, end: float | None,
     ), produce)
     if created:
         video = created[0]
-        original = db.video_path(video["id"])
+        original = db.physical_video_path(video["id"])
         db.bind_shared_media(video["id"], path)
         original.unlink(missing_ok=True)
         return db.get_video(video["id"])
@@ -49,6 +50,14 @@ def download_shared_video(url: str, start: float | None, end: float | None,
     # The media is shared, but boxes and analysis jobs belong to
     # this new review. Never merge that task state just because URLs match.
     metadata = probe(path)
+    if target_video_id is not None:
+        review = db.get_video(target_video_id)
+        if metadata["duration"] + 1.5 < review["duration"]:
+            raise ValueError("The cached video does not cover this review's complete range")
+        return db.bind_local_copy(
+            target_video_id, path, mimetypes.guess_type(path.name)[0] or "video/mp4",
+            metadata["width"], metadata["height"], shared_media=True,
+        )
     video = db.create_video(
         uuid.uuid4().hex, source_key(url).replace(":", "-") + ".mp4", path,
         mimetypes.guess_type(path.name)[0] or "video/mp4",
