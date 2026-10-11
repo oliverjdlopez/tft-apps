@@ -1,0 +1,5 @@
+# IT-2 evidence notes
+
+D1 motivates flexible item choices; D2 records disagreement about assigning a fixed inventory; D3 records disagreement about Azir's role and whether samples are comparable. These discussions motivate the cases but do not provide outcome evidence. NoxuTFT supplies named complete-build rows for Ezreal, Sivir, Yunara, and Azir, plus Ashe rows (N1–N4, N6); none verifies the cases' exact joint inventory and board allocation. Malphite's attempted NoxuTFT page returned no readable data (N5). SeeMeta's Azir rows are single-item marginals, not the specified three-star build (S2).
+
+Tactics.tools pages T1–T7 show general summaries and item/context controls, but no controls were executed and no required joint allocation was retrieved. T9 is an Ashe statistics page without a joint-allocation query. The Yunara route failed (T8). U1 verifies Sivir's Set 18 identity. Exact build counts, board strata, synchronized windows, rank, and region remain unknown. Do not infer an allocation winner from marginal outcomes or discussion claims.

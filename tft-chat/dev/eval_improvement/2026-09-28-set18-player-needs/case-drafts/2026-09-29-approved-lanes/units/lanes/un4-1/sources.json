@@ -1,0 +1,496 @@
+{
+  "lane": "UN4-1",
+  "stage": "case-drafting",
+  "case_ids": [
+    "UN4-1-C01",
+    "UN4-1-C02",
+    "UN4-1-C03",
+    "UN4-1-C04"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wpb4o0/183_bpatch_live_k6_nerf_dark_coven_disabled/",
+      "title": "B-patch discussion",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "UN4-1-C01"
+      ],
+      "observations": [
+        "Replies disagree over LeBlanc importance and mention Veigar, Ornn, Blackthorn and Alistar changes."
+      ],
+      "limitations": [
+        "Anecdotes; no measured effect."
+      ],
+      "patch_scope": "Set18 18.3B",
+      "statistics": null
+    },
+    {
+      "id": "S2",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wdpeq4/removed_by_moderator/",
+      "title": "Removed-post surviving replies",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "UN4-1-C02"
+      ],
+      "observations": [
+        "Explicit Yi2/radiant QSS/Flickerblade/Edge of Night package; Draven alternative; different supporting boards and tank-item criticisms."
+      ],
+      "limitations": [
+        "Original image unavailable; Draven1 constructed; fresh text has relative dates."
+      ],
+      "patch_scope": "Historical Set18",
+      "statistics": null
+    },
+    {
+      "id": "S3",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Official 18.3 notes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "rules"
+      ],
+      "case_ids": [
+        "UN4-1-C01"
+      ],
+      "observations": [
+        "Distinguishes carry and trait Veigar; reduces stacking and increases base damage."
+      ],
+      "limitations": [
+        "Rules do not establish outcomes or date samples."
+      ],
+      "patch_scope": "18.3 plus updates",
+      "statistics": null
+    },
+    {
+      "id": "S4",
+      "url": "https://tactics.tools/units/da_18_veigar",
+      "title": "Veigar statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "descriptive outcomes"
+      ],
+      "case_ids": [
+        "UN4-1-C01"
+      ],
+      "observations": [
+        "Separate star and item marginals; detached item-table labels not safely associated."
+      ],
+      "limitations": [
+        "No crossed cohort or exact counts; unknown period/region."
+      ],
+      "patch_scope": "18.3b",
+      "statistics": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "stars": "Any",
+        "displayed_games": "159k",
+        "average_placement": 4.38,
+        "top4_percent": 52.3,
+        "win_percent": 14.2,
+        "star2": {
+          "share_percent": 31.9,
+          "place": 4.46
+        },
+        "star3": {
+          "share_percent": 56.3,
+          "place": 4.21
+        },
+        "items0": {
+          "share_percent": 38.8,
+          "place": 4.59
+        },
+        "items3": {
+          "share_percent": 57.2,
+          "place": 4.18
+        },
+        "matched_comparison": false
+      }
+    },
+    {
+      "id": "S5",
+      "url": "https://tactics.tools/units/da_18_masteryi_ad",
+      "title": "Yi statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-1-C02"
+      ],
+      "observations": [
+        "General summaries readable."
+      ],
+      "limitations": [
+        "No trio coverage; URL suffix does not establish form data."
+      ],
+      "patch_scope": "18.3b",
+      "statistics": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "period": null,
+        "region": null,
+        "displayed_games": "29k",
+        "average_placement": 4.62,
+        "star2_place": 5.41,
+        "exact_trio_count": null
+      }
+    },
+    {
+      "id": "S6",
+      "url": "https://tactics.tools/units/da_draven18",
+      "title": "Draven statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-1-C02"
+      ],
+      "observations": [
+        "General summaries readable."
+      ],
+      "limitations": [
+        "Different crawl age; no synchronized trio coverage."
+      ],
+      "patch_scope": "18.3b",
+      "statistics": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "period": null,
+        "region": null,
+        "displayed_games": "9.0k",
+        "average_placement": 4.23,
+        "exact_trio_count": null
+      }
+    },
+    {
+      "id": "S7",
+      "url": "https://tactics.tools/explorer",
+      "title": "Stats Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow attempt"
+      ],
+      "case_ids": [
+        "UN4-1-C01",
+        "UN4-1-C02"
+      ],
+      "observations": [
+        "Empty three filters, No Data, advanced-patron notice."
+      ],
+      "limitations": [
+        "No applied query; not zero examples; no bypass."
+      ],
+      "patch_scope": "18.3b selector",
+      "statistics": {
+        "rank": "Diamond+",
+        "retrieved_population": null
+      }
+    },
+    {
+      "id": "S8",
+      "url": "https://noxutft.com/tft-champions/veigar",
+      "title": "Veigar builds",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "limited outcomes"
+      ],
+      "case_ids": [
+        "UN4-1-C01",
+        "UN4-1-C03"
+      ],
+      "observations": [
+        "Explicit build/comp/count/placement rows. Both linked comp pages returned Internal Error."
+      ],
+      "limitations": [
+        "Unknown stars/rank/region/subpatch; search snippet differs from opened snapshot."
+      ],
+      "patch_scope": "Set18; opened updated September23",
+      "statistics": {
+        "date": "2026-09-23",
+        "mode": "ranked per provider",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "displayed_games": "289k",
+        "average_placement": 4.58,
+        "builds": [
+          {
+            "items": [
+              "Blue Buff",
+              "Hextech Gunblade",
+              "Jeweled Gauntlet"
+            ],
+            "comp": "Blackthorn Veigar",
+            "games": 569,
+            "place": 4.23
+          },
+          {
+            "items": [
+              "Flora Fatalis Emblem",
+              "Blue Buff",
+              "Hextech Gunblade"
+            ],
+            "comp": "Sprykin Veigar",
+            "games": 24,
+            "place": 3.54
+          }
+        ]
+      }
+    },
+    {
+      "id": "S9",
+      "url": "https://seemeta.com/en/tft/set-18/champions/Veigar",
+      "title": "Veigar SeeMeta",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "alternative audit"
+      ],
+      "case_ids": [
+        "UN4-1-C01"
+      ],
+      "observations": [
+        "Fresh page says18.3; separate marginals."
+      ],
+      "limitations": [
+        "Search snippet says18.2; old tooltip. Hyper Roll-labelled comp cards excluded; no matched cohort."
+      ],
+      "patch_scope": "18.3 label",
+      "statistics": {
+        "updated": "2026-09-28",
+        "games": 19160,
+        "place": 4.54,
+        "top4_percent": 49.39,
+        "win_percent": 12.08,
+        "rank": "across ranks, unspecified",
+        "region": "across regions, unspecified",
+        "period": null,
+        "mode": "ranked per methodology; comp labels ambiguous"
+      }
+    },
+    {
+      "id": "S10",
+      "url": "https://tftcodex.com/champions/veigar.html",
+      "title": "Veigar TFT Codex",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "alternative audit"
+      ],
+      "case_ids": [
+        "UN4-1-C01",
+        "UN4-1-C03"
+      ],
+      "observations": [
+        "Star and single-item counts readable."
+      ],
+      "limitations": [
+        "Selected rank state and mode unknown; item possession is not exact build or artifact-free comparison."
+      ],
+      "patch_scope": "18.3 label",
+      "statistics": {
+        "updated": "2026-09-28T15:19:00Z",
+        "unit_games": 168029,
+        "sampled_games_header": 296999,
+        "boards_header": 2547252,
+        "rank": null,
+        "mode": null,
+        "region": null,
+        "period": null,
+        "star3_games": 102197,
+        "star3_place": 4.2,
+        "dawncore_games": 16262,
+        "dawncore_place": 2.93
+      }
+    },
+    {
+      "id": "S11",
+      "url": "https://mobalytics.gg/tft/items/artifacts",
+      "title": "Set18 artifacts",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "identity"
+      ],
+      "case_ids": [
+        "UN4-1-C02"
+      ],
+      "observations": [
+        "Flickerblade explicitly listed as artifact."
+      ],
+      "limitations": [
+        "No item ID or exact-cohort coverage; effects conflict with VN TFT."
+      ],
+      "patch_scope": "Set18; subpatch unknown",
+      "statistics": {
+        "attack_speed_per_attack_percent": 5,
+        "attacks_per_trigger": 3
+      }
+    },
+    {
+      "id": "S12",
+      "url": "https://vntft.com/items/flickerblade",
+      "title": "Flickerblade Set18",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "identity countercheck"
+      ],
+      "case_ids": [
+        "UN4-1-C02"
+      ],
+      "observations": [
+        "Same named item listed."
+      ],
+      "limitations": [
+        "Conflicting values; holder suggestions not outcomes."
+      ],
+      "patch_scope": "Set18; subpatch unknown",
+      "statistics": {
+        "attack_speed_per_attack_percent": 6,
+        "attacks_per_trigger": 5
+      }
+    },
+    {
+      "id": "S13",
+      "url": "https://tactics.tools/info/items",
+      "title": "Set18 items",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:33:20Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "identity"
+      ],
+      "case_ids": [
+        "UN4-1-C02"
+      ],
+      "observations": [
+        "Radiant Quicksilver distinct entry; Flicker text search no match."
+      ],
+      "limitations": [
+        "Omission does not prove removal."
+      ],
+      "patch_scope": "Set18",
+      "statistics": null
+    },
+    {
+      "id": "S14",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1wh8iqn/hey_guys_i_made_a_guide_on_the_new_kr_veigar_tech/",
+      "title": "KR Veigar guide and replies",
+      "source_date": "2026-09-15",
+      "retrieved_at_utc": "2026-09-29T08:38:16Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "UN4-1-C03",
+        "UN4-1-C04"
+      ],
+      "observations": [
+        "A reader asks whether Dawncore/floral is mandatory; replies claim ordinary builds work but one invokes eventual Ornn artifact generation. Post identifies Ornn and Alistar as alternative main tanks."
+      ],
+      "limitations": [
+        "Anecdotes; opener/timing instructions excluded; individual queue unverified."
+      ],
+      "patch_scope": "Historical Set18, September15",
+      "statistics": null
+    },
+    {
+      "id": "S15",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "title": "18.3 discussion",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:16Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "UN4-1-C03"
+      ],
+      "observations": [
+        "Disputes Veigar artifact necessity; separate Azir debate contrasts itemized and unitemized Azir3, Kha allocation, rank filters and sample sufficiency."
+      ],
+      "limitations": [
+        "Comment numbers are disputed claims, not verified datasets."
+      ],
+      "patch_scope": "Set18 18.3 discussion",
+      "statistics": null
+    },
+    {
+      "id": "S16",
+      "url": "https://tactics.tools/units/da_18_ornn",
+      "title": "Ornn statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:16Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-1-C04"
+      ],
+      "observations": [
+        "Unit page opened."
+      ],
+      "limitations": [
+        "No Veigar-conditioned allocation cohort obtained."
+      ],
+      "patch_scope": "18.3b",
+      "statistics": null
+    },
+    {
+      "id": "S17",
+      "url": "https://tactics.tools/units/da_18_alistar",
+      "title": "Alistar statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:16Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "UN4-1-C04"
+      ],
+      "observations": [
+        "Unit page opened."
+      ],
+      "limitations": [
+        "No Veigar-conditioned allocation cohort obtained."
+      ],
+      "patch_scope": "18.3b",
+      "statistics": null
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# UN4-3 evidence notes
+
+D1 motivates the Morgana partner, Mama Beak inclusion, Fiddlesticks frontline partner, and Sett tank-fit questions. D2 motivates the Draven secondary-carry and Taric-versus-Amumu questions; its original screenshot was not inspected, and positioning or transition claims are outside the retained cases. These are anecdotal discussions, not measured comparisons.
+
+Tactics.tools provides labeled marginal summaries for Morgana, Mama Beak, Kennen, Sett, and Fiddlesticks, but no partner-conditioned cohorts (T1–T5). MetaTFT attempts returned JavaScript shells without readable result rows (M1–M4). Riot's 18.3 update headings supply rules timing, not third-party collection windows (R1); the unit reference supplies identity context only (R2). Failed detail routes and a units-list extraction without unit rows are recorded in X1–X3 and X8. Exact partner/allocation cohorts, board context, population bounds, and uncertainty remain unavailable; no marginal average establishes a substitution effect.

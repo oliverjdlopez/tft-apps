@@ -1,0 +1,599 @@
+{
+  "lane": "TR-4",
+  "stage": "case-drafting",
+  "case_ids": [
+    "TR-4-C01",
+    "TR-4-C02",
+    "TR-4-C03",
+    "TR-4-C04"
+  ],
+  "sources": [
+    {
+      "id": "D1",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1winnef/whats_your_hear_me_out_comp_this_patch/",
+      "title": "What’s your “hear me out” comp this patch?",
+      "source_date": "2026-09-17",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; relevant comments and replies readable",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-4-C01",
+        "TR-4-C03"
+      ],
+      "observations": [
+        "AD-backline question: replies contrast broad flexibility with Summoner, Hunter/Primal and Sivir/Ashe preference.",
+        "Mama Beak Summoner claim meets contesting/rank disagreement and reply that vertical Riftbeast often omits her."
+      ],
+      "limitations": [
+        "Date from indexed record; opened relative ages inconsistent.",
+        "Individual queues/ranks unverified; comments constitute one source.",
+        "No combat or placement claim treated as a measured package result."
+      ],
+      "patch_scope": "Live Set18; precise subpatch unknown"
+    },
+    {
+      "id": "D2",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w7klse/is_eclipse_bad/",
+      "title": "Is Eclipse Bad?",
+      "source_date": "2026-09-04",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; question, replies and correction readable",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-4-C02"
+      ],
+      "observations": [
+        "Eclipse viability disputed; reply contrasts Solar in Aphelios and Lunar in Solar.",
+        "Five-three-star recipe challenged; author concedes achieving three or four upgrades instead."
+      ],
+      "limitations": [
+        "Individual queues/ranks unverified; old anecdotes not current comparisons."
+      ],
+      "patch_scope": "Live Set18; precise subpatch unknown"
+    },
+    {
+      "id": "D3",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w1znv9/this_set_is_everything_ive_ever_wanted_from_small/",
+      "title": "This set is everything I've ever wanted from small traits.",
+      "source_date": "2026-09-01",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; substantive explanation and reply readable",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-4-C04"
+      ],
+      "observations": [
+        "Azir/Zyra explanation uses Yorick Summoner, Juggernaut and Executioner support; alternative proposes Blackthorn/Brawler.",
+        "Author's claims about summons are hypotheses, not independently verified outcomes."
+      ],
+      "limitations": [
+        "Date from indexed record; queue/rank unverified.",
+        "Attached board image not inspected; no roster transcribed from it.",
+        "An enthusiastic anecdote, not statistical performance proof."
+      ],
+      "patch_scope": "Live Set18; precise subpatch unknown"
+    },
+    {
+      "id": "D4",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1waq1o4/what_are_yall_blackthorning/",
+      "title": "what are yall blackthorning?",
+      "source_date": "2026-09-08",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; disagreements and replies readable",
+      "roles": [
+        "motivation",
+        "counterevidence"
+      ],
+      "case_ids": [
+        "TR-4-C04"
+      ],
+      "observations": [
+        "Yorick/Summoner suggestion; disagreements over sacrifice value and preserving Fiddlesticks.",
+        "Summoned-body arithmetic challenged by multiple replies; no alleged net body advantage accepted."
+      ],
+      "limitations": [
+        "Sacrifice not observable from generic final boards.",
+        "Comments are one source; no measured package comparison."
+      ],
+      "patch_scope": "Live Set18; older than 18.3"
+    },
+    {
+      "id": "M1",
+      "url": "https://www.metatft.com/explorer",
+      "title": "MetaTFT Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-4-C01",
+        "TR-4-C02",
+        "TR-4-C04"
+      ],
+      "observations": [
+        "No filtered rows returned."
+      ],
+      "limitations": [
+        "No population, count or comparison retrieved."
+      ],
+      "patch_scope": "unknown"
+    },
+    {
+      "id": "M2",
+      "url": "https://www.metatft.com/comps",
+      "title": "MetaTFT comps",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; one-line JavaScript shell",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-4-C01",
+        "TR-4-C02"
+      ],
+      "observations": [
+        "No usable comp/variation rows."
+      ],
+      "limitations": [
+        "No query executed or matched comparison."
+      ],
+      "patch_scope": "unknown"
+    },
+    {
+      "id": "M3",
+      "url": "https://www.metatft.com/units/MamaBeak",
+      "title": "MetaTFT Mama Beak alternative",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; one-line shell; lowercase URL failed",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-4-C03"
+      ],
+      "observations": [
+        "Tried same-site unit alternative after explorer/comps shells."
+      ],
+      "limitations": [
+        "No rows or selected filters returned."
+      ],
+      "patch_scope": "unknown"
+    },
+    {
+      "id": "T1",
+      "url": "https://tactics.tools/team-compositions",
+      "title": "TFT Meta Stats - Best Team Comps & Builds for Set 15 Patch 18.3b",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; comp rows and filters readable",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "TR-4-C01"
+      ],
+      "observations": [
+        "Juggernaut Zyra & Amumu row visible."
+      ],
+      "limitations": [
+        "Title Set15 conflicts with Set18 body.",
+        "No exact-six condition, region, count, window or play-rate denominator.",
+        "Not a matched Hunter/Primal counterpart."
+      ],
+      "patch_scope": "Displayed18.3b",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "region": null,
+        "period": null,
+        "rows": [
+          {
+            "label": "Juggernaut Zyra & Amumu",
+            "mean_placement": 4.33,
+            "top_four_pct": 52.6,
+            "win_pct": 14.3,
+            "play_rate": 0.49,
+            "sample_count": null
+          }
+        ],
+        "play_rate_denominator": null
+      }
+    },
+    {
+      "id": "T2",
+      "url": "https://tactics.tools/explorer",
+      "title": "Stats Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; controls and No Data",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-4-C01",
+        "TR-4-C02"
+      ],
+      "observations": [
+        "18.3b, Diamond+, three filter inputs."
+      ],
+      "limitations": [
+        "No filter submitted; no result cohort."
+      ],
+      "patch_scope": "Displayed18.3b",
+      "statistical_metadata": {
+        "patch": "18.3b",
+        "rank": "Diamond+",
+        "mode": null,
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "result": "No Data"
+      }
+    },
+    {
+      "id": "S1",
+      "url": "https://www.tftcodex.com/comps/juggernaut-amumu.html",
+      "title": "Juggernaut Zyra — TFT Codex",
+      "source_date": "2026-09-26T18:41:00Z",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; variant and bracket rows readable",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "TR-4-C01"
+      ],
+      "observations": [
+        "Opened version differs from search-index snapshot; retain opened version.",
+        "Core displays Juggernaut6 and Summoner2."
+      ],
+      "limitations": [
+        "Region and queue are not explicit in the opened evidence.",
+        "Header patch does not establish the period of every panel.",
+        "No matched statistical claim; family membership is not an exact unit/item/trait filter.",
+        "Level panel: all ranks last14days182368; all-ranks bracket131272; variants have no separately defined window.",
+        "Do not parse concatenated trait rows into joint cohorts."
+      ],
+      "patch_scope": "Header18.3; panel windows unaligned",
+      "statistical_metadata": {
+        "header_updated": "2026-09-26T18:41:00Z",
+        "header_patch": "18.3",
+        "level_panel": {
+          "rank": "All ranks",
+          "period": "last 14 days",
+          "games": 182368
+        },
+        "brackets": [
+          {
+            "rank": "Diamond+",
+            "games": 85826,
+            "mean_placement": 4.46,
+            "top_four_pct": 50.1,
+            "win_pct": 13.4
+          },
+          {
+            "rank": "All ranks",
+            "games": 131272,
+            "mean_placement": 4.5,
+            "top_four_pct": 49.4,
+            "win_pct": 12.9
+          }
+        ],
+        "variants": [
+          {
+            "adds": [
+              "Ivern"
+            ],
+            "leaves_out": [
+              "Azir",
+              "Rakan"
+            ],
+            "mean_placement": 3.52,
+            "games": 18320
+          },
+          {
+            "adds": [
+              "Sivir"
+            ],
+            "leaves_out": [
+              "Azir",
+              "Kennen",
+              "Maokai"
+            ],
+            "mean_placement": 5.66,
+            "games": 13397
+          }
+        ],
+        "variant_rank": null,
+        "variant_period": null,
+        "region": null,
+        "mode": null
+      }
+    },
+    {
+      "id": "S2",
+      "url": "https://www.tftcodex.com/champions/kayle.html",
+      "title": "Kayle — TFT Codex",
+      "source_date": "2026-09-20T14:58:00Z",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; historical unit and comp listing readable",
+      "roles": [
+        "historical lead"
+      ],
+      "case_ids": [
+        "TR-4-C02"
+      ],
+      "observations": [
+        "Kayle page is18.2, not current18.3 evidence."
+      ],
+      "limitations": [
+        "Cannot join its comp list with later18.3 pages as same-window outcomes.",
+        "Comp name alone does not verify Eclipse."
+      ],
+      "patch_scope": "18.2",
+      "statistical_metadata": {
+        "header_patch": "18.2",
+        "rows": [
+          {
+            "label": "Solar Kayle Lunar",
+            "mean_placement": 4.65,
+            "games": 15483
+          },
+          {
+            "label": "Solar Kayle",
+            "mean_placement": 4.98,
+            "games": 43943
+          }
+        ],
+        "rank": null,
+        "mode": null,
+        "region": null,
+        "period": null,
+        "comparison_validated": false
+      }
+    },
+    {
+      "id": "S3",
+      "url": "https://www.tftcodex.com/comps/solar-kayle-lunar.html",
+      "title": "Solar Kayle Lunar — TFT Codex",
+      "source_date": "2026-09-23T10:18:00Z",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; core, variants and brackets readable",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "TR-4-C02"
+      ],
+      "observations": [
+        "Core: Kayle3, Sejuani3, Leona3, Aphelios1, Diana2; Lunar2 shown, not verified Eclipse.",
+        "Family outcome cannot answer upgrade-depth interaction."
+      ],
+      "limitations": [
+        "Region and queue are not explicit in the opened evidence.",
+        "Header patch does not establish the period of every panel.",
+        "No matched statistical claim; family membership is not an exact unit/item/trait filter.",
+        "A variant10514 exceeds Diamond+5441; variant totals also exceed all-ranks20394. No common denominator inferred.",
+        "No Eclipse by unique-three-star-count cross-tab."
+      ],
+      "patch_scope": "Header18.3; older snapshot, panel period undefined",
+      "statistical_metadata": {
+        "header_patch": "18.3",
+        "brackets": [
+          {
+            "rank": "Diamond+",
+            "games": 5441,
+            "mean_placement": 4.66,
+            "top_four_pct": 48.1,
+            "win_pct": 12.1
+          },
+          {
+            "rank": "All ranks",
+            "games": 20394,
+            "mean_placement": 4.59,
+            "top_four_pct": 48.6,
+            "win_pct": 11.7
+          }
+        ],
+        "variants": [
+          {
+            "adds": [
+              "Shen",
+              "Varus"
+            ],
+            "leaves_out": [
+              "Lux",
+              "Ornn",
+              "Rakan",
+              "Xayah"
+            ],
+            "mean_placement": 5.16,
+            "games": 10514
+          },
+          {
+            "adds": [
+              "Alune",
+              "Cinderling",
+              "Shen"
+            ],
+            "leaves_out": [
+              "Lux",
+              "Ornn",
+              "Rakan",
+              "Xayah"
+            ],
+            "mean_placement": 3.92,
+            "games": 9837
+          }
+        ],
+        "variant_rank": null,
+        "variant_period": null,
+        "mode": null,
+        "region": null
+      }
+    },
+    {
+      "id": "S4",
+      "url": "https://www.tftcodex.com/champions/mama-beak.html",
+      "title": "Mama Beak — TFT Codex",
+      "source_date": "2026-09-28T02:20:00Z",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; stars, unit summary and trait marginals readable",
+      "roles": [
+        "partial outcome evidence"
+      ],
+      "case_ids": [
+        "TR-4-C03"
+      ],
+      "observations": [
+        "Three-star row readable; carry-item restriction absent.",
+        "Trait table says pooled across every game.",
+        "MamaBeak Summoner comp targets failed when opened."
+      ],
+      "limitations": [
+        "Unit panel56673 differs from introductory97893; selected rank not securely established.",
+        "Trait marginals are not MamaBeak-conditioned package rows.",
+        "Current search-index snapshot differs from opened snapshot."
+      ],
+      "patch_scope": "Header18.3; start/end population undefined",
+      "statistical_metadata": {
+        "header_patch": "18.3",
+        "introductory_sample_games": 97893,
+        "site_total_games": 2252724,
+        "visible_unit_games": 56673,
+        "rank_controls": [
+          "Diamond+",
+          "All ranks"
+        ],
+        "selected_rank": null,
+        "mode": null,
+        "region": null,
+        "period": null,
+        "rows": [
+          {
+            "panel": "By star level",
+            "stars": 3,
+            "games": 2619,
+            "mean_placement": 4.21,
+            "top_four_pct": 56.2,
+            "win_pct": 11.2
+          }
+        ],
+        "joint_package_rows": []
+      }
+    },
+    {
+      "id": "S5",
+      "url": "https://www.tftcodex.com/comps/executioner-malphite-soraka.html",
+      "title": "Executioner Malphite & Soraka — TFT Codex",
+      "source_date": "2026-09-25T06:18:00Z",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; core and bracket rows readable",
+      "roles": [
+        "adjacent outcome evidence"
+      ],
+      "case_ids": [
+        "TR-4-C04"
+      ],
+      "observations": [
+        "Azir and Zyra present but declared carries are Malphite/Soraka; fails requested dual-carry definition."
+      ],
+      "limitations": [
+        "Region and queue are not explicit in the opened evidence.",
+        "Header patch does not establish the period of every panel.",
+        "No matched statistical claim; family membership is not an exact unit/item/trait filter.",
+        "All-ranks/last14days504044 differs from bracket221453.",
+        "Not a joint Azir/Zyra carry support-package comparison."
+      ],
+      "patch_scope": "Header18.3; panel windows unaligned",
+      "statistical_metadata": {
+        "header_patch": "18.3",
+        "brackets": [
+          {
+            "rank": "Diamond+",
+            "games": 135808,
+            "mean_placement": 4.5,
+            "top_four_pct": 50.7,
+            "win_pct": 9.6
+          },
+          {
+            "rank": "All ranks",
+            "games": 221453,
+            "mean_placement": 4.49,
+            "top_four_pct": 50.9,
+            "win_pct": 9.8
+          }
+        ],
+        "level_panel": {
+          "rank": "All ranks",
+          "period": "last 14 days",
+          "games": 504044
+        },
+        "mode": null,
+        "region": null
+      }
+    },
+    {
+      "id": "R1",
+      "url": "https://tactics.tools/info/traits",
+      "title": "Traits Set18 TFT Info",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; memberships and rules text readable",
+      "roles": [
+        "identity support",
+        "rules lead"
+      ],
+      "case_ids": [
+        "TR-4-C01",
+        "TR-4-C02",
+        "TR-4-C03",
+        "TR-4-C04"
+      ],
+      "observations": [
+        "Solar/Lunar relationship, MamaBeak Riftbeast membership, Blackthorn and Summoner identities verified."
+      ],
+      "limitations": [
+        "Tooltip placeholders and conflicting numerical rules mean not an authoritative current stat source.",
+        "No combat or performance conclusions derived."
+      ],
+      "patch_scope": "Set18; no selected subpatch"
+    },
+    {
+      "id": "R2",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Teamfight Tactics patch18.3",
+      "source_date": "2026-09-22T18:00:00Z",
+      "retrieved_at_utc": "2026-09-29T08:58:53Z",
+      "access_status": "opened; midpatch updates readable",
+      "roles": [
+        "rules context"
+      ],
+      "case_ids": [
+        "TR-4-C01",
+        "TR-4-C02",
+        "TR-4-C04"
+      ],
+      "observations": [
+        "September24 Blackthorn AP-sacrifice damage-amp change14%to12%.",
+        "September28 update disables Polymorph; explanatory paragraph says Greater, bullet says Major."
+      ],
+      "limitations": [
+        "Rules page is not a statistical population definition.",
+        "No inferred dataset cutoff from page publication."
+      ],
+      "patch_scope": "18.3 plus September24B and September28 updates"
+    }
+  ]
+}

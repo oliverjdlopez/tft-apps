@@ -1,0 +1,361 @@
+{
+  "lane": "UN4-4",
+  "stage": "case-drafting",
+  "case_ids": [
+    "UN4-4-C01",
+    "UN4-4-C02",
+    "UN4-4-C03"
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wfwfrl/september_14_2026_daily_discussion_thread/",
+      "title": "September 14 daily discussion",
+      "source_date": "2026-09-14",
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened_partial_relevant_reply_missing",
+      "roles": [
+        "historical_motivation_lead"
+      ],
+      "case_ids": [
+        "UN4-4-C01"
+      ],
+      "observations": [
+        "Prior lane records described a Lillia flex-tank exchange; current opened snapshot did not contain Lillia. Alternate top-sort retrieval failed."
+      ],
+      "limitations": [
+        "Do not treat historical comment as freshly verified or use search snippets as opened reply evidence."
+      ],
+      "patch_scope": "Live Set 18 community; exact anecdote window unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S02",
+      "url": "https://tactics.tools/units/da_18_lillia",
+      "title": "Lillia statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "unfiltered_outcome_context"
+      ],
+      "case_ids": [
+        "UN4-4-C01"
+      ],
+      "observations": [
+        "Overview and separate star/item-count distributions inspected. Units/Traits controls were not configured query results."
+      ],
+      "limitations": [
+        "Region and collection period absent; rounded games; no shared-shell filter; separate marginals cannot be combined; item icons not reliably associated with numeric rows."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "set": 18,
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "games_display": "78k",
+        "exact_n": null,
+        "avg_place": 4.58,
+        "top4_percent": 48.1,
+        "win_percent": 12.0,
+        "two_star_marginal_avg_place": 4.18,
+        "three_item_marginal_avg_place": 4.32,
+        "crawl_age_display": "yesterday"
+      }
+    },
+    {
+      "id": "S03",
+      "url": "https://tactics.tools/units/da_18_malphite",
+      "title": "Malphite statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "unfiltered_outcome_context"
+      ],
+      "case_ids": [
+        "UN4-4-C01"
+      ],
+      "observations": [
+        "Overview and separate star/item-count distributions inspected. Units/Traits controls were not configured query results."
+      ],
+      "limitations": [
+        "Region and collection period absent; rounded games; no shared-shell filter; separate marginals cannot be combined; item icons not reliably associated with numeric rows."
+      ],
+      "patch_scope": "18.3",
+      "statistical_metadata": {
+        "set": 18,
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "patch": "18.3",
+        "star_filter": "Any",
+        "games_display": "22k",
+        "exact_n": null,
+        "avg_place": 4.58,
+        "top4_percent": 49.4,
+        "win_percent": 8.65,
+        "two_star_marginal_avg_place": 4.3,
+        "three_item_marginal_avg_place": 4.37,
+        "crawl_age_display": "5 days ago"
+      }
+    },
+    {
+      "id": "S05",
+      "url": "https://tactics.tools/units/da_18_ashe",
+      "title": "Ashe statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "unfiltered_outcome_context"
+      ],
+      "case_ids": [
+        "UN4-4-C02"
+      ],
+      "observations": [
+        "Overview and separate star/item-count distributions inspected. Units/Traits controls were not configured query results."
+      ],
+      "limitations": [
+        "Region and collection period absent; rounded games; no shared-shell filter; separate marginals cannot be combined; item icons not reliably associated with numeric rows."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "set": 18,
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "games_display": "212k",
+        "exact_n": null,
+        "avg_place": 4.05,
+        "top4_percent": 57.5,
+        "win_percent": 19.6,
+        "two_star_marginal_avg_place": 3.05,
+        "three_item_marginal_avg_place": 3.79,
+        "crawl_age_display": "today"
+      }
+    },
+    {
+      "id": "S06",
+      "url": "https://tactics.tools/units/da_draven18",
+      "title": "Draven statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "unfiltered_outcome_context"
+      ],
+      "case_ids": [
+        "UN4-4-C02"
+      ],
+      "observations": [
+        "Overview and separate star/item-count distributions inspected. Units/Traits controls were not configured query results."
+      ],
+      "limitations": [
+        "Region and collection period absent; rounded games; no shared-shell filter; separate marginals cannot be combined; item icons not reliably associated with numeric rows."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "set": 18,
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "games_display": "9.0k",
+        "exact_n": null,
+        "avg_place": 4.23,
+        "top4_percent": 52.5,
+        "win_percent": 22.5,
+        "two_star_marginal_avg_place": 3.27,
+        "three_item_marginal_avg_place": 3.92,
+        "crawl_age_display": "3 days ago"
+      }
+    },
+    {
+      "id": "S04",
+      "url": "https://tactics.tools/explorer",
+      "title": "Stats Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened_no_data",
+      "roles": [
+        "workflow_attempt"
+      ],
+      "case_ids": [
+        "UN4-4-C01",
+        "UN4-4-C02",
+        "UN4-4-C03"
+      ],
+      "observations": [
+        "18.3b and Diamond+ displayed; three filter controls and patron notice; No Data."
+      ],
+      "limitations": [
+        "No configured cohort, sample or result retrieved."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "mode": null,
+        "filters_executed": null,
+        "n": null,
+        "metrics": null
+      }
+    },
+    {
+      "id": "S07",
+      "url": "https://tftflow.com/composition/set18/draven-fast-9",
+      "title": "Draven Fast 9 guide and discussion",
+      "source_date": "2026-09-27",
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened_with_replies",
+      "roles": [
+        "motivation",
+        "package_context"
+      ],
+      "case_ids": [
+        "UN4-4-C02",
+        "UN4-4-C03"
+      ],
+      "observations": [
+        "Commenter prefers Ashe; owner disputes universal interchangeability. Guide offers Elder Dragon and Ezreal alternatives. Owner says default changed toward Elder Dragon popularity."
+      ],
+      "limitations": [
+        "Guide opinion and comments are not matched outcomes; exclude levelling advice and unverified popularity estimate."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S08",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Riot TFT patch 18.3 and mid-patch updates",
+      "source_date": "2026-09-28",
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "official_rules",
+        "window_caution"
+      ],
+      "case_ids": [
+        "UN4-4-C01",
+        "UN4-4-C02",
+        "UN4-4-C03"
+      ],
+      "observations": [
+        "September 24 re-added Ashe and Draven changes; September 28 disabled Polymorph following unusually early legendary upgrades."
+      ],
+      "limitations": [
+        "Rules update dates do not establish statistics collection periods; page uses Greater/Major inconsistently for Polymorph."
+      ],
+      "patch_scope": "18.3 with September 24 and 28 updates",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S09",
+      "url": "https://tactics.tools/info/units",
+      "title": "Set 18 unit reference",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "identity_reference",
+        "conflict_check"
+      ],
+      "case_ids": [
+        "UN4-4-C01",
+        "UN4-4-C02"
+      ],
+      "observations": [
+        "Set 18 identities and traits visible. Ashe displayed trail values conflict with official September 24 update."
+      ],
+      "limitations": [
+        "Do not use stale Ashe numbers for a current numerical explanation."
+      ],
+      "patch_scope": "Set 18; exact data refresh unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S10",
+      "url": "https://noxutft.com/tft-comps",
+      "title": "Set 18 meta compositions",
+      "source_date": "2026-09-29",
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "named_build_outcomes",
+        "package_context"
+      ],
+      "case_ids": [
+        "UN4-4-C03"
+      ],
+      "observations": [
+        "Executioner Draven roster includes Ezreal and Maokai; Draven has Executioner Emblem. Juggernaut Elder Dragon includes Draven/Maokai with a different support roster."
+      ],
+      "limitations": [
+        "Not matched secondary-carry cohorts. Template stars not certified sample filters. Boilerplate has implausible level/roster combinations; detached board-by-level numbers excluded. Patch/rank/region/period unknown."
+      ],
+      "patch_scope": "Set 18; subpatch unknown",
+      "statistical_metadata": {
+        "mode": "ranked per site",
+        "rank": null,
+        "region": null,
+        "patch": null,
+        "period": null,
+        "update_date": "2026-09-29",
+        "overall_games_display": "26.8M",
+        "rows": [
+          {
+            "label": "Executioner Draven",
+            "games_display": "1.1M",
+            "exact_n": null,
+            "avg_place": 4.28,
+            "top4_percent": 51.7,
+            "win_percent": 20.2
+          },
+          {
+            "label": "Juggernaut Elder Dragon",
+            "games_display": "2.3M",
+            "exact_n": null,
+            "avg_place": 4.72,
+            "top4_percent": 45.9,
+            "win_percent": 18.1
+          }
+        ]
+      }
+    },
+    {
+      "id": "S11",
+      "url": "https://noxutft.com/tft-comps/executioner-draven",
+      "title": "Executioner Draven detail",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:16Z",
+      "access_status": "opened",
+      "roles": [
+        "alternate_route_attempt"
+      ],
+      "case_ids": [
+        "UN4-4-C03"
+      ],
+      "observations": [
+        "Dedicated detail page opened from composition index."
+      ],
+      "limitations": [
+        "No matched counterpart recovered; Elder Dragon detail click returned internal error."
+      ],
+      "patch_scope": "Set 18; statistics window unverified",
+      "statistical_metadata": null
+    }
+  ]
+}

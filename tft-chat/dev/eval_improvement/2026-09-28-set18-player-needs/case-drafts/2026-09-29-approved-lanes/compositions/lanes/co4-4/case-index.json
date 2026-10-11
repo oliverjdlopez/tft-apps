@@ -1,0 +1,164 @@
+{
+  "lane": "CO4-4",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "CO4-4-C01",
+      "title": "Eclipse investment versus frontline packages",
+      "question": "On a level-9 Aphelios board, when is keeping Eclipse worth the slots compared with a stronger frontline and utility package? Does that change if the Solar units are already three-star?",
+      "status": "provisional",
+      "origin": "Adapted Eclipse discussions",
+      "proposal_lineage": [
+        "CO4-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S4",
+        "S5",
+        "S6",
+        "S9"
+      ],
+      "comparison": {
+        "level": 9,
+        "carry": "Aphelios",
+        "alternatives": "Eclipse versus complete observed frontline/utility packages",
+        "sensitivity": "Explicit Solar star vectors including upgraded Solar"
+      },
+      "unresolved_evidence": [
+        "Complete alternative packages",
+        "Matched outcomes",
+        "Solar star sensitivity",
+        "Compatible window"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "CO4-4-C02",
+      "title": "Two caps for Azir and Mama Beak",
+      "question": "For a level-8 Azir–Mama Beak board, how do the Ezreal–Scuttle Crab and Kennen–Amumu versions compare as finished boards? Is one more likely to win rather than just make top four?",
+      "status": "provisional",
+      "origin": "Adapted Azir package reply",
+      "proposal_lineage": [
+        "CO4-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S3",
+        "S4",
+        "S5",
+        "S9",
+        "S12"
+      ],
+      "comparison": {
+        "level": 8,
+        "carries": [
+          "Azir",
+          "Mama Beak"
+        ],
+        "package_a": [
+          "Ezreal",
+          "Scuttle Crab"
+        ],
+        "package_b": [
+          "Kennen",
+          "Amumu"
+        ],
+        "common_roster_status": "Five named; sixth unresolved",
+        "outcomes": [
+          "top-four",
+          "first-place"
+        ]
+      },
+      "unresolved_evidence": [
+        "Sixth common unit",
+        "Legal complete rosters",
+        "Matched outcome cohorts",
+        "Emblem and item allocation"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "CO4-4-C03",
+      "title": "Popular Primal cap versus observed performance",
+      "question": "TFT Codex lists several level-nine Primal Aphelios–Nidalee finishes. Is the most popular last unit also getting the best placements and win rate?",
+      "status": "grounded",
+      "origin": "Constructed resource-grounded popularity comparison",
+      "proposal_lineage": [],
+      "answer_status": "supported",
+      "source_ids": [
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "comparison": {
+        "level": 9,
+        "common_roster": [
+          "Amumu",
+          "Aphelios",
+          "Nidalee",
+          "Sentinel",
+          "Diana",
+          "Kog'Maw",
+          "Vi",
+          "Varus"
+        ],
+        "alternatives": [
+          "Brambleback",
+          "Ivern",
+          "Alune"
+        ],
+        "objective": "Popularity versus observed performance"
+      },
+      "unresolved_evidence": [
+        "Conflicting panel window labels",
+        "Exact rounded counts",
+        "Investment matching",
+        "Uncertainty"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "CO4-4-C04",
+      "title": "How clear is the legendary cap ranking?",
+      "question": "The level-ten Elder Dragon–Draven options on TFT Codex look very close. Is there convincing evidence that the Alune version is better than the Lux or Soraka versions?",
+      "status": "grounded",
+      "origin": "Constructed resource-grounded close-ranking investigation",
+      "proposal_lineage": [],
+      "answer_status": "supported",
+      "source_ids": [
+        "S10",
+        "S8",
+        "S9",
+        "S11"
+      ],
+      "comparison": {
+        "level": 10,
+        "common_roster": [
+          "Draven",
+          "Elder Dragon",
+          "Ivern",
+          "Kennen",
+          "Maokai",
+          "Taric",
+          "Amumu",
+          "Sentinel"
+        ],
+        "alternatives": [
+          "Alune",
+          "Lux",
+          "Soraka"
+        ],
+        "objective": "Strength of close-ranking evidence"
+      },
+      "unresolved_evidence": [
+        "Conflicting panel window labels",
+        "Exact counts/distributions",
+        "Investment matching",
+        "Lux variant"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

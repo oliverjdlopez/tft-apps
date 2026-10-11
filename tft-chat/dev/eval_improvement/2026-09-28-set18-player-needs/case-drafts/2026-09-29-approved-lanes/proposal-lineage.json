@@ -1,0 +1,266 @@
+{
+  "stage": "approved-case-drafting",
+  "proposals": [
+    {
+      "proposal_id": "IT-1-R2-P1",
+      "lane": "IT-1",
+      "approved_question": "How do Kraken's Fury and Guinsoo's Rageblade builds compare on Aphelios? Are there good builds without Rageblade?",
+      "final_case_ids": [
+        "IT-1-C01"
+      ]
+    },
+    {
+      "proposal_id": "IT-1-R2-P2",
+      "lane": "IT-1",
+      "approved_question": "With Bloodthirster and Infinity Edge on Brambleback, how does Titan's Resolve compare with Edge of Night for the last slot?",
+      "final_case_ids": [
+        "IT-1-C02"
+      ]
+    },
+    {
+      "proposal_id": "IT-2-R2-P1",
+      "lane": "IT-2",
+      "approved_question": "With Shojin, Infinity Edge and Last Whisper, how do two-star Ezreal, Sivir and Yunara compare as endgame carries? What trait support makes each worth considering?",
+      "final_case_ids": [
+        "IT-2-C01"
+      ]
+    },
+    {
+      "proposal_id": "IT-2-R2-P2",
+      "lane": "IT-2",
+      "approved_question": "On an Azir–Malphite board, is Adaptive Helm better as Azir's third item or Malphite's? I'm comparing three-star Azir with Nashor's Tooth and Jeweled Gauntlet against two-star Malphite with Warmog's and Gargoyle.",
+      "final_case_ids": [
+        "IT-2-C02"
+      ]
+    },
+    {
+      "proposal_id": "IT-3-R2-P1",
+      "lane": "IT-3",
+      "approved_question": "Does Gunblade become a better item on Zyra when she's playing behind Juggernauts, or do those boards just do well regardless of her build?",
+      "final_case_ids": [
+        "IT-3-C01"
+      ]
+    },
+    {
+      "proposal_id": "IT-3-R2-P2",
+      "lane": "IT-3",
+      "approved_question": "Is Rageblade–Titan's Elise actually good in ordinary Vanguard boards, or does it only look good when she has a Ravager emblem?",
+      "final_case_ids": [
+        "IT-3-C02"
+      ]
+    },
+    {
+      "proposal_id": "IT-4-R2-P1",
+      "lane": "IT-4",
+      "approved_question": "For Kayle–Aphelios boards, how do Wit's End, Shiv, Collector and Infinity Force compare between the two carries when the frontline already has its items?",
+      "final_case_ids": [
+        "IT-4-C01"
+      ]
+    },
+    {
+      "proposal_id": "IT-4-R2-P2",
+      "lane": "IT-4",
+      "approved_question": "For Zyra–Malphite boards, is radiant Archangel on Zyra worth more than radiant Bramble or Dragon's Claw on Malphite? I'm thinking of Zyra with Shojin and JG and Malphite with just Warmog's.",
+      "final_case_ids": [
+        "IT-4-C02"
+      ]
+    },
+    {
+      "proposal_id": "UN4-1-R2-P1",
+      "lane": "UN4-1",
+      "approved_question": "What separates a Veigar reroll carry board from a board that just uses him for traits? How much do his items and the rest of the team change whether three-star Veigar is worth building around?",
+      "final_case_ids": [
+        "UN4-1-C01",
+        "UN4-1-C03",
+        "UN4-1-C04"
+      ]
+    },
+    {
+      "proposal_id": "UN4-1-R2-P2",
+      "lane": "UN4-1",
+      "approved_question": "With Flickerblade, radiant Quicksilver and Edge of Night, is two-star Master Yi or one-star Draven the better carry? How much does the rest of the board change that?",
+      "final_case_ids": [
+        "UN4-1-C02"
+      ]
+    },
+    {
+      "proposal_id": "UN4-2-R2-P1",
+      "lane": "UN4-2",
+      "approved_question": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?",
+      "final_case_ids": [
+        "UN4-2-C01",
+        "UN4-2-C03"
+      ]
+    },
+    {
+      "proposal_id": "UN4-2-R2-P2",
+      "lane": "UN4-2",
+      "approved_question": "Does three-star Azir need Shojin, or can I build Guinsoo’s plus two damage items? Are there boards where spending that slot on mana looks more worthwhile?",
+      "final_case_ids": [
+        "UN4-2-C02"
+      ]
+    },
+    {
+      "proposal_id": "UN4-3-R2-P1",
+      "lane": "UN4-3",
+      "approved_question": "Is Ahri actually Morgana’s best carry partner, or do Morgana boards do just as well with Sivir?",
+      "final_case_ids": [
+        "UN4-3-C01"
+      ]
+    },
+    {
+      "proposal_id": "UN4-3-R2-P2",
+      "lane": "UN4-3",
+      "approved_question": "Which Aphelios boards actually do well with Mama Beak, and which do better without her?",
+      "final_case_ids": [
+        "UN4-3-C02"
+      ]
+    },
+    {
+      "proposal_id": "UN4-4-R2-P1",
+      "lane": "UN4-4",
+      "approved_question": "How do Soraka and Zyra boards with Lillia as the main tank compare with similar boards using Malphite? Are there versions where Lillia holds up, or is she usually a weaker substitute?",
+      "final_case_ids": [
+        "UN4-4-C01"
+      ]
+    },
+    {
+      "proposal_id": "UN4-4-R2-P2",
+      "lane": "UN4-4",
+      "approved_question": "Is Ashe really the better carry than Draven on Maokai endgame boards, or are they succeeding in different versions of the board?",
+      "final_case_ids": [
+        "UN4-4-C02",
+        "UN4-4-C03"
+      ]
+    },
+    {
+      "proposal_id": "CO4-1-R2-P1",
+      "lane": "CO4-1",
+      "approved_question": "What two or three AP comps are worth learning on 18.3B without relying on an artifact, emblem, or a big reroll high roll, and what core units and item needs distinguish them?",
+      "final_case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C02"
+      ]
+    },
+    {
+      "proposal_id": "CO4-1-R2-P2",
+      "lane": "CO4-1",
+      "approved_question": "Is Azir reroll actually a reasonable comp to choose on 18.3B, or do his good three-star stats mostly come from boards where someone else is carrying? What would make the Azir version worth choosing?",
+      "final_case_ids": [
+        "CO4-1-C03"
+      ]
+    },
+    {
+      "proposal_id": "CO4-2-R2-P1",
+      "lane": "CO4-2",
+      "approved_question": "People keep calling the level-nine boards “five-cost soup,” but they don't all look alike. What recurring cores show up in those endgame boards, and which units are actually flexible around them?",
+      "final_case_ids": [
+        "CO4-2-C01"
+      ]
+    },
+    {
+      "proposal_id": "CO4-2-R2-P2",
+      "lane": "CO4-2",
+      "approved_question": "When I look up Elderwood Veigar, the finished boards aren't all the same. Which units keep showing up together, and what are the main ways people fill the remaining slots?",
+      "final_case_ids": [
+        "CO4-2-C02"
+      ]
+    },
+    {
+      "proposal_id": "CO4-3-R2-P1",
+      "lane": "CO4-3",
+      "approved_question": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.",
+      "final_case_ids": [
+        "CO4-3-C01"
+      ]
+    },
+    {
+      "proposal_id": "CO4-3-R2-P2",
+      "lane": "CO4-3",
+      "approved_question": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.",
+      "final_case_ids": [
+        "CO4-3-C02"
+      ]
+    },
+    {
+      "proposal_id": "CO4-4-R2-P1",
+      "lane": "CO4-4",
+      "approved_question": "On a level-9 Aphelios board, when is keeping Eclipse worth the slots compared with a stronger frontline and utility package? Does that change if the Solar units are already three-star?",
+      "final_case_ids": [
+        "CO4-4-C01"
+      ]
+    },
+    {
+      "proposal_id": "CO4-4-R2-P2",
+      "lane": "CO4-4",
+      "approved_question": "For a level-8 Azir–Mama Beak board, how do the Ezreal–Scuttle Crab and Kennen–Amumu versions compare as finished boards? Is one more likely to win rather than just make top four?",
+      "final_case_ids": [
+        "CO4-4-C02"
+      ]
+    },
+    {
+      "proposal_id": "TR-1-R2-P1",
+      "lane": "TR-1",
+      "approved_question": "Do Ahri endgame boards perform well without Invoker, or are the good results mostly coming from boards where she has an Invoker emblem?",
+      "final_case_ids": [
+        "TR-1-C01"
+      ]
+    },
+    {
+      "proposal_id": "TR-1-R2-P2",
+      "lane": "TR-1",
+      "approved_question": "Do Soraka boards with four Executioners actually finish better than the three-Executioner versions, or is that mostly because those boards also have Kennen?",
+      "final_case_ids": [
+        "TR-1-C02"
+      ]
+    },
+    {
+      "proposal_id": "TR-2-R2-P1",
+      "lane": "TR-2",
+      "approved_question": "For an Ezreal board, what am I really getting by going from 5 to 7 Elderwood? Is the extra plant worth replacing Shen and Taric with Xayah and LeBlanc, or am I giving up too much useful frontline?",
+      "final_case_ids": [
+        "TR-2-C01"
+      ]
+    },
+    {
+      "proposal_id": "TR-2-R2-P2",
+      "lane": "TR-2",
+      "approved_question": "Can Inferno Lux be worth a slot just for the 2 Inferno splash? On this Ezreal board I'd have to drop Kennen and lose Executioner.",
+      "final_case_ids": [
+        "TR-2-C02"
+      ]
+    },
+    {
+      "proposal_id": "TR-3-R2-P1",
+      "lane": "TR-3",
+      "approved_question": "In Defender Cassiopeia boards, do Rengar or Kha’Zix versions actually finish better when they hold the Defender emblem?",
+      "final_case_ids": [
+        "TR-3-C01"
+      ]
+    },
+    {
+      "proposal_id": "TR-3-R2-P2",
+      "lane": "TR-3",
+      "approved_question": "Is Hunter-emblem Camille with Caitlyn a real alternative to Nidalee/Sivir, or does that board mostly fall short?",
+      "final_case_ids": [
+        "TR-3-C02"
+      ]
+    },
+    {
+      "proposal_id": "TR-4-R2-P1",
+      "lane": "TR-4",
+      "approved_question": "Is six Juggernaut really as flexible as people say, or do the Hunter/Primal and Summoner versions perform differently?",
+      "final_case_ids": [
+        "TR-4-C01"
+      ]
+    },
+    {
+      "proposal_id": "TR-4-R2-P2",
+      "lane": "TR-4",
+      "approved_question": "Does Eclipse perform differently on upgraded Solar boards built around Kayle than on Lunar boards built around Aphelios?",
+      "final_case_ids": [
+        "TR-4-C02"
+      ]
+    }
+  ]
+}

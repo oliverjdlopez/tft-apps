@@ -1,0 +1,159 @@
+{
+  "lane": "UN4-3",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "UN4-3-C01",
+      "title": "Morgana’s carry partner",
+      "question": "Is Ahri actually Morgana’s best carry partner, or do Morgana boards do just as well with Sivir?",
+      "status": "provisional",
+      "origin": "Adapted from competing Ahri and Sivir suggestions in the opened off-meta discussion; another reply questions the Ahri board ceiling.",
+      "proposal_lineage": [
+        "UN4-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T1",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Morgana 2 + Ahri 2 versus Morgana 2 + Sivir 2, excluding boards with both partners and separating itemized from utility Morgana.",
+      "unresolved_evidence": [
+        "Matched partner outcomes and counts",
+        "Item/frontline overlap",
+        "Exact region and collection period"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "UN4-3-C02",
+      "title": "Mama Beak beside Aphelios",
+      "question": "Which Aphelios boards actually do well with Mama Beak, and which do better without her?",
+      "status": "provisional",
+      "origin": "Adapted from the opened correction distinguishing vertical Riftbeast from occasional Aphelios inclusion.",
+      "proposal_lineage": [
+        "UN4-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T2",
+        "M1",
+        "M2",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Mama Beak present versus absent inside observed Aphelios board families, identifying actual alternative slots.",
+      "unresolved_evidence": [
+        "Aphelios-conditioned cohorts",
+        "Actual alternatives and item overlap",
+        "Exact period and region"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "UN4-3-C03",
+      "title": "Kennen as Draven’s second damage source",
+      "question": "On finished Draven boards, when does giving Kennen the secondary damage items work better than leaving them on Gnar or Ezreal?",
+      "status": "provisional",
+      "origin": "Adapted from opened replies advocating Kennen secondary carry, alongside Gnar/Ezreal allocation alternatives and uncertainty that any change wins the original game.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "T3",
+        "M2",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Kennen-focused versus Gnar/Ezreal-focused secondary item allocation within Draven board families at comparable whole-board inventory.",
+      "unresolved_evidence": [
+        "Draven-conditioned allocation outcomes",
+        "Whole-board inventory overlap",
+        "Consistent patch window"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "UN4-3-C04",
+      "title": "Fiddlesticks’ frontline partner",
+      "question": "For finished Spellweaver boards with Fiddlesticks tanking, does adding another Defender actually outperform using that slot for another carry or support?",
+      "status": "provisional",
+      "origin": "Adapted from an opened Spellweaver comment praising Fiddlesticks as tank and the direct unanswered Defender-partner question.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "M2",
+        "M4",
+        "R1",
+        "R2",
+        "X1",
+        "T5"
+      ],
+      "comparison": "Fiddlesticks tank plus an additional Defender versus observed carry/support slot alternatives within the same Spellweaver core.",
+      "unresolved_evidence": [
+        "Observed extra units and carry cores",
+        "Matched outcomes and counts",
+        "Star/item strata"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "UN4-3-C05",
+      "title": "Taric versus Amumu beside Draven",
+      "question": "In finished Draven boards, is two-star Taric still better than two-star Amumu when Taric has no Vanguard active but Amumu has Juggernaut?",
+      "status": "disputed",
+      "origin": "Adapted from explicit conflicting opened replies: one prefers tank items on Amumu over traitless Taric; another insists Taric 2 wins with or without Vanguard; disagreement continues and mentions changing companions.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "M2",
+        "M4",
+        "R1",
+        "R2",
+        "X2",
+        "X3"
+      ],
+      "comparison": "Taric 2 without Vanguard versus Amumu 2 with Juggernaut in Draven boards, preserving asymmetric trait restrictions and comparing whole frontlines.",
+      "unresolved_evidence": [
+        "Asymmetric-trait cohorts",
+        "Comparable companions and tank investment",
+        "Link-target effects unobserved"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "UN4-3-C06",
+      "title": "Where Sett works as the main tank",
+      "question": "Which finished carry cores actually perform well with Sett as the main tank, and does that hold without a Ravager emblem on him?",
+      "status": "provisional",
+      "origin": "Adapted from an opened question asking whether anyone succeeds with Sett frontline and a Ravager-emblem reply; carry-core comparison is constructed to make the concern investigable.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T4",
+        "M2",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Itemized Sett 2 across actual carry/partner cores and their observed alternative tanks; Ravager-emblem Sett separate.",
+      "unresolved_evidence": [
+        "Carry-core outcomes and alternatives",
+        "Emblem versus ordinary cohorts",
+        "Reliable role proxy and matched investment"
+      ],
+      "priority_verification": false
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# TR-2 evidence notes
+
+All six constructed final-board comparisons remain incomplete. The opened Avatar discussion supplies leads about Inferno splashes, Eclipse, Solar compression, seven-to-five Inferno and Fae support compression, with disagreement and explicit upgraded-support exceptions (D3). Elderwood and Lux discussions motivate C01–C02 (D1–D2); a separate Solar thread disputes universal Eclipse weakness (D4). These are hypotheses, not measured swap values. Trait references establish membership/rules but their Inferno tiers are stale relative to official notes (R1); Riot documents the 18.3 burn reduction from 1/1/3.5/4.5 to 1/1/3/4 percent and subsequent updates (O1).
+
+The available Explorer showed 18.3b / Diamond+ controls and No Data; no query was submitted (W1). Trait labels could not be safely joined to detached numeric blocks (W2). An Elderwood Kha'Zix/Hecarim card is a different carry family and has a Set 15 title conflicting with Set 18 navigation (W3). The Lux route returned a generic 18.2 unit list, not a form-resolved comparison (W4).
+
+Case-specific interpretation assumptions and exact constructed rosters remain in the protected cases. They are hypotheses for retrieval, not source facts. A decisive answer requires complete boards, exact trait activation, whole-board stars/items and counts in one disclosed Set 18 patch/subpatch, date, rank and region. Keep Solar upgrade depths, Eclipse, emblem conditions and unequal slot/cost investments separate; do not infer history or form from final traits.

@@ -1,0 +1,5 @@
+# UN4-1 evidence notes
+
+S1 and S2 are discussions motivating Veigar investment and the Yi/Draven build comparison; the original board image for S2 is unavailable, so the Draven1 comparison is constructed. Riot's 18.3 notes distinguish Veigar's carry and trait roles and describe the relevant balance changes, without establishing match outcomes (S3). Tactics.tools supplies Veigar star/item marginals and general Yi/Draven summaries, while its Explorer returned No Data (S4–S7). NoxuTFT provides named Veigar build rows but lacks star, rank, region, and subpatch filters (S8); SeeMeta and TFT Codex provide separate marginals with mode/window limitations (S9–S10).
+
+S11–S13 verify artifact/item identities and preserve conflicting or stale item references. S14 motivates the Ornn/Alistar tank alternative; S15 records disputed Azir/itemization claims, not validated cohorts. Ornn and Alistar unit pages opened but provide no Veigar-conditioned allocation result (S16–S17). None of these sources establishes the requested investment or tank allocation within comparable boards. Keep the cases incomplete and do not treat discussion or marginal statistics as a winner.

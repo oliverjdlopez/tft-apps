@@ -1,0 +1,86 @@
+{
+  "lane": "UN4-4",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "UN4-4-C01",
+      "title": "Lillia versus Malphite in Soraka/Zyra boards",
+      "question": "How do Soraka and Zyra boards with Lillia as the main tank compare with similar boards using Malphite? Are there versions where Lillia holds up, or is she usually a weaker substitute?",
+      "status": "provisional",
+      "origin": "Accepted discussion-motivated adaptation; exact Malphite comparator constructed. Historical Lillia reply not recovered in this reopening.",
+      "proposal_lineage": [
+        "UN4-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S08",
+        "S09"
+      ],
+      "comparison": "Lillia2 versus Malphite2, three defensive items each, level-eight Soraka2/Zyra2 final boards; overlapping support cores with explicit trait-package differences.",
+      "unresolved_evidence": [
+        "Contemporaneous dual-carry counts and outcomes",
+        "Exact tank/carry items and support overlap",
+        "Blackthorn choice unavailable",
+        "Historical motivation reply absent from reopened snapshot"
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "UN4-4-C02",
+      "title": "Ashe versus Draven on Maokai boards",
+      "question": "Is Ashe really the better carry than Draven on Maokai endgame boards, or are they succeeding in different versions of the board?",
+      "status": "disputed",
+      "origin": "Opened September 27 TFT Flow commenter/owner disagreement adapted to shared Maokai boards.",
+      "proposal_lineage": [
+        "UN4-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09"
+      ],
+      "comparison": "Level-nine itemized Maokai2 with exactly one three-item Ashe2 or Draven2; separate support packages and investment.",
+      "unresolved_evidence": [
+        "Matched Maokai cohorts",
+        "Common observation window",
+        "Carry-item/support overlap",
+        "Scaling and reward history unobserved"
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "UN4-4-C03",
+      "title": "Elder Dragon versus Ezreal supporting packages",
+      "question": "Among finished Draven\u2013Maokai boards, how do the Elder Dragon and Ezreal versions compare for top fours and wins once board size, upgrades and emblem differences are accounted for?",
+      "status": "provisional",
+      "origin": "New whole-package comparison from reopened guide and independently inspected named-build statistics.",
+      "proposal_lineage": [
+        "UN4-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S04",
+        "S07",
+        "S08",
+        "S10",
+        "S11"
+      ],
+      "comparison": "Level-nine Draven2/Maokai2 with itemized Elder Dragon2 versus Ezreal2; equal capacity and explicit emblem/support strata.",
+      "unresolved_evidence": [
+        "Joint-filter outcomes",
+        "Emblem-free overlap",
+        "Noxu patch/rank/region/period",
+        "Scaling and selection history unobserved"
+      ],
+      "priority_verification": true
+    }
+  ]
+}

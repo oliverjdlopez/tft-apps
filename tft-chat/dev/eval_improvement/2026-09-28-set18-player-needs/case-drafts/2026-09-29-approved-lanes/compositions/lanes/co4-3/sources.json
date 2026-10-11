@@ -1,0 +1,594 @@
+{
+  "lane": "CO4-3",
+  "stage": "case-drafting",
+  "case_ids": [
+    "CO4-3-C01",
+    "CO4-3-C02",
+    "CO4-3-C03",
+    "CO4-3-C04",
+    "CO4-3-C05"
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1whq2db/september_16_2026_daily_discussion_thread/",
+      "title": "September 16 daily discussion",
+      "source_date": "2026-09-16",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-3-C01"
+      ],
+      "observations": [
+        "Level-eight frontline/Nidalee complaint opened; nearby Primal replies disagree."
+      ],
+      "limitations": [
+        "Deeper Malphite replies absent; exact approved question is adaptation."
+      ],
+      "patch_scope": "Historical live Set 18, subpatch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S02",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wdbrup/182_whats_working_whats_not/",
+      "title": "18.2 working/not-working",
+      "source_date": "2026-09-11",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-3-C02"
+      ],
+      "observations": [
+        "Yi–Kog without Rengar/artifacts/emblems comment opened, with replies disputing balance and usefulness."
+      ],
+      "limitations": [
+        "Anecdotes and opinions; not measured outcomes."
+      ],
+      "patch_scope": "18.2",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S03",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-primal-jungle-copy",
+      "title": "Sivir Flex / Primal Flex",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C01"
+      ],
+      "observations": [
+        "Amumu/Vanguard instead of Blackthorn/Brawler candidate."
+      ],
+      "limitations": [
+        "Guide, not matched results. Board images not decoded; exact lineup not inferred from graphics."
+      ],
+      "patch_scope": "18.3b page label",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S04",
+      "url": "https://tftflow.com/composition/set18/master-yi-reroll",
+      "title": "Master Yi Reroll",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C02"
+      ],
+      "observations": [
+        "Vi and Krug tank/build candidates; Rengar and Scuttle variations."
+      ],
+      "limitations": [
+        "Guide, not matched outcomes. Timing and positions excluded."
+      ],
+      "patch_scope": "18.3b page label",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S05",
+      "url": "https://tactics.tools/team-compositions",
+      "title": "Tactics.tools team compositions",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-3-C01",
+        "CO4-3-C02"
+      ],
+      "observations": [
+        "Ranked/Diamond+ controls and broad Blossom Master Yi row including Rengar and Kog opened."
+      ],
+      "limitations": [
+        "No constrained query executed. Title says Set 15; navigation says Set 18. Region/period/count unknown."
+      ],
+      "patch_scope": "18.3b UI; Set 18 navigation",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "patch": "18.3b",
+        "row": "Blossom Master Yi",
+        "displayed_values": {
+          "play_rate": 0.09,
+          "place": 4.29,
+          "top_four_pct": 55.2,
+          "win_pct": 10.7
+        },
+        "metric_definitions": "Source labels; play-rate denominator not established",
+        "matched": false
+      }
+    },
+    {
+      "id": "S06",
+      "url": "https://tactics.tools/explorer",
+      "title": "Tactics.tools Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "CO4-3-C01",
+        "CO4-3-C02"
+      ],
+      "observations": [
+        "Diamond+, three blank inputs, No Data; patron advanced filters advertised."
+      ],
+      "limitations": [
+        "No query result, no validated mode/count/region/dates; no bypass attempted."
+      ],
+      "patch_scope": "18.3b UI",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S07",
+      "url": "https://tftcodex.com/about/index.html",
+      "title": "How TFT Codex measures TFT",
+      "source_date": "2026-09-29",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "methodology"
+      ],
+      "case_ids": [
+        "CO4-3-C01",
+        "CO4-3-C02",
+        "CO4-3-C03",
+        "CO4-3-C04",
+        "CO4-3-C05"
+      ],
+      "observations": [
+        "Ranked final-board sampling; rank can fall back to discovery player's bracket. Region not split. Cores and whole-package options described."
+      ],
+      "limitations": [
+        "Current method may not explain older snapshots; exact case-specific window unknown. No independent validation of source pipeline."
+      ],
+      "patch_scope": "Methodology current page",
+      "statistical_metadata": {
+        "mode": "ranked only",
+        "rank": "Default Diamond+; discovery-player fallback when individual tier absent",
+        "region": "unsplit; region set not specified",
+        "period": "Comp statistics at most 7 days; early patch minimum3 may extend into prior patch; current methodology says6 days",
+        "sample_count": null,
+        "core_definition": "60% presence; variants share all but2 units of larger core",
+        "whole_option_definition": "Same final level, whole core retained; not independent per-slot maxima",
+        "limitation": "These current definitions cannot retroactively establish older variation row windows or exclusivity"
+      }
+    },
+    {
+      "id": "S08",
+      "url": "https://tftcodex.com/comps/primal-nidalee-sivir-adaptor.html",
+      "title": "Primal Nidalee & Sivir Adaptor",
+      "source_date": "2026-09-18",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C01"
+      ],
+      "observations": [
+        "Historical candidate core plus variations; one drops Sivir. Search snippet was newer than opened page."
+      ],
+      "limitations": [
+        "Not level-eight/no-emblem/AD filtered. No cross-snapshot pooling."
+      ],
+      "patch_scope": "18.2 opened snapshot",
+      "statistical_metadata": {
+        "mode": "ranked by methodology",
+        "rank": "Diamond+",
+        "period": null,
+        "region": null,
+        "sample_count": 1852,
+        "average_placement": 4.61,
+        "top_four_pct": 48,
+        "win_pct": 7.2,
+        "all_ranks": {
+          "n": 2932,
+          "average_placement": 4.58
+        },
+        "variation": {
+          "adds": [
+            "Ashe",
+            "Hecarim"
+          ],
+          "omits": [
+            "Amumu",
+            "Rakan"
+          ],
+          "n": 553
+        },
+        "matched": false
+      }
+    },
+    {
+      "id": "S09",
+      "url": "https://tftcodex.com/comps/fae-sivir-nidalee-adaptor.html",
+      "title": "Fae Sivir & Nidalee Adaptor",
+      "source_date": "2026-09-28",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C01"
+      ],
+      "observations": [
+        "Core retains Nidalee/Sivir; Malphite is flex. Variants explicitly omitting Malphite exist."
+      ],
+      "limitations": [
+        "Family is not no-Malphite. Variation denominator/overlap/period unclear. www open failed; non-www succeeded."
+      ],
+      "patch_scope": "18.3; updated 12:17 UTC",
+      "statistical_metadata": {
+        "mode": "ranked by methodology",
+        "rank": "both panels explicit",
+        "period": "Trend Sep24–28; exact variation window unknown",
+        "region": null,
+        "diamond_plus": {
+          "n": 305,
+          "average_placement": 5.22
+        },
+        "all_ranks": {
+          "n": 493,
+          "average_placement": 5.32
+        },
+        "variation_rows": [
+          {
+            "adds": [
+              "Teemo"
+            ],
+            "omits": [
+              "Fiddlesticks",
+              "Malphite",
+              "Veigar"
+            ],
+            "average_placement": 5.4,
+            "n": 166
+          },
+          {
+            "adds": [
+              "Morgana",
+              "Soraka"
+            ],
+            "omits": [
+              "Malphite",
+              "Rammus",
+              "Veigar"
+            ],
+            "average_placement": 5.09,
+            "n": 110
+          }
+        ],
+        "consistency": "Five displayed variation counts193,180,166,151,110 plus689 smaller are not reconciled to493 all-rank family games. Overlap/window/extraction possibilities unresolved.",
+        "matched": false
+      }
+    },
+    {
+      "id": "S10",
+      "url": "https://tftcodex.com/comps/blossom-master-yi.html",
+      "title": "Blossom Master Yi",
+      "source_date": "2026-09-29",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C02"
+      ],
+      "observations": [
+        "Gromp/Taric, Gnar, Zyra additions in rows leaving Rengar out. Broad family carries Yi and Rengar."
+      ],
+      "limitations": [
+        "No Vi/Krug tank-role filter; no ordinary-item-only filter. Row membership/rank/window unresolved."
+      ],
+      "patch_scope": "18.3; updated 02:18 UTC",
+      "statistical_metadata": {
+        "mode": "ranked by methodology",
+        "rank": "explicit bracket panels; variation rank unknown",
+        "region": null,
+        "period": "Family trend Sep24–29; exact variation window unknown",
+        "diamond_plus": {
+          "n": 21736,
+          "average_placement": 4.31,
+          "top_four_pct": 54.1,
+          "win_pct": 10.6
+        },
+        "all_ranks": {
+          "n": 39675,
+          "average_placement": 4.34
+        },
+        "variation_rows": [
+          {
+            "adds": [
+              "Gromp",
+              "Taric"
+            ],
+            "omits": [
+              "Rengar"
+            ],
+            "n": 28345,
+            "average_placement": 4.08
+          },
+          {
+            "adds": [
+              "Gnar"
+            ],
+            "omits": [
+              "Rengar"
+            ],
+            "n": 6644,
+            "average_placement": 3.7
+          },
+          {
+            "adds": [
+              "Zyra"
+            ],
+            "omits": [
+              "Rengar"
+            ],
+            "n": 1666,
+            "average_placement": 3.6
+          }
+        ],
+        "consistency": "Gromp/Taric count exceeds Diamond+ but not all ranks. Other rows plus smaller versions not reconciled; not proof of error or known alternate window.",
+        "matched": false
+      }
+    },
+    {
+      "id": "S11",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wjjqg3/weekly_rant_megathread/",
+      "title": "September 18 weekly rant",
+      "source_date": "2026-09-18",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-3-C03"
+      ],
+      "observations": [
+        "Explicit Yorick/Karma versus Alune/Amumu criticism opened. Replies address Kha tempo, not independent package outcomes."
+      ],
+      "limitations": [
+        "Opinionated motivation; no matched stats or complete fixed-core boards."
+      ],
+      "patch_scope": "Historical 18.2 period",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S12",
+      "url": "https://tftcodex.com/comps/blossom-ahri-sett.html",
+      "title": "Blossom Ahri & Sett",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C03"
+      ],
+      "observations": [
+        "Ahri/Sett shell includes Yorick/Karma and mixed final levels."
+      ],
+      "limitations": [
+        "Does not isolate exact Executioner alternative; source search and opened values differ."
+      ],
+      "patch_scope": "18.3 snapshot; trend Sep21–27",
+      "statistical_metadata": {
+        "mode": "ranked by methodology",
+        "rank": "both panels explicit",
+        "region": null,
+        "period": "Trend Sep21–27; final-level section explicitly14 days",
+        "diamond_plus": {
+          "n": 20080,
+          "average_placement": 4.8
+        },
+        "all_ranks": {
+          "n": 41903,
+          "average_placement": 4.8
+        },
+        "level_section_n": 110107,
+        "matched": false
+      }
+    },
+    {
+      "id": "S13",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wbukv0/182_patch_notes/",
+      "title": "18.2 patch discussion",
+      "source_date": "2026-09-09",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-3-C04"
+      ],
+      "observations": [
+        "Opened disagreement over Akali/Camille strength, Solar, artifacts and conditions."
+      ],
+      "limitations": [
+        "Pre-change expectations and anecdotes, not 18.3 evidence. No PBE conclusion adopted."
+      ],
+      "patch_scope": "18.1 live reactions to announced 18.2",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S14",
+      "url": "https://www.tftcodex.com/comps/solar-akali-camille.html",
+      "title": "Solar Akali & Camille",
+      "source_date": "2026-09-25",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C04"
+      ],
+      "observations": [
+        "Solar support core read; Adaptor Akali/Camille linked as six-shared-core alternative."
+      ],
+      "limitations": [
+        "Search showed newer snapshot. Opened level section has 14-day all-rank population distinct from bracket panel. Alternative board not recovered."
+      ],
+      "patch_scope": "18.3; updated 12:29 UTC",
+      "statistical_metadata": {
+        "mode": "ranked by methodology",
+        "rank": "both panels explicit",
+        "region": null,
+        "period": "Final-level section last14 days; bracket exact bounds unknown",
+        "diamond_plus": {
+          "n": 32832,
+          "average_placement": 4.64
+        },
+        "all_ranks": {
+          "n": 65612,
+          "average_placement": 4.7
+        },
+        "level_section_n": 190035,
+        "alternative_family": {
+          "name": "Adaptor Akali & Camille",
+          "shared_core": 6,
+          "n": 127,
+          "average_placement": 5.06,
+          "rank": null,
+          "period": null
+        },
+        "matched": false
+      }
+    },
+    {
+      "id": "S15",
+      "url": "https://www.tftcodex.com/comps/adaptor-akali-camille.html",
+      "title": "Adaptor Akali & Camille",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Failed: cache miss on both hosts",
+      "roles": [
+        "access"
+      ],
+      "case_ids": [
+        "CO4-3-C04"
+      ],
+      "observations": [
+        "Both www and non-www opens failed."
+      ],
+      "limitations": [
+        "No full alternate core or outcome verified."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S16",
+      "url": "https://www.tftcodex.com/comps/invoker-ahri-morgana.html",
+      "title": "Invoker Ahri & Morgana",
+      "source_date": "2026-09-28",
+      "retrieved_at_utc": "2026-09-29T08:50:53Z",
+      "access_status": "Opened public text",
+      "roles": [
+        "candidate"
+      ],
+      "case_ids": [
+        "CO4-3-C05"
+      ],
+      "observations": [
+        "Whole-variation table names Kog and Hecarim alternatives omitting Alune/Lux/Taric."
+      ],
+      "limitations": [
+        "Incomplete remaining slots. Rank/period and overlapping membership of variation rows not established; no same-level matching."
+      ],
+      "patch_scope": "18.3; updated 10:18 UTC",
+      "statistical_metadata": {
+        "mode": "ranked by methodology",
+        "rank": "both panels explicit; variation rank unknown",
+        "region": null,
+        "period": "Trend Sep24–28; variation bounds unknown",
+        "diamond_plus": {
+          "n": 103165,
+          "average_placement": 4.35,
+          "top_four_pct": 53.6,
+          "win_pct": 11.2
+        },
+        "all_ranks": {
+          "n": 158422,
+          "average_placement": 4.33
+        },
+        "variation_rows": [
+          {
+            "adds": [
+              "Kog'Maw"
+            ],
+            "omits": [
+              "Alune",
+              "Lux",
+              "Taric"
+            ],
+            "n": 51305,
+            "average_placement": 5.03
+          },
+          {
+            "adds": [
+              "Hecarim"
+            ],
+            "omits": [
+              "Alune",
+              "Lux",
+              "Taric"
+            ],
+            "n": 35992,
+            "average_placement": 5.26
+          }
+        ],
+        "consistency": "Displayed variation counts60709,51305,43515,35992,34707 plus69043 smaller exceed either bracket total if assumed disjoint. Exclusive membership is not established; no asserted explanation.",
+        "matched": false
+      }
+    }
+  ]
+}

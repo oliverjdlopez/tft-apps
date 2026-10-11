@@ -1,0 +1,7 @@
+# CO4-1 evidence notes
+
+All three cases are incomplete; CO4-1-C03 preserves a disputed role claim. The opened 18.2 discussion supplies AP repertoire motivation only (S1); 18.3 replies dispute Veigar's artifact dependence and Azir's item/role interpretation (S2). Riot's September 24 and 28 updates changed relevant units and disabled Polymorph, but dates do not define a provider cohort (S3).
+
+The MetaTFT composition, explorer and Azir routes returned shells without rows or filters (S4, S5, S6). Tactics.tools showed Ranked / Diamond+ / 18.3b controls and illustrative Veigar–Ornn and Zyra–Amumu examples, including Dawncore, Luden's Tempest and Radiant Blue Buff on Veigar and Archangel's, Gunblade and Shojin on Zyra. Its Set 15 title conflicts with Set 18 navigation; it has no region, dates or counts and examples do not define measured boards (S7). S10 confirms ordinary item identities only. The reopened Azir page supplies separate rounded star and item marginals, not a joint star-by-item or teammate-role cohort; its 136k page count is not the subgroup denominator (S12).
+
+The final cases therefore retain the displayed snapshot facts while leaving ordinary-resource outcome comparisons, carry-role shares and reroll attempt value unresolved. Final boards cannot establish acquisition difficulty, primary damage or the effect of an item. A future answer needs a dated, region- and rank-defined 18.3B population and complete-board counts; no displayed example establishes forceability or causation.

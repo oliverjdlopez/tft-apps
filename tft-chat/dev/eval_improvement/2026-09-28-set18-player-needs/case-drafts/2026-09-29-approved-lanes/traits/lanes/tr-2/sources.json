@@ -1,0 +1,295 @@
+{
+  "lane": "TR-2",
+  "stage": "case-drafting",
+  "case_ids": [
+    "TR-2-C01",
+    "TR-2-C02",
+    "TR-2-C03",
+    "TR-2-C04",
+    "TR-2-C05",
+    "TR-2-C06"
+  ],
+  "sources": [
+    {
+      "id": "D1",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w8390h/i_cant_understand_elderwood/",
+      "title": "I cannot understand elderwood",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened post and replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-2-C01"
+      ],
+      "observations": [
+        "Ezreal reply favors flexible five with emblem qualifications; separate branch corrects duplication premise toward Ivern."
+      ],
+      "limitations": [
+        "Absolute date, rank, mode and patch unverified; no statistical comparison."
+      ],
+      "patch_scope": "Set 18 discussion; patch unknown"
+    },
+    {
+      "id": "D2",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w8l16t/lux_where_is_she_good/",
+      "title": "Lux - Where is she good?",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened post and reply branches",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "TR-2-C02"
+      ],
+      "observations": [
+        "Slot-value debate; edited comment distinguishes spell bonus from trait bonus. Its Coven vulnerability attribution is not accepted as rules proof."
+      ],
+      "limitations": [
+        "Anecdotes, not matched outcomes; precise posting date and ranked status unverified."
+      ],
+      "patch_scope": "Set 18; patch unknown"
+    },
+    {
+      "id": "D3",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1wlt5fj/the_avatar_trait_seems_badly_designed_and/",
+      "title": "The Avatar trait seems badly designed and underutilised",
+      "source_date": "2026-09-20",
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened post and extended replies",
+      "roles": [
+        "motivation",
+        "counterevidence"
+      ],
+      "case_ids": [
+        "TR-2-C02",
+        "TR-2-C03",
+        "TR-2-C04",
+        "TR-2-C05",
+        "TR-2-C06"
+      ],
+      "observations": [
+        "Replies discuss Inferno splash, Eclipse, Solar compression, seven-to-five Inferno and Fae compression. Others dispute rarity/usefulness; upgraded Fae supports are an explicit exception."
+      ],
+      "limitations": [
+        "Search dates place thread September 20 and replies September 21; opened relative ages conflict with retrieval time. No measured ranked comparison; constructed anchors are not quoted matches."
+      ],
+      "patch_scope": "Set 18; exact patch unverified"
+    },
+    {
+      "id": "D4",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1w9ttx9/solar_lux_is_poorly_designed/",
+      "title": "Solar Lux is poorly designed",
+      "source_date": "2026-09-07",
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened post and replies",
+      "roles": [
+        "motivation",
+        "counterevidence"
+      ],
+      "case_ids": [
+        "TR-2-C03",
+        "TR-2-C04"
+      ],
+      "observations": [
+        "Reroll and Eclipse replies rebut universal uselessness; niche availability remains disputed."
+      ],
+      "limitations": [
+        "Date from indexed result; opened page shows relative hours. No verified population or outcome distribution."
+      ],
+      "patch_scope": "Set 18; exact patch unverified"
+    },
+    {
+      "id": "R1",
+      "url": "https://tactics.tools/info/traits",
+      "title": "Traits Set 18 TFT Info",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened relevant trait entries",
+      "roles": [
+        "cohort_definition",
+        "rules"
+      ],
+      "case_ids": [
+        "TR-2-C01",
+        "TR-2-C02",
+        "TR-2-C03",
+        "TR-2-C04",
+        "TR-2-C05",
+        "TR-2-C06"
+      ],
+      "observations": [
+        "Avatar counts its chosen trait twice. Elderwood stars matter; Solar, Lunar, Inferno and Fae memberships inspected."
+      ],
+      "limitations": [
+        "Rules only. Inferno upper burn tiers stale versus official notes; trait fields cannot prove historical form encoding."
+      ],
+      "patch_scope": "Set 18; some numeric values pre-18.3"
+    },
+    {
+      "id": "O1",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "TFT patch 18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened patch and midpatch sections",
+      "roles": [
+        "rules",
+        "patch_boundary"
+      ],
+      "case_ids": [
+        "TR-2-C01",
+        "TR-2-C03",
+        "TR-2-C05"
+      ],
+      "observations": [
+        "18.3 reduces Inferno burn from 1/1/3.5/4.5 to 1/1/3/4 percent. September 24 B and September 28 updates present."
+      ],
+      "limitations": [
+        "Rules reference is not a sampled statistical period."
+      ],
+      "patch_scope": "18.3 plus B and September 28 update"
+    },
+    {
+      "id": "W1",
+      "url": "https://tactics.tools/explorer",
+      "title": "TFT Stats Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened controls; No Data",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-2-C01",
+        "TR-2-C02",
+        "TR-2-C03",
+        "TR-2-C04",
+        "TR-2-C05",
+        "TR-2-C06"
+      ],
+      "observations": [
+        "Three empty filters, 18.3b, Diamond+; patron notice for advanced filters."
+      ],
+      "limitations": [
+        "No filters submitted, no requested outcome result, no patron access attempted."
+      ],
+      "patch_scope": "Visible 18.3b",
+      "statistical_inspection": {
+        "mode": null,
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "region": null,
+        "time_window": null,
+        "filters_applied": [],
+        "sample_count": null,
+        "matched_outcomes": null
+      }
+    },
+    {
+      "id": "W2",
+      "url": "https://tactics.tools/traits",
+      "title": "TFT Traits Stats",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened detached labels and values",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-2-C01",
+        "TR-2-C05"
+      ],
+      "observations": [
+        "Ranked, Diamond+, 18.3b; target trait labels present."
+      ],
+      "limitations": [
+        "Target labels not safely associated with numeric blocks; no target values assigned."
+      ],
+      "patch_scope": "Visible 18.3b",
+      "statistical_inspection": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "region": null,
+        "time_window": null,
+        "filters_applied": [],
+        "sample_count": null,
+        "matched_outcomes": null
+      }
+    },
+    {
+      "id": "W3",
+      "url": "https://tactics.tools/team-compositions",
+      "title": "TFT Meta Stats - Best Team Comps & Builds for Set 15 Patch 18.3b",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened adjacent composition card",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-2-C01"
+      ],
+      "observations": [
+        "Elderwood Kha'Zix & Hecarim card accessible; not requested Ezreal package."
+      ],
+      "limitations": [
+        "Title says Set 15 despite Set 18 navigation; missing counts, dates, region, denominator definitions."
+      ],
+      "patch_scope": "18.3b visible; conflicting set title",
+      "statistical_inspection": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "region": null,
+        "time_window": null,
+        "filters_applied": [],
+        "sample_count": null,
+        "matched_outcomes": null,
+        "observed_card": {
+          "name": "Elderwood Kha'Zix & Hecarim",
+          "Play Rate": 0.14,
+          "Place": 4.26,
+          "Top 4 %": 55.2,
+          "Win %": 12.4,
+          "sample_count": null,
+          "used_for_recommendation": false
+        }
+      }
+    },
+    {
+      "id": "W4",
+      "url": "https://tactics.tools/units/lux",
+      "title": "TFT Units Stats - Set 18 Patch 18.2",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:47:03Z",
+      "access_status": "opened generic truncated unit list",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "TR-2-C02"
+      ],
+      "observations": [
+        "Named route returns generic unit list, not Lux form results."
+      ],
+      "limitations": [
+        "18.2 page cannot answer current form-resolved comparison."
+      ],
+      "patch_scope": "Visible 18.2",
+      "statistical_inspection": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.2",
+        "region": null,
+        "time_window": null,
+        "filters_applied": [],
+        "sample_count": null,
+        "matched_outcomes": null
+      }
+    }
+  ]
+}

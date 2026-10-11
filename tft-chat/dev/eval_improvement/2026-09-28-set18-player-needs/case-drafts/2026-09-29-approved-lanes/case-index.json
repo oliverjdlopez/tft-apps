@@ -1,0 +1,2575 @@
+{
+  "stage": "case-drafting",
+  "review_status": "coordinator_review_complete",
+  "generated_utc": "2026-09-29T09:02:59.502376+00:00",
+  "scope": "Candidate Set 18 standard-ranked asynchronous final-board investigations; research artifacts only.",
+  "counts": {
+    "total_cases": 69,
+    "by_subject": {
+      "items": 17,
+      "units": 17,
+      "compositions": 18,
+      "traits": 17
+    },
+    "by_status": {
+      "provisional": 60,
+      "disputed": 7,
+      "grounded": 2
+    },
+    "by_answer_status": {
+      "incomplete": 67,
+      "supported": 2
+    },
+    "by_motivation_category": {
+      "opened_discussion_adaptation_or_synthesis": 56,
+      "reference_or_workflow_constructed": 6,
+      "partially_accessible_discussion": 7
+    },
+    "cases_with_approved_lineage": 37,
+    "cases_without_approved_lineage": 32,
+    "unique_approved_proposals_covered": 32,
+    "independently_checked_cases": 32
+  },
+  "answer_status_note": "Supported means the two scoped descriptive snapshot answers. All other decisive answers remain incomplete. No fully matched current gameplay recommendation validated.",
+  "motivation_category_note": "Conservative coordinator grouping of case origins, not independent thread counts or answer support. Partial exact replies are not promoted to opened evidence; constructed wording is retained in each origin.",
+  "lanes": [
+    {
+      "id": "IT-1",
+      "subject": "items",
+      "title": "Completed-item alternatives across comparable holders and builds",
+      "case_count": 2,
+      "case_index": "items/lanes/it-1/case-index.json",
+      "case_file": "items/lanes/it-1/cases.md",
+      "research_report": "items/lanes/it-1/research-report.md",
+      "sources": "items/lanes/it-1/sources.json",
+      "approved_proposal_ids": [
+        "IT-1-R2-P1",
+        "IT-1-R2-P2"
+      ]
+    },
+    {
+      "id": "IT-2",
+      "subject": "items",
+      "title": "Fixed-inventory holder comparisons and item allocation",
+      "case_count": 3,
+      "case_index": "items/lanes/it-2/case-index.json",
+      "case_file": "items/lanes/it-2/cases.md",
+      "research_report": "items/lanes/it-2/research-report.md",
+      "sources": "items/lanes/it-2/sources.json",
+      "approved_proposal_ids": [
+        "IT-2-R2-P1",
+        "IT-2-R2-P2"
+      ]
+    },
+    {
+      "id": "IT-3",
+      "subject": "items",
+      "title": "How item performance varies with board and trait context",
+      "case_count": 6,
+      "case_index": "items/lanes/it-3/case-index.json",
+      "case_file": "items/lanes/it-3/cases.md",
+      "research_report": "items/lanes/it-3/research-report.md",
+      "sources": "items/lanes/it-3/sources.json",
+      "approved_proposal_ids": [
+        "IT-3-R2-P1",
+        "IT-3-R2-P2"
+      ]
+    },
+    {
+      "id": "IT-4",
+      "subject": "items",
+      "title": "Special-item comparisons across carry and frontline roles",
+      "case_count": 6,
+      "case_index": "items/lanes/it-4/case-index.json",
+      "case_file": "items/lanes/it-4/cases.md",
+      "research_report": "items/lanes/it-4/research-report.md",
+      "sources": "items/lanes/it-4/sources.json",
+      "approved_proposal_ids": [
+        "IT-4-R2-P1",
+        "IT-4-R2-P2"
+      ]
+    },
+    {
+      "id": "UN4-1",
+      "subject": "units",
+      "title": "Unit investment, carry versions and alternative holders",
+      "case_count": 4,
+      "case_index": "units/lanes/un4-1/case-index.json",
+      "case_file": "units/lanes/un4-1/cases.md",
+      "research_report": "units/lanes/un4-1/research-report.md",
+      "sources": "units/lanes/un4-1/sources.json",
+      "approved_proposal_ids": [
+        "UN4-1-R2-P1",
+        "UN4-1-R2-P2"
+      ]
+    },
+    {
+      "id": "UN4-2",
+      "subject": "units",
+      "title": "Unit build alternatives and their board conditions",
+      "case_count": 4,
+      "case_index": "units/lanes/un4-2/case-index.json",
+      "case_file": "units/lanes/un4-2/cases.md",
+      "research_report": "units/lanes/un4-2/research-report.md",
+      "sources": "units/lanes/un4-2/sources.json",
+      "approved_proposal_ids": [
+        "UN4-2-R2-P1",
+        "UN4-2-R2-P2"
+      ]
+    },
+    {
+      "id": "UN4-3",
+      "subject": "units",
+      "title": "Unit partnerships and fit across board contexts",
+      "case_count": 6,
+      "case_index": "units/lanes/un4-3/case-index.json",
+      "case_file": "units/lanes/un4-3/cases.md",
+      "research_report": "units/lanes/un4-3/research-report.md",
+      "sources": "units/lanes/un4-3/sources.json",
+      "approved_proposal_ids": [
+        "UN4-3-R2-P1",
+        "UN4-3-R2-P2"
+      ]
+    },
+    {
+      "id": "UN4-4",
+      "subject": "units",
+      "title": "Alternative units within similar board structures",
+      "case_count": 3,
+      "case_index": "units/lanes/un4-4/case-index.json",
+      "case_file": "units/lanes/un4-4/cases.md",
+      "research_report": "units/lanes/un4-4/research-report.md",
+      "sources": "units/lanes/un4-4/sources.json",
+      "approved_proposal_ids": [
+        "UN4-4-R2-P1",
+        "UN4-4-R2-P2"
+      ]
+    },
+    {
+      "id": "CO4-1",
+      "subject": "compositions",
+      "title": "Composition repertoires and statistical claims",
+      "case_count": 3,
+      "case_index": "compositions/lanes/co4-1/case-index.json",
+      "case_file": "compositions/lanes/co4-1/cases.md",
+      "research_report": "compositions/lanes/co4-1/research-report.md",
+      "sources": "compositions/lanes/co4-1/sources.json",
+      "approved_proposal_ids": [
+        "CO4-1-R2-P1",
+        "CO4-1-R2-P2"
+      ]
+    },
+    {
+      "id": "CO4-2",
+      "subject": "compositions",
+      "title": "Recurring final-board cores and flexible slots",
+      "case_count": 6,
+      "case_index": "compositions/lanes/co4-2/case-index.json",
+      "case_file": "compositions/lanes/co4-2/cases.md",
+      "research_report": "compositions/lanes/co4-2/research-report.md",
+      "sources": "compositions/lanes/co4-2/sources.json",
+      "approved_proposal_ids": [
+        "CO4-2-R2-P1",
+        "CO4-2-R2-P2"
+      ]
+    },
+    {
+      "id": "CO4-3",
+      "subject": "compositions",
+      "title": "Composition variants with alternative partner packages",
+      "case_count": 5,
+      "case_index": "compositions/lanes/co4-3/case-index.json",
+      "case_file": "compositions/lanes/co4-3/cases.md",
+      "research_report": "compositions/lanes/co4-3/research-report.md",
+      "sources": "compositions/lanes/co4-3/sources.json",
+      "approved_proposal_ids": [
+        "CO4-3-R2-P1",
+        "CO4-3-R2-P2"
+      ]
+    },
+    {
+      "id": "CO4-4",
+      "subject": "compositions",
+      "title": "Finished-board package comparisons and caps",
+      "case_count": 4,
+      "case_index": "compositions/lanes/co4-4/case-index.json",
+      "case_file": "compositions/lanes/co4-4/cases.md",
+      "research_report": "compositions/lanes/co4-4/research-report.md",
+      "sources": "compositions/lanes/co4-4/sources.json",
+      "approved_proposal_ids": [
+        "CO4-4-R2-P1",
+        "CO4-4-R2-P2"
+      ]
+    },
+    {
+      "id": "TR-1",
+      "subject": "traits",
+      "title": "Trait performance within composition families",
+      "case_count": 3,
+      "case_index": "traits/lanes/tr-1/case-index.json",
+      "case_file": "traits/lanes/tr-1/cases.md",
+      "research_report": "traits/lanes/tr-1/research-report.md",
+      "sources": "traits/lanes/tr-1/sources.json",
+      "approved_proposal_ids": [
+        "TR-1-R2-P1",
+        "TR-1-R2-P2"
+      ]
+    },
+    {
+      "id": "TR-2",
+      "subject": "traits",
+      "title": "Vertical breakpoints versus conditional splashes",
+      "case_count": 6,
+      "case_index": "traits/lanes/tr-2/case-index.json",
+      "case_file": "traits/lanes/tr-2/cases.md",
+      "research_report": "traits/lanes/tr-2/research-report.md",
+      "sources": "traits/lanes/tr-2/sources.json",
+      "approved_proposal_ids": [
+        "TR-2-R2-P1",
+        "TR-2-R2-P2"
+      ]
+    },
+    {
+      "id": "TR-3",
+      "subject": "traits",
+      "title": "Emblem-enabled board variants",
+      "case_count": 4,
+      "case_index": "traits/lanes/tr-3/case-index.json",
+      "case_file": "traits/lanes/tr-3/cases.md",
+      "research_report": "traits/lanes/tr-3/research-report.md",
+      "sources": "traits/lanes/tr-3/sources.json",
+      "approved_proposal_ids": [
+        "TR-3-R2-P1",
+        "TR-3-R2-P2"
+      ]
+    },
+    {
+      "id": "TR-4",
+      "subject": "traits",
+      "title": "Trait combinations and conditional splashes",
+      "case_count": 4,
+      "case_index": "traits/lanes/tr-4/case-index.json",
+      "case_file": "traits/lanes/tr-4/cases.md",
+      "research_report": "traits/lanes/tr-4/research-report.md",
+      "sources": "traits/lanes/tr-4/sources.json",
+      "approved_proposal_ids": [
+        "TR-4-R2-P1",
+        "TR-4-R2-P2"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "IT-1-C01",
+      "title": "Aphelios without Rageblade",
+      "question": "How do Kraken's Fury and Guinsoo's Rageblade builds compare on Aphelios? Are there good builds without Rageblade?",
+      "status": "provisional",
+      "origin": "Discussion-motivated adaptation; exact Kraken comparison constructed.",
+      "proposal_lineage": [
+        "IT-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "N1",
+        "M1",
+        "M3",
+        "M4",
+        "M5",
+        "M6",
+        "M7",
+        "T1",
+        "T2",
+        "T3",
+        "R1",
+        "S2"
+      ],
+      "comparison": "Two-star, exactly three ordinary completed items: Kraken-only versus Rageblade-only within shared remaining pairs and comparable cores; both-items separate.",
+      "unresolved_evidence": [
+        "Fully specified current population",
+        "Matched shared-pair outcomes and counts",
+        "Whole-board comparability",
+        "Placement uncertainty"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-1/cases.md",
+      "case_heading_line": 5,
+      "research_report": "items/lanes/it-1/research-report.md",
+      "source_record": "items/lanes/it-1/sources.json"
+    },
+    {
+      "id": "IT-1-C02",
+      "title": "Brambleback's third fighter item",
+      "question": "With Bloodthirster and Infinity Edge on Brambleback, how does Titan's Resolve compare with Edge of Night for the last slot?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of itemization disagreement and official scaling context; fixed pair prevalence unverified.",
+      "proposal_lineage": [
+        "IT-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "S1",
+        "N2",
+        "M2",
+        "M3",
+        "M4",
+        "M6",
+        "T1",
+        "T2",
+        "T3",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Two-star Brambleback with Bloodthirster/Infinity Edge plus Titans versus Edge, exactly three ordinary items, comparable boards.",
+      "unresolved_evidence": [
+        "Existence and counts of exact triplets",
+        "Compatible subpatch/date bounds, rank and region",
+        "Matched outcomes and uncertainty",
+        "Unverified special choices"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-1/cases.md",
+      "case_heading_line": 42,
+      "research_report": "items/lanes/it-1/research-report.md",
+      "source_record": "items/lanes/it-1/sources.json"
+    },
+    {
+      "id": "IT-2-C01",
+      "title": "One AD inventory across three endgame holders",
+      "question": "With Shojin, Infinity Edge and Last Whisper, how do two-star Ezreal, Sivir and Yunara compare as endgame carries? What trait support makes each worth considering?",
+      "status": "provisional",
+      "origin": "Constructed endgame comparison adapted from opened player discussion",
+      "proposal_lineage": [
+        "IT-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T1",
+        "T2",
+        "T3",
+        "T7",
+        "T8",
+        "U1",
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "comparison": "Exactly two-star Ezreal versus Sivir versus Yunara, each with ordinary Spear of Shojin, Infinity Edge and Last Whisper; compare recurring final-board trait packages.",
+      "unresolved_evidence": [
+        "Common verified statistical window for all three holders",
+        "Exact trio and two-star counts/outcomes",
+        "Trait-conditioned full-board comparisons and uncertainty"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-2/cases.md",
+      "case_heading_line": 5,
+      "research_report": "items/lanes/it-2/research-report.md",
+      "source_record": "items/lanes/it-2/sources.json"
+    },
+    {
+      "id": "IT-2-C02",
+      "title": "One Helm across carry and tank",
+      "question": "On an Azir–Malphite board, is Adaptive Helm better as Azir's third item or Malphite's? I'm comparing three-star Azir with Nashor's Tooth and Jeweled Gauntlet against two-star Malphite with Warmog's and Gargoyle.",
+      "status": "provisional",
+      "origin": "Constructed endgame comparison adapted from opened player discussion",
+      "proposal_lineage": [
+        "IT-2-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "D3",
+        "T4",
+        "T5",
+        "T6",
+        "N4",
+        "N5",
+        "S1",
+        "S2"
+      ],
+      "comparison": "Both units on every board: Azir 3 with Nashor/JG/Helm and Malphite 2 with Warmog/Gargoyle versus Azir 3 with Nashor/JG and Malphite 2 with Warmog/Gargoyle/Helm; ordinary variants, exactly five combined items.",
+      "unresolved_evidence": [
+        "Joint allocation counts/outcomes in one standard-ranked window",
+        "Comparable remaining board strength and active traits",
+        "Subpatch, period and uncertainty"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-2/cases.md",
+      "case_heading_line": 37,
+      "research_report": "items/lanes/it-2/research-report.md",
+      "source_record": "items/lanes/it-2/sources.json"
+    },
+    {
+      "id": "IT-2-C03",
+      "title": "Damage and utility bundles across two carries",
+      "question": "On a final board with two-star Ashe and two-star Sivir, should Ashe get Shojin, Red Buff and Last Whisper while Sivir gets Blue Buff, Infinity Edge and Striker's Flail, or should those two complete builds be reversed?",
+      "status": "provisional",
+      "origin": "Constructed two-carry endgame adaptation of opened multi-carry allocation disagreement; stars and reversed bundle deliberately specified",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "T2",
+        "N2",
+        "T9",
+        "N6"
+      ],
+      "comparison": "Two-star Ashe and Sivir on every board; exchange complete Shojin/Red Buff/Last Whisper and Blue Buff/Infinity Edge/Striker's Flail bundles, preserving six ordinary items.",
+      "unresolved_evidence": [
+        "Joint six-item allocation outcomes and counts",
+        "Exact two-star restriction",
+        "Matched trait/core and rest-of-board investment",
+        "Common patch/subpatch, period, rank and region"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-2/cases.md",
+      "case_heading_line": 69,
+      "research_report": "items/lanes/it-2/research-report.md",
+      "source_record": "items/lanes/it-2/sources.json"
+    },
+    {
+      "id": "IT-3-C01",
+      "title": "Gunblade behind Juggernauts",
+      "question": "Does Gunblade become a better item on Zyra when she's playing behind Juggernauts, or do those boards just do well regardless of her build?",
+      "status": "provisional",
+      "origin": "Adapted D1 synthesis of Gunblade/Juggernaut praise, a Zyra suggestion and disagreement over interchangeable backlines.",
+      "proposal_lineage": [
+        "IT-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S1",
+        "N1",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Two-star Zyra with exactly three normal completed items. Compare Gunblade trios with observed alternatives, preferably fixing the other two items, within four, six and lower Juggernaut tiers separately. Preserve Maokai presence, Summoner tier, frontline stars/items, secondary carries and total items. Other healing remains a confounder.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-3/cases.md",
+      "case_heading_line": 5,
+      "research_report": "items/lanes/it-3/research-report.md",
+      "source_record": "items/lanes/it-3/sources.json"
+    },
+    {
+      "id": "IT-3-C02",
+      "title": "Elise carry pair without the emblem",
+      "question": "Is Rageblade–Titan's Elise actually good in ordinary Vanguard boards, or does it only look good when she has a Ravager emblem?",
+      "status": "disputed",
+      "origin": "Constructed synthesis of conflicting D1 ordinary-carry endorsements, item-specificity objection and emblem suggestions.",
+      "proposal_lineage": [
+        "IT-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S2",
+        "N2",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Ordinary means no emblem/artifact/radiant on Elise. Start with three-star, three-item Elise, separate four/six Vanguard. Within each context compare Rageblade–Titan’s builds against other carry builds; require Ravager emblem on Elise and active Ravager for emblem cohort. Preserve exact third items, Coven tier, secondary carry investment and whole-board item quality. Two-star separately. Do not replace Titan’s with the emblem silently or infer Coven reward history.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-3/cases.md",
+      "case_heading_line": 27,
+      "research_report": "items/lanes/it-3/research-report.md",
+      "source_record": "items/lanes/it-3/sources.json"
+    },
+    {
+      "id": "IT-3-C03",
+      "title": "Red Buff inside Inferno",
+      "question": "Does Red Buff still improve Ashe's endgame results when the board already has Inferno, or is its good average mostly coming from boards without that trait?",
+      "status": "provisional",
+      "origin": "Constructed endgame adaptation of D1’s explicit Inferno-emblem/Red-Buff/Shojin Ashe suggestion; redundancy wording is newly synthesized.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S3",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Fully itemized Ashe; one-star and two-star separately. Compare Red Buff against alternative third items with the same other pair, within no-Inferno and each active Inferno tier. Emblem on Ashe is a separate stratum from native Inferno allies because it consumes a slot and changes application. Preserve Hunter/Blossom, Kennen/Amumu, frontline and other burn items. No opponent burn-coverage inference.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-3/cases.md",
+      "case_heading_line": 49,
+      "research_report": "items/lanes/it-3/research-report.md",
+      "source_record": "items/lanes/it-3/sources.json"
+    },
+    {
+      "id": "IT-3-C04",
+      "title": "Morgana utility and the second carry",
+      "question": "Is Morello–Void Staff Morgana a good build on her own, or do its results depend on having a fully itemized Ahri beside her?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of D1 Morgana burn-support/Ahri suggestion and N3 named-comp utility-pair rows; exact Void Staff question is adapted.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S4",
+        "N3",
+        "M1",
+        "W1",
+        "R3"
+      ],
+      "comparison": "Two-star Morgana with three normal items. Compare Morello–Void Staff plus explicit third against observed damage builds within matched Invoker/frontline tiers. Split three-item two-star Ahri, underitemized Ahri, another itemized AP carry, and no comparable second carry. Match total team items. “On her own” means no other fully itemized AP carry, not a one-unit board. Statikk is an artifact here, not ordinary shred; do not silently equate it with Void Staff.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-3/cases.md",
+      "case_heading_line": 71,
+      "research_report": "items/lanes/it-3/research-report.md",
+      "source_record": "items/lanes/it-3/sources.json"
+    },
+    {
+      "id": "IT-3-C05",
+      "title": "Mama Beak across board families",
+      "question": "Does Titan's actually beat Kraken on carry Mama Beak in Summoner boards, and does that still hold when she's played in a Riftbeast-heavy board?",
+      "status": "disputed",
+      "origin": "Adapted from D1 full-AD three-Summoner Mama Beak branch, Titan’s disagreement and Riftbeast-board discussion. Family contrast constructed.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "S5",
+        "W1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Three-star Mama Beak with three normal completed items first; two-star separately. Titan’s Resolve versus Kraken’s Fury, holding the other pair fixed where possible. Jointly tabulate actual Summoner/Riftbeast tiers rather than assume mutually exclusive families. Exclude unitemized trait fillers. Preserve secondary carry and frontline investment. Alpha Mark ownership cannot be inferred from generic unit/trait records; disclose missing ownership as residual confounding.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-3/cases.md",
+      "case_heading_line": 93,
+      "research_report": "items/lanes/it-3/research-report.md",
+      "source_record": "items/lanes/it-3/sources.json"
+    },
+    {
+      "id": "IT-3-C06",
+      "title": "Seeker’s and trait-provided stats",
+      "question": "Is Seeker's Armguard worse than Crownguard on Fiddlesticks when I play lots of Defenders and Spellweavers, or do the results still favor it there?",
+      "status": "disputed",
+      "origin": "Close adaptation of opened September 7–8 TFT Flow question/reply, extended to test its trait-context explanation with outcomes.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "S6",
+        "W1",
+        "R1",
+        "R2",
+        "R3"
+      ],
+      "comparison": "Three-star Fiddlesticks holding Adaptive Helm and Titan’s Resolve: Seeker’s versus normal Crownguard third. Two-star separately. Cross actual Defender and Spellweaver tiers; preserve Flora Fatalis activation/Soraka, carry items, team size and total artifact count. Artifact access is a selection confounder even at equal item count. No takedown stacks, combat duration or healing inferred. A broader matched-pair sensitivity cohort is acceptable only explicitly labeled.",
+      "unresolved_evidence": [
+        "Matched item-by-context outcome cohorts and counts",
+        "Consistent verified patch, period, rank and region",
+        "Selection confounding and special-state observability"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-3/cases.md",
+      "case_heading_line": 115,
+      "research_report": "items/lanes/it-3/research-report.md",
+      "source_record": "items/lanes/it-3/sources.json"
+    },
+    {
+      "id": "IT-4-C01",
+      "title": "Four artifacts across two carries",
+      "question": "For Kayle–Aphelios boards, how do Wit's End, Shiv, Collector and Infinity Force compare between the two carries when the frontline already has its items?",
+      "status": "provisional",
+      "origin": "Adaptation of opened specialization discussion with constructed grid",
+      "proposal_lineage": [
+        "IT-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Four artifacts across Kayle2 and Aphelios2 with fixed co-items and tank items",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-4/cases.md",
+      "case_heading_line": 7,
+      "research_report": "items/lanes/it-4/research-report.md",
+      "source_record": "items/lanes/it-4/sources.json"
+    },
+    {
+      "id": "IT-4-C02",
+      "title": "Radiant scaling or radiant protection",
+      "question": "For Zyra–Malphite boards, is radiant Archangel on Zyra worth more than radiant Bramble or Dragon's Claw on Malphite? I'm thinking of Zyra with Shojin and JG and Malphite with just Warmog's.",
+      "status": "provisional",
+      "origin": "Approved constructed allocation comparison adapted from opened criticism",
+      "proposal_lineage": [
+        "IT-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S11",
+        "S12",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Radiant Archangel Zyra2 versus radiant Bramble/Dragon Claw Malphite2, fixed partial builds",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-4/cases.md",
+      "case_heading_line": 29,
+      "research_report": "items/lanes/it-4/research-report.md",
+      "source_record": "items/lanes/it-4/sources.json"
+    },
+    {
+      "id": "IT-4-C03",
+      "title": "Concentrate a second artifact or strengthen the tank",
+      "question": "On finished Elderwood Veigar boards that already have Dawncore on Veigar, does a second artifact do more for the board as Luden's on Veigar or as Lightshield Crest on Alistar?",
+      "status": "provisional",
+      "origin": "Constructed second-artifact concentration versus splitting synthesis",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S13",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Fixed Dawncore: second artifact Luden on Veigar3 versus Lightshield Alistar3, equal two-artifact budgets",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-4/cases.md",
+      "case_heading_line": 51,
+      "research_report": "items/lanes/it-4/research-report.md",
+      "source_record": "items/lanes/it-4/sources.json"
+    },
+    {
+      "id": "IT-4-C04",
+      "title": "Radiant Rageblade's apparent Caitlyn advantage",
+      "question": "For completed three-star Caitlyn boards, how much better is radiant Rageblade than Flickerblades or ordinary Rageblade once the frontline and the rest of her build are comparable?",
+      "status": "provisional",
+      "origin": "Resource-workflow adaptation of actual marginal gap; discussion lead access-limited",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S08",
+        "S14",
+        "S15",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Caitlyn3 radiant Rageblade versus Flickerblades versus ordinary Rageblade, matched co-items/frontline",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-4",
+      "motivation_category": "reference_or_workflow_constructed",
+      "case_file": "items/lanes/it-4/cases.md",
+      "case_heading_line": 73,
+      "research_report": "items/lanes/it-4/research-report.md",
+      "source_record": "items/lanes/it-4/sources.json"
+    },
+    {
+      "id": "IT-4-C05",
+      "title": "An offensive artifact on Ravager Sett",
+      "question": "Do six-Brawler boards with Ravager Sett actually perform better with Hellfire Hatchet or Void Gauntlet on him than with a normal defensive item?",
+      "status": "provisional",
+      "origin": "Adaptation of directly opened artifact hypothesis and counterargument",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S16",
+        "S17",
+        "S18",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Ravager Sett2 six-Brawler Hatchet/Void/Gargoyle with Warmog fixed",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": true,
+      "subject": "items",
+      "lane": "IT-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "items/lanes/it-4/cases.md",
+      "case_heading_line": 95,
+      "research_report": "items/lanes/it-4/research-report.md",
+      "source_record": "items/lanes/it-4/sources.json"
+    },
+    {
+      "id": "IT-4-C06",
+      "title": "Eternal Pact depends on the frontline",
+      "question": "Does Eternal Pact on Veigar hold up against Dawncore when I separate completed boards by their main tank and tank itemization, or is its overall item ranking hiding a frontline dependency?",
+      "status": "provisional",
+      "origin": "Constructed paired-artifact/frontline dependency synthesis",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S07",
+        "S08",
+        "S13",
+        "S19",
+        "S20"
+      ],
+      "comparison": "Veigar3 Pact/Dawncore with JG and Blue, conditional on tank package",
+      "unresolved_evidence": [
+        "Exact matched final-board cohorts and outcome counts",
+        "Compatible patch/subpatch, period, region and rank population",
+        "Whole-board item-budget and selection confounding"
+      ],
+      "priority_verification": false,
+      "subject": "items",
+      "lane": "IT-4",
+      "motivation_category": "reference_or_workflow_constructed",
+      "case_file": "items/lanes/it-4/cases.md",
+      "case_heading_line": 117,
+      "research_report": "items/lanes/it-4/research-report.md",
+      "source_record": "items/lanes/it-4/sources.json"
+    },
+    {
+      "id": "UN4-1-C01",
+      "title": "Veigar carry investment versus trait support",
+      "question": "What separates a Veigar reroll carry board from a board that just uses him for traits? How much do his items and the rest of the team change whether three-star Veigar is worth building around?",
+      "status": "provisional",
+      "origin": "Discussion-motivated synthesis, reinforced by official carry/trait distinction.",
+      "proposal_lineage": [
+        "UN4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S7",
+        "S8",
+        "S9",
+        "S10"
+      ],
+      "comparison": "Veigar2/3 crossed with zero/three items, then board family and whole-board investment.",
+      "unresolved_evidence": [
+        "Crossed star/item/board outcomes and counts",
+        "Compatible patch/time/rank/region",
+        "Frontline, secondary-carry and artifact-free investment",
+        "Unobserved AP stacks"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-1/cases.md",
+      "case_heading_line": 5,
+      "research_report": "units/lanes/un4-1/research-report.md",
+      "source_record": "units/lanes/un4-1/sources.json"
+    },
+    {
+      "id": "UN4-1-C02",
+      "title": "Exact special trio on Yi2 versus Draven1",
+      "question": "With Flickerblade, radiant Quicksilver and Edge of Night, is two-star Master Yi or one-star Draven the better carry? How much does the rest of the board change that?",
+      "status": "provisional",
+      "origin": "Adaptation of surviving removed-post replies; Draven1 alternative is constructed.",
+      "proposal_lineage": [
+        "UN4-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S2",
+        "S5",
+        "S6",
+        "S7",
+        "S11",
+        "S12",
+        "S13"
+      ],
+      "comparison": "Yi2 versus Draven1 with exactly Flickerblade, radiant Quicksilver and ordinary Edge of Night.",
+      "unresolved_evidence": [
+        "Exact trio item IDs and both holder counts",
+        "Compatible population window",
+        "Supporting board distributions",
+        "Conflicting Flickerblade effect values",
+        "Unknown Yi form"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-1/cases.md",
+      "case_heading_line": 33,
+      "research_report": "units/lanes/un4-1/research-report.md",
+      "source_record": "units/lanes/un4-1/sources.json"
+    },
+    {
+      "id": "UN4-1-C03",
+      "title": "Is special-item Veigar a different ceiling?",
+      "question": "Does three-star Veigar with normal items still have a strong endgame, or do Dawncore and Flora Fatalis versions account for most of his top finishes?",
+      "status": "provisional",
+      "origin": "Direct player question about item dependency adapted to final-board outcome ceilings.",
+      "proposal_lineage": [
+        "UN4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S8",
+        "S10",
+        "S14",
+        "S15"
+      ],
+      "comparison": "Veigar3 craftable-only holder builds versus Dawncore and Flora Fatalis builds; separate neither/one/both special items.",
+      "unresolved_evidence": [
+        "Star3 exact special-item intersections",
+        "Share of top finishes and denominators",
+        "Whole-team artifacts and frontline matching"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-1/cases.md",
+      "case_heading_line": 63,
+      "research_report": "units/lanes/un4-1/research-report.md",
+      "source_record": "units/lanes/un4-1/sources.json"
+    },
+    {
+      "id": "UN4-1-C04",
+      "title": "Who receives the tank investment beside Veigar?",
+      "question": "On finished three-star Veigar boards, how do Ornn-focused, Alistar-focused and split frontline investment compare?",
+      "status": "provisional",
+      "origin": "Guide explicitly identifies either tank as main tank; adapted from roll timing to end-state allocation.",
+      "proposal_lineage": [
+        "UN4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S14",
+        "S16",
+        "S17"
+      ],
+      "comparison": "Within Veigar3 boards, Ornn as main itemized/upgraded tank versus Alistar versus split allocation.",
+      "unresolved_evidence": [
+        "Veigar-conditioned tank allocation counts/outcomes",
+        "Comparable total items and frontline stars",
+        "Unobserved history and artifact generation"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-1",
+      "motivation_category": "reference_or_workflow_constructed",
+      "case_file": "units/lanes/un4-1/cases.md",
+      "case_heading_line": 85,
+      "research_report": "units/lanes/un4-1/research-report.md",
+      "source_record": "units/lanes/un4-1/sources.json"
+    },
+    {
+      "id": "UN4-2-C01",
+      "title": "AP-oriented Nidalee within comparable boards",
+      "question": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?",
+      "status": "provisional",
+      "origin": "Discussion-motivated adaptation of the approved question; the Invoker suggestion is observed, the population comparison is constructed.",
+      "proposal_lineage": [
+        "UN4-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S04",
+        "S07",
+        "S10"
+      ],
+      "comparison": "Exactly two-star Nidalee with three completed ordinary items: AP-oriented versus AD-oriented exact packages, then the same comparison within recurring allied cores and observed Invoker breakpoints. Keep mixed packages separate; item families do not establish form.",
+      "unresolved_evidence": [
+        "Exact package taxonomy and matched cohort counts/outcomes",
+        "Comparable board strata and allied item allocation",
+        "Form observability",
+        "Complete period/region metadata"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-2/cases.md",
+      "case_heading_line": 7,
+      "research_report": "units/lanes/un4-2/research-report.md",
+      "source_record": "units/lanes/un4-2/sources.json"
+    },
+    {
+      "id": "UN4-2-C02",
+      "title": "Azir’s Shojin slot",
+      "question": "Does three-star Azir need Shojin, or can I build Guinsoo’s plus two damage items? Are there boards where spending that slot on mana looks more worthwhile?",
+      "status": "provisional",
+      "origin": "User-accepted question; general mana-item discussion motivates investigation, while the exact Azir formulation is constructed.",
+      "proposal_lineage": [
+        "UN4-2-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S03",
+        "S04",
+        "S08",
+        "S10"
+      ],
+      "comparison": "Exactly three-star Azir with three completed ordinary items: Guinsoo’s plus one shared damage item plus Shojin versus Guinsoo’s plus that shared item plus a second damage item. Show exact pairs before pooling. Examine common Blackthorn, Executioner and Summoner contexts.",
+      "unresolved_evidence": [
+        "Exact triplet counts and outcomes",
+        "Damage-item definition including incidental mana regeneration",
+        "Board strata and allied items",
+        "Complete period/region metadata"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-2/cases.md",
+      "case_heading_line": 42,
+      "research_report": "units/lanes/un4-2/research-report.md",
+      "source_record": "units/lanes/un4-2/sources.json"
+    },
+    {
+      "id": "UN4-2-C03",
+      "title": "Rapidfire-emblem Nidalee as an exceptional build",
+      "question": "Does AP Nidalee with a Rapidfire emblem actually outperform ordinary AP builds, or is it mainly showing up on much stronger endgame boards?",
+      "status": "provisional",
+      "origin": "Constructed extension of an observed special-build anecdote. Two-star restriction is supplied by this case, not stated by the commenter.",
+      "proposal_lineage": [
+        "UN4-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S07",
+        "S10"
+      ],
+      "comparison": "Exactly two-star Nidalee with three completed items: Rapidfire emblem plus two explicitly AP-oriented ordinary items versus those same two items plus an ordinary third item. Separate exact third items and observable Rapidfire breakpoints; compare board investment and common supporting cores.",
+      "unresolved_evidence": [
+        "Emblem cohort size and outcomes",
+        "Comparable ordinary third-item groups",
+        "Board investment and emblem source if observed",
+        "Form and complete period/region metadata"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-2/cases.md",
+      "case_heading_line": 77,
+      "research_report": "units/lanes/un4-2/research-report.md",
+      "source_record": "units/lanes/un4-2/sources.json"
+    },
+    {
+      "id": "UN4-2-C04",
+      "title": "Ahri double Blue Buff outside the simulator",
+      "question": "A simulator suggested double Blue Buff for Ahri. Do two-star Ahri endgame boards with that build actually hold up against a single mana item and two damage items, and does the surrounding board change the comparison?",
+      "status": "provisional",
+      "origin": "Directly observed discussion need adapted into ranked endgame investigation. Two-star restriction and matching constraints are supplied, not verbatim.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S09",
+        "S10"
+      ],
+      "comparison": "Exactly two-star Ahri with three completed ordinary items: two Blue Buffs plus a shared damage item versus one Blue Buff plus the shared item plus a second damage item. Show Shojin alternatives separately. Examine recurring allied cores and observed Blossom, Spellweaver and Invoker context.",
+      "unresolved_evidence": [
+        "Double-Blue cohort and matched triplets",
+        "Item multiplicity legality confirmed for the chosen window",
+        "Allied item investment and trait strata",
+        "Complete period/region metadata"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-2/cases.md",
+      "case_heading_line": 110,
+      "research_report": "units/lanes/un4-2/research-report.md",
+      "source_record": "units/lanes/un4-2/sources.json"
+    },
+    {
+      "id": "UN4-3-C01",
+      "title": "Morgana’s carry partner",
+      "question": "Is Ahri actually Morgana’s best carry partner, or do Morgana boards do just as well with Sivir?",
+      "status": "provisional",
+      "origin": "Adapted from competing Ahri and Sivir suggestions in the opened off-meta discussion; another reply questions the Ahri board ceiling.",
+      "proposal_lineage": [
+        "UN4-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T1",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Morgana 2 + Ahri 2 versus Morgana 2 + Sivir 2, excluding boards with both partners and separating itemized from utility Morgana.",
+      "unresolved_evidence": [
+        "Matched partner outcomes and counts",
+        "Item/frontline overlap",
+        "Exact region and collection period"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-3/cases.md",
+      "case_heading_line": 5,
+      "research_report": "units/lanes/un4-3/research-report.md",
+      "source_record": "units/lanes/un4-3/sources.json"
+    },
+    {
+      "id": "UN4-3-C02",
+      "title": "Mama Beak beside Aphelios",
+      "question": "Which Aphelios boards actually do well with Mama Beak, and which do better without her?",
+      "status": "provisional",
+      "origin": "Adapted from the opened correction distinguishing vertical Riftbeast from occasional Aphelios inclusion.",
+      "proposal_lineage": [
+        "UN4-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T2",
+        "M1",
+        "M2",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Mama Beak present versus absent inside observed Aphelios board families, identifying actual alternative slots.",
+      "unresolved_evidence": [
+        "Aphelios-conditioned cohorts",
+        "Actual alternatives and item overlap",
+        "Exact period and region"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-3/cases.md",
+      "case_heading_line": 31,
+      "research_report": "units/lanes/un4-3/research-report.md",
+      "source_record": "units/lanes/un4-3/sources.json"
+    },
+    {
+      "id": "UN4-3-C03",
+      "title": "Kennen as Draven’s second damage source",
+      "question": "On finished Draven boards, when does giving Kennen the secondary damage items work better than leaving them on Gnar or Ezreal?",
+      "status": "provisional",
+      "origin": "Adapted from opened replies advocating Kennen secondary carry, alongside Gnar/Ezreal allocation alternatives and uncertainty that any change wins the original game.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "T3",
+        "M2",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Kennen-focused versus Gnar/Ezreal-focused secondary item allocation within Draven board families at comparable whole-board inventory.",
+      "unresolved_evidence": [
+        "Draven-conditioned allocation outcomes",
+        "Whole-board inventory overlap",
+        "Consistent patch window"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-3/cases.md",
+      "case_heading_line": 57,
+      "research_report": "units/lanes/un4-3/research-report.md",
+      "source_record": "units/lanes/un4-3/sources.json"
+    },
+    {
+      "id": "UN4-3-C04",
+      "title": "Fiddlesticks’ frontline partner",
+      "question": "For finished Spellweaver boards with Fiddlesticks tanking, does adding another Defender actually outperform using that slot for another carry or support?",
+      "status": "provisional",
+      "origin": "Adapted from an opened Spellweaver comment praising Fiddlesticks as tank and the direct unanswered Defender-partner question.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "M2",
+        "M4",
+        "R1",
+        "R2",
+        "X1",
+        "T5"
+      ],
+      "comparison": "Fiddlesticks tank plus an additional Defender versus observed carry/support slot alternatives within the same Spellweaver core.",
+      "unresolved_evidence": [
+        "Observed extra units and carry cores",
+        "Matched outcomes and counts",
+        "Star/item strata"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-3/cases.md",
+      "case_heading_line": 83,
+      "research_report": "units/lanes/un4-3/research-report.md",
+      "source_record": "units/lanes/un4-3/sources.json"
+    },
+    {
+      "id": "UN4-3-C05",
+      "title": "Taric versus Amumu beside Draven",
+      "question": "In finished Draven boards, is two-star Taric still better than two-star Amumu when Taric has no Vanguard active but Amumu has Juggernaut?",
+      "status": "disputed",
+      "origin": "Adapted from explicit conflicting opened replies: one prefers tank items on Amumu over traitless Taric; another insists Taric 2 wins with or without Vanguard; disagreement continues and mentions changing companions.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "M2",
+        "M4",
+        "R1",
+        "R2",
+        "X2",
+        "X3"
+      ],
+      "comparison": "Taric 2 without Vanguard versus Amumu 2 with Juggernaut in Draven boards, preserving asymmetric trait restrictions and comparing whole frontlines.",
+      "unresolved_evidence": [
+        "Asymmetric-trait cohorts",
+        "Comparable companions and tank investment",
+        "Link-target effects unobserved"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-3/cases.md",
+      "case_heading_line": 109,
+      "research_report": "units/lanes/un4-3/research-report.md",
+      "source_record": "units/lanes/un4-3/sources.json"
+    },
+    {
+      "id": "UN4-3-C06",
+      "title": "Where Sett works as the main tank",
+      "question": "Which finished carry cores actually perform well with Sett as the main tank, and does that hold without a Ravager emblem on him?",
+      "status": "provisional",
+      "origin": "Adapted from an opened question asking whether anyone succeeds with Sett frontline and a Ravager-emblem reply; carry-core comparison is constructed to make the concern investigable.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "T4",
+        "M2",
+        "M4",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Itemized Sett 2 across actual carry/partner cores and their observed alternative tanks; Ravager-emblem Sett separate.",
+      "unresolved_evidence": [
+        "Carry-core outcomes and alternatives",
+        "Emblem versus ordinary cohorts",
+        "Reliable role proxy and matched investment"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-3/cases.md",
+      "case_heading_line": 135,
+      "research_report": "units/lanes/un4-3/research-report.md",
+      "source_record": "units/lanes/un4-3/sources.json"
+    },
+    {
+      "id": "UN4-4-C01",
+      "title": "Lillia versus Malphite in Soraka/Zyra boards",
+      "question": "How do Soraka and Zyra boards with Lillia as the main tank compare with similar boards using Malphite? Are there versions where Lillia holds up, or is she usually a weaker substitute?",
+      "status": "provisional",
+      "origin": "Accepted discussion-motivated adaptation; exact Malphite comparator constructed. Historical Lillia reply not recovered in this reopening.",
+      "proposal_lineage": [
+        "UN4-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S08",
+        "S09"
+      ],
+      "comparison": "Lillia2 versus Malphite2, three defensive items each, level-eight Soraka2/Zyra2 final boards; overlapping support cores with explicit trait-package differences.",
+      "unresolved_evidence": [
+        "Contemporaneous dual-carry counts and outcomes",
+        "Exact tank/carry items and support overlap",
+        "Blackthorn choice unavailable",
+        "Historical motivation reply absent from reopened snapshot"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-4",
+      "motivation_category": "partially_accessible_discussion",
+      "case_file": "units/lanes/un4-4/cases.md",
+      "case_heading_line": 5,
+      "research_report": "units/lanes/un4-4/research-report.md",
+      "source_record": "units/lanes/un4-4/sources.json"
+    },
+    {
+      "id": "UN4-4-C02",
+      "title": "Ashe versus Draven on Maokai boards",
+      "question": "Is Ashe really the better carry than Draven on Maokai endgame boards, or are they succeeding in different versions of the board?",
+      "status": "disputed",
+      "origin": "Opened September 27 TFT Flow commenter/owner disagreement adapted to shared Maokai boards.",
+      "proposal_lineage": [
+        "UN4-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09"
+      ],
+      "comparison": "Level-nine itemized Maokai2 with exactly one three-item Ashe2 or Draven2; separate support packages and investment.",
+      "unresolved_evidence": [
+        "Matched Maokai cohorts",
+        "Common observation window",
+        "Carry-item/support overlap",
+        "Scaling and reward history unobserved"
+      ],
+      "priority_verification": false,
+      "subject": "units",
+      "lane": "UN4-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-4/cases.md",
+      "case_heading_line": 33,
+      "research_report": "units/lanes/un4-4/research-report.md",
+      "source_record": "units/lanes/un4-4/sources.json"
+    },
+    {
+      "id": "UN4-4-C03",
+      "title": "Elder Dragon versus Ezreal supporting packages",
+      "question": "Among finished Draven–Maokai boards, how do the Elder Dragon and Ezreal versions compare for top fours and wins once board size, upgrades and emblem differences are accounted for?",
+      "status": "provisional",
+      "origin": "New whole-package comparison from reopened guide and independently inspected named-build statistics.",
+      "proposal_lineage": [
+        "UN4-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S04",
+        "S07",
+        "S08",
+        "S10",
+        "S11"
+      ],
+      "comparison": "Level-nine Draven2/Maokai2 with itemized Elder Dragon2 versus Ezreal2; equal capacity and explicit emblem/support strata.",
+      "unresolved_evidence": [
+        "Joint-filter outcomes",
+        "Emblem-free overlap",
+        "Noxu patch/rank/region/period",
+        "Scaling and selection history unobserved"
+      ],
+      "priority_verification": true,
+      "subject": "units",
+      "lane": "UN4-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "units/lanes/un4-4/cases.md",
+      "case_heading_line": 63,
+      "research_report": "units/lanes/un4-4/research-report.md",
+      "source_record": "units/lanes/un4-4/sources.json"
+    },
+    {
+      "id": "CO4-1-C01",
+      "title": "An AP repertoire with ordinary resources",
+      "question": "What two or three AP comps are worth learning on 18.3B without relying on an artifact, emblem, or a big reroll high roll, and what core units and item needs distinguish them?",
+      "status": "provisional",
+      "origin": "Adaptation of the opened 18.2 AP-alternatives request, narrowed to asynchronous endgame repertoire investigation.",
+      "proposal_lineage": [
+        "CO4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S5",
+        "S7",
+        "S8",
+        "S10"
+      ],
+      "comparison": "Ordinary-resource AP families: cores, item allocation and outcomes, avoiding dependence on multiple three-stars.",
+      "unresolved_evidence": [
+        "Fully scoped counts and outcome distributions for the requested cohorts",
+        "Matched ordinary-resource or investment-role comparisons",
+        "Sensitivity to final-board selection and unobserved augment/player differences"
+      ],
+      "priority_verification": false,
+      "subject": "compositions",
+      "lane": "CO4-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-1/cases.md",
+      "case_heading_line": 5,
+      "research_report": "compositions/lanes/co4-1/research-report.md",
+      "source_record": "compositions/lanes/co4-1/sources.json"
+    },
+    {
+      "id": "CO4-1-C02",
+      "title": "Does Veigar belong in a top-four repertoire?",
+      "question": "For an ordinary-item AP repertoire on 18.3B, should Veigar–Ornn be on my list if I care more about top fours than firsts, or is its good placement mostly coming from specialist-item boards?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of the AP repertoire request and conflicting Veigar artifact/top-four claims; exact wording is not a quotation.",
+      "proposal_lineage": [
+        "CO4-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S7",
+        "S10"
+      ],
+      "comparison": "Ordinary versus specialist Veigar–Ornn boards and an ordinary Zyra–Amumu alternative, emphasizing top-four membership.",
+      "unresolved_evidence": [
+        "Fully scoped counts and outcome distributions for the requested cohorts",
+        "Matched ordinary-resource or investment-role comparisons",
+        "Sensitivity to final-board selection and unobserved augment/player differences"
+      ],
+      "priority_verification": true,
+      "subject": "compositions",
+      "lane": "CO4-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-1/cases.md",
+      "case_heading_line": 36,
+      "research_report": "compositions/lanes/co4-1/research-report.md",
+      "source_record": "compositions/lanes/co4-1/sources.json"
+    },
+    {
+      "id": "CO4-1-C03",
+      "title": "What Azir-three statistics actually describe",
+      "question": "Is Azir reroll actually a reasonable comp to choose on 18.3B, or do his good three-star stats mostly come from boards where someone else is carrying? What would make the Azir version worth choosing?",
+      "status": "disputed",
+      "origin": "Directly discussion-motivated adaptation of the corrected three-star claim, role-mixing explanation and counterexample; exact wording is constructed.",
+      "proposal_lineage": [
+        "CO4-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S12"
+      ],
+      "comparison": "Azir-three investment-role shares and like-core outcomes, including three-item Azir/zero-item Kha sensitivity.",
+      "unresolved_evidence": [
+        "Fully scoped counts and outcome distributions for the requested cohorts",
+        "Matched ordinary-resource or investment-role comparisons",
+        "Sensitivity to final-board selection and unobserved augment/player differences"
+      ],
+      "priority_verification": true,
+      "subject": "compositions",
+      "lane": "CO4-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-1/cases.md",
+      "case_heading_line": 67,
+      "research_report": "compositions/lanes/co4-1/research-report.md",
+      "source_record": "compositions/lanes/co4-1/sources.json"
+    },
+    {
+      "title": "Five-cost soup families",
+      "question": "People keep calling the level-nine boards “five-cost soup,” but they don't all look alike. What recurring cores show up in those endgame boards, and which units are actually flexible around them?",
+      "proposal_lineage": [
+        "CO4-2-R2-P1"
+      ],
+      "source_ids": [
+        "S1",
+        "S3",
+        "S4",
+        "S6"
+      ],
+      "origin": "Discussion-motivated synthesis of a ranked player's confusion and replies about coherent endgame packages.",
+      "comparison": "Discovery across an informal broad label, preserving hybrid reroll/legendary families.",
+      "id": "CO4-2-C01",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ],
+      "subject": "compositions",
+      "lane": "CO4-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-2/cases.md",
+      "case_heading_line": 5,
+      "research_report": "compositions/lanes/co4-2/research-report.md",
+      "source_record": "compositions/lanes/co4-2/sources.json"
+    },
+    {
+      "title": "Elderwood Veigar core and flex",
+      "question": "When I look up Elderwood Veigar, the finished boards aren't all the same. Which units keep showing up together, and what are the main ways people fill the remaining slots?",
+      "proposal_lineage": [
+        "CO4-2-R2-P2"
+      ],
+      "source_ids": [
+        "S2",
+        "S3",
+        "S5",
+        "S6",
+        "S10",
+        "S12"
+      ],
+      "origin": "Adaptation of the accepted KR Veigar conditionality discussion; guide and promotion are one evidence family.",
+      "comparison": "Within-family stability across frontline upgrades, board sizes and inventory contexts.",
+      "id": "CO4-2-C02",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ],
+      "subject": "compositions",
+      "lane": "CO4-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-2/cases.md",
+      "case_heading_line": 34,
+      "research_report": "compositions/lanes/co4-2/research-report.md",
+      "source_record": "compositions/lanes/co4-2/sources.json"
+    },
+    {
+      "title": "AD pairs beyond fixed templates",
+      "question": "In finished AD boards, are Aphelios–Brambleback and Sivir–Nidalee really two fixed pairs, or do the carries recombine into other recurring boards? Which support units stay together when they do?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S7",
+        "S5",
+        "S6",
+        "S3"
+      ],
+      "origin": "Adaptation of September 5's AD-flex question and replies disputing mandatory pairs. Some reply context was readable in indexed extraction but absent from the partial opened page.",
+      "comparison": "Carry-pair recombination and accompanying support cores.",
+      "id": "CO4-2-C03",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": true,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ],
+      "subject": "compositions",
+      "lane": "CO4-2",
+      "motivation_category": "partially_accessible_discussion",
+      "case_file": "compositions/lanes/co4-2/cases.md",
+      "case_heading_line": 63,
+      "research_report": "compositions/lanes/co4-2/research-report.md",
+      "source_record": "compositions/lanes/co4-2/sources.json"
+    },
+    {
+      "title": "AP frontline packages",
+      "question": "For finished Zyra/Soraka boards, what does the rest of the team look like when Malphite and Sentinel aren't the frontline? Are there recurring alternatives, or just scattered emergency boards?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S7",
+        "S5",
+        "S6",
+        "S11"
+      ],
+      "origin": "Adaptation of the September 5 Malphite-lottery complaint and an indexed reply suggesting Sett/Amumu; a current site example provides a further lead.",
+      "comparison": "Coordinated frontline-shell changes and accompanying carry membership.",
+      "id": "CO4-2-C04",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ],
+      "subject": "compositions",
+      "lane": "CO4-2",
+      "motivation_category": "partially_accessible_discussion",
+      "case_file": "compositions/lanes/co4-2/cases.md",
+      "case_heading_line": 92,
+      "research_report": "compositions/lanes/co4-2/research-report.md",
+      "source_record": "compositions/lanes/co4-2/sources.json"
+    },
+    {
+      "title": "Teemo presence versus Teemo composition",
+      "question": "When Teemo shows up in several top-four endgame boards, are those actually the same composition? What recurring cores separate Teemo carry boards from boards that just keep him alongside another carry?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S8",
+        "S6",
+        "S3",
+        "S4"
+      ],
+      "origin": "Adaptation of September 4's indexed Teemo exchange; opened page was partial and sorted follow-up URLs failed.",
+      "comparison": "Shared-unit presence across composition identities and final itemization roles.",
+      "id": "CO4-2-C05",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": false,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ],
+      "subject": "compositions",
+      "lane": "CO4-2",
+      "motivation_category": "partially_accessible_discussion",
+      "case_file": "compositions/lanes/co4-2/cases.md",
+      "case_heading_line": 121,
+      "research_report": "compositions/lanes/co4-2/research-report.md",
+      "source_record": "compositions/lanes/co4-2/sources.json"
+    },
+    {
+      "title": "Two meanings of Murkwolf boards",
+      "question": "Are the finished boards people call Warwick–Murkwolf reroll actually the same family as vertical Riftbeast boards that carry Murkwolf? Which units define each core, and where do they overlap?",
+      "proposal_lineage": [],
+      "source_ids": [
+        "S9",
+        "S6",
+        "S3",
+        "S4"
+      ],
+      "origin": "New synthesis of a Warwick–Murkwolf reroll claim and a seven-Riftbeast counterexample in the 18.3 discussion.",
+      "comparison": "Overlapping trait-defined versus carry-pair-defined families; whether an anecdotal counterexample belongs to the claimed family.",
+      "id": "CO4-2-C06",
+      "status": "provisional",
+      "answer_status": "incomplete",
+      "priority_verification": true,
+      "unresolved_evidence": [
+        "Counted complete-board cohorts and within-family frequencies",
+        "Verified common patch/subpatch, period, rank and region",
+        "Stars, deployed count and inventory-conditioned structure"
+      ],
+      "subject": "compositions",
+      "lane": "CO4-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-2/cases.md",
+      "case_heading_line": 150,
+      "research_report": "compositions/lanes/co4-2/research-report.md",
+      "source_record": "compositions/lanes/co4-2/sources.json"
+    },
+    {
+      "id": "CO4-3-C01",
+      "title": "Nidalee and Sivir without Malphite",
+      "question": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.",
+      "status": "provisional",
+      "origin": "Adapted opened September 16 discussion need and approved fixed-carry question; guide and measured-family leads.",
+      "proposal_lineage": [
+        "CO4-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S03",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09"
+      ],
+      "comparison": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.",
+      "unresolved_evidence": [
+        "Exact filtered package outcomes",
+        "AD-form classification",
+        "No-emblem versus hidden trait-grant distinction"
+      ],
+      "priority_verification": true,
+      "subject": "compositions",
+      "lane": "CO4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-3/cases.md",
+      "case_heading_line": 5,
+      "research_report": "compositions/lanes/co4-3/research-report.md",
+      "source_record": "compositions/lanes/co4-3/sources.json"
+    },
+    {
+      "id": "CO4-3-C02",
+      "title": "Yi and Kog without Rengar",
+      "question": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.",
+      "status": "provisional",
+      "origin": "Adapted opened 18.2 discussion distinguishing Yi–Kog without Rengar; guide supplies Vi/Krug interest.",
+      "proposal_lineage": [
+        "CO4-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S02",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S10"
+      ],
+      "comparison": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.",
+      "unresolved_evidence": [
+        "Tank-role-specific outcomes",
+        "Variation denominator reconciliation",
+        "Yi form and artifact conditioning"
+      ],
+      "priority_verification": true,
+      "subject": "compositions",
+      "lane": "CO4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-3/cases.md",
+      "case_heading_line": 34,
+      "research_report": "compositions/lanes/co4-3/research-report.md",
+      "source_record": "compositions/lanes/co4-3/sources.json"
+    },
+    {
+      "id": "CO4-3-C03",
+      "title": "Ahri and Sett: Blossom or Executioner partners",
+      "question": "With Ahri and Sett on my final board, how does keeping Yorick and Karma for the Blossom package compare with using Alune and Amumu for an Executioner package? Are the results different at level eight and level nine?",
+      "status": "provisional",
+      "origin": "Adapted opened September 18 rant with explicit two-unit contrast; fixed-core and final-level wording authored.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S11",
+        "S12",
+        "S07"
+      ],
+      "comparison": "With Ahri and Sett on my final board, how does keeping Yorick and Karma for the Blossom package compare with using Alune and Amumu for an Executioner package? Are the results different at level eight and level nine?",
+      "unresolved_evidence": [
+        "Complete packages at each level",
+        "Matched outcome comparison",
+        "Trait-grant and carry-role conditioning"
+      ],
+      "priority_verification": false,
+      "subject": "compositions",
+      "lane": "CO4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-3/cases.md",
+      "case_heading_line": 63,
+      "research_report": "compositions/lanes/co4-3/research-report.md",
+      "source_record": "compositions/lanes/co4-3/sources.json"
+    },
+    {
+      "id": "CO4-3-C04",
+      "title": "Akali and Camille: Solar or Adaptor partners",
+      "question": "With Akali and Camille both three-star, how do Solar-heavy end boards compare with Adaptor-focused support packages? Which supporting units change together, and does the comparison hold when the other three-stars and artifacts are similar?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of opened Akali/Camille conditional-strength discussion and measured-resource alternative-family lead.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S13",
+        "S14",
+        "S15",
+        "S07"
+      ],
+      "comparison": "With Akali and Camille both three-star, how do Solar-heavy end boards compare with Adaptor-focused support packages? Which supporting units change together, and does the comparison hold when the other three-stars and artifacts are similar?",
+      "unresolved_evidence": [
+        "Full Adaptor supporting board",
+        "Matched stars/artifacts and form classification",
+        "Compatible outcome window"
+      ],
+      "priority_verification": false,
+      "subject": "compositions",
+      "lane": "CO4-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-3/cases.md",
+      "case_heading_line": 92,
+      "research_report": "compositions/lanes/co4-3/research-report.md",
+      "source_record": "compositions/lanes/co4-3/sources.json"
+    },
+    {
+      "id": "CO4-3-C05",
+      "title": "Ahri and Morgana: alternative support packages",
+      "question": "For Ahri–Morgana end boards, is there actually a payoff to the Alune/Lux/Taric support package compared with versions using Kog'Maw or Hecarim? I'd like a comparison at the same final level, including what fills the remaining slots.",
+      "status": "provisional",
+      "origin": "Constructed resource-workflow need from opened whole-variation table, not a verbatim player post.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S16",
+        "S07"
+      ],
+      "comparison": "For Ahri–Morgana end boards, is there actually a payoff to the Alune/Lux/Taric support package compared with versions using Kog'Maw or Hecarim? I'd like a comparison at the same final level, including what fills the remaining slots.",
+      "unresolved_evidence": [
+        "Complete remaining slots",
+        "Variation rank/period/membership semantics",
+        "Same-level outcome comparison"
+      ],
+      "priority_verification": false,
+      "subject": "compositions",
+      "lane": "CO4-3",
+      "motivation_category": "reference_or_workflow_constructed",
+      "case_file": "compositions/lanes/co4-3/cases.md",
+      "case_heading_line": 121,
+      "research_report": "compositions/lanes/co4-3/research-report.md",
+      "source_record": "compositions/lanes/co4-3/sources.json"
+    },
+    {
+      "id": "CO4-4-C01",
+      "title": "Eclipse investment versus frontline packages",
+      "question": "On a level-9 Aphelios board, when is keeping Eclipse worth the slots compared with a stronger frontline and utility package? Does that change if the Solar units are already three-star?",
+      "status": "provisional",
+      "origin": "Adapted Eclipse discussions",
+      "proposal_lineage": [
+        "CO4-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S4",
+        "S5",
+        "S6",
+        "S9"
+      ],
+      "comparison": {
+        "level": 9,
+        "carry": "Aphelios",
+        "alternatives": "Eclipse versus complete observed frontline/utility packages",
+        "sensitivity": "Explicit Solar star vectors including upgraded Solar"
+      },
+      "unresolved_evidence": [
+        "Complete alternative packages",
+        "Matched outcomes",
+        "Solar star sensitivity",
+        "Compatible window"
+      ],
+      "priority_verification": false,
+      "subject": "compositions",
+      "lane": "CO4-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-4/cases.md",
+      "case_heading_line": 5,
+      "research_report": "compositions/lanes/co4-4/research-report.md",
+      "source_record": "compositions/lanes/co4-4/sources.json"
+    },
+    {
+      "id": "CO4-4-C02",
+      "title": "Two caps for Azir and Mama Beak",
+      "question": "For a level-8 Azir–Mama Beak board, how do the Ezreal–Scuttle Crab and Kennen–Amumu versions compare as finished boards? Is one more likely to win rather than just make top four?",
+      "status": "provisional",
+      "origin": "Adapted Azir package reply",
+      "proposal_lineage": [
+        "CO4-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S3",
+        "S4",
+        "S5",
+        "S9",
+        "S12"
+      ],
+      "comparison": {
+        "level": 8,
+        "carries": [
+          "Azir",
+          "Mama Beak"
+        ],
+        "package_a": [
+          "Ezreal",
+          "Scuttle Crab"
+        ],
+        "package_b": [
+          "Kennen",
+          "Amumu"
+        ],
+        "common_roster_status": "Five named; sixth unresolved",
+        "outcomes": [
+          "top-four",
+          "first-place"
+        ]
+      },
+      "unresolved_evidence": [
+        "Sixth common unit",
+        "Legal complete rosters",
+        "Matched outcome cohorts",
+        "Emblem and item allocation"
+      ],
+      "priority_verification": true,
+      "subject": "compositions",
+      "lane": "CO4-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "compositions/lanes/co4-4/cases.md",
+      "case_heading_line": 27,
+      "research_report": "compositions/lanes/co4-4/research-report.md",
+      "source_record": "compositions/lanes/co4-4/sources.json"
+    },
+    {
+      "id": "CO4-4-C03",
+      "title": "Popular Primal cap versus observed performance",
+      "question": "TFT Codex lists several level-nine Primal Aphelios–Nidalee finishes. Is the most popular last unit also getting the best placements and win rate?",
+      "status": "grounded",
+      "origin": "Constructed resource-grounded popularity comparison",
+      "proposal_lineage": [],
+      "answer_status": "supported",
+      "source_ids": [
+        "S7",
+        "S8",
+        "S9"
+      ],
+      "comparison": {
+        "level": 9,
+        "common_roster": [
+          "Amumu",
+          "Aphelios",
+          "Nidalee",
+          "Sentinel",
+          "Diana",
+          "Kog'Maw",
+          "Vi",
+          "Varus"
+        ],
+        "alternatives": [
+          "Brambleback",
+          "Ivern",
+          "Alune"
+        ],
+        "objective": "Popularity versus observed performance"
+      },
+      "unresolved_evidence": [
+        "Conflicting panel window labels",
+        "Exact rounded counts",
+        "Investment matching",
+        "Uncertainty"
+      ],
+      "priority_verification": true,
+      "subject": "compositions",
+      "lane": "CO4-4",
+      "motivation_category": "reference_or_workflow_constructed",
+      "case_file": "compositions/lanes/co4-4/cases.md",
+      "case_heading_line": 49,
+      "research_report": "compositions/lanes/co4-4/research-report.md",
+      "source_record": "compositions/lanes/co4-4/sources.json"
+    },
+    {
+      "id": "CO4-4-C04",
+      "title": "How clear is the legendary cap ranking?",
+      "question": "The level-ten Elder Dragon–Draven options on TFT Codex look very close. Is there convincing evidence that the Alune version is better than the Lux or Soraka versions?",
+      "status": "grounded",
+      "origin": "Constructed resource-grounded close-ranking investigation",
+      "proposal_lineage": [],
+      "answer_status": "supported",
+      "source_ids": [
+        "S10",
+        "S8",
+        "S9",
+        "S11"
+      ],
+      "comparison": {
+        "level": 10,
+        "common_roster": [
+          "Draven",
+          "Elder Dragon",
+          "Ivern",
+          "Kennen",
+          "Maokai",
+          "Taric",
+          "Amumu",
+          "Sentinel"
+        ],
+        "alternatives": [
+          "Alune",
+          "Lux",
+          "Soraka"
+        ],
+        "objective": "Strength of close-ranking evidence"
+      },
+      "unresolved_evidence": [
+        "Conflicting panel window labels",
+        "Exact counts/distributions",
+        "Investment matching",
+        "Lux variant"
+      ],
+      "priority_verification": false,
+      "subject": "compositions",
+      "lane": "CO4-4",
+      "motivation_category": "reference_or_workflow_constructed",
+      "case_file": "compositions/lanes/co4-4/cases.md",
+      "case_heading_line": 79,
+      "research_report": "compositions/lanes/co4-4/research-report.md",
+      "source_record": "compositions/lanes/co4-4/sources.json"
+    },
+    {
+      "id": "TR-1-C01",
+      "title": "Ahri's Invoker dependence",
+      "question": "Do Ahri endgame boards perform well without Invoker, or are the good results mostly coming from boards where she has an Invoker emblem?",
+      "status": "provisional",
+      "origin": "Constructed adaptation of indexed Ahri dependence debate",
+      "proposal_lineage": [
+        "TR-1-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D01",
+        "D03",
+        "D04",
+        "O01",
+        "R01",
+        "R02",
+        "L01",
+        "L02",
+        "N01",
+        "W01",
+        "W02",
+        "W03",
+        "W04"
+      ],
+      "comparison": "Ahri carry boards by observed Invoker activation, tier and Ahri emblem holder",
+      "unresolved_evidence": [
+        "Matched cohorts and population shares",
+        "Exact comparable period/rank/region",
+        "Support-core and item overlap",
+        "Fully opened specific replies"
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-1",
+      "motivation_category": "partially_accessible_discussion",
+      "case_file": "traits/lanes/tr-1/cases.md",
+      "case_heading_line": 5,
+      "research_report": "traits/lanes/tr-1/research-report.md",
+      "source_record": "traits/lanes/tr-1/sources.json"
+    },
+    {
+      "id": "TR-1-C02",
+      "title": "Soraka's fourth Executioner versus Kennen",
+      "question": "Do Soraka boards with four Executioners actually finish better than the three-Executioner versions, or is that mostly because those boards also have Kennen?",
+      "status": "provisional",
+      "origin": "Constructed Soraka adaptation of Executioner/Kennen debate",
+      "proposal_lineage": [
+        "TR-1-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D02",
+        "D03",
+        "O01",
+        "R01",
+        "R02",
+        "L01",
+        "N02",
+        "W01",
+        "W02",
+        "W04"
+      ],
+      "comparison": "Soraka carry boards: three/four Executioners crossed with Kennen absent/present",
+      "unresolved_evidence": [
+        "Four conditional outcome cells",
+        "Exact comparable period/rank/region",
+        "Other fourth-unit routes and overlapping investment",
+        "Fully opened correction chain"
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-1",
+      "motivation_category": "partially_accessible_discussion",
+      "case_file": "traits/lanes/tr-1/cases.md",
+      "case_heading_line": 40,
+      "research_report": "traits/lanes/tr-1/research-report.md",
+      "source_record": "traits/lanes/tr-1/sources.json"
+    },
+    {
+      "id": "TR-1-C03",
+      "title": "Did Cassiopeia become less tied to six Defender?",
+      "question": "After the 18.3 buffs to Cassiopeia and her tanks, did her endgame boards get better outside six Defender, or is six Defender still carrying her results?",
+      "status": "provisional",
+      "origin": "New synthesis of opened dependence and patch-response debates",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D03",
+        "D05",
+        "O01",
+        "R01",
+        "L01",
+        "N03",
+        "W01",
+        "W02",
+        "W04"
+      ],
+      "comparison": "Cassio carry boards: within-Defender-tier pre/post 18.3 outcomes and package shares",
+      "unresolved_evidence": [
+        "Compatible pre/post tier outcomes",
+        "Matched carry and frontline investment",
+        "Package shares and uncertainty"
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-1",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-1/cases.md",
+      "case_heading_line": 77,
+      "research_report": "traits/lanes/tr-1/research-report.md",
+      "source_record": "traits/lanes/tr-1/sources.json"
+    },
+    {
+      "id": "TR-2-C01",
+      "title": "Does Elderwood seven earn two slots?",
+      "question": "For an Ezreal board, what am I really getting by going from 5 to 7 Elderwood? Is the extra plant worth replacing Shen and Taric with Xayah and LeBlanc, or am I giving up too much useful frontline?",
+      "status": "provisional",
+      "origin": "Adapted Ezreal discussion need; exact package retained from approved proposal.",
+      "proposal_lineage": [
+        "TR-2-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "R1",
+        "O1",
+        "W1",
+        "W2",
+        "W3"
+      ],
+      "comparison": "Eight units: Ornn, Alistar, Hecarim, Ezreal, Gnar, Kennen plus Shen/Taric versus Xayah/LeBlanc.",
+      "unresolved_evidence": [
+        "Matched exact-package counts/outcomes",
+        "Comparable Elderwood stars and item allocation",
+        "Emblem exclusion and population scope"
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-2/cases.md",
+      "case_heading_line": 5,
+      "research_report": "traits/lanes/tr-2/research-report.md",
+      "source_record": "traits/lanes/tr-2/sources.json"
+    },
+    {
+      "id": "TR-2-C02",
+      "title": "Inferno splash versus Executioner",
+      "question": "Can Inferno Lux be worth a slot just for the 2 Inferno splash? On this Ezreal board I'd have to drop Kennen and lose Executioner.",
+      "status": "provisional",
+      "origin": "Approved constructed Ezreal substitution motivated by Lux slot-value discussion.",
+      "proposal_lineage": [
+        "TR-2-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "D3",
+        "R1",
+        "W1",
+        "W4"
+      ],
+      "comparison": "Eight units: Ornn, Alistar, Hecarim, Ezreal, Gnar, Alune, Taric plus Kennen1 versus confirmed Inferno Lux1.",
+      "unresolved_evidence": [
+        "Validated historical Lux-form encoding",
+        "Matched support-star and carry-item cohorts",
+        "Player roster ambiguity and counts"
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-2/cases.md",
+      "case_heading_line": 32,
+      "research_report": "traits/lanes/tr-2/research-report.md",
+      "source_record": "traits/lanes/tr-2/sources.json"
+    },
+    {
+      "id": "TR-2-C03",
+      "title": "Solar compression after five three-stars",
+      "question": "For finished Akali–Camille reroll boards with Akali, Camille, Varus, Leona and Ornn all three-star, do Solar Lux plus Maokai outperform keeping two-star Kayle and Sejuani, or is the apparent upgrade just richer boards doing better?",
+      "status": "provisional",
+      "origin": "New adaptation of independently opened Solar rebuttals and Avatar replies.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "D4",
+        "R1",
+        "O1",
+        "W1"
+      ],
+      "comparison": "Eight units share Akali3, Camille3, Varus3, Leona3, Ornn3, Taric1; Kayle2/Sejuani2 versus Solar Lux1/Maokai1.",
+      "unresolved_evidence": [
+        "Form-resolved package outcomes",
+        "Artifact and item overlap",
+        "Persistent stacks and survivorship"
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-2/cases.md",
+      "case_heading_line": 59,
+      "research_report": "traits/lanes/tr-2/research-report.md",
+      "source_record": "traits/lanes/tr-2/sources.json"
+    },
+    {
+      "id": "TR-2-C04",
+      "title": "Eclipse without reroll investment",
+      "question": "On nine-unit Lunar endboards with no three-star units, does spending two slots on Solar Lux and Sejuani for Eclipse beat using Taric and Maokai instead?",
+      "status": "provisional",
+      "origin": "New adaptation of Eclipse-versus-Solar disagreement; exact packages constructed.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "D4",
+        "R1",
+        "W1"
+      ],
+      "comparison": "Nine units share Alune1, Aphelios2, Diana2, Amumu2, Shen2, Kennen1, Gnar2; Solar Lux1/Sejuani2 versus Taric1/Maokai1.",
+      "unresolved_evidence": [
+        "Verified Eclipse and Solar Lux representation",
+        "Matched nine-unit outcomes",
+        "Persistent Maokai investment"
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-2/cases.md",
+      "case_heading_line": 86,
+      "research_report": "traits/lanes/tr-2/research-report.md",
+      "source_record": "traits/lanes/tr-2/sources.json"
+    },
+    {
+      "id": "TR-2-C05",
+      "title": "Keeping seven Inferno on finished boards",
+      "question": "For completed nine-unit Inferno Lux boards, is keeping seven Inferno actually better than five with Taric and Maokai, when the units removed are unitemized two-star Akali and Varus?",
+      "status": "provisional",
+      "origin": "New adaptation of seven-to-five reply and disagreement about vertical strength.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "R1",
+        "O1",
+        "W1",
+        "W2"
+      ],
+      "comparison": "Nine units share Shen2, Amumu2, Kennen2, Inferno Lux2, Alune1, Ezreal2, Gnar2; Akali2/Varus2 versus Taric1/Maokai1.",
+      "unresolved_evidence": [
+        "Post-change matched samples",
+        "Lux2 carry/support-item strata",
+        "Prior economic value is not recoverable from endboards"
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-2/cases.md",
+      "case_heading_line": 113,
+      "research_report": "traits/lanes/tr-2/research-report.md",
+      "source_record": "traits/lanes/tr-2/sources.json"
+    },
+    {
+      "id": "TR-2-C06",
+      "title": "Fae four with compressed support slots",
+      "question": "For three-star Tristana endboards with a Fae emblem on Sett, does replacing two-star Rakan and Xayah with one-star Fae Lux and Taric improve results while keeping four Fae? Does that still hold when Rakan and Xayah are both three-star?",
+      "status": "provisional",
+      "origin": "New adaptation of Fae compression claim and its three-star exception; Sett anchor constructed.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "R1",
+        "W1"
+      ],
+      "comparison": "Eight units share Tristana3, Rammus2, Kobuko2, Veigar2, Gnar2, Sett2 with Fae emblem; Rakan2/Xayah2 versus Fae Lux1/Taric1. Separate Rakan3/Xayah3 retention stratum.",
+      "unresolved_evidence": [
+        "Form/emblem-resolved outcomes",
+        "Separate support-star cohorts",
+        "Unknown Pixie stacks and duration"
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-2",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-2/cases.md",
+      "case_heading_line": 140,
+      "research_report": "traits/lanes/tr-2/research-report.md",
+      "source_record": "traits/lanes/tr-2/sources.json"
+    },
+    {
+      "id": "TR-3-C01",
+      "title": "Defender Cassiopeia: competing emblem holders",
+      "question": "In Defender Cassiopeia boards, do Rengar or Kha’Zix versions actually finish better when they hold the Defender emblem?",
+      "status": "disputed",
+      "origin": "Approved discussion-and-guide synthesis; conflicting holder experiences.",
+      "proposal_lineage": [
+        "TR-3-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S02",
+        "S03",
+        "S12"
+      ],
+      "comparison": "Six-Defender Cassiopeia/Fiddlesticks endgames with one Defender emblem on Rengar versus Kha’Zix.",
+      "unresolved_evidence": [
+        "Matched final-board outcomes and counts",
+        "Holder and carry stars, other holder items and tank investment",
+        "Kha’Zix evolution coverage",
+        "Single verified post-change ranked window"
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-3/cases.md",
+      "case_heading_line": 5,
+      "research_report": "traits/lanes/tr-3/research-report.md",
+      "source_record": "traits/lanes/tr-3/sources.json"
+    },
+    {
+      "id": "TR-3-C02",
+      "title": "Hunter Camille and Caitlyn as an alternative",
+      "question": "Is Hunter-emblem Camille with Caitlyn a real alternative to Nidalee/Sivir, or does that board mostly fall short?",
+      "status": "provisional",
+      "origin": "Approved adaptation; exact motivating Hunter reply remains search-visible only.",
+      "proposal_lineage": [
+        "TR-3-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S12"
+      ],
+      "comparison": "Hunter emblem on Camille with Caitlyn, initially four Vanguard/three Coven, versus Hunter emblem on Nidalee with Sivir.",
+      "unresolved_evidence": [
+        "Independently opened exact motivating reply",
+        "Camille+Caitlyn and Nidalee+Sivir board-linked outcomes",
+        "Matched Hunter tier, stars, investment and recent subpatch",
+        "Named servers and rank for TopMeta"
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-3",
+      "motivation_category": "partially_accessible_discussion",
+      "case_file": "traits/lanes/tr-3/cases.md",
+      "case_heading_line": 23,
+      "research_report": "traits/lanes/tr-3/research-report.md",
+      "source_record": "traits/lanes/tr-3/sources.json"
+    },
+    {
+      "id": "TR-3-C04",
+      "title": "Brawler Yi without artifact dependence",
+      "question": "Can Brawler-emblem Master Yi boards finish reliably with normal items, or is their reputation mostly coming from artifact games?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of opened conditional-line discussion and a named Brawler Yi build row.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S01",
+        "S07",
+        "S11",
+        "S13",
+        "S03"
+      ],
+      "comparison": "Brawler emblem on Master Yi with two ordinary items versus artifact-supported Brawler Yi, plus comparable no-emblem Yi packages.",
+      "unresolved_evidence": [
+        "Artifact-free whole-board cohorts",
+        "Comparable Yi/Vi/Rengar and Nidalee support variants",
+        "Exact patch, rank and region for Noxu",
+        "Count and star-label reliability"
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-3/cases.md",
+      "case_heading_line": 41,
+      "research_report": "traits/lanes/tr-3/research-report.md",
+      "source_record": "traits/lanes/tr-3/sources.json"
+    },
+    {
+      "id": "TR-3-C05",
+      "title": "Inferno Kha’Zix and the freed Akali slot",
+      "question": "In five-Inferno Kha’Zix endgames, does putting Inferno emblem on Kha’Zix and replacing Akali actually improve the final board?",
+      "status": "provisional",
+      "origin": "Adaptation of an opened explicit roster-compression suggestion, recast as endgame analysis.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "S07",
+        "S03",
+        "S14"
+      ],
+      "comparison": "Equal-size five-Inferno Kha’Zix/Fiddlesticks endgames: Akali plus an ordinary Kha’Zix third item versus Inferno-emblem Kha’Zix plus an observed replacement.",
+      "unresolved_evidence": [
+        "Complete legal fixed-size rosters and exact replacement identity",
+        "Five-Inferno holder-linked outcomes",
+        "Lost third-item value versus replacement value",
+        "Kha’Zix choices and subpatch"
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-3",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-3/cases.md",
+      "case_heading_line": 59,
+      "research_report": "traits/lanes/tr-3/research-report.md",
+      "source_record": "traits/lanes/tr-3/sources.json"
+    },
+    {
+      "id": "TR-4-C01",
+      "title": "Six Juggernaut supporting packages",
+      "question": "Is six Juggernaut really as flexible as people say, or do the Hunter/Primal and Summoner versions perform differently?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of an opened AD-backline question and conflicting replies.",
+      "proposal_lineage": [
+        "TR-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "M1",
+        "M2",
+        "T1",
+        "T2",
+        "S1",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Exactly six active Juggernaut: Hunter/Primal only, Summoner only, both, and neither, at comparable carry and tank investment.",
+      "unresolved_evidence": [
+        "No joint exactly-six-Juggernaut package cohorts.",
+        "Variant panel periods and denominators are unaligned.",
+        "Primal blessing, Alpha Mark and permanent stacks not assumed observed."
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-4/cases.md",
+      "case_heading_line": 5,
+      "research_report": "traits/lanes/tr-4/research-report.md",
+      "source_record": "traits/lanes/tr-4/sources.json"
+    },
+    {
+      "id": "TR-4-C02",
+      "title": "Eclipse interaction across carry families",
+      "question": "Does Eclipse perform differently on upgraded Solar boards built around Kayle than on Lunar boards built around Aphelios?",
+      "status": "provisional",
+      "origin": "Adaptation of an opened Eclipse viability discussion, its cross-family reply and correction to a proposed five-three-star board.",
+      "proposal_lineage": [
+        "TR-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "M1",
+        "M2",
+        "T2",
+        "S2",
+        "S3",
+        "R1",
+        "R2"
+      ],
+      "comparison": "With/without Eclipse separately within Kayle/Solar and Aphelios/Lunar; compare those associations across unique-three-star count.",
+      "unresolved_evidence": [
+        "Both within-family with/without cohorts and upgrade-depth intersections missing.",
+        "Solar Kayle Lunar title does not establish Eclipse activation.",
+        "Lux encoding and stale or undefined statistical windows unresolved."
+      ],
+      "priority_verification": true,
+      "subject": "traits",
+      "lane": "TR-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-4/cases.md",
+      "case_heading_line": 33,
+      "research_report": "traits/lanes/tr-4/research-report.md",
+      "source_record": "traits/lanes/tr-4/sources.json"
+    },
+    {
+      "id": "TR-4-C03",
+      "title": "Mama Beak carry versus trait passenger",
+      "question": "When Mama Beak is actually the carry, do three-Summoner boards with a small Riftbeast package outperform the vertical Riftbeast versions?",
+      "status": "provisional",
+      "origin": "Constructed final-board comparison from an opened Mama Beak Summoner claim and replies disputing whether vertical Riftbeast keeps her.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "M3",
+        "S4",
+        "R1"
+      ],
+      "comparison": "Itemized Mama Beak with three Summoner and three Riftbeast versus itemized Mama Beak at higher Riftbeast tiers; separate hybrid and passenger cohorts.",
+      "unresolved_evidence": [
+        "No itemized-Mama-Beak joint package outcomes.",
+        "Alpha Mark recipient unavailable.",
+        "Target comp links failed; pooled trait rows are not carry-package cohorts."
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-4/cases.md",
+      "case_heading_line": 61,
+      "research_report": "traits/lanes/tr-4/research-report.md",
+      "source_record": "traits/lanes/tr-4/sources.json"
+    },
+    {
+      "id": "TR-4-C04",
+      "title": "Azir and Zyra support-package tradeoff",
+      "question": "On boards carrying Azir and Zyra together, is the Blackthorn/Brawler package worth more than keeping Juggernaut frontline and extra Executioner support?",
+      "status": "provisional",
+      "origin": "Adaptation of an opened request to explain Azir/Zyra and a reply proposing Blackthorn/Brawler support.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "D4",
+        "S5",
+        "R1",
+        "R2",
+        "M1"
+      ],
+      "comparison": "Itemized Azir+Zyra with Summoner active: Blackthorn/Brawler-oriented versus Juggernaut/Executioner-oriented support, hybrids separate.",
+      "unresolved_evidence": [
+        "No joint dual-carry-role by supporting-package outcomes.",
+        "Sacrifice choice cannot be inferred from final board.",
+        "Available Malphite/Soraka cluster is not Azir/Zyra carry evidence."
+      ],
+      "priority_verification": false,
+      "subject": "traits",
+      "lane": "TR-4",
+      "motivation_category": "opened_discussion_adaptation_or_synthesis",
+      "case_file": "traits/lanes/tr-4/cases.md",
+      "case_heading_line": 89,
+      "research_report": "traits/lanes/tr-4/research-report.md",
+      "source_record": "traits/lanes/tr-4/sources.json"
+    }
+  ],
+  "evidence_notes": "Lane research-report.md files contain only evidence and limitations relevant to retained cases.",
+  "scope_document": "scope.md",
+  "proposal_lineage_catalog": "proposal-lineage.json",
+  "cleanup_updated_utc": "2026-09-29T14:36:52.611806+00:00"
+}

@@ -1,0 +1,765 @@
+{
+  "lane": "IT-2",
+  "stage": "case-drafting",
+  "case_ids": [
+    "IT-2-C01",
+    "IT-2-C02",
+    "IT-2-C03"
+  ],
+  "sources": [
+    {
+      "id": "D1",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1wlpjb8/meta_tft_make_you_naturally_play_worst/",
+      "title": "Meta TFT make you naturally play worst",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "IT-2-C01"
+      ],
+      "observations": [
+        "Author describes narrowing around BIS; replies report opposite experiences and shared-item flexibility, including Ezreal/Shojin."
+      ],
+      "limitations": [
+        "Motivation only; exact three-holder comparison constructed; explicit Double Up reply excluded; other commenters queue unverified; relative date not converted."
+      ],
+      "patch_scope": "Set 18 context; exact patch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "D2",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wn4m6a/how_would_you_itemize_these_3_carries_with_these/",
+      "title": "How would you itemize these 3 carries with these items?",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "IT-2-C02",
+        "IT-2-C03"
+      ],
+      "observations": [
+        "Replies disagree about carry priority and Helm allocation. Author revises preference after frontline upgrade, but lacks removers."
+      ],
+      "limitations": [
+        "Exact Azir/Malphite case is constructed; screenshot not inspected; queue unverified; opinions are not outcomes."
+      ],
+      "patch_scope": "Set 18 context; exact patch unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "D3",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "title": "18.3 Patch Notes",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "counterevidence motivation"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Opened Azir discussion and replies: low placement claims challenged by star, item investment, secondary-carry role and sample questions."
+      ],
+      "limitations": [
+        "Conflicting claimed averages are not validated cohorts; no allocation winner inferred."
+      ],
+      "patch_scope": "Discussion of 18.3 changes, prior-data window unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "T1",
+      "url": "https://tactics.tools/units/da_18_ezreal/all",
+      "title": "Ezreal statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow",
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C01"
+      ],
+      "observations": [
+        "Readable overview and Items/Item Pairs/Item Trios/Units/Traits controls."
+      ],
+      "limitations": [
+        "No controls activated; flattened item and synergy labels do not safely identify exact-build outcome rows; not joint-board evidence; route suffix does not override visible filter."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "mode_display": "Ranked",
+        "rank_display": "Diamond+",
+        "stars_display": "Any",
+        "patch": "18.3b",
+        "region": null,
+        "period": null,
+        "exact_cohort_count": null,
+        "exact_cohort_outcomes": null,
+        "adjusted_placement_definition": null,
+        "overview": {
+          "games_display": "227k",
+          "average_placement": 4.38,
+          "top_four_pct": 51.6,
+          "win_pct": 14.6
+        }
+      }
+    },
+    {
+      "id": "T2",
+      "url": "https://tactics.tools/units/da_18_sivir",
+      "title": "Sivir statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow",
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C01",
+        "IT-2-C03"
+      ],
+      "observations": [
+        "Readable overview and Items/Item Pairs/Item Trios/Units/Traits controls."
+      ],
+      "limitations": [
+        "No controls activated; flattened item and synergy labels do not safely identify exact-build outcome rows; not joint-board evidence; route suffix does not override visible filter."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "mode_display": "Ranked",
+        "rank_display": "Diamond+",
+        "stars_display": "Any",
+        "patch": "18.3b",
+        "region": null,
+        "period": null,
+        "exact_cohort_count": null,
+        "exact_cohort_outcomes": null,
+        "adjusted_placement_definition": null
+      }
+    },
+    {
+      "id": "T3",
+      "url": "https://tactics.tools/units/da_18_yunara/all",
+      "title": "Yunara statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow",
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C01"
+      ],
+      "observations": [
+        "Readable overview and Items/Item Pairs/Item Trios/Units/Traits controls."
+      ],
+      "limitations": [
+        "No controls activated; flattened item and synergy labels do not safely identify exact-build outcome rows; not joint-board evidence; route suffix does not override visible filter."
+      ],
+      "patch_scope": "18.2b",
+      "statistical_metadata": {
+        "mode_display": "Ranked",
+        "rank_display": "Diamond+",
+        "stars_display": "Any",
+        "patch": "18.2b",
+        "region": null,
+        "period": null,
+        "exact_cohort_count": null,
+        "exact_cohort_outcomes": null,
+        "adjusted_placement_definition": null
+      }
+    },
+    {
+      "id": "T4",
+      "url": "https://tactics.tools/units/da_18_azir",
+      "title": "Azir statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow",
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Readable overview and Items/Item Pairs/Item Trios/Units/Traits controls."
+      ],
+      "limitations": [
+        "No controls activated; flattened item and synergy labels do not safely identify exact-build outcome rows; not joint-board evidence; route suffix does not override visible filter."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "mode_display": "Ranked",
+        "rank_display": "Diamond+",
+        "stars_display": "Any",
+        "patch": "18.3b",
+        "region": null,
+        "period": null,
+        "exact_cohort_count": null,
+        "exact_cohort_outcomes": null,
+        "adjusted_placement_definition": null,
+        "overview": {
+          "games_display": "136k",
+          "average_placement": 4.55,
+          "top_four_pct": 49.5,
+          "win_pct": 10.5
+        }
+      }
+    },
+    {
+      "id": "T5",
+      "url": "https://tactics.tools/units/da_18_malphite/all",
+      "title": "Malphite statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow",
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Readable overview and Items/Item Pairs/Item Trios/Units/Traits controls."
+      ],
+      "limitations": [
+        "No controls activated; flattened item and synergy labels do not safely identify exact-build outcome rows; not joint-board evidence; route suffix does not override visible filter."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "mode_display": "Ranked",
+        "rank_display": "Diamond+",
+        "stars_display": "Any",
+        "patch": "18.3b",
+        "region": null,
+        "period": null,
+        "exact_cohort_count": null,
+        "exact_cohort_outcomes": null,
+        "adjusted_placement_definition": null
+      }
+    },
+    {
+      "id": "T6",
+      "url": "https://tactics.tools/units/da_18_malphite",
+      "title": "Malphite statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow",
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Readable overview and Items/Item Pairs/Item Trios/Units/Traits controls."
+      ],
+      "limitations": [
+        "No controls activated; flattened item and synergy labels do not safely identify exact-build outcome rows; not joint-board evidence; route suffix does not override visible filter."
+      ],
+      "patch_scope": "18.3",
+      "statistical_metadata": {
+        "mode_display": "Ranked",
+        "rank_display": "Diamond+",
+        "stars_display": "Any",
+        "patch": "18.3",
+        "region": null,
+        "period": null,
+        "exact_cohort_count": null,
+        "exact_cohort_outcomes": null,
+        "adjusted_placement_definition": null
+      }
+    },
+    {
+      "id": "T7",
+      "url": "https://tactics.tools/units/da_18_yunara/plat",
+      "title": "Yunara statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "workflow",
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C01"
+      ],
+      "observations": [
+        "Readable overview and Items/Item Pairs/Item Trios/Units/Traits controls."
+      ],
+      "limitations": [
+        "No controls activated; flattened item and synergy labels do not safely identify exact-build outcome rows; not joint-board evidence; route suffix does not override visible filter."
+      ],
+      "patch_scope": "18.2b",
+      "statistical_metadata": {
+        "mode_display": "Ranked",
+        "rank_display": "Diamond+",
+        "stars_display": "Any",
+        "patch": "18.2b",
+        "region": null,
+        "period": null,
+        "exact_cohort_count": null,
+        "exact_cohort_outcomes": null,
+        "adjusted_placement_definition": null,
+        "overview": {
+          "games_display": "6.0k",
+          "average_placement": 4.86,
+          "top_four_pct": 43.4,
+          "win_pct": 9.65
+        }
+      }
+    },
+    {
+      "id": "T8",
+      "url": "https://tactics.tools/units/da_18_yunara",
+      "title": "Yunara base route",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Internal Error from web open",
+      "roles": [
+        "access attempt"
+      ],
+      "case_ids": [
+        "IT-2-C01"
+      ],
+      "observations": [],
+      "limitations": [
+        "No data returned."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "U1",
+      "url": "https://tactics.tools/info/units",
+      "title": "Set 18 units",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "entity verification"
+      ],
+      "case_ids": [
+        "IT-2-C01",
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Set 18 roster inspected; Sivir listed Primal/Hunter, cost four."
+      ],
+      "limitations": [
+        "Entity context only; not exact-build outcome evidence."
+      ],
+      "patch_scope": "Set 18",
+      "statistical_metadata": null
+    },
+    {
+      "id": "N1",
+      "url": "https://noxutft.com/tft-champions/ezreal",
+      "title": "Ezreal complete-build table",
+      "source_date": "2026-09-25",
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "exploratory outcome evidence",
+        "entity context"
+      ],
+      "case_ids": [
+        "IT-2-C01"
+      ],
+      "observations": [
+        "Named complete-build rows and composition labels readable; Elderwood/Executioner."
+      ],
+      "limitations": [
+        "None of displayed builds equals approved inventory; update date is not collection window; star-conditioned and joint allocations absent."
+      ],
+      "patch_scope": "Set 18; exact patch unstated",
+      "statistical_metadata": {
+        "mode_statement": "ranked",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "patch": null,
+        "stars": null,
+        "row_fields": [
+          "item1",
+          "item2",
+          "item3",
+          "comp_label",
+          "average_placement",
+          "games_display"
+        ],
+        "inspected_rows": [
+          [
+            "Deathblade",
+            "Last Whisper",
+            "Spear of Shojin",
+            "Executioner Sett",
+            4.19,
+            "1.7k"
+          ],
+          [
+            "Last Whisper",
+            "Spear of Shojin",
+            "Striker's Flail",
+            "Executioner Draven",
+            3.72,
+            "807"
+          ]
+        ],
+        "exact_approved_build_present": false
+      }
+    },
+    {
+      "id": "N2",
+      "url": "https://noxutft.com/tft-champions/sivir",
+      "title": "Sivir complete-build table",
+      "source_date": "2026-09-27",
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "exploratory outcome evidence",
+        "entity context"
+      ],
+      "case_ids": [
+        "IT-2-C01",
+        "IT-2-C03"
+      ],
+      "observations": [
+        "Named complete-build rows and composition labels readable; Primal/Hunter."
+      ],
+      "limitations": [
+        "None of displayed builds equals approved inventory; update date is not collection window; star-conditioned and joint allocations absent."
+      ],
+      "patch_scope": "Set 18; exact patch unstated",
+      "statistical_metadata": {
+        "mode_statement": "ranked",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "patch": null,
+        "stars": null,
+        "row_fields": [
+          "item1",
+          "item2",
+          "item3",
+          "comp_label",
+          "average_placement",
+          "games_display"
+        ],
+        "inspected_rows": [
+          [
+            "Infinity Edge",
+            "Red Buff",
+            "Striker's Flail",
+            "Hunter Nidalee",
+            4.07,
+            "3.1k"
+          ],
+          [
+            "Infinity Edge",
+            "Spear of Shojin",
+            "Striker's Flail",
+            "Juggernaut Ashe",
+            3.73,
+            "1.8k"
+          ]
+        ],
+        "exact_approved_build_present": false
+      }
+    },
+    {
+      "id": "N3",
+      "url": "https://noxutft.com/tft-champions/yunara",
+      "title": "Yunara complete-build table",
+      "source_date": "2026-09-23",
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "exploratory outcome evidence",
+        "entity context"
+      ],
+      "case_ids": [
+        "IT-2-C01"
+      ],
+      "observations": [
+        "Named complete-build rows and composition labels readable; Blossom/Executioner; cost two."
+      ],
+      "limitations": [
+        "None of displayed builds equals approved inventory; update date is not collection window; star-conditioned and joint allocations absent."
+      ],
+      "patch_scope": "Set 18; exact patch unstated",
+      "statistical_metadata": {
+        "mode_statement": "ranked",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "patch": null,
+        "stars": null,
+        "row_fields": [
+          "item1",
+          "item2",
+          "item3",
+          "comp_label",
+          "average_placement",
+          "games_display"
+        ],
+        "inspected_rows": [
+          [
+            "Deathblade",
+            "Spear of Shojin",
+            "Striker's Flail",
+            "Executioner Sejuani",
+            4.44,
+            "506"
+          ],
+          [
+            "Blue Buff",
+            "Deathblade",
+            "Last Whisper",
+            "Executioner Yunara",
+            4.0,
+            "14"
+          ]
+        ],
+        "exact_approved_build_present": false
+      }
+    },
+    {
+      "id": "N4",
+      "url": "https://noxutft.com/tft-champions/azir",
+      "title": "Azir complete-build table",
+      "source_date": "2026-09-24",
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "exploratory outcome evidence",
+        "entity context"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Named complete-build rows and composition labels readable; Blackthorn/Executioner/Summoner."
+      ],
+      "limitations": [
+        "None of displayed builds equals approved inventory; update date is not collection window; star-conditioned and joint allocations absent."
+      ],
+      "patch_scope": "Set 18; exact patch unstated",
+      "statistical_metadata": {
+        "mode_statement": "ranked",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "patch": null,
+        "stars": null,
+        "row_fields": [
+          "item1",
+          "item2",
+          "item3",
+          "comp_label",
+          "average_placement",
+          "games_display"
+        ],
+        "inspected_rows": [
+          [
+            "Hextech Gunblade",
+            "Rabadon's Deathcap",
+            "Rabadon's Deathcap",
+            "Executioner Azir",
+            3.91,
+            "480"
+          ],
+          [
+            "Giant Slayer",
+            "Jeweled Gauntlet",
+            "Striker's Flail",
+            "Blackthorn Azir",
+            2.73,
+            "11"
+          ]
+        ],
+        "exact_approved_build_present": false
+      }
+    },
+    {
+      "id": "N5",
+      "url": "https://noxutft.com/tft-champions/malphite",
+      "title": "Malphite complete-build attempt",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Internal Error from web open",
+      "roles": [
+        "access attempt"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [],
+      "limitations": [
+        "No readable data."
+      ],
+      "patch_scope": "Unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S1",
+      "url": "https://seemeta.com/en/tft/champions/Azir",
+      "title": "Azir legacy route",
+      "source_date": "2026-08-29",
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "scope verification"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Redirected to set-18/champions/Azir; old snapshot."
+      ],
+      "limitations": [
+        "Build and item labels absent from extracted rows; not allocation evidence."
+      ],
+      "patch_scope": "18.1",
+      "statistical_metadata": {
+        "updated": "2026-08-29",
+        "games": 1106,
+        "average_placement": 4.81,
+        "top_four_pct": 44.3,
+        "win_pct": 8.97,
+        "rank": null,
+        "region": null,
+        "period": null
+      }
+    },
+    {
+      "id": "S2",
+      "url": "https://seemeta.com/en/tft/set-18/champion-items/Azir/singles",
+      "title": "Azir named single-item rows",
+      "source_date": "2026-09-26",
+      "retrieved_at_utc": "2026-09-29T08:34:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "exploratory outcome evidence"
+      ],
+      "case_ids": [
+        "IT-2-C02"
+      ],
+      "observations": [
+        "Following View All returned a newer snapshot, redirected to set-18/champions/Azir. Adaptive Helm marginal is readable."
+      ],
+      "limitations": [
+        "18.3 subpatch unknown; no three-star restriction, fixed companion items or Malphite allocation; item count unavailable; pick-rate denominator not verified; not causal."
+      ],
+      "patch_scope": "18.3",
+      "statistical_metadata": {
+        "updated": "2026-09-26",
+        "unit_games": 14627,
+        "rank": null,
+        "region": "Across regions per site, specific selection unknown",
+        "period": null,
+        "mode_statement": "ranked per site",
+        "stars": null,
+        "item": "Adaptive Helm",
+        "average_placement": 4.17,
+        "top_four_pct": 58.7,
+        "win_pct": 13.77,
+        "pick_rate_pct": 0.9,
+        "item_sample_count": null,
+        "joint_allocation_count": null
+      }
+    },
+    {
+      "id": "T9",
+      "url": "https://tactics.tools/units/da_18_ashe/all",
+      "title": "Ashe statistics",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:40:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "exploratory evidence"
+      ],
+      "case_ids": [
+        "IT-2-C03"
+      ],
+      "observations": [
+        "18.3b unit page opened."
+      ],
+      "limitations": [
+        "No joint allocation queried or verified."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_metadata": {
+        "exact_joint_count": null,
+        "exact_joint_outcomes": null
+      }
+    },
+    {
+      "id": "N6",
+      "url": "https://noxutft.com/tft-champions/ashe",
+      "title": "Ashe named complete-build rows",
+      "source_date": "2026-09-26",
+      "retrieved_at_utc": "2026-09-29T08:40:00Z",
+      "access_status": "Opened readable text",
+      "roles": [
+        "exploratory evidence"
+      ],
+      "case_ids": [
+        "IT-2-C03"
+      ],
+      "observations": [
+        "Ashe Shojin/Red Buff/Last Whisper appears under two Juggernaut comp labels."
+      ],
+      "limitations": [
+        "No Sivir item restriction, stars, exact patch, rank, region or collection window."
+      ],
+      "patch_scope": "Set 18; exact patch unknown",
+      "statistical_metadata": {
+        "mode_statement": "ranked",
+        "update_date": "2026-09-26",
+        "stars": null,
+        "rank": null,
+        "region": null,
+        "period": null,
+        "rows": [
+          {
+            "items": [
+              "Last Whisper",
+              "Red Buff",
+              "Spear of Shojin"
+            ],
+            "comp": "Juggernaut Ashe",
+            "average_placement": 3.36,
+            "games_display": "6.1k"
+          },
+          {
+            "items": [
+              "Last Whisper",
+              "Red Buff",
+              "Spear of Shojin"
+            ],
+            "comp": "Juggernaut Sivir",
+            "average_placement": 3.12,
+            "games_display": "1.1k"
+          }
+        ],
+        "joint_count": null
+      }
+    }
+  ]
+}

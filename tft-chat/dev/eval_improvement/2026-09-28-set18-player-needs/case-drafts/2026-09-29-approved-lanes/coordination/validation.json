@@ -1,0 +1,87 @@
+{
+  "validated_utc": "2026-09-29T14:41:31.356971+00:00",
+  "status": "passed",
+  "scope": "Final deliverable integrity and cleanup boundaries; no new gameplay validation.",
+  "counts": {
+    "total_cases": 69,
+    "by_subject": {
+      "items": 17,
+      "units": 17,
+      "compositions": 18,
+      "traits": 17
+    },
+    "by_status": {
+      "provisional": 60,
+      "disputed": 7,
+      "grounded": 2
+    },
+    "by_answer_status": {
+      "incomplete": 67,
+      "supported": 2
+    },
+    "by_motivation_category": {
+      "opened_discussion_adaptation_or_synthesis": 56,
+      "reference_or_workflow_constructed": 6,
+      "partially_accessible_discussion": 7
+    },
+    "cases_with_approved_lineage": 37,
+    "cases_without_approved_lineage": 32,
+    "unique_approved_proposals_covered": 32,
+    "independently_checked_cases": 32
+  },
+  "retained_files": 78,
+  "original_files": 294,
+  "original_files_deleted": 218,
+  "necessary_new_files": 2,
+  "protected_case_and_lane_index_files_unchanged": 32,
+  "retained_source_records": 234,
+  "unused_source_records_removed": 45,
+  "retained_source_records_identical_to_precleanup": true,
+  "sources_used_only_in_evidence_notes": [
+    {
+      "lane": "UN4-2",
+      "source_id": "S05",
+      "used_in": "research-report.md"
+    },
+    {
+      "lane": "UN4-2",
+      "source_id": "S06",
+      "used_in": "research-report.md"
+    },
+    {
+      "lane": "UN4-3",
+      "source_id": "X8",
+      "used_in": "research-report.md"
+    }
+  ],
+  "local_links_checked": 276,
+  "reachable_retained_files": 78,
+  "source_checks_cases": 32,
+  "external_links_present": 147,
+  "outside_existing_nonignored_paths_checked": 719,
+  "outside_paths_missing": [],
+  "all_retained_files_markdown_or_json": true,
+  "errors": [],
+  "limits": [
+    "No web refresh or new answer verification during cleanup.",
+    "Final case texts and lane indexes are preserved byte-for-byte.",
+    "Two descriptive snapshot answers supported; 67 decisive answers still incomplete.",
+    "Outside-boundary deletion check covers the preexisting nonignored repository file inventory."
+  ],
+  "independent_cleanup_audit": "passed with no remaining findings",
+  "cleanup_agent_settings": {
+    "model": "gpt-6-luna",
+    "reasoning_effort": "high",
+    "cleanup_workers": 3,
+    "independent_reviewer": 1
+  },
+  "deletion_audit": {
+    "original_file_deletions_reviewed": 218,
+    "historical_files": 195,
+    "superseded_lane_assignments": 16,
+    "obsolete_shared_process_files": 7,
+    "all_deletions_accounted_for": true,
+    "unrelated_deletions_found": 0
+  },
+  "temporary_review_material_removed": true
+}

@@ -1,0 +1,306 @@
+{
+  "lane": "CO4-1",
+  "stage": "case-drafting",
+  "case_ids": [
+    "CO4-1-C01",
+    "CO4-1-C02",
+    "CO4-1-C03"
+  ],
+  "retrieval_note": "Timestamp is an observed UTC checkpoint during research, not individual HTTP timestamps.",
+  "sources": [
+    {
+      "id": "S1",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1wiq7dv/which_patch_182_comps_are_flexible_enough_to/",
+      "title": "Which Patch 18.2 comps are flexible enough to force/play in almost every game right now?",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_post_and_visible_replies",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C02"
+      ],
+      "observations": [
+        "Opened author AP follow-up and visible replies naming Soraka/Zyra, Ahri and Veigar alternatives. Veigar advice introduces several three-stars and artifacts. Separate success report attracts rank/items question."
+      ],
+      "limitations": [
+        "Motivation only; not current strength. Relative ages do not establish date. More-reply expansion returned Internal Error. Routes and forceability excluded from cases."
+      ],
+      "patch_scope": "18.2",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S2",
+      "url": "https://www.reddit.com/r/CompetitiveTFT/comments/1wnh3gt/183_patch_notes/",
+      "title": "18.3 Patch Notes",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_post_and_visible_replies",
+      "roles": [
+        "motivation",
+        "disputed_claim"
+      ],
+      "case_ids": [
+        "CO4-1-C02",
+        "CO4-1-C03"
+      ],
+      "observations": [
+        "AP scarcity and Veigar artifact dependence/top-four disagreement. Azir-three corrected after trait-bot reply; zero versus three item comparisons challenged by three-item Azir/zero-item Kha counterexample and sample-size question."
+      ],
+      "limitations": [
+        "Comment values are unverified claims, not measured current results. Deeper reply expansion errored. Purchase-history claims are anecdotes, not final-board facts."
+      ],
+      "patch_scope": "18.3 launch discussion; pre-B",
+      "statistical_metadata": {
+        "type": "commenter_claims_only",
+        "reported_values": [
+          "Azir three avg 3.5ish",
+          "Azir three 3.8 Diamond+",
+          "Azir three items / Kha zero items around 3.4"
+        ],
+        "sample_count": null,
+        "period": null,
+        "region": null,
+        "validated": false
+      }
+    },
+    {
+      "id": "S3",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-au/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Teamfight Tactics patch 18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_official_updates",
+      "roles": [
+        "rules_chronology"
+      ],
+      "case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C02",
+        "CO4-1-C03"
+      ],
+      "observations": [
+        "September 24 B changes Blackthorn and Kha; September 28 temporarily disables a Polymorph Wisp."
+      ],
+      "limitations": [
+        "Rules dates do not establish provider dataset cutoffs. September 28 prose says Greater Polymorph but bullet says Major Polymorph; no effect size inferred."
+      ],
+      "patch_scope": "18.3; September 24 B; September 28 update",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S4",
+      "url": "https://www.metatft.com/comps",
+      "title": "MetaTFT comps",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_one_line_shell",
+      "roles": [
+        "statistical_workflow_attempt"
+      ],
+      "case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C03"
+      ],
+      "observations": [
+        "Direct public URL reopened; one-line extraction."
+      ],
+      "limitations": [
+        "No controls, rows, filters, sample counts or selected population available. Search pro-guide text is not a retrieved statistical result."
+      ],
+      "patch_scope": "unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S5",
+      "url": "https://www.metatft.com/explorer",
+      "title": "MetaTFT explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_one_line_shell",
+      "roles": [
+        "statistical_workflow_attempt"
+      ],
+      "case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C03"
+      ],
+      "observations": [
+        "Direct public URL reopened; one-line extraction."
+      ],
+      "limitations": [
+        "No controls, rows, filters, sample counts or selected population available. Search pro-guide text is not a retrieved statistical result."
+      ],
+      "patch_scope": "unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S6",
+      "url": "https://www.metatft.com/units/Azir",
+      "title": "MetaTFT units/Azir",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_one_line_shell",
+      "roles": [
+        "statistical_workflow_attempt"
+      ],
+      "case_ids": [
+        "CO4-1-C03"
+      ],
+      "observations": [
+        "Direct public URL reopened; one-line extraction."
+      ],
+      "limitations": [
+        "No controls, rows, filters, sample counts or selected population available. Search pro-guide text is not a retrieved statistical result."
+      ],
+      "patch_scope": "unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S8",
+      "url": "https://www.metatft.com/pro-comps",
+      "title": "MetaTFT pro-comps",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_one_line_shell",
+      "roles": [
+        "statistical_workflow_attempt"
+      ],
+      "case_ids": [
+        "CO4-1-C01"
+      ],
+      "observations": [
+        "Direct public URL reopened; one-line extraction."
+      ],
+      "limitations": [
+        "No controls, rows, filters, sample counts or selected population available. Search pro-guide text is not a retrieved statistical result."
+      ],
+      "patch_scope": "unknown",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S7",
+      "url": "https://tactics.tools/team-compositions",
+      "title": "TFT Meta Stats - Best Team Comps & Builds for Set 15 Patch 18.3b",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_controls_and_rows",
+      "roles": [
+        "displayed_statistics",
+        "candidate_package"
+      ],
+      "case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C02",
+        "CO4-1-C03"
+      ],
+      "observations": [
+        "Two named AP rows inspected; item examples exposed. Veigar example has Dawncore, Ludens Tempest and Radiant Blue Buff. Zyra example has Archangels Staff, Hextech Gunblade and Spear of Shojin."
+      ],
+      "limitations": [
+        "Title says Set 15 while navigation says Set 18. Counts, interval and region absent. Display examples do not define statistical membership. No filters changed; no ordinary-resource or Azir role comparison."
+      ],
+      "patch_scope": "UI 18.3b / Set 18 navigation; title conflict",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "region": null,
+        "period": null,
+        "sample_count": null,
+        "filters_changed": false,
+        "ordinary_resource_filter": false,
+        "rows": [
+          {
+            "name": "Spellweaver Veigar & Ornn",
+            "average_placement": 4.3,
+            "top_four_percent": 53.4,
+            "win_percent": 15.7,
+            "play_rate_display": 0.5,
+            "sample_count": null
+          },
+          {
+            "name": "Juggernaut Zyra & Amumu",
+            "average_placement": 4.33,
+            "top_four_percent": 52.5,
+            "win_percent": 14.3,
+            "play_rate_display": 0.49,
+            "sample_count": null
+          }
+        ],
+        "play_rate_units": null,
+        "validated_matched_comparison": false
+      }
+    },
+    {
+      "id": "S10",
+      "url": "https://tactics.tools/info/items",
+      "title": "Items Set 18 TFT Info & Items Chart",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_reference",
+      "roles": [
+        "item_identity_reference"
+      ],
+      "case_ids": [
+        "CO4-1-C01",
+        "CO4-1-C02"
+      ],
+      "observations": [
+        "Craftable section exposes Archangels Staff, Hextech Gunblade and ordinary item recipes."
+      ],
+      "limitations": [
+        "Reference identity does not establish outcome strength or whole-board ordinary-resource eligibility."
+      ],
+      "patch_scope": "Set 18",
+      "statistical_metadata": null
+    },
+    {
+      "id": "S12",
+      "url": "https://tactics.tools/units/da_18_azir",
+      "title": "Azir TFT Stats - Best Items, Synergies, Counrers Set 18 Patch 18.3b",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T07:22:12Z",
+      "access_status": "opened_controls_and_marginal_distributions",
+      "roles": [
+        "bounded_descriptive_statistics"
+      ],
+      "case_ids": [
+        "CO4-1-C03"
+      ],
+      "observations": [
+        "Coordinator supplied public route; worker independently reopened it. Separate star/item marginals are visible."
+      ],
+      "limitations": [
+        "No star-by-item joint cohort or teammate roles. Rounded page count is not exact subgroup size. Region and exact interval absent.",
+        "Retrieval timestamp uses the earlier session checkpoint, not precise request time."
+      ],
+      "patch_scope": "UI 18.3b",
+      "statistical_metadata": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "patch": "18.3b",
+        "star_filter": "Any",
+        "games_display": "136k",
+        "exact_sample_count": null,
+        "region": null,
+        "period": null,
+        "star_three": {
+          "share_percent": 21.5,
+          "average_placement": 3.61
+        },
+        "item_count_zero_all_stars": {
+          "share_percent": 41.6,
+          "average_placement": 4.64
+        },
+        "item_count_three_all_stars": {
+          "share_percent": 44.5,
+          "average_placement": 4.38
+        },
+        "validated_role_comparison": false
+      }
+    }
+  ]
+}

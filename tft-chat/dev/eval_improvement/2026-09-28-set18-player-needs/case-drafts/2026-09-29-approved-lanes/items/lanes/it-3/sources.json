@@ -1,0 +1,578 @@
+{
+  "lane": "IT-3",
+  "stage": "case-drafting",
+  "case_ids": [
+    "IT-3-C01",
+    "IT-3-C02",
+    "IT-3-C03",
+    "IT-3-C04",
+    "IT-3-C05",
+    "IT-3-C06"
+  ],
+  "sources": [
+    {
+      "id": "D1",
+      "url": "https://www.reddit.com/r/TeamfightTactics/comments/1winnef/whats_your_hear_me_out_comp_this_patch/",
+      "title": "What’s your hear me out comp this patch?",
+      "source_date": "2026-09-17",
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "IT-3-C01",
+        "IT-3-C02",
+        "IT-3-C03",
+        "IT-3-C04",
+        "IT-3-C05"
+      ],
+      "observations": [
+        "Opened replies: Gunblade/Juggernaut praise and backline disagreement; ordinary versus emblem Elise suggestions; Inferno/Red Buff/Shojin Ashe; Morgana burn with Ahri; Mama Beak Titan/Kraken debate."
+      ],
+      "limitations": [
+        "One thread, not five independent sources. Individual queue/rank unverified. Questions adapted, not verbatim. Search date September 17; opened relative hours inconsistent."
+      ],
+      "patch_scope": "Historical Set 18; exact subpatch unknown"
+    },
+    {
+      "id": "D2",
+      "url": "https://tftflow.com/composition/set18/defender-cassiopeia",
+      "title": "Defender Cassiopeia guide comments",
+      "source_date": "2026-09-07",
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "motivation"
+      ],
+      "case_ids": [
+        "IT-3-C06"
+      ],
+      "observations": [
+        "September 7 asks Seeker over Crownguard in Adaptive Fiddlesticks build; September 8 reply objects that Defender/Spellweaver already supply its stats."
+      ],
+      "limitations": [
+        "Anecdotal historical question/reply, no ranked outcome cohorts. Current guide and old comments must not share an assumed patch."
+      ],
+      "patch_scope": "Comments labeled 18.1b"
+    },
+    {
+      "id": "S1",
+      "url": "https://tactics.tools/units/da_18_zyra",
+      "title": "Zyra Tactics.tools stats",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C01"
+      ],
+      "observations": [
+        "Labeled overall outcomes and item/pair/trio/unit/trait controls visible."
+      ],
+      "limitations": [
+        "Overview only, no crossed item/trait outcomes. Item row identity ambiguous alongside synergy icons; no numeric item assignment guessed. Rounded count; period and region unknown."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "stars": "Any",
+        "filters": "Unit only",
+        "games_display": "186k",
+        "average_placement": 4.41,
+        "top_four_percent": 51.9,
+        "win_percent": 12.0,
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "S2",
+      "url": "https://tactics.tools/units/da_18_elise",
+      "title": "Elise Tactics.tools stats",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C02"
+      ],
+      "observations": [
+        "Labeled overall outcomes and item/pair/trio/unit/trait controls visible."
+      ],
+      "limitations": [
+        "Overview only, no crossed item/trait outcomes. Item row identity ambiguous alongside synergy icons; no numeric item assignment guessed. Rounded count; period and region unknown."
+      ],
+      "patch_scope": "18.3",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "stars": "Any",
+        "filters": "Unit only",
+        "games_display": "8.9k",
+        "average_placement": 5.01,
+        "top_four_percent": 40.7,
+        "win_percent": 12.3,
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "S3",
+      "url": "https://tactics.tools/units/da_18_ashe",
+      "title": "Ashe Tactics.tools stats",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C03"
+      ],
+      "observations": [
+        "Labeled overall outcomes and item/pair/trio/unit/trait controls visible."
+      ],
+      "limitations": [
+        "Overview only, no crossed item/trait outcomes. Item row identity ambiguous alongside synergy icons; no numeric item assignment guessed. Rounded count; period and region unknown."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "stars": "Any",
+        "filters": "Unit only",
+        "games_display": "212k",
+        "average_placement": 4.05,
+        "top_four_percent": 57.5,
+        "win_percent": 19.6,
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "S4",
+      "url": "https://tactics.tools/units/da_18_morgana",
+      "title": "Morgana Tactics.tools stats",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C04"
+      ],
+      "observations": [
+        "Labeled overall outcomes and item/pair/trio/unit/trait controls visible."
+      ],
+      "limitations": [
+        "Overview only, no crossed item/trait outcomes. Item row identity ambiguous alongside synergy icons; no numeric item assignment guessed. Rounded count; period and region unknown."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "stars": "Any",
+        "filters": "Unit only",
+        "games_display": "48k",
+        "average_placement": 4.48,
+        "top_four_percent": 50.6,
+        "win_percent": 12.0,
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "S5",
+      "url": "https://tactics.tools/units/da_crimsonraptor18",
+      "title": "Mama Beak Tactics.tools stats",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C05"
+      ],
+      "observations": [
+        "Labeled overall outcomes and item/pair/trio/unit/trait controls visible."
+      ],
+      "limitations": [
+        "Overview only, no crossed item/trait outcomes. Item row identity ambiguous alongside synergy icons; no numeric item assignment guessed. Rounded count; period and region unknown."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "stars": "Any",
+        "filters": "Unit only",
+        "games_display": "42k",
+        "average_placement": 4.59,
+        "top_four_percent": 49.7,
+        "win_percent": 8.24,
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "S6",
+      "url": "https://tactics.tools/units/da_fiddlesticks18",
+      "title": "Fiddlesticks Tactics.tools stats",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C06"
+      ],
+      "observations": [
+        "Labeled overall outcomes and item/pair/trio/unit/trait controls visible."
+      ],
+      "limitations": [
+        "Overview only, no crossed item/trait outcomes. Item row identity ambiguous alongside synergy icons; no numeric item assignment guessed. Rounded count; period and region unknown."
+      ],
+      "patch_scope": "18.3b",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "stars": "Any",
+        "filters": "Unit only",
+        "games_display": "312k",
+        "average_placement": 4.45,
+        "top_four_percent": 51.1,
+        "win_percent": 12.2,
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "W1",
+      "url": "https://tactics.tools/explorer",
+      "title": "Stats Explorer",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "workflow"
+      ],
+      "case_ids": [
+        "IT-3-C01",
+        "IT-3-C02",
+        "IT-3-C03",
+        "IT-3-C04",
+        "IT-3-C05",
+        "IT-3-C06"
+      ],
+      "observations": [
+        "18.3b Diamond+, three blank filter inputs, No Data and patron notice."
+      ],
+      "limitations": [
+        "Controls are not query results; no accessible crossed comparison validated."
+      ],
+      "patch_scope": "18.3b controls",
+      "statistical_observation": {
+        "mode": null,
+        "rank": "Diamond+",
+        "region": null,
+        "period": null,
+        "filters": null,
+        "count": null,
+        "values": null
+      }
+    },
+    {
+      "id": "N1",
+      "url": "https://noxutft.com/tft-champions/zyra",
+      "title": "Zyra named build table",
+      "source_date": "2026-09-23",
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C01"
+      ],
+      "observations": [
+        "Opened build, comp, average-placement and Games columns. Page says ranked and updated September 23, refresh every six hours."
+      ],
+      "limitations": [
+        "No precise patch, dates of collection, rank, region, stars or comp-membership rule. Named comps are not exact trait filters. Search snippets differed from opened values; opened snapshot retained. Linked comp pages returned internal errors."
+      ],
+      "patch_scope": "Set 18; says this patch, unspecified",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "patch": null,
+        "stars": null,
+        "columns": [
+          "build",
+          "named_comp",
+          "average_placement",
+          "games_display"
+        ],
+        "rows": [
+          [
+            "Archangel/Archangel/Gunblade",
+            "Juggernaut Zyra",
+            4.08,
+            "4.5k"
+          ],
+          [
+            "Archangel/Archangel/Gunblade",
+            "Juggernaut Amumu",
+            3.67,
+            "3.8k"
+          ],
+          [
+            "Executioner Emblem/Shojin/Void Staff",
+            "Executioner Malphite",
+            3.75,
+            "3.7k"
+          ]
+        ],
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "N2",
+      "url": "https://noxutft.com/tft-champions/elise",
+      "title": "Elise named build table",
+      "source_date": "2026-09-23",
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C02"
+      ],
+      "observations": [
+        "Opened build, comp, average-placement and Games columns. Page says ranked and updated September 23, refresh every six hours."
+      ],
+      "limitations": [
+        "No precise patch, dates of collection, rank, region, stars or comp-membership rule. Named comps are not exact trait filters. Search snippets differed from opened values; opened snapshot retained. Linked comp pages returned internal errors."
+      ],
+      "patch_scope": "Set 18; says this patch, unspecified",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "patch": null,
+        "stars": null,
+        "columns": [
+          "build",
+          "named_comp",
+          "average_placement",
+          "games_display"
+        ],
+        "rows": [
+          [
+            "Stoneplate/Rageblade/Titan",
+            "Vanguard Morgana",
+            4.07,
+            "3.9k"
+          ],
+          [
+            "Ravager Emblem/Rageblade/Titan",
+            "Vanguard Elise",
+            4.55,
+            "2.3k"
+          ]
+        ],
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "N3",
+      "url": "https://noxutft.com/tft-champions/morgana",
+      "title": "Morgana named build table",
+      "source_date": "2026-09-23",
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C04"
+      ],
+      "observations": [
+        "Opened build, comp, average-placement and Games columns. Page says ranked and updated September 23, refresh every six hours."
+      ],
+      "limitations": [
+        "No precise patch, dates of collection, rank, region, stars or comp-membership rule. Named comps are not exact trait filters. Search snippets differed from opened values; opened snapshot retained. Linked comp pages returned internal errors."
+      ],
+      "patch_scope": "Set 18; says this patch, unspecified",
+      "statistical_observation": {
+        "mode": "Ranked",
+        "rank": null,
+        "region": null,
+        "period": null,
+        "patch": null,
+        "stars": null,
+        "columns": [
+          "build",
+          "named_comp",
+          "average_placement",
+          "games_display"
+        ],
+        "rows": [
+          [
+            "Morello/Deathcap/Void Staff",
+            "Invoker Ahri",
+            3.74,
+            "5.4k"
+          ],
+          [
+            "Adaptive/Morello/Void Staff",
+            "Vanguard Morgana",
+            3.85,
+            445
+          ],
+          [
+            "Adaptive/Morello/Void Staff",
+            "Invoker Morgana",
+            3.95,
+            178
+          ],
+          [
+            "Gunblade/Morello/Void Staff",
+            "Invoker KogMaw",
+            3.41,
+            27
+          ]
+        ],
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "M1",
+      "url": "https://seemeta.com/en/tft/set-18/items/Morellonomicon",
+      "title": "SeeMeta Morellonomicon",
+      "source_date": "2026-09-17",
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "answer-support candidate"
+      ],
+      "case_ids": [
+        "IT-3-C04"
+      ],
+      "observations": [
+        "Opened marginal item/holder table."
+      ],
+      "limitations": [
+        "Patch 18.2 historical, not merged with 18.3b. Holder count absent; no Ahri filter."
+      ],
+      "patch_scope": "18.2",
+      "statistical_observation": {
+        "mode": null,
+        "rank": null,
+        "region": null,
+        "period": null,
+        "page_games": 37456,
+        "item_average_placement": 3.98,
+        "item_top_four_percent": 59.91,
+        "item_win_percent": 16.01,
+        "morgana_average_placement": 4.05,
+        "morgana_top_four_percent": 58.62,
+        "morgana_win_percent": 15.19,
+        "morgana_count": null,
+        "matched_comparison_validated": false
+      }
+    },
+    {
+      "id": "R1",
+      "url": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-3/",
+      "title": "Official patch 18.3",
+      "source_date": "2026-09-22",
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "rules/window caution"
+      ],
+      "case_ids": [
+        "IT-3-C01",
+        "IT-3-C02",
+        "IT-3-C03",
+        "IT-3-C06"
+      ],
+      "observations": [
+        "B-patch section; Dark Ritual temporarily disabled; Inferno 5/7 burn nerfed to 3/4%."
+      ],
+      "limitations": [
+        "September 28 heading absent in this extraction; cannot independently confirm its contents here. Does not date third-party samples."
+      ],
+      "patch_scope": "18.3 with B-patch"
+    },
+    {
+      "id": "R2",
+      "url": "https://tactics.tools/info/traits",
+      "title": "Set 18 traits",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "rules/identity only"
+      ],
+      "case_ids": [
+        "IT-3-C01",
+        "IT-3-C02",
+        "IT-3-C03",
+        "IT-3-C05",
+        "IT-3-C06"
+      ],
+      "observations": [
+        "Inferno says its burn stacks with other burns; board traits and tiers readable."
+      ],
+      "limitations": [
+        "Numeric Inferno 5/7 values 3.5/4.5% conflict with official 18.3 nerfs; do not treat entire page as current rules. Alpha Mark selection not inferred from final trait tier."
+      ],
+      "patch_scope": "Set 18, exact subpatch unspecified"
+    },
+    {
+      "id": "R3",
+      "url": "https://tactics.tools/info/items",
+      "title": "Set 18 items",
+      "source_date": null,
+      "retrieved_at_utc": "2026-09-29T08:38:54Z",
+      "access_status": "Opened; readable extracted text",
+      "roles": [
+        "identity only"
+      ],
+      "case_ids": [
+        "IT-3-C01",
+        "IT-3-C02",
+        "IT-3-C03",
+        "IT-3-C04",
+        "IT-3-C05",
+        "IT-3-C06"
+      ],
+      "observations": [
+        "Normal/radiant/artifact sections; Seeker and Statikk are artifact references."
+      ],
+      "limitations": [
+        "Mechanics do not validate performance; exact subpatch unknown."
+      ],
+      "patch_scope": "Set 18"
+    }
+  ]
+}

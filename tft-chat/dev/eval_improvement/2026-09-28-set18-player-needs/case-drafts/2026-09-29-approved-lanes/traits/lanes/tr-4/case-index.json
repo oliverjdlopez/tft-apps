@@ -1,0 +1,108 @@
+{
+  "lane": "TR-4",
+  "stage": "case-drafting",
+  "cases": [
+    {
+      "id": "TR-4-C01",
+      "title": "Six Juggernaut supporting packages",
+      "question": "Is six Juggernaut really as flexible as people say, or do the Hunter/Primal and Summoner versions perform differently?",
+      "status": "provisional",
+      "origin": "Constructed synthesis of an opened AD-backline question and conflicting replies.",
+      "proposal_lineage": [
+        "TR-4-R2-P1"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "M1",
+        "M2",
+        "T1",
+        "T2",
+        "S1",
+        "R1",
+        "R2"
+      ],
+      "comparison": "Exactly six active Juggernaut: Hunter/Primal only, Summoner only, both, and neither, at comparable carry and tank investment.",
+      "unresolved_evidence": [
+        "No joint exactly-six-Juggernaut package cohorts.",
+        "Variant panel periods and denominators are unaligned.",
+        "Primal blessing, Alpha Mark and permanent stacks not assumed observed."
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-4-C02",
+      "title": "Eclipse interaction across carry families",
+      "question": "Does Eclipse perform differently on upgraded Solar boards built around Kayle than on Lunar boards built around Aphelios?",
+      "status": "provisional",
+      "origin": "Adaptation of an opened Eclipse viability discussion, its cross-family reply and correction to a proposed five-three-star board.",
+      "proposal_lineage": [
+        "TR-4-R2-P2"
+      ],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D2",
+        "M1",
+        "M2",
+        "T2",
+        "S2",
+        "S3",
+        "R1",
+        "R2"
+      ],
+      "comparison": "With/without Eclipse separately within Kayle/Solar and Aphelios/Lunar; compare those associations across unique-three-star count.",
+      "unresolved_evidence": [
+        "Both within-family with/without cohorts and upgrade-depth intersections missing.",
+        "Solar Kayle Lunar title does not establish Eclipse activation.",
+        "Lux encoding and stale or undefined statistical windows unresolved."
+      ],
+      "priority_verification": true
+    },
+    {
+      "id": "TR-4-C03",
+      "title": "Mama Beak carry versus trait passenger",
+      "question": "When Mama Beak is actually the carry, do three-Summoner boards with a small Riftbeast package outperform the vertical Riftbeast versions?",
+      "status": "provisional",
+      "origin": "Constructed final-board comparison from an opened Mama Beak Summoner claim and replies disputing whether vertical Riftbeast keeps her.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D1",
+        "M3",
+        "S4",
+        "R1"
+      ],
+      "comparison": "Itemized Mama Beak with three Summoner and three Riftbeast versus itemized Mama Beak at higher Riftbeast tiers; separate hybrid and passenger cohorts.",
+      "unresolved_evidence": [
+        "No itemized-Mama-Beak joint package outcomes.",
+        "Alpha Mark recipient unavailable.",
+        "Target comp links failed; pooled trait rows are not carry-package cohorts."
+      ],
+      "priority_verification": false
+    },
+    {
+      "id": "TR-4-C04",
+      "title": "Azir and Zyra support-package tradeoff",
+      "question": "On boards carrying Azir and Zyra together, is the Blackthorn/Brawler package worth more than keeping Juggernaut frontline and extra Executioner support?",
+      "status": "provisional",
+      "origin": "Adaptation of an opened request to explain Azir/Zyra and a reply proposing Blackthorn/Brawler support.",
+      "proposal_lineage": [],
+      "answer_status": "incomplete",
+      "source_ids": [
+        "D3",
+        "D4",
+        "S5",
+        "R1",
+        "R2",
+        "M1"
+      ],
+      "comparison": "Itemized Azir+Zyra with Summoner active: Blackthorn/Brawler-oriented versus Juggernaut/Executioner-oriented support, hybrids separate.",
+      "unresolved_evidence": [
+        "No joint dual-carry-role by supporting-package outcomes.",
+        "Sacrifice choice cannot be inferred from final board.",
+        "Available Malphite/Soraka cluster is not Azir/Zyra carry evidence."
+      ],
+      "priority_verification": false
+    }
+  ]
+}
