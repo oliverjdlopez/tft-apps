@@ -22,6 +22,7 @@ const ITEM_TYPE_LABELS = {
 
 /** Singular and plural names for each element kind in a saved group's summary. */
 const KIND_NAMES = {
+  group: ["container", "containers"],
   plan: ["state", "states"],
   action: ["action", "actions"],
   decision: ["decision", "decisions"],

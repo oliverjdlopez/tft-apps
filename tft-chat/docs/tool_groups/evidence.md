@@ -35,7 +35,8 @@ Unsupported, erroneous, or malformed analytical results remain usable as
 ordinary tool output but do not register evidence. Successful capture adds an
 `evidence` descriptor with references, field definitions, and compatible views
 alongside the existing model-facing result. Chat passes one store through the
-SDK run and handoffs. The maximum-turn fallback receives the same store but
+SDK run and handoffs inside `AssistantRunContext.evidence`. Existing callers may
+still supply a bare store; an absent store retains prose-only behavior. The maximum-turn fallback receives the same store but
 remains tool-free to terminate reliably.
 
 ## Presentation and interaction
@@ -45,7 +46,10 @@ checks the selected fields and view compatibility, stores a resolved object,
 and returns a compact acknowledgement to the model. Invalid choices return a
 correctable tool error; only one successful initial display is allowed per
 answer. Stream events serialize the store's resolved object directly, retaining
-backend precision. The browser formats values for reading without changing them.
+backend precision. `domain.tools.evidence.presentation_event` owns extraction of
+the validated object and the existing unavailable-error payload; the stream
+adapter calls it when consuming the presentation tool's output. The browser
+formats values for reading without changing them.
 
 The static table has no sorting or grouping controls. The interactive table
 places controls behind an explicit Explore table disclosure, keeping the

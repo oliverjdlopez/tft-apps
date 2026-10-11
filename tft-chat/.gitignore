@@ -53,3 +53,6 @@ app/static/
 
 # Local profile info
 profiles/
+
+# Assistant drafts, trial results, and recoverable apply journals
+.runtime/assistant-workspace/

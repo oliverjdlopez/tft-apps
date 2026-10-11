@@ -61,5 +61,22 @@
   },
   "audit_inventory": ".migration/inventory.json",
   "copy_method": "independent copy2, symlinks materialized, SHA256 and inode comparison",
-  "source_status_verified_after_copy": true
+  "source_status_verified_after_copy": true,
+  "live_evaluation_content": {
+    "datasets": 6,
+    "cases": 56,
+    "archived_cases": 11,
+    "prompt_versions": 23,
+    "evaluators": 5,
+    "rules": 5,
+    "unavailable": [],
+    "private_export": ".migration/langfuse-content.json",
+    "private_verification": ".migration/langfuse-verification.json"
+  },
+  "destination_services": {
+    "langfuse_project": "tft-apps-evals",
+    "langfuse_port": 15510,
+    "cloudbeaver_project": "tft-apps-cloudbeaver",
+    "cloudbeaver_port": 8979
+  }
 }

@@ -19,6 +19,9 @@ selection, instruction assembly, agent setup, first stream chunk, first model
 event, first text delta, and total request time. Missing stage values mean the
 request ended before that stage completed; interrupted streams are recorded as
 such. The output is local diagnostic data and is ignored by Git.
+Instruction assembly is the cumulative time spent rendering dynamic instruction
+callbacks across model steps, including fallback; resource-selection timings
+still measure the single preparation pass.
 
 ## Backend composition
 
@@ -27,8 +30,9 @@ local tracing, attempts to validate and warm the application database, and can
 start query-table catch-up. Route modules under `api/routes/` validate HTTP
 inputs and delegate to `services/`:
 
-- `chat_service.py` owns model selection, API-key checks, configuration
-  payloads, streamed chat execution, and `StreamingResponse` construction. Its
+- The chat route owns model selection, API-key checks, and `StreamingResponse`
+  construction; `chat_service.py` owns configuration payloads and streamed chat
+  execution. Its
   `/api/config` model options come from `domain.model_catalog.chat_model_specs`,
   which supplies the labels and IDs shown in the chat model dropdown. Labels
   include the exact model ID and are derived from it, so they cannot advertise a
@@ -36,6 +40,10 @@ inputs and delegate to `services/`:
   the current `OpenAIModels.LATEST` ID alongside the curated model choices.
 - `display_service.py` supplies explorer views for models, databases, tools,
   and upstream APIs.
+- `/api/shared-media` exposes immutable shared file publication, discovery,
+  metadata, and verified content through the independently vendored catalogue.
+  See [suite media sharing](../../../docs/shared-media.md) for the cross-backend
+  contract and VOD library integration.
 - `services/flowchart/` stores player-authored patch workspaces for the
   `/api/flowchart` routes; see [Flowchart](../apps/flowchart.md).
 - the remaining services adapt assistants, tasks, rolldown analysis, tracing,
@@ -57,8 +65,8 @@ eval graphs; normal conversations continue using repository specs. See
 `scripts/start.py` launches the configured UI service. Installed command names
 are declared in `pyproject.toml`.
 
-The optional [Electron desktop application](../apps/desktop.md) lives under
-`desktop/` and starts this same FastAPI application from the checkout. Normal
+The [Electron desktop application](../apps/desktop.md) lives at the suite root under
+`../desktop/` and starts this same FastAPI application from the checkout. Normal
 launch rebuilds and loads the production UI; development launch starts Vite
 with hot reload and proxies to the managed backend. Desktop owns its service
 processes, binds them to loopback, and stops them on Quit. Frontend components,
@@ -96,6 +104,25 @@ boundaries.
 Chat Activity trace links open the encoded trace-detail URL rather than the
 dashboard index.
 
+Chat obtains a fresh `AssistantInvocation` through `Assistant.prepare`, then
+supplies its typed `AssistantRunContext` and activity hooks to the runner and
+stream adapter. The instance owns a registry snapshot shared with its context
+and skill selectors; tracing and stream cleanup remain service-owned.
+`domain.runtime.activity.ActivityRunHooks` records tool-call IDs, owning agent,
+arguments, actual execution timestamps, and handoffs in that context. These
+records remain internal: SDK stream events still determine browser ordering,
+and the existing Activity UI and payloads are unchanged. Hooks emit no browser
+events. The tool wrapper records raised failures/cancellation; returned error
+payloads remain ordinary completed tool executions.
+
+The stream adapter obtains validated display events from
+`domain.tools.evidence.presentation_event`, preserving a presentation before its
+completed-tool event and retaining backend numerical precision. Legacy adapter
+callers can still supply a bare evidence store. Interrupted stream consumers
+cancel the SDK result and consume its cleanup stream before returning; unfinished
+activity records become cancelled or failed. The chat service explicitly closes
+the nested adapter on consumer closure, including during the maximum-turn fallback.
+
 ## Main navigation
 
 The React application has three primary destinations: **Chat**, **Workflows**,
@@ -110,7 +137,7 @@ CloudBeaver and Langfuse services. The global database availability warning
 remains visible across destinations.
 
 The embedded database row browser has been removed. Use the desktop Database
-tab or [local CloudBeaver](http://localhost:8978) from a browser; see
+tab or [local CloudBeaver](http://localhost:8979) from a browser; see
 [database workspace setup](../apps/desktop.md#database-workspace-cloudbeaver).
 The existing database HTTP endpoints remain available. Langfuse owns evaluation
 work; production spec editing, application tool invocation, upstream API probes,
@@ -127,7 +154,7 @@ ChatTFT, Compositions, Rolldown, and Flowchart use locally installed shadcn/ui c
 (New York, Radix, neutral light), Tailwind CSS 4, and Lucide icons. ChatTFT owns the
 canonical light theme with distinct pastel panels and dialogs; the desktop shell
 mirrors its palette. The independent
-VOD Review and Wisps checkouts retain their own themes.
+VOD Review and Wisps views share the sibling VOD application and its own theme.
 Navigation, tool payloads, streaming, specialist renderers, and revision checking
 retain their existing contracts. See [shared UI conventions](../development/shared-ui.md)
 for component provenance, CSS layering, and the update procedure.
@@ -245,38 +272,36 @@ Electron adds application and external-service tabs outside the React applicatio
 using independent `WebContentsView` instances. ChatTFT, Rolldown, and the configurable
 Compositions workspace share one backend; Force Reload on any of them restarts
 that backend and reloads all enabled application views. Switching
-tabs preserves each view’s in-memory state. `desktop/workspace.mjs` owns view selection, isolated
+tabs preserves each view’s in-memory state. `../desktop/workspace.mjs` owns view selection, isolated
 Langfuse navigation and login storage, retry state, and child-renderer cleanup.
 The local shell alone receives a fixed-action preload; hosted pages remain
-unprivileged. The desktop bootstrap checks Langfuse health on localhost port 15500 and
+unprivileged. The desktop bootstrap checks Langfuse health on localhost port 15510 and
 starts an unavailable Docker stack through the existing evaluation launcher.
 A failed attempt reports recovery instructions and continues ChatTFT startup.
 Quitting Electron leaves the Docker stack running. See the
-[desktop guide](../apps/desktop.md#desktop-workspace-tabs) for controls and setup.
+[desktop guide](../../../docs/desktop.md) for controls and setup.
 
 ### Desktop database workspace
 
 Electron's Database tab hosts CloudBeaver Community in its own sandboxed,
 persistent browser session alongside ChatTFT and Langfuse. This desktop-only
-view connects to a separately started loopback Docker service at port 8978;
+view connects to a separately started loopback Docker service at port 8979;
 CloudBeaver owns its login, saved connections, and direct database operations.
 Each external view loads lazily and retains its state while hidden, with an
 independent loading deadline and Retry screen. No React routes, FastAPI APIs,
 assistant tools, or RDS configuration imports participate. See
 [Desktop database setup](../apps/desktop.md#database-workspace-cloudbeaver).
 
-### Video service discovery and ownership
+### Shared video service ownership
 
-`desktop/video-runtime.mjs` supervises VOD Review and Wisps independently of the
-ChatTFT runtime. It checks both configured endpoints before starting missing
-services. API-compatible existing backends and identified proxy frontends remain
-externally owned; only new child processes participate in desktop shutdown.
-`desktop/vod_backend.py` runs the selected checkout in its own interpreter with
-the existing parent-pipe shutdown and socket ownership helpers.
-`desktop/vod-frontend.mjs` serves the frontend with a same-origin API proxy and
-workspace identity endpoint. Video startup runs in the background; Retry shares
-an in-flight startup attempt and never creates a second process generation.
-See [automatic video startup](../apps/desktop.md#automatic-vod-review-and-wisps-startup).
+`../desktop/video-runtime.mjs` owns one suite-local VOD backend/frontend pair,
+independently of ChatTFT. VOD Review and Wisps have separate persistent views
+on frontend port 5174; Wisps loads `/wisp_classifier`. Occupied ports fail,
+including compatible servers from original checkouts. A shared readiness promise
+coalesces tab startup and retries, and quit stops the owned pair once.
+`../desktop/vod_backend.py` uses VOD's own interpreter and parent-pipe lifetime;
+`../desktop/vod-frontend.mjs` uses VOD's Vite config with a same-origin API proxy.
+See [suite lifecycle](../../../docs/desktop.md).
 
 ## Private composition workspace
 
@@ -344,3 +369,40 @@ and cache lookup results for a mounted view's patch/set. Navigating between
 entities reuses those lookups; switching context disposes stale requests. Reload
 the page after downloading or replacing a bundle to refresh browser lookup state.
 Image transfer failures preserve labels and show the same unavailable-image note.
+
+
+## Flowchart document and worker ownership
+
+The standalone Flowchart canvas uses `flowchart/document.js` as its canonical
+validated command/history layer. `projection.js` derives React Flow parent/child
+nodes and collapsed boundary connections from that document; hiding or dimming
+objects never changes the saved graph. `TextField.jsx` keeps edit drafts local
+until commit. Revision-checked autosave receives complete canonical documents,
+including undo/redo results, and ignores initial loading and DOM measurements.
+
+`routing.worker.js` runs a sparse orthogonal visibility graph and A* with
+obstacle, turn, sharing and crossing costs. `layout.worker.js` uses ELK's native
+worker dispatcher; a distinct fixed-side port per connection avoids hyperedge
+merger recursion on large cyclic diagrams. Worker snapshots/generations and
+termination prevent superseded jobs from replacing newer edits. The pinned
+`elkjs` dependency stays in the standalone Flowchart/worker bundle.
+
+Containers, relative child geometry, locks, waypoints and label offsets persist
+in `flowchart.v2` JSON on the existing tables/routes. Backend and frontend
+validate containment, connection semantics, finite geometry and routing bounds.
+V1 reads normalize in memory without storage writes. Collapse and named focus
+views are personal localStorage state keyed by source and workspace. Clipboard
+uses browser events and validated fragments, keeping desktop renderers
+unprivileged. See [Flowchart commands and compatibility](../apps/flowchart.md).
+
+## Specs assistant workspace
+
+`/api/specs` exposes the [assistant workspace](../development/assistant-workspace.md):
+immutable local draft revisions, graph validation, bounded independent trials,
+optional Langfuse comparisons/import, history/restore, and recoverable Apply.
+Saving never writes application source. Document reads remain available; legacy
+direct document writes return 410. SQLite and recovery journals are checkout-owned
+under ignored `.runtime/assistant-workspace/`. Apply/refresh install complete
+validated registries; constructed SDK graphs retain their previous definitions.
+Optional experiments use the authenticated checkout host runner Unix socket;
+backend credentials never enter browser requests or results.

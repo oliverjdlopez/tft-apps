@@ -8,8 +8,8 @@ const {chromium} = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || '
 const root = path.resolve('evals/langfuse');
 const env = Object.fromEntries(fs.readFileSync(process.env.LANGFUSE_BROWSER_ENV_FILE || path.join(root,'.env'),'utf8').trim().split(/\r?\n/).map(line=>[line.slice(0,line.indexOf('=')),line.slice(line.indexOf('=')+1)]));
 const snapshots = process.env.LANGFUSE_BROWSER_SNAPSHOTS || path.join(root,'snapshots');
-const base = process.env.LANGFUSE_BROWSER_URL || 'http://localhost:15500';
-const project = 'chattft-evals';
+const base = process.env.LANGFUSE_BROWSER_URL || 'http://localhost:15510';
+const project = 'tft-apps-evals';
 const publicHeaders = {Authorization:`Basic ${Buffer.from(`${env.LANGFUSE_PUBLIC_KEY}:${env.LANGFUSE_SECRET_KEY}`).toString('base64')}`};
 const browser = await chromium.launch({headless:true,args:['--no-sandbox']});
 const page = await browser.newPage({viewport:{width:1440,height:1000}});

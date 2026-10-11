@@ -7,6 +7,7 @@ Python environment is imported by the other. Requires a local POSIX filesystem.
 from __future__ import annotations
 
 import json
+import mimetypes
 import os
 import shutil
 import sqlite3
@@ -17,7 +18,8 @@ from pathlib import Path
 from typing import Callable, Iterator
 
 from .models import MediaRequest
-from .utils import compatible, derive, lock_name, probe, source_key, validate_request
+from .resources import ResourceStore
+from .utils import compatible, configured_root, derive, lock_name, probe, source_key, validate_request
 
 
 class MediaStore:
@@ -43,14 +45,9 @@ class MediaStore:
 
     @classmethod
     def from_env(cls) -> MediaStore | None:
-        """Enable shared storage only when its infrastructure path is supplied."""
-        root = os.environ.get("TFT_MEDIA_DIR", "").strip()
-        if not root:
-            return None
-        path = Path(root).expanduser()
-        if not path.is_absolute():
-            raise ValueError("TFT_MEDIA_DIR must be an absolute path shared by both apps")
-        return cls(path)
+        """Use suite storage by default, with an explicit empty value disabling it."""
+        root = configured_root()
+        return None if root is None else cls(root)
 
     @contextmanager
     def connection(self) -> Iterator[sqlite3.Connection]:
@@ -136,6 +133,15 @@ class MediaStore:
             end = None if request.end is None else min(request.end, request.start + metadata["duration"])
             row = {**metadata, "start": request.start, "end": end, "profile": request.profile,
                    "path": str(destination.relative_to(self.root)), "size": destination.stat().st_size}
+            # Index completed URL downloads for discovery by either backend.
+            # ResourceStore links catalogue-owned bytes; no second media copy
+            # is made, and each refresh still receives an immutable reference.
+            ResourceStore(self.root).publish(
+                destination, kind="video" if metadata["video"] else "audio", source=key,
+                name=key.replace(":", "-") + source.suffix,
+                content_type=mimetypes.guess_type(destination.name)[0] or "application/octet-stream",
+                metadata={name: value for name, value in row.items() if name != "path"},
+            )
             with self.connection() as connection:
                 connection.execute("INSERT INTO media_assets VALUES(?,?,?)", (asset_id, key, json.dumps(row)))
             return destination

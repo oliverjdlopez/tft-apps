@@ -101,7 +101,7 @@ packages = [
 dev-mode-dirs = [".", "app/backend", "app/backend/src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["app/backend", "app/backend/src", "."]
+pythonpath = ["app/backend", "app/backend/src", ".", ".."]
 markers = [
     "timeout(seconds): override the repository's per-test call timeout; use 0 to disable",
 ]

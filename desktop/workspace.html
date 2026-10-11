@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' http://127.0.0.1:*; media-src http://127.0.0.1:*; object-src 'none'; base-uri 'none'">
   <title>ChatTFT Desktop</title>
   <link rel="stylesheet" href="workspace.css">
   <script defer src="workspace.js"></script>
+  <script defer src="media.js"></script>
 </head>
 <body>
   <nav aria-label="Desktop workspace">
@@ -16,9 +17,9 @@
     <button id="rolldown" aria-pressed="false" title="Rolldown (Ctrl/Cmd+3)">Rolldown</button>
     <button id="flowchart" aria-pressed="false" title="Flowchart (Ctrl/Cmd+4)">Flowchart</button>
     <button id="vod" aria-pressed="false" title="VOD Review (Ctrl/Cmd+5)">VOD Review</button>
-    <button id="wisps" aria-pressed="false" title="Wisps (Ctrl/Cmd+6)">Wisps</button>
     <button id="langfuse" aria-pressed="false" title="Langfuse (Ctrl/Cmd+7)">Langfuse</button>
     <button id="database" aria-pressed="false" title="Database (Ctrl/Cmd+8)">Database</button>
+    <button id="media" aria-pressed="false" title="Media (Ctrl/Cmd+9)">Media</button>
   </nav>
   <main id="status" hidden>
     <span id="service" class="eyebrow">LANGFUSE</span>
@@ -29,6 +30,45 @@
       <code id="command">uv run --extra evals chat-tft-evals up --no-browser</code>
       <p id="service-note">For a WSL checkout, run this in your WSL terminal. Docker must be running.</p>
       <button id="retry">Retry connection</button>
+    </section>
+  </main>
+  <main id="media-panel" hidden aria-label="Shared media">
+    <section class="media-library" aria-label="Media library">
+      <div class="media-toolbar">
+        <h1>Media</h1>
+        <button id="media-refresh">Refresh</button>
+      </div>
+      <label for="media-search">Search by name, source or reference</label>
+      <input id="media-search" type="search" placeholder="Find media…">
+      <label for="media-kind">Media type</label>
+      <select id="media-kind">
+        <option value="">All types</option>
+        <option value="video">Video</option>
+        <option value="audio">Audio</option>
+        <option value="image">Images</option>
+        <option value="text">Text / transcripts</option>
+        <option value="data">Data</option>
+      </select>
+      <p id="media-list-status" role="status" aria-live="polite"></p>
+      <ul id="media-list" aria-label="Available media"></ul>
+      <button id="media-more" hidden>Load more</button>
+    </section>
+    <section class="media-reader" aria-label="Selected media">
+      <h2 id="media-title">Choose a media resource</h2>
+      <p id="media-source">Select a file to preview it and copy its shared reference.</p>
+      <p id="media-details"></p>
+      <div id="media-reference-controls" hidden>
+        <label for="media-reference">Shared reference</label>
+        <div class="media-reference-row">
+          <input id="media-reference" readonly>
+          <button id="media-copy">Copy reference</button>
+        </div>
+        <p id="media-copy-status" role="status" aria-live="polite"></p>
+      </div>
+      <p id="media-status" role="status" aria-live="polite"></p>
+      <button id="media-retry" hidden>Retry preview</button>
+      <div id="media-preview"></div>
+      <pre id="media-content" tabindex="0" aria-label="Text content"></pre>
     </section>
   </main>
 </body>

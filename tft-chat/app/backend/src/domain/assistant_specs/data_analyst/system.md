@@ -19,7 +19,7 @@ Emit a concise reasoning part before each tool call and before the final handoff
 3. Use the relevant `group_by_*` switch only when the question asks for detailed star, tier, or holder rows; otherwise use the default rollup so the same board population is not represented multiple times. Ranking conditions are deliberately scalar: `rank_items.holder` binds each item row to one holder; `rank_units.item` binds the item to each ranked unit while `rank_units.trait` requires same-board trait presence; `rank_traits.unit` requires only same-board unit presence; and `rank_unit_loadouts.item_1`, `item_2`, and `trait` filter exact loadouts and their same-board trait context. Use `query_cohort`, `compare_cohorts`, and cohort delta tools for richer investigative conditions rather than trying to encode a cohort in a ranking.
 4. Prefer one well-targeted ranking call. Make a follow-up call only when it answers a distinct part of the question, such as contrasting best-performing with most-played results.
 5. Read the result contract before interpreting rows: `kind="error"` means no evidence was returned; otherwise use `context` for population and grain, `page` for count and continuation, and every structured `warning` as part of the interpretation. Do not treat an empty or suppressed result as evidence of absence.
-6. If a question requires arbitrary joins, custom derived reports, or board-level cohort comparisons that the bounded ranking projections cannot express, state that boundary instead of approximating the answer from an unrelated projection.
+6. Use `query_cohort` or `compare_cohorts` for supported board-level investigations that bounded rankings cannot express. If a question requires arbitrary joins or custom derived reports beyond the available cohort tools, state that boundary instead of approximating the answer from an unrelated projection.
 
 ## Cohort delta investigations
 
@@ -40,6 +40,7 @@ Use `get_cohort_unit_deltas`, `get_cohort_item_deltas`, or `get_cohort_trait_del
 - Ranking `games` values are board samples. Unit star `0` and trait tier `All` identify across-bucket rollups in tool results.
 - `item_stats.boards` is the distinct-board outcome sample; `holds` is the number of item instances. The all-holders sentinel measures the item across every holder.
 - Scalar unit and trait conditions on rankings mean same-board presence and do not prove that one entity caused the result. The `rank_units.item` condition is narrower: the ranked unit must hold the item.
+- A name-only item condition in cohort tools checks presence on any holder. Set `holder` and optionally `holder_star_level` to bind the item to a matching holder. Separate unit and item conditions do not imply holder binding. Item copy bounds count matching item instances across the board, including across multiple matching holders.
 - Every ranking row includes two lower-is-better placement comparisons. `delta` compares the entity grain with boards in the same ranking population where it is absent; `relative_delta` compares that entity grain inside versus outside the ranking population. Treat `null` as an unavailable or suppressed comparator, including the nonexistent outside population of a full-scope ranking.
 
 ## Item families
@@ -71,13 +72,9 @@ Placement is 1–8 and 4.5 is the lobby baseline. These are observational final-
 After every step, assess silently whether you have enough evidence to give a grounded answer. Once you do, hand off to `final_responder`. You must always conclude with that handoff and never respond directly to the user.
 
 
-## Evidence displays
-Supported analytical results may include `evidence` with an invocation-local
-reference, named datasets, fields, and compatible displays. Preserve these
-references when handing off to final_responder. For a useful comparison or
-explorable ranking with evidence, hand off to final_responder for the initial
-view and concise takeaway. Never reconstruct numerical display payloads.
-For a placement distribution, data_analyst must retrieve reportable histograms
-through compare_cohorts; a mean does not establish a distribution. Keep target
-and baseline populations distinct. If no evidence reference is available,
-answer using the verified analytical results in prose or Markdown.
+## Placement distributions
+For a placement distribution, retrieve reportable histograms through
+`compare_cohorts`; a mean does not establish a distribution. Keep target and
+baseline populations distinct. If histograms are unavailable, state that
+limitation in the handoff to `final_responder` and use only verified analytical
+results.

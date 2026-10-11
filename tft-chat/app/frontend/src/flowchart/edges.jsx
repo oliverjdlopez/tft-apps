@@ -1,107 +1,80 @@
-/** Custom React Flow edges: guarded transitions with attached notes, and dashed note annotations. */
-import React, { useState } from "react";
-import { BaseEdge, EdgeLabelRenderer, useInternalNode } from "@xyflow/react";
-import { StickyNote } from "lucide-react";
-import { useFlowchart } from "./context.js";
-import { edgePath } from "./utils.js";
+/** Routed transitions with readable labels and explicit manual placement gestures. */
+import React, { useState } from 'react';
+import { BaseEdge, EdgeLabelRenderer, useInternalNode } from '@xyflow/react';
+import { StickyNote } from 'lucide-react';
+import { useFlowchart } from './context.js';
+import { edgePath, routePath, orthogonalPoints } from './utils.js';
+import TextField from './TextField.jsx';
 
-/** Wider invisible hit area so thin links are easy to click. */
-const INTERACTION_WIDTH = 16;
-
-/**
- * A "move on when..." link whose guard is drawn as a `[guard]` pill on the line.
- *
- * Empty guards stay hidden until the link is selected, so unlabeled links do
- * not clutter the canvas. Links leaving a decision are its branches, so an
- * empty guard there is always shown and flagged until the player names it.
- * Situational notes open from the pill's note button in a callout hanging
- * under it, keeping them attached to this transition. The label is portalled by `EdgeLabelRenderer`
- * into an HTML layer, so it needs explicit pointer events and `nodrag nopan`
- * to stay editable over the canvas.
- */
-export function TransitionEdge({ id, source, target, data, selected, markerEnd, ...geometry }) {
-  const { readOnly, edgeStyle, updateEdgeData } = useFlowchart();
-  const [path, labelX, labelY] = edgePath(geometry, edgeStyle);
-  const condition = data?.condition ?? "";
-  const notes = data?.notes ?? "";
-  // Notes start collapsed so callouts never cover nodes; a gold note icon on
-  // the pill shows that a transition has notes.
-  const [notesOpen, setNotesOpen] = useState(false);
-  const sourceNode = useInternalNode(source);
-  const targetNode = useInternalNode(target);
-  const branch = sourceNode?.type === "decision";
-  const missingGuard = branch && !condition.trim();
-  // A box selection also selects the links inside it; only a link picked on
-  // its own (its ends not both selected) opens its empty guard for editing.
-  const editing = !readOnly && selected && !(sourceNode?.selected && targetNode?.selected);
-  const showGuard = Boolean(condition) || editing || (missingGuard && !readOnly);
-  const showToggle = editing || Boolean(notes);
-  const showNotes = notesOpen && (editing || Boolean(notes));
+/** Render worker routes, provisional curves, orthogonal bend handles and draggable guard text. */
+export function TransitionEdge({ id, source, data, selected, markerEnd, ...geometry }) {
+  const { readOnly, edgeStyle, updateEdgeData, screenToFlowPosition, routingBusy } = useFlowchart();
+  const [notesOpen, setNotesOpen] = useState(false), [preview, setPreview] = useState(null), [labelPreview, setLabelPreview] = useState(null);
+  const sourceNode = useInternalNode(source), branch = data?.original?.kind !== 'annotation' && sourceNode?.type === 'decision';
+  const condition = data?.condition ?? '', notes = data?.notes ?? '';
+  const route = data?.route, manual = Boolean(data?.waypoints?.length), proxy = data?.proxy;
+  const points = preview ?? route?.points ?? orthogonalPoints([{ x: geometry.sourceX, y: geometry.sourceY }, ...(proxy ? [] : data?.waypoints ?? []), { x: geometry.targetX, y: geometry.targetY }]);
+  const routed = !routingBusy && route;
+  const [path, fallbackX, fallbackY] = (manual || preview || (edgeStyle !== 'curve' && routed)) ? routePath(points) : edgePath(geometry, edgeStyle);
+  const label = routed?.label ?? { x: fallbackX, y: fallbackY }, offset = labelPreview ?? data?.label_offset ?? { x: 0, y: 0 };
+  const showLabel = Boolean(condition || notes || selected || branch);
+  /** A pointer gesture changes local preview; only its completed placement enters history. */
+  const dragLabel = (event) => {
+    if (readOnly || proxy || event.button !== 0) return;
+    event.preventDefault(); event.stopPropagation();
+    const start = screenToFlowPosition({ x: event.clientX, y: event.clientY }), initial = { ...offset };
+    let next = initial;
+    const move = (e) => { const at = screenToFlowPosition({ x: e.clientX, y: e.clientY }); next = { x: initial.x + at.x - start.x, y: initial.y + at.y - start.y }; setLabelPreview(next); };
+    const finish = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', finish); window.removeEventListener('pointercancel', cancel); setLabelPreview(null); updateEdgeData(id, { label_offset: next }); };
+    const cancel = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', finish); window.removeEventListener('pointercancel', cancel); setLabelPreview(null); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', finish, { once: true }); window.addEventListener('pointercancel', cancel, { once: true });
+  };
+  const dragSegment = (event, index) => {
+    if (readOnly || proxy || event.button !== 0) return;
+    event.preventDefault(); event.stopPropagation();
+    const a = points[index], b = points[index + 1], horizontal = a.y === b.y;
+    const start = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+    let next = points;
+    const move = (e) => {
+      const at = screenToFlowPosition({ x: e.clientX, y: e.clientY });
+      // Endpoint-adjacent legs gain two bends so the attachment never moves.
+      next = points.flatMap((p, i) => {
+        const shifted = { ...p, [horizontal ? 'y' : 'x']: a[horizontal ? 'y' : 'x'] + at[horizontal ? 'y' : 'x'] - start[horizontal ? 'y' : 'x'] };
+        if (i === index) return i === 0 ? [p, shifted] : [shifted];
+        if (i === index + 1) return i === points.length - 1 ? [shifted, p] : [shifted];
+        return [p];
+      });
+      setPreview(next);
+    };
+    const finish = () => { cancel(); updateEdgeData(id, { waypoints: orthogonalPoints(next).slice(1, -1).slice(0, 64) }); };
+    const cancel = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', finish); window.removeEventListener('pointercancel', cancel); setPreview(null); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', finish, { once: true }); window.addEventListener('pointercancel', cancel, { once: true });
+  };
   return <>
-    <BaseEdge
-      id={id} path={path} markerEnd={markerEnd}
-      interactionWidth={INTERACTION_WIDTH} className="flowchart-transition"
-    />
-    {(showGuard || showToggle) && (
-      <EdgeLabelRenderer>
-        {/* Anchored by the pill's center; the notes callout hangs below it. */}
-        <div
-          className="nodrag nopan flowchart-edge-label"
-          style={{ transform: `translate(-50%, -12px) translate(${labelX}px, ${labelY}px)` }}
-        >
-          <div
-            className="flowchart-edge-pill"
-            data-selected={selected || undefined}
-            data-missing-guard={missingGuard || undefined}
-          >
-            {showGuard && <>
-              <span aria-hidden="true">[</span>
-              {readOnly
-                ? <span>{condition}</span>
-                : <input
-                    aria-label="Transition guard"
-                    placeholder={branch ? "branch when…" : "when…"}
-                    value={condition}
-                    maxLength={200}
-                    onChange={(event) => updateEdgeData(id, { condition: event.target.value })}
-                  />}
-              <span aria-hidden="true">]</span>
-            </>}
-            {showToggle && (
-              <button
-                type="button"
-                className="flowchart-edge-notes-toggle"
-                aria-label="Notes"
-                aria-expanded={notesOpen}
-                data-has-notes={notes ? true : undefined}
-                onClick={() => setNotesOpen(!notesOpen)}
-              >
-                <StickyNote aria-hidden="true" />
-              </button>
-            )}
-          </div>
-          {showNotes && (readOnly
-            ? <p className="flowchart-edge-notes">{notes}</p>
-            : <textarea
-                className="nowheel flowchart-edge-notes"
-                aria-label="Transition notes"
-                placeholder="Situational detail for this transition"
-                value={notes}
-                maxLength={2000}
-                rows={2}
-                onChange={(event) => updateEdgeData(id, { notes: event.target.value })}
-              />)}
-        </div>
-      </EdgeLabelRenderer>
-    )}
+    <BaseEdge id={id} path={path} markerEnd={markerEnd} interactionWidth={16} className={data?.original?.kind === 'annotation' ? 'flowchart-annotation' : 'flowchart-transition'} />
+    {selected && !readOnly && !proxy && points.slice(1).map((p, i) => <line key={i} className="flowchart-segment-handle nodrag nopan"
+      x1={points[i].x} y1={points[i].y} x2={p.x} y2={p.y} stroke="transparent" strokeWidth={12}
+      onPointerDown={(event) => dragSegment(event, i)}><title>Drag orthogonal segment</title></line>)}
+    {selected && !readOnly && !proxy && <EdgeLabelRenderer>{points.slice(1).map((p, i) => <button key={i}
+      type="button" className="flowchart-bend-grip nodrag nopan" aria-label={`Drag orthogonal segment ${i + 1}`}
+      style={{ transform: `translate(-50%, -50%) translate(${(points[i].x + p.x) / 2}px, ${(points[i].y + p.y) / 2 + 32}px)` }}
+      onPointerDown={(event) => dragSegment(event, i)}>↔</button>)}</EdgeLabelRenderer>}
+    {showLabel && <EdgeLabelRenderer><div className="nodrag nopan flowchart-edge-label" data-id={id}
+      style={{ transform: `translate(-50%, -50%) translate(${label.x + offset.x}px, ${label.y + offset.y}px)` }}>
+      <div className="flowchart-edge-pill" data-selected={selected || undefined} data-missing-guard={branch && !condition.trim() || undefined}>
+        {!readOnly && !proxy && <button type="button" className="flowchart-label-grip" aria-label="Drag guard label" onPointerDown={dragLabel}>⠿</button>}
+        {(condition || selected || branch) && <TextField label="Transition guard" prefix="[" suffix="]" value={condition}
+          placeholder={branch ? 'branch when…' : 'when…'} maxLength={200} multiline onCommit={(condition) => updateEdgeData(id, { condition })} />}
+        {(notes || selected) && <button type="button" className="flowchart-edge-notes-toggle" aria-label="Notes" aria-expanded={notesOpen}
+          data-has-notes={Boolean(notes) || undefined} onClick={() => setNotesOpen(!notesOpen)}><StickyNote aria-hidden="true" /></button>}
+      </div>
+      {notesOpen && <div className="flowchart-edge-notes"><TextField label="Transition notes" value={notes} placeholder="Situational detail"
+        maxLength={2000} multiline onCommit={(notes) => updateEdgeData(id, { notes })} /></div>}
+    </div></EdgeLabelRenderer>}
   </>;
 }
-
-/** A dashed link attaching a situational note to the element it explains. */
-export function AnnotationEdge({ id, ...geometry }) {
-  const { edgeStyle } = useFlowchart();
-  const [path] = edgePath(geometry, edgeStyle);
-  return <BaseEdge id={id} path={path} interactionWidth={INTERACTION_WIDTH} className="flowchart-annotation" />;
+/** Dashed annotations use the same obstacle routing while staying undirected. */
+export function AnnotationEdge(props) {
+  return <TransitionEdge {...props} markerEnd={undefined} />;
 }
-
 export const edgeTypes = { transition: TransitionEdge, annotation: AnnotationEdge };

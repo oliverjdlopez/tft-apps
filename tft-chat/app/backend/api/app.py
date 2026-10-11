@@ -48,6 +48,7 @@ from api.routes import (
     ingest,
     response_tuning,
     rolldown,
+    shared_media,
     specs,
 )
 from core.config import load_config
@@ -185,6 +186,9 @@ def _warm_database_at_startup() -> dict[str, object]:
 
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
+    from services.spec_service import initialize_workspace
+
+    await asyncio.to_thread(initialize_workspace)
     _install_local_trace_recorder()
     database_status = await asyncio.to_thread(_warm_database_at_startup)
     app.state.database_status = database_status
@@ -238,6 +242,7 @@ def create_app() -> FastAPI:
     app.include_router(assistants.router)
     app.include_router(ingest.router)
     app.include_router(specs.router)
+    app.include_router(shared_media.router)
 
     @app.get("/")
     def index() -> Response:

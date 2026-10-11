@@ -4,13 +4,16 @@ import argparse
 import os
 from typing import Any
 
+import pytest
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import Session
 
 from scripts.rebuild_tables import main as rebuild_cli
 
 
-def test_rebuild_tables_uses_db_modules(monkeypatch) -> None:
+@pytest.mark.parametrize("full_rebuild", [False, True])
+def test_rebuild_tables_uses_db_modules(monkeypatch, full_rebuild: bool) -> None:
+    """Use catch-up by default and clear projections only for an explicit rebuild."""
     class FakeSession:
         def __init__(self) -> None:
             self.closed = False
@@ -32,6 +35,7 @@ def test_rebuild_tables_uses_db_modules(monkeypatch) -> None:
         active_session: FakeSession,
         **kwargs: Any,
     ) -> dict[str, int]:
+        assert full_rebuild
         captured["session"] = active_session
         captured["kwargs"] = kwargs
         return {
@@ -41,6 +45,23 @@ def test_rebuild_tables_uses_db_modules(monkeypatch) -> None:
             "trait_stats": 6,
         }
 
+    def fake_catch_up_query_tables(
+        active_session: FakeSession,
+        **kwargs: Any,
+    ) -> dict[str, int]:
+        """Report newly processed matches while retaining existing aggregate totals."""
+        assert not full_rebuild
+        captured["session"] = active_session
+        captured["kwargs"] = kwargs
+        return {"processed_matches": 1, "boards": 8, "remaining_matches": 0}
+
+    dropped: list[FakeSession] = []
+
+    def fake_drop_retired(active_session: FakeSession) -> list[str]:
+        """Record destructive cleanup so default catch-up cannot invoke it."""
+        dropped.append(active_session)
+        return []
+
     monkeypatch.setenv("CHAT_TFT_DATABASE_URL", "postgresql:///before")
     monkeypatch.setattr(rebuild_cli, "open_db", fake_open_db)
     monkeypatch.setattr(
@@ -49,30 +70,30 @@ def test_rebuild_tables_uses_db_modules(monkeypatch) -> None:
         lambda _dsn=None: "postgresql:///rebuild",
     )
     monkeypatch.setattr(rebuild_cli, "db_stats", fake_db_stats)
-    monkeypatch.setattr(rebuild_cli, "_drop_retired_aggregate_tables", lambda _session: [])
+    monkeypatch.setattr(rebuild_cli, "_drop_retired_aggregate_tables", fake_drop_retired)
+    query_counts = iter([
+        {"matches": 1, "unit_stats": 2, "item_stats": 3, "trait_stats": 4},
+        {"matches": 3, "unit_stats": 4, "item_stats": 5, "trait_stats": 6},
+    ])
     monkeypatch.setattr(
         rebuild_cli,
         "_query_table_counts",
-        lambda active_session: {
-            "matches": 1,
-            "unit_stats": 2,
-            "item_stats": 3,
-            "trait_stats": 4,
-        },
+        lambda active_session: next(query_counts),
     )
     monkeypatch.setattr(
         rebuild_cli, "rebuild_db_query_tables", fake_rebuild_query_tables
     )
-    args = argparse.Namespace(
-        dsn="postgresql:///override",
-        match_ids="NA1_a, NA1_b",
-        explain=False,
-        explain_analyze=False,
+    monkeypatch.setattr(rebuild_cli, "catch_up_query_tables", fake_catch_up_query_tables)
+    args = rebuild_cli.parse_args(
+        ["--dsn", "postgresql:///override", "--patch", "17.1"]
+        + (["--full-rebuild"] if full_rebuild else [])
     )
 
     result = rebuild_cli.rebuild_tables(args)
 
     assert result["database"] == "postgresql:///rebuild"
+    assert result["mode"] == ("full_rebuild" if full_rebuild else "catch_up")
+    assert dropped == ([session] if full_rebuild else [])
     assert result["before"] == {
         "raw_matches": 2,
         "raw_participants": 16,
@@ -82,22 +103,75 @@ def test_rebuild_tables_uses_db_modules(monkeypatch) -> None:
         "item_stats": 3,
         "trait_stats": 4,
     }
-    assert result["counts"] == {
+    expected_counts = {
         "matches": 3,
         "unit_stats": 4,
         "item_stats": 5,
         "trait_stats": 6,
     }
+    if not full_rebuild:
+        expected_counts.update(processed_matches=1, boards=8, remaining_matches=0)
+    assert result["counts"] == expected_counts
     assert result["matches"] == 3
     assert result["unit_stats"] == 4
     assert result["item_stats"] == 5
     assert result["trait_stats"] == 6
     assert captured == {
         "session": session,
-        "kwargs": {"explain": False, "explain_analyze": False},
+        "kwargs": {
+            "patch": "17.1",
+            **({"explain": False, "explain_analyze": False} if full_rebuild else {}),
+        },
     }
     assert session.closed is True
     assert os.environ["CHAT_TFT_DATABASE_URL"] == "postgresql:///before"
+
+
+@pytest.mark.parametrize("flag", ["--explain", "--explain-analyze"])
+def test_planner_profiling_requires_full_rebuild(flag: str, capsys) -> None:
+    """Reject profiling flags instead of silently ignoring them during catch-up."""
+    with pytest.raises(SystemExit, match="2"):
+        rebuild_cli.parse_args([flag])
+    assert "require --full-rebuild" in capsys.readouterr().err
+    args = rebuild_cli.parse_args(["--full-rebuild", flag])
+    assert args.full_rebuild is True
+    assert getattr(args, flag[2:].replace("-", "_")) is True
+
+
+def test_catch_up_failure_closes_session_without_full_rebuild(monkeypatch) -> None:
+    """Keep dirty scopes on the explicit repair path and close failed sessions."""
+    class FakeSession:
+        """Track session cleanup after a maintenance failure."""
+
+        closed = False
+
+        def close(self) -> None:
+            """Record session closure."""
+            self.closed = True
+
+    session = FakeSession()
+
+    def fail_catch_up(active_session, **kwargs):
+        """Simulate the catch-up builder refusing a dirty projection."""
+        assert active_session is session
+        assert kwargs == {}
+        raise RuntimeError("analysis scope is dirty and requires a full rebuild")
+
+    def reject_full_rebuild(*args, **kwargs):
+        """Prevent an implicit destructive fallback on failure."""
+        raise AssertionError("full rebuild must be explicitly requested")
+
+    monkeypatch.setattr(rebuild_cli, "open_db", lambda _dsn: session)
+    monkeypatch.setattr(rebuild_cli, "database_label", lambda _dsn: "local test")
+    monkeypatch.setattr(rebuild_cli, "db_stats", lambda _session: {"matches": 1, "participants": 8})
+    monkeypatch.setattr(rebuild_cli, "_query_table_counts", lambda _session: {})
+    monkeypatch.setattr(rebuild_cli, "catch_up_query_tables", fail_catch_up)
+    monkeypatch.setattr(rebuild_cli, "rebuild_db_query_tables", reject_full_rebuild)
+    monkeypatch.setattr(rebuild_cli, "_drop_retired_aggregate_tables", reject_full_rebuild)
+
+    with pytest.raises(RuntimeError, match="dirty.*full rebuild"):
+        rebuild_cli.rebuild_tables(rebuild_cli.parse_args(["--dsn", "postgresql:///test"]))
+    assert session.closed is True
 
 
 def test_full_rebuild_drops_retired_aggregate_tables() -> None:

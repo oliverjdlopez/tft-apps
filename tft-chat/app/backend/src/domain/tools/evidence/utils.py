@@ -5,6 +5,7 @@ import logging
 from uuid import uuid4
 
 from common.serialization import to_jsonable
+from domain.runtime.models import AssistantRunContext
 from domain.tools.db_tools.models import AnalysisComparisonResult, AnalysisTableResult
 from .models import (
     DistributionDataset,
@@ -38,6 +39,45 @@ FRACTION_FIELDS = {
 }
 GROUP_FIELDS = {"unit_name", "trait_name", "star_level", "tier", "cost", "item_count"}
 MAX_ROWS = 200
+
+
+def resolve_evidence_store(context_or_store: object) -> EvidenceStore | None:
+    """Resolve invocation evidence while preserving legacy bare-store callers.
+
+    Args:
+        context_or_store: Application run context, legacy store, or absent context.
+
+    Returns:
+        The caller-owned store, if this execution surface supports evidence.
+    """
+    if isinstance(context_or_store, AssistantRunContext):
+        return context_or_store.evidence
+    return context_or_store if isinstance(context_or_store, EvidenceStore) else None
+
+
+def presentation_event(context_or_store: object, call_id: str | None) -> dict:
+    """Extract a browser event from validated evidence without model rounding.
+
+    Args:
+        context_or_store: Application run context, legacy store, or absent context.
+        call_id: SDK call identifier associated with a successful presentation.
+
+    Returns:
+        The existing presentation payload or its bounded unavailable error.
+    """
+    store = resolve_evidence_store(context_or_store)
+    presentation = store.presentations.get(call_id) if store is not None else None
+    if presentation is not None:
+        try:
+            # Only the acknowledgement crosses the model boundary. The browser
+            # receives this store object directly to retain analytical precision.
+            return {
+                "type": "presentation",
+                "presentation": presentation.model_dump(mode="json"),
+            }
+        except (ValueError, TypeError):
+            pass
+    return {"type": "presentation_error", "error": "Evidence view unavailable."}
 
 
 def field_definition(key: str) -> EvidenceField:

@@ -5,11 +5,35 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import subprocess
+from contextlib import contextmanager
+from dataclasses import asdict
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from .models import MediaRequest
+
+
+def configured_root() -> Path | None:
+    """Resolve suite-owned storage for standalone and desktop processes.
+
+    Returns:
+        The absolute configured directory, defaulting to the suite's media
+        directory. An explicitly empty TFT_MEDIA_DIR disables shared storage.
+
+    Raises:
+        ValueError: If an explicit storage path is relative.
+    """
+    app_root = next(parent for parent in Path(__file__).resolve().parents
+                    if (parent / "pyproject.toml").is_file())
+    value = os.environ.get("TFT_MEDIA_DIR", str(app_root.parent / "media")).strip()
+    if not value:
+        return None
+    root = Path(value).expanduser()
+    if not root.is_absolute():
+        raise ValueError("TFT_MEDIA_DIR must be an absolute path shared by both apps")
+    return root.resolve()
 
 
 def source_key(url: str) -> str:
@@ -106,3 +130,65 @@ def derive(source: Path, destination: Path, row: dict, request: MediaRequest) ->
             command += ["-vf", f"scale=-2:{request.height}"]
     command += ["-movflags", "+faststart", str(destination)]
     subprocess.run(command, check=True, capture_output=True, text=True)
+
+
+# ---------------------------------------------------------------------------
+# Shared resource operations
+# Content integrity and catalog decoding
+# Used by the modality-independent resource store
+# ---------------------------------------------------------------------------
+
+
+def resource_digest(path: Path) -> str:
+    """Hash artifacts incrementally so large data files fit bounded memory."""
+    with path.open("rb") as handle:
+        return hashlib.file_digest(handle, "sha256").hexdigest()
+
+
+def resource_from_row(value: str):
+    """Decode catalog metadata and validate IDs before constructing disk paths."""
+    from .models import Resource
+
+    resource = Resource(**json.loads(value))
+    if len(resource.id) != 32 or any(c not in "0123456789abcdef" for c in resource.id):
+        raise ValueError("Invalid catalog resource ID")
+    return resource
+
+
+def resource_payload(resource) -> dict:
+    """Expose provenance and portable references without host filesystem paths."""
+    return {**asdict(resource), "reference": resource.reference,
+            "content_url": f"/api/shared-media/{resource.reference}/content"}
+
+
+@contextmanager
+def resource_errors():
+    """Translate catalogue failures into consistent responses in both backends."""
+    from fastapi import HTTPException
+
+    try:
+        yield
+    except KeyError:
+        raise HTTPException(404, "Unknown shared resource") from None
+    except FileNotFoundError:
+        raise HTTPException(410, "Shared resource file is missing") from None
+    except ValueError:
+        raise HTTPException(409, "Shared resource is invalid or failed its integrity check") from None
+
+
+def copy_resource(source: Path, destination: Path, root: Path) -> None:
+    """Link immutable catalogue media, copying caller-owned files for isolation.
+
+    Args:
+        source: Completed file being published.
+        destination: New temporary resource path.
+        root: Catalogue root shared by both applications.
+    """
+    if source.resolve().parent == root / "media" and not source.is_symlink():
+        # Both names belong to this catalogue and are immutable. This avoids
+        # storing a second multi-gigabyte copy when indexing a URL download.
+        os.link(source, destination)
+    else:
+        import shutil
+
+        shutil.copyfile(source, destination)

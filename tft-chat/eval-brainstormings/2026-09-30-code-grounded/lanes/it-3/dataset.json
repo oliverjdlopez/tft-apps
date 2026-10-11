@@ -1,0 +1,339 @@
+{
+  "items": [
+    {
+      "case": "IT-3-C01",
+      "input": "Does Gunblade become a better item on Zyra when she's playing behind Juggernauts, or do those boards just do well regardless of her build?\n\nPlease focus on Set 18 standard-ranked final boards. For the main comparison, use two-star Zyra with exactly three ordinary completed items. Compare Gunblade with observed alternative third items while holding Zyra's other two items fixed, separately in lower, four-contributor, and six-contributor Juggernaut contexts. Within each context, assess the item contrast before comparing how it varies across contexts. Account for Maokai presence, Summoner activation, and carry or tank investment where the available aggregates permit; describe count or level imbalances instead of claiming they were matched. Report sample sizes and placement, top-four, and win results, and say when a comparison is suppressed or unsupported.",
+      "expected_output": {
+        "requirements": [
+          "Treat this as an evidence-relative investigation of the scoped Set 18 standard-ranked final-board population. Do not select a preferred winner in advance or present historical or online results as the answer.",
+          "Define the compared Zyra builds as two-star, three-completed-item loadouts and distinguish the Gunblade build from observed alternatives that share the other two items. A board-level Gunblade association alone does not establish the item contrast.",
+          "Compare the build contrast within lower, four-contributor, and six-contributor Juggernaut contexts before describing any variation across contexts. Use contribution counts or equivalent support for numeric thresholds; a medal label alone does not establish four versus six contributors.",
+          "Where supported, inspect or account for Maokai presence, active Summoner, and carry or tank investment. Do not claim samples were matched on board size, total items, or other unavailable controls; describe grouped imbalances when available.",
+          "Give the observed cell counts and available average placement, top-four rate, and win rate, with comparison direction and available uncertainty. Lower average placement is better. Treat suppressed or missing rows as unavailable evidence, not as zero.",
+          "Explain that the results are final-board associations, not causal item effects; the data do not reveal healing in combat, every healing source, or a universal matched-board budget. If the loaded scope cannot be verified as applicable, make that a preparation limitation.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade whether the assistant investigates the specified holder-bound, within-context contrast and reports the results actually available. The intended answer is not a preselected winner."
+      },
+      "metadata": {
+        "source_case_id": "IT-3-C01",
+        "lane": "IT-3",
+        "subject": "items",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-3/cases.md",
+        "proposal_lineage": [
+          "IT-3-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "zyra_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Zyra",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "compares_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-3-C02",
+      "input": "Is Rageblade–Titan's Elise actually good in ordinary Vanguard boards, or does it only look good when she has a Ravager emblem?\n\nPlease focus on Set 18 standard-ranked final boards. For the primary comparison, use three-star Elise with exactly three completed items in four- and six-contributor Vanguard contexts. Compare ordinary Rageblade–Titan's builds with observed ordinary third items, then separately compare the complete package where a Ravager emblem occupies Elise's third slot and Ravager is active. Keep the emblem on Elise and make the lost ordinary third item explicit. Consider two-star Elise only as a separate sensitivity, and report the support for each cell.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the scoped Set 18 standard-ranked final-board evidence without assuming either the ordinary build or emblem package wins.",
+          "Separate three-star Elise with three completed items into four- and six-contributor Vanguard contexts. Compare Rageblade–Titan's with observed ordinary third items while preserving the shared pair.",
+          "Analyze the Ravager-emblem package as a distinct three-item allocation with the emblem bound to Elise and active Ravager. State that the emblem uses a slot that otherwise held an ordinary third item; do not describe it as an ordinary third-item comparison.",
+          "Report counts and available average placement, top-four, and win outcomes within each context, with comparison direction and uncertainty when available. Do not call a suppressed or absent row zero. Keep any two-star sensitivity separate from the primary three-star comparison.",
+          "Do not infer global absence of special items, Coven rewards, acquisition timing, or damage role. State when sample support or scope readiness prevents an answer, rather than turning the case into a generic refusal.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Assess whether the ordinary builds have supported outcomes and how the distinct emblem-bearing package compares; either direction or an unresolved result can be valid."
+      },
+      "metadata": {
+        "source_case_id": "IT-3-C02",
+        "lane": "IT-3",
+        "subject": "items",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-3/cases.md",
+        "proposal_lineage": [
+          "IT-3-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "elise_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Elise",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "compares_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_status": "disputed",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-3-C03",
+      "input": "Does Red Buff still improve Ashe's endgame results when the board already has Inferno, or is its good average mostly coming from boards without that trait?\n\nPlease focus on Set 18 standard-ranked final boards and analyze one-star and two-star Ashe separately. For each star level, compare fully itemized Ashe builds with Red Buff against observed alternative third items that share the other two items. Cross those build comparisons with boards where Inferno is active and boards without active Inferno; include boards where Inferno is absent as well as present but inactive. Track Inferno Emblem on Ashe separately from allied Inferno activation, and distinguish other named burn items. Report which cells have usable support.",
+      "expected_output": {
+        "requirements": [
+          "Use scoped Set 18 standard-ranked final-board evidence, without selecting a winner in advance.",
+          "Separate one-star and two-star Ashe and compare three-item builds that hold Ashe's other two items fixed while changing Red Buff versus observed alternative third items.",
+          "Cross each build with active-Inferno contexts and genuinely without-active-Inferno contexts. Explain that a missing trait row is not matched by an inactive-trait predicate; use an appropriate complement for absence and do not treat it as a general nested filter.",
+          "Keep Inferno Emblem on Ashe separate from native allied Inferno activation, and distinguish other named burn equipment where relevant. Do not claim opponent burn coverage or exact combat overlap.",
+          "Report support counts and available average placement, top-four, and win results by star and context, with comparison direction and uncertainty where available. Missing or suppressed cells are unknown, not zero.",
+          "If the loaded scope or sample does not support the crossed comparison, say precisely what is missing; do not substitute a pooled Red Buff average for the conditional question.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "The case asks for an evidence-relative crossed comparison, not a fixed Red Buff verdict."
+      },
+      "metadata": {
+        "source_case_id": "IT-3-C03",
+        "lane": "IT-3",
+        "subject": "items",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-3/cases.md",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "ashe_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Ashe",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "compares_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-3-C04",
+      "input": "Is Morello–Void Staff Morgana a good build on her own, or do its results depend on having a fully itemized Ahri beside her?\n\nPlease focus on Set 18 standard-ranked final boards. For the primary comparison, use two-star Morgana with exactly three ordinary completed items: Morello and Void Staff plus an observed third item, compared with other observed damage trios. Separate boards with a two-star, fully itemized Ahri; an underitemized Ahri; another fully itemized damage carry; and no other fully itemized carry within a clearly named, bounded AP-carry candidate pool that you can justify from available context or observed candidates. Define “on her own” only against that declared pool, not as having no other units. Compare within defensible Invoker and frontline shells where support permits, and describe equipment or holder imbalances rather than claiming a global item-budget match.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the scoped Set 18 standard-ranked final-board evidence without presuming that Morgana's build or Ahri's presence explains the results.",
+          "Define Morgana's primary build comparison as two-star, three-item allocations containing Morello and Void Staff plus an observed third item, against observed alternative damage trios. Keep Morgana's own build association separate from partner investment.",
+          "Compare the partner strata requested: two-star fully itemized Ahri, underitemized Ahri, another fully itemized damage carry, and no other fully itemized carry within an explicitly named bounded AP-carry pool. State the pool and the limits of treating it as exhaustive; “on her own” does not mean no other units.",
+          "Use named Invoker/frontline shells as supported controls and define partner investment through star and completed-item conditions when available. Holder-specific item predicates must bind items to the named holder; do not infer an exact trio from board-level item presence.",
+          "Give cell counts and available average placement, top-four, and win outcomes for both Morgana build and partner comparisons. Label unsupported or suppressed cells as unavailable, not zero; describe candidate-pool and overall equipment-budget limits.",
+          "Do not treat Statikk as ordinary Void Staff, infer damage share or a generic AP role, or claim global item-budget matching. If there is no adequately supported sample, report the preparation gap.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "The intended result distinguishes Morgana's own allocation from partner investment and treats “on her own” as absence only within a disclosed candidate pool."
+      },
+      "metadata": {
+        "source_case_id": "IT-3-C04",
+        "lane": "IT-3",
+        "subject": "items",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-3/cases.md",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "morgana_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Morgana",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "compares_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-3-C05",
+      "input": "Does Titan's actually beat Kraken on carry Mama Beak in Summoner boards, and does that still hold when she's played in a Riftbeast-heavy board?\n\nPlease focus on Set 18 standard-ranked final boards. First compare three-star Mama Beak with exactly three ordinary completed items, contrasting Titan's with Kraken in builds that share an observed pair of other items. Keep two-star results separate. Compare within active Summoner and active Riftbeast contribution contexts, including their joint intersection when supported; those board families can overlap, so do not treat them as exclusive. Use named carry or frontline conditions where support permits, and report itemized carry support rather than counting trait-only fillers as carries.",
+      "expected_output": {
+        "requirements": [
+          "Use scoped Set 18 standard-ranked final-board evidence and do not assume which item wins.",
+          "Establish the three-star, three-ordinary-item Mama Beak comparison first: Titan's versus Kraken with an observed shared pair. Keep any two-star comparison as a separate sensitivity.",
+          "Define Summoner and Riftbeast contexts from their contribution support and explicitly inspect the joint context when available. State that these contexts can overlap; do not compare them as mutually exclusive families or use two marginal trait rows to assert a joint sample.",
+          "Compare exact holder-bound loadouts within supported trait cells and use named carry/frontline conditions when available. An itemized-carry condition should exclude naked trait fillers from the carry interpretation.",
+          "Report cell counts and available average placement, top-four, and win results before summarizing differences across contexts. Missing or suppressed samples are not zero; distinguish insufficient evidence from evidence of no difference.",
+          "Do not infer Alpha Mark ownership from the observed board aggregates. Describe results as associations and flag scope or sample readiness limits.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "A supported answer can favor either item in either or both overlapping board contexts, or conclude that a cell is unresolved."
+      },
+      "metadata": {
+        "source_case_id": "IT-3-C05",
+        "lane": "IT-3",
+        "subject": "items",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-3/cases.md",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "mama_beak_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Mama Beak",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "queries_cohort_context",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_status": "disputed",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-3-C06",
+      "input": "Is Seeker's Armguard worse than Crownguard on Fiddlesticks when I play lots of Defenders and Spellweavers, or do the results still favor it there?\n\nPlease focus on Set 18 standard-ranked final boards. For the primary comparison, use three-star Fiddlesticks with Adaptive Helm and Titan's as a fixed two-item pair, and compare Seeker's Armguard against ordinary Crownguard as the third item. Repeat the comparison separately for two-star Fiddlesticks. Cross the builds with joint Defender and Spellweaver contribution contexts rather than analyzing either trait only as a marginal. Where visible, preserve Flora Fatalis and Soraka conditions and inspect special-item holders. State that artifact acquisition and exact whole-board artifact counts may remain different between the compared boards, and do not attribute results to armor/AP saturation, takedown stacks, or duration.",
+      "expected_output": {
+        "requirements": [
+          "Investigate scoped Set 18 standard-ranked final-board evidence without preselecting which third item is better.",
+          "Compare three-star Fiddlesticks loadouts that hold Adaptive Helm and Titan's fixed while varying Seeker's Armguard versus ordinary Crownguard. Report two-star results separately rather than pooling star levels.",
+          "Cross the fixed-pair build comparison with joint Defender and Spellweaver contribution contexts. A marginal Defender or Spellweaver association alone does not answer the joint-context question.",
+          "Where supported, preserve Flora Fatalis and Soraka conditions and inspect special-item holders descriptively. Report counts and available average placement, top-four, and win effects with uncertainty when available.",
+          "Explain that artifact acquisition and exact whole-board artifact counts remain unmatched selection differences even when Fiddlesticks has the same item count. Do not attribute an association to armor/AP saturation, takedown stacks, or fight duration.",
+          "Distinguish unsupported or suppressed cells from zero and state scope or sample readiness limitations; do not claim a causal item effect.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade the exact fixed-pair, star-separated and joint-context investigation. Either item may lead, or available support may be insufficient."
+      },
+      "metadata": {
+        "source_case_id": "IT-3-C06",
+        "lane": "IT-3",
+        "subject": "items",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-3/cases.md",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "fiddlesticks_name_resolved_for_loadout_lookup",
+            "kind": "trace",
+            "check": {
+              "type": "tool_argument_resolved",
+              "query": "Fiddlesticks",
+              "argument": "unit",
+              "value": "rank_unit_loadouts"
+            }
+          },
+          {
+            "name": "compares_cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_status": "disputed",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

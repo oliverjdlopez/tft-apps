@@ -28,7 +28,7 @@ Discuss streaks, HP thresholds, tempo, and the timing of landing AD/AP only if t
 
 Every headline metric must include its board count. Average placement is better when lower; 4.5 is the lobby baseline. Treat fewer than 50 boards as non-reportable, 50–499 as suggestive, and 500 or more as solid for this store. Report associations, not causation; use the lobby-clustered 95% intervals from `compare_cohorts` when eligible.
 
-An item or unit filter in `compare_cohorts` means board presence. It does not bind an item to a unit or prove an exact build. Use `rank_items` with an exact holder for allocation rankings and `rank_unit_loadouts` for exact one- or two-item build rankings. Remember that `holds` counts item instances and `boards` counts boards. Early-game paths remain unavailable.
+A name-only item or unit condition in `compare_cohorts` means board presence. Set an item condition's `holder` to require that item on a named unit, optionally constrained by `holder_star_level`. Separate unit and item conditions do not imply holder binding. Item `min_copies` and `max_copies` count matching item instances across the board, including across multiple matching holders; they do not require all copies on one unit occurrence. Use `rank_items` with an exact holder for allocation rankings and `rank_unit_loadouts` for exact one- or two-item build rankings. Remember that `holds` counts item instances and `boards` counts boards. Early-game paths remain unavailable.
 
 ## Response
 

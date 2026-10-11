@@ -1,0 +1,1301 @@
+{
+  "config": {
+    "action": "run",
+    "cases": [],
+    "concurrency": 4,
+    "data_snapshot_label": null,
+    "dataset_version": null,
+    "repetitions": 1,
+    "selection_live": false,
+    "snapshot": null,
+    "variants": [
+      {
+        "model": null,
+        "name": "baseline",
+        "prompts": {}
+      }
+    ]
+  },
+  "dataset_name": "chattft/comp-expert",
+  "items": [
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nAddress whether the Alune version has convincing support over Lux or Soraka in the level-ten Elder Dragon/Draven options referenced on TFT Codex. Preserve all three alternatives and distinguish exact source-table evidence from any local-data analogue. Do not fabricate a common nine-unit core or claim to have read Codex if it was unavailable. Close point estimates, cohort overlap, sample sizes, and available uncertainty matter; do not force a winner.",
+      "id": "comp-expert/CO4-4-C04",
+      "input": "The level-ten Elder Dragon–Draven options on TFT Codex look very close. Is there convincing evidence that the Alune version is better than the Lux or Soraka versions?",
+      "metadata": {
+        "adaptation": "Converted the website-panel interpretation into a ChatTFT scoped-data uncertainty comparison, keeping the shared core and three alternatives. The previously supported web-only answer is not considered measured support for this new benchmark.",
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C04",
+        "case_id": "comp-expert/CO4-4-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_candidate_roster_diagnostics",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_support_version_effects",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "82cebbc965279b836b5a6dc8bd06beebc8596120214d0babbd79c81ea72f71b9",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "be5e7a34c8a6f146f4f0a4c6b6229c035ef8f45f46fd5ee646106a772cae8a5a",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "supported",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "38458dfdd603a102776637e806dc31622e95ca8de1f11eca96080dd51fab9721",
+        "source_status": "grounded",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C04",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "f8454a12-f04b-590a-8d65-191fd5ac2a88",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nAddress the player's TFT Codex question: identify whether the most popular last-unit finish on level-nine Primal Aphelios/Nidalee boards also leads placement and win rate. If the Codex table is unavailable, say that its exact ranking cannot be verified; a clearly labeled local-data analogue is acceptable but must not be attributed to Codex. Do not invent the table, last-unit candidates, common eight-unit core, counts, or historical values. Compare popularity and outcomes with their denominators and sample support when data is available.",
+      "id": "comp-expert/CO4-4-C03",
+      "input": "TFT Codex lists several level-nine Primal Aphelios–Nidalee finishes. Is the most popular last unit also getting the best placements and win rate?",
+      "metadata": {
+        "adaptation": "Removed dependence on a mutable TFT Codex panel while preserving the popularity-versus-performance investigation and its known shared roster. Original website snapshot numbers remain historical provenance, not gold for a different database.",
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C03",
+        "case_id": "comp-expert/CO4-4-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_named_finishing_unit_frequencies",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compare_requested_finishes",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "c0cf75ee184d0adddaa771e544e3ea73bdc2828bceee77f0784279835cb8654c",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "666017fe4c3bfea920e7c563b6053e11c4bead8aea311502c9ee22a6fccf16ac",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "supported",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "5c7d8312d3e16e79a2ef369b4560360b57820a3733be8434c7f9b2c43ecb30de",
+        "source_status": "grounded",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "598dbbd3-5cf9-54c5-b53a-75f6ad6ef58e",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nCompare the Ezreal/Scuttle Crab and Kennen/Amumu finished packages around Azir/Mama Beak at level eight. Keep shared carry context and disclose remaining roster differences; report win rate separately from top-four rate so a higher win rate is not mislabeled greater consistency.",
+      "id": "comp-expert/CO4-4-C02",
+      "input": "For a level-8 Azir–Mama Beak board, how do the Ezreal–Scuttle Crab and Kennen–Amumu versions compare as finished boards? Is one more likely to win rather than just make top four?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C02",
+        "case_id": "comp-expert/CO4-4-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "discovers_shared_companions_and_package_support",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compare_requested_finishes",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "70800ce72296a074cc9ed7369c1acc83048bd38746484d7acd5eb42b313c557d",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "715cf352cd1576bc7419c601fb455689b5674c14d530d744e684bf11ad81905e",
+        "proposal_lineage": [
+          "CO4-4-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "f3b9e7c114a5c1f5bdf6959c5de041c6a0c5ab065a54d0d01a4b5a8444948a70",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "e2e766e7-b2ee-530d-a94b-ca3eca635956",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nOn level-nine Aphelios boards, compare Eclipse support with observed frontline/utility alternatives, then inspect how the comparison differs when the Solar units are three-star. Define the observed packages and upgrade strata rather than inventing a fixed roster; distinguish the Eclipse package from the value of the invested units it contains.",
+      "id": "comp-expert/CO4-4-C01",
+      "input": "On a level-9 Aphelios board, when is keeping Eclipse worth the slots compared with a stronger frontline and utility package? Does that change if the Solar units are already three-star?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-4-C01",
+        "case_id": "comp-expert/CO4-4-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_observed_aphelios_packages",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_eclipse_and_support_packages",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "fc44c5386963f54d7dab1f0ce0e1069c38f1935ff8de982e9bde1a69d63575ef",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-4",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "08407eb848ae6eeb8d5108de0cb0c38fd3295e91f714077d4217e42f537a7f22",
+        "proposal_lineage": [
+          "CO4-4-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_case_id": "CO4-4-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "fb911bb706bd467dd04aafe3a69282d5409c31770846d1210ba065ab34e469a5",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-4-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "f6694c80-25b6-5cc6-a522-24ae26ca1be5",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nCompare Alune/Lux/Taric support against observed Kog'Maw or Hecarim alternatives on Ahri/Morgana boards at the same final level, and describe remaining-slot composition. Do not invent a fixed opposite roster that the player never supplied or pool different levels as if the capacity cost were equal.",
+      "id": "comp-expert/CO4-3-C05",
+      "input": "For Ahri–Morgana end boards, is there actually a payoff to the Alune/Lux/Taric support package compared with versions using Kog'Maw or Hecarim? I'd like a comparison at the same final level, including what fills the remaining slots.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C05",
+        "case_id": "comp-expert/CO4-3-C05",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare same-level package cohorts",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect supporting roster and traits",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect supporting roster and traits",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "d0fc2846799e556f1f1144a7682637aa72f23ed32446f7530daa5d48d491e3df",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "27f7ab956cee7ec157ba814472c9dee6794b2bfab8b8cded262dbd1402823da3",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C05",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "6b58438caa90ee81fd496d040ab40bf72ec445310769d3d3d384e3e0d10c904d",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C05",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "126997bd-c592-5e59-9991-16e592d91809",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nCompare Solar-heavy and Adaptor-focused support packages with both Akali and Camille three-star, identify units that change together, and check whether the contrast survives similar other three-stars and artifact investment. Do not equate a richer package with an isolated support-trait effect or claim exact matching when unavailable.",
+      "id": "comp-expert/CO4-3-C04",
+      "input": "With Akali and Camille both three-star, how do Solar-heavy end boards compare with Adaptor-focused support packages? Which supporting units change together, and does the comparison hold when the other three-stars and artifacts are similar?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C04",
+        "case_id": "comp-expert/CO4-3-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare named support packages",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "discover joint support patterns",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "discover joint support patterns",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "3cc03e3a6d7bb353112b4769a1bde6ac1ece1dccd2ab87666a6dd7dabab978ac",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "270019768a69732f9c1fb75a8eaee438bea4a66334f2c27f8b480450efab3c7d",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "0f5bf4211b11f43241560e8fda51fb079c3ede8fd99808ac49e112b6b85bf9bc",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C04",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "0b6908ff-5c75-50c5-9f41-3cf129a7776d",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nCompare Ahri/Sett boards with Yorick/Karma's Blossom package against Alune/Amumu's Executioner package, separately at levels eight and nine. Preserve the joint unit swaps and report active traits rather than assuming the label guarantees them. A pooled comparison across levels does not answer the requested level dependence.",
+      "id": "comp-expert/CO4-3-C03",
+      "input": "With Ahri and Sett on my final board, how does keeping Yorick and Karma for the Blossom package compare with using Alune and Amumu for an Executioner package? Are the results different at level eight and level nine?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C03",
+        "case_id": "comp-expert/CO4-3-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare partner packages by level",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect partner and trait composition",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect partner and trait composition",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "116fad960b08afc21ce238a53e50e3c1a3e372b5dc0f02d91db88b1784eb6d88",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "a80eb332a1a31404f7485f6303defb3b75d463ec58cf57377afb4ecede2e362a",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "0ac1519727438751ac455b2fd9241e85db7e492f838094d7719a495b22f29986",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "85be0860-6f9f-576f-a9c0-54ed219f3932",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nInvestigate Master Yi reroll variants without Rengar while retaining Kog'Maw, comparing Vi and Krug as invested tanks and describing other support changes. Keep both named tank alternatives and do not silently include the excluded unit. Evaluate finished packages without pretending to reconstruct their transitions.",
+      "id": "comp-expert/CO4-3-C02",
+      "input": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C02",
+        "case_id": "comp-expert/CO4-3-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare frontline allocations",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect tank and companion patterns",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect tank and companion patterns",
+            "original_values": [
+              "get_cohort_unit_deltas",
+              "query_cohort",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "f966a996042819e8b7253100b97bb065da66d429d0bdd9bae736ff20b39545bb",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "8058bb804c0a63ac6df178e0570a88c4c4699e329668d5d97db661298f244ed3",
+        "proposal_lineage": [
+          "CO4-3-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "cabd425c78eb277a50ef0dedf6b27013bc20a31ad8143f36e0e82f96d6c75f91",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "678e0ba9-fe08-59c8-b49a-73ed0da0bc49",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nCompare observed frontline packages for AD Nidalee/Sivir at level eight with Malphite absent and no emblems, and describe the accompanying support-unit changes. Preserve all stated restrictions, support recurring packages with counts/outcomes, and avoid recommending an emblem-enabled or level-nine alternative as the requested answer.",
+      "id": "comp-expert/CO4-3-C01",
+      "input": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-3-C01",
+        "case_id": "comp-expert/CO4-3-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed packages",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect frontline and support patterns",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect frontline and support patterns",
+            "original_values": [
+              "get_cohort_unit_deltas",
+              "query_cohort",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "092004a40677576f52147774bf01486f12212a753d82bf6fce71f359a0ad600e",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-3",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "d0497b8150efe92806b7e628e85834c2eb3fee8b6599478a451e6fd30f10aca0",
+        "proposal_lineage": [
+          "CO4-3-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "source_case_id": "CO4-3-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "4475da69ff160d9f96bcb04e2378c47d53956f0d8900ddf335a6998e92982c33",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-3-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "b41f3ca2-3080-5661-ab0c-e4f76c57edce",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nCompare the joint roster and support structures of Warwick/Murkwolf reroll boards and vertical Riftbeast boards carrying Murkwolf, identifying defining cores and observed overlap. Define carry and reroll proxies from items/stars; shared unit names alone do not establish that the two families are identical.",
+      "id": "comp-expert/CO4-2-C06",
+      "input": "Are the finished boards people call Warwick–Murkwolf reroll actually the same family as vertical Riftbeast boards that carry Murkwolf? Which units define each core, and where do they overlap?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C06",
+        "case_id": "comp-expert/CO4-2-C06",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "compare_cohorts",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort",
+              "compare_cohorts"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "f7c4a1c1a4e309c4e321f15981a70274449219cc8baddb37959e0ed4e4f8a8ae",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "9d6bde434a46ba58805997c987fffa80debfe640d89039cae2f49aadbb8866ea",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C06",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "b1a9b89879e50e3cac5a2af22d88e8f8f9c2cc81c1676a4603d042b1a8b811bf",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C06",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "5774e58b-77de-5611-abfe-e6d906f3b6b6",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nWithin the top-four finished Teemo boards being discussed, distinguish an invested Teemo carry role from boards retaining him beside another carry, and identify their recurring cores. Explain the role proxy and selection denominator. A sample restricted to top fours cannot estimate each family's unconditional top-four probability.",
+      "id": "comp-expert/CO4-2-C05",
+      "input": "When Teemo shows up in several top-four endgame boards, are those actually the same composition? What recurring cores separate Teemo carry boards from boards that just keep him alongside another carry?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C05",
+        "case_id": "comp-expert/CO4-2-C05",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "94af21e799876cdf6103756c750217a2f45528ab234c6154fabc39314183cdad",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "2c1dad69aa50cad25a531c3ad8e294ff063af9e93e893a7b29102fd6afc1a60f",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C05",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "7cc18b7355264342c00ef66e296d54c3a1969ab0eb65910d9d29ddcc70ffe558",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C05",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "17463d26-0467-5dd2-ab1e-2612bb033176",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nDiscover recurring frontline/support alternatives around Zyra/Soraka when Malphite and Sentinel are absent under an explicit interpretation of the question. Use joint roster evidence and counts to distinguish recurring alternatives from sparse boards. Calling them emergency boards would require player-intent evidence unavailable in final-board records.",
+      "id": "comp-expert/CO4-2-C04",
+      "input": "For finished Zyra/Soraka boards, what does the rest of the team look like when Malphite and Sentinel aren't the frontline? Are there recurring alternatives, or just scattered emergency boards?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C04",
+        "case_id": "comp-expert/CO4-2-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "b75aea7af6f9b6cebd6372f123efc0be04ffc87f0e940094ec312affe5cb3905",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "7c89891c4c77d66137aacfc8d5296af5feb93055e81cba763e4dc1f61bf6c77d",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "32a7449e2419f83390d403ec916da7afae351a5e35bbbce2a5f921102ccf9ef7",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C04",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "26a61a23-ec27-5d84-9d41-d750770e7713",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nInvestigate whether Aphelios/Brambleback and Sivir/Nidalee are exclusive fixed pairings or recombine in recurring finished AD board families. Examine joint carry combinations and their associated support cores; distinguish rare overlaps from well-supported families without inferring transition history.",
+      "id": "comp-expert/CO4-2-C03",
+      "input": "In finished AD boards, are Aphelios–Brambleback and Sivir–Nidalee really two fixed pairs, or do the carries recombine into other recurring boards? Which support units stay together when they do?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C03",
+        "case_id": "comp-expert/CO4-2-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "7a4b32f9c22ee8b212a1c86834ba8ce9bb5d0548e06b0d784cdef9f0ab0be2c6",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "0861bc3c714cd0a5dfe6d2f32ebf9ac45a34ab1de5405c419c3bd6194d466411",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "830de2c26614aebbca0dd45015d94d8655f1e3657736d409c945507b06ee84ec",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "34151da9-2b75-5a2e-b8a2-b96092cced67",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nIdentify recurring joint cores and observed remaining-slot variants of Elderwood Veigar boards. Separate mandatory-by-definition filters from empirically common units, give denominator and support for patterns, and avoid constructing a full composition by combining unrelated unit marginals.",
+      "id": "comp-expert/CO4-2-C02",
+      "input": "When I look up Elderwood Veigar, the finished boards aren't all the same. Which units keep showing up together, and what are the main ways people fill the remaining slots?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C02",
+        "case_id": "comp-expert/CO4-2-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "get_cohort_trait_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "0f4e044d3d6ef2d90b81d35ecb1e0fe0dc840784a9164acb8176ba3dc192ec42",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "2f3d173e9548934c00d70cf449bb7e747701dd818e668622921466ea71b5c72d",
+        "proposal_lineage": [
+          "CO4-2-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "a3a4520d70fa4f2c018d3efe0096889eb63c583080a407acbc23648ee8731773",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "28ffd23d-e255-5356-bfef-94022be8c56f",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nDiscover recurring joint unit cores among level-nine five-cost endgame boards, then distinguish stable cores from flexible accompanying units. Define the analyzed five-cost population and report support for recurring combinations. Independent popular units do not establish that they occur together as a composition.",
+      "id": "comp-expert/CO4-2-C01",
+      "input": "People keep calling the level-nine boards “five-cost soup,” but they don't all look alike. What recurring cores show up in those endgame boards, and which units are actually flexible around them?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-2-C01",
+        "case_id": "comp-expert/CO4-2-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "investigate_the_declared_board_population",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "investigate_the_declared_board_population",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_unit_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "297dc810cb13cac3e82a99fd05b865b263e84cb30919cbac3853b22cb2a6e4c6",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-2",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "dacc6665449d3a11c2d27414a6e5b523ae5dc6a86f3158e8b9c1c50c110cdd98",
+        "proposal_lineage": [
+          "CO4-2-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-2/cases.md",
+        "source_case_id": "CO4-2-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "6baf55754810c4ef3e7a02239784386b1dc0eeedf912d93cf3ef12a5089798d6",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-2-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "716141d9-638e-5599-ac49-73766a825a30",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nAssess whether three-star Azir boards support choosing him as the invested carry on 18.3B, separating that role proxy from boards where another itemized carry likely drives the package. Describe the support and item conditions observed. Final-board success alone does not estimate the chance, cost, or safety of reaching the reroll board.",
+      "id": "comp-expert/CO4-1-C03",
+      "input": "Is Azir reroll actually a reasonable comp to choose on 18.3B, or do his good three-star stats mostly come from boards where someone else is carrying? What would make the Azir version worth choosing?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-1-C03",
+        "case_id": "comp-expert/CO4-1-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_joint_azir_role_proxies",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_reportable_role_groups",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "540ad2391a1d8ee7fb12c19c51ec7c91fbefc026512d571d41325e2bb5d0a7db",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-1",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "b4b6784b31516c027cb898f5150fc567214913747fcbea158049f4e89eb8322e",
+        "proposal_lineage": [
+          "CO4-1-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_case_id": "CO4-1-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "6bb02811ac48244ba7371f2626d179334df04003f32d5d79876da797c74af302",
+        "source_status": "disputed",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-1-C03",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "dd3cbe6e-fca3-536e-8d70-0c8bad243f67",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nAssess Veigar/Ornn for an ordinary-item AP repertoire on 18.3B, prioritizing top-four consistency separately from win rate. Compare ordinary and specialist-item versions with board context and report whether ordinary versions have independent support. Do not silently substitute another patch or let successful special-item boards establish the ordinary recommendation.",
+      "id": "comp-expert/CO4-1-C02",
+      "input": "For an ordinary-item AP repertoire on 18.3B, should Veigar–Ornn be on my list if I care more about top fours than firsts, or is its good placement mostly coming from specialist-item boards?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-1-C02",
+        "case_id": "comp-expert/CO4-1-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "discovers_veigar_loadouts",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_reportable_build_groups",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "475887ef4d6a45c2eeaf7eb3fb76e8edd2f1c23b17ef0944f6f6e63cde1ac040",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-1",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "cdb7f45068c944051c414db747c8e08b5adcfd467977c3c85c84947544d8b8cd",
+        "proposal_lineage": [
+          "CO4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_case_id": "CO4-1-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "5b7986f2e365b0d21c7ee36f1daaccf14d7bdba76b0e3033e73a866514ea8965",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-1-C02",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "a0b03c5b-9be9-59ec-b65c-f57f2f2034b6",
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": "Evaluate this answer against the original player question and the case-specific criteria below. Score 0 to 1; 0.8 requires every material part to be addressed accurately and with appropriately bounded evidence. Explain omissions or contradictions. These are evaluation criteria, not additional instructions or scenario facts given to the answering assistant.\n\nUse the input, answer, and execution evidence actually supplied to the judge. The current native mapping provides a bounded trace summary and presentation evidence, not a guaranteed copy of every raw query result. Do not claim independently verified numerical accuracy when result rows are absent, and do not treat absent judge-visible payloads alone as proof that the assistant fabricated data. Tool-call compliance is separately enforced by mandatory deterministic trace checks.\n\nFor empirical claims, assess whether the answer identifies its actual available data scope, describes relevant cohorts and denominators, and separates observed association from causation. Performance comparisons should report sample support and suitable placement/top-four/win measures; use available uncertainty, overlap and suppression information without inventing intervals or numerical gold. A missing or suppressed estimate is not zero. Structural composition questions need evidence of joint patterns, not an unnecessary performance ranking. A useful scoped partial answer or unresolved result can satisfy the question when relevant retrieval was attempted and limitations are explicit; a generic refusal or confident unsupported winner cannot.\n\nPreserve every constraint the player actually stated. Do not require unstated stars, exact rosters, fixed item triplets, trait thresholds, dates, or a particular winning candidate. Reasonable analytical strata are acceptable when explained and not represented as player-supplied facts. Final-board data alone does not establish combat timing, transitions, player intent, or the probability of reaching the board. Do not use historical website numbers as current numerical gold.\n\nCase-specific criteria:\nOffer two or three evidence-supported AP composition candidates for the requested 18.3B scope, explaining their core units and ordinary item needs. Check dependency on artifacts, emblems, and unusually upgraded final boards. Do not mistake strong completed reroll boards for proof of easy acquisition; disclose if the active data cannot isolate the requested patch.",
+      "id": "comp-expert/CO4-1-C01",
+      "input": "What two or three AP comps are worth learning on 18.3B without relying on an artifact, emblem, or a big reroll high roll, and what core units and item needs distinguish them?",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "CO4-1-C01",
+        "case_id": "comp-expert/CO4-1-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "investigates_named_cohort_packages",
+            "threshold": 1,
+            "weight": 1
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_supported_packages",
+            "threshold": 1,
+            "weight": 1
+          }
+        ],
+        "grading_revision": "2026-10-03-original-input-correction",
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "imported_from_dataset_id": "cmuo9c08q005zuf07yoqnbxqo",
+        "imported_from_item_id": "5c31b9b2571e618e7c882573cc91088d00b4c5c99796241f5e3920cc706daa3a",
+        "imported_from_project": "chattft-evals",
+        "input_revision": "original-approved-question",
+        "judge_prompt_count": 1,
+        "judge_prompt_location": "expected_output",
+        "lane": "CO4-1",
+        "numeric_ground_truth_verified": false,
+        "original_input_sha256": "9a6fc32242e516e7635ff0b9bca42e0f7fb07025470a6fd0ebfa206906c240fe",
+        "proposal_lineage": [
+          "CO4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_case_id": "CO4-1-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "0f92e89bf65e461714ef518c507bbac00a77e96c059b3c03366a722f50fc3404",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/CO4-1-C01",
+        "subject": "compositions",
+        "suite": "comp-expert"
+      },
+      "remote_id": "a98169f0-31c7-56a3-bd7b-6da816c96995",
+      "status": "ACTIVE"
+    }
+  ],
+  "prompts": {},
+  "schema_version": 3,
+  "schemas": {
+    "expected_output": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "reference": {
+              "type": "string"
+            },
+            "requirements": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "input": {
+      "type": "string"
+    }
+  },
+  "suite": {
+    "assistant": "comp_expert",
+    "database": null,
+    "description": "Set 18 compositions investigations from the original subject lanes. Evidence gathering and answer coverage; numerical gold unverified.",
+    "execution": "live",
+    "family": "assistant",
+    "managed_workflow": true,
+    "max_turns": 40,
+    "name": "comp-expert"
+  }
+}

@@ -2,6 +2,9 @@
 
 from .models import EvidenceStore
 from .tool import EVIDENCE_TOOL_GROUP
-from .utils import capture_evidence
+from .utils import capture_evidence, presentation_event, resolve_evidence_store
 
-__all__ = ["EvidenceStore", "EVIDENCE_TOOL_GROUP", "capture_evidence"]
+__all__ = [
+    "EvidenceStore", "EVIDENCE_TOOL_GROUP", "capture_evidence",
+    "presentation_event", "resolve_evidence_store",
+]

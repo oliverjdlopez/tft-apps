@@ -2,7 +2,9 @@
 from __future__ import annotations
 import json
 from typing import Any
-from domain.providers.context import MAX_CONTEXT_CHARS, MAX_CONTEXT_SNIPPETS, _ContextCandidate, _bound_context_snippets
+from domain.providers.constants import MAX_CONTEXT_CHARS, MAX_CONTEXT_SNIPPETS
+from domain.providers.models import ContextCandidate as _ContextCandidate
+from domain.providers.utils import bound_context_snippets as _bound_context_snippets
 
 _MATCH_FIELDS = frozenset(
     {

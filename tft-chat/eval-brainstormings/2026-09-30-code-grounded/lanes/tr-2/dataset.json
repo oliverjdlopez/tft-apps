@@ -1,0 +1,292 @@
+{
+  "items": [
+    {
+      "case": "TR-2-C01",
+      "input": "For an Ezreal board, what am I really getting by going from 5 to 7 Elderwood? Is the extra plant worth replacing Shen and Taric with Xayah and LeBlanc, or am I giving up too much useful frontline?\n\nUse an eight-unit named-core comparison: Ornn, Alistar, Hecarim, Ezreal, Gnar, and Kennen stay in both packages; compare Shen and Taric against Xayah and LeBlanc. Hold Ezreal at two stars with the same three ordinary completed item identities, and report the frontline stars/items and recorded Elderwood contributor stars. Keep the exact pair comparison separate from broader five/seven-contributor samples; keep emblems off the declared primary item holders and report any remaining whole-board emblem uncertainty. A named-core plus a reportable board-size row can check stored roster size, but does not establish occupied capacity or global emblem absence.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define the exact named package contrast and Ezreal two-star/three-item identity match, and keep it separate from any broader five/seven Elderwood samples.",
+          "Use recorded active Elderwood and contributor/star data to describe the breakpoint populations; do not interpret a medal label as a numeric breakpoint.",
+          "Report boards and denominators, mean placement, top-four and win rates where available, with uncertainty or suppression noted; include the changed frontline package and investments.",
+          "State whether exact named-roster closure was established by a reportable board_size=8 query row after all eight distinct identities were required. Keep ordinary declared holder builds separate from the stronger original whole-board no-emblem intent; report any unmet inventory restriction rather than rejecting a useful supported package comparison.",
+          "Treat the plant and package effects as observational associations. Do not claim causal combat value or infer the player’s exact legal roster from a contains-core result.",
+          "Bind any claimed multi-item build to a single unit occurrence. Holder-specific item predicates alone can span duplicate same-name units; use a one-copy guard across all stars or occurrence-bound loadout evidence, with the star and completed-item constraints applied separately."
+        ],
+        "reference": "No outcome winner or numerical answer is preselected. Assess claims against the actual scoped observations and denominators. Prepared anchors are analytical definitions, not proof those observations were collected."
+      },
+      "metadata": {
+        "source_case_id": "TR-2-C01",
+        "lane": "TR-2",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [
+          "TR-2-R2-P1"
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_named_package_comparison",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-2-C02",
+      "input": "Can Inferno Lux be worth a slot just for the 2 Inferno splash? On this Ezreal board I'd have to drop Kennen and lose Executioner.\n\nThe player has not specified a full roster, so state this constructed eight-unit interpretation: Ornn, Alistar, Hecarim, Ezreal, Gnar, Alune, and Taric stay in both packages; compare one-star Kennen with one-star confirmed Inferno Lux. Ezreal is two-star with the same three completed item identities. Compare one-star support variants first, keep two-star support variants separate, and match frontline allocation; inspect existing burn or wound equipment as a sensitivity. A generic Lux result plus an Inferno trait does not establish Inferno Lux.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "State the constructed roster assumption and compare the named Kennen versus confirmed Inferno Lux packages, with Ezreal’s two-star, three-item identity match and frontline allocation preserved.",
+          "Keep one-star supports primary and two-star support versions separate; report the actual observed counts and denominators for the constrained packages.",
+          "Verify the observable Lux variant identity and recorded Inferno/Executioner traits. Generic Lux plus an Inferno board trait does not prove Inferno Lux; if the form cannot be established, report only a qualified package proxy.",
+          "Inspect named burn/wound equipment as a sensitivity where supported, and disclose support, item and sample differences.",
+          "Report placement outcomes and uncertainty when available; do not turn a sparse or suppressed group into zero or claim a causal value for the extra trait.",
+          "Bind any claimed multi-item build to a single unit occurrence. Holder-specific item predicates alone can span duplicate same-name units; use a one-copy guard across all stars or occurrence-bound loadout evidence, with the star and completed-item constraints applied separately."
+        ],
+        "reference": "No outcome winner or numerical answer is preselected. Assess claims against the actual scoped observations and denominators. Prepared anchors are analytical definitions, not proof those observations were collected."
+      },
+      "metadata": {
+        "source_case_id": "TR-2-C02",
+        "lane": "TR-2",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [
+          "TR-2-R2-P2"
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_named_package_comparison",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-2-C03",
+      "input": "For finished Akali–Camille reroll boards with Akali, Camille, Varus, Leona and Ornn all three-star, do Solar Lux plus Maokai outperform keeping two-star Kayle and Sejuani, or is the apparent upgrade just richer boards doing better?\n\nCompare constructed eight-unit packages sharing Akali, Camille, Varus, Leona, Ornn, and one-star Taric, all at the stated three-/one-star levels: five shared units are three-star. Compare two-star Kayle and Sejuani against one-star Solar Lux and Maokai. Keep three completed item identities on each of three-star Akali and Camille matched across packages; record artifacts and tank allocations; the swapped supports have zero completed items. Keep emblems off Akali and Camille’s declared builds. Inspect the intended no-Eclipse population where it can be established; report a broader named-package comparison separately if absence or whole-board emblem exclusion cannot be certified. A named-core plus reportable board-size row can check stored roster size, but global emblem exclusion and unlisted extra-unit eligibility need separate support.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Compare the two named support packages while keeping Akali3, Camille3, Varus3, Leona3 and Ornn3 fixed, with common Taric1; do not let the five fixed three-stars disappear from the population definition.",
+          "Preserve three matched item identities on Akali3 and Camille3, record artifact/tank allocation, and enforce zero completed items on each swapped support when observations permit.",
+          "Verify Solar/Eclipse activation and the actual Solar Lux identity before making form-specific claims; a medal name is not a numeric breakpoint.",
+          "Report constrained package counts and placement outcomes before any broadening, and describe item, board-size, or investment differences that could confound the contrast.",
+          "State that exact eight stored units can be checked by a reportable board-size-eight row for the named core, while global no-emblem/no-Eclipse status requires separate evidence; do not claim richer-board confounding has been eliminated.",
+          "Bind any claimed multi-item build to a single unit occurrence. Holder-specific item predicates alone can span duplicate same-name units; use a one-copy guard across all stars or occurrence-bound loadout evidence, with the star and completed-item constraints applied separately."
+        ],
+        "reference": "No outcome winner or numerical answer is preselected. Assess claims against the actual scoped observations and denominators. Prepared anchors are analytical definitions, not proof those observations were collected."
+      },
+      "metadata": {
+        "source_case_id": "TR-2-C03",
+        "lane": "TR-2",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_named_package_comparison",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-2-C04",
+      "input": "On nine-unit Lunar endboards with no three-star units, does spending two slots on Solar Lux and Sejuani for Eclipse beat using Taric and Maokai instead?\n\nCompare constructed nine-unit packages sharing one-star Alune, two-star Aphelios, Diana, Amumu, Shen, and Gnar, plus one-star Kennen. Compare one-star Solar Lux and two-star Sejuani against one-star Taric and one-star Maokai. Aphelios has the same three completed carry item identities and frontline allocation is matched; swapped units have zero completed items. For a supported row with exactly these nine stored units and their specified stars, the full star vector excludes three-star units. Keep emblems off the declared primary builds; inspect and report whether the stronger whole-board no-emblem intent can be established. Verify recorded active Eclipse rather than treating Solar Lux alone as proof.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define both nine-unit named packages with the exact shared stars and the Solar Lux1/Sejuani2 versus Taric1/Maokai1 contrast; retain the asymmetrical stars and costs.",
+          "Preserve Aphelios2’s three matched item identities, full frontline allocation, and zero completed items on the swapped support units.",
+          "Verify recorded active Eclipse and Solar Lux form separately; do not infer a form from generic Lux identity or infer Eclipse from Solar alone.",
+          "Report package counts and outcomes with denominators and uncertainty where available; separate missing or suppressed estimates from zero.",
+          "Explain that a reportable board-size-nine row with all nine named identities and exact stars can certify the complete stored roster and star vector, including absence of extra three-star units. This does not prove occupied capacity or global no-emblem status unless item slots are accounted for. Do not make positioning, execution-timing, or causal claims.",
+          "Bind any claimed multi-item build to a single unit occurrence. Holder-specific item predicates alone can span duplicate same-name units; use a one-copy guard across all stars or occurrence-bound loadout evidence, with the star and completed-item constraints applied separately."
+        ],
+        "reference": "No outcome winner or numerical answer is preselected. Assess claims against the actual scoped observations and denominators. Prepared anchors are analytical definitions, not proof those observations were collected."
+      },
+      "metadata": {
+        "source_case_id": "TR-2-C04",
+        "lane": "TR-2",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_named_package_comparison",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-2-C05",
+      "input": "For completed nine-unit Inferno Lux boards, is keeping seven Inferno actually better than five with Taric and Maokai, when the units removed are unitemized two-star Akali and Varus?\n\nCompare constructed nine-unit packages sharing two-star Shen, Amumu, Kennen, Inferno Lux, and Ezreal, plus one-star Alune and two-star Gnar. Compare two-star Akali and Varus against one-star Taric and Maokai. Lux has three completed AP item identities, Amumu three tank item identities, and Kennen only Protector’s Vow in the primary stratum; match common-unit remaining items. The swapped units are unitemized and the keep emblems off the declared primary item holders and report any remaining whole-board emblem uncertainty. Preserve the unequal costs and verify the recorded Lux form and Inferno contribution; this concerns final boards, not prior shop value or transition route.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Compare seven- versus five-Inferno named packages, preserving two-star Akali/Varus versus one-star Taric/Maokai, the fixed shared core, and the unequal unit costs.",
+          "Keep Lux2’s three AP item identities, Amumu2’s three tank item identities, Kennen2’s Protector’s Vow-only primary stratum, common-unit remaining items, and zero-item swapped units visible.",
+          "Verify the observable Lux form and recorded Inferno contribution intervals; interpret trait contribution counts directly rather than treating medal labels as numeric thresholds.",
+          "Report sample counts, mean placement, top-four and win rates where available, with denominators and support caveats; describe changed final packages rather than generated shop value.",
+          "State that a reportable board-size-nine row can verify stored-record count for the named core, while global emblem exclusion and exact item-budget matching need separate evidence. Do not infer transition route or prior economic value.",
+          "Bind any claimed multi-item build to a single unit occurrence. Holder-specific item predicates alone can span duplicate same-name units; use a one-copy guard across all stars or occurrence-bound loadout evidence, with the star and completed-item constraints applied separately."
+        ],
+        "reference": "No outcome winner or numerical answer is preselected. Assess claims against the actual scoped observations and denominators. Prepared anchors are analytical definitions, not proof those observations were collected."
+      },
+      "metadata": {
+        "source_case_id": "TR-2-C05",
+        "lane": "TR-2",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_named_package_comparison",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "TR-2-C06",
+      "input": "For three-star Tristana endboards with a Fae emblem on Sett, does replacing two-star Rakan and Xayah with one-star Fae Lux and Taric improve results while keeping four Fae? Does that still hold when Rakan and Xayah are both three-star?\n\nCompare constructed eight-unit packages sharing three-star Tristana, two-star Rammus, Kobuko, Veigar, Gnar, and Sett; Sett holds one Fae Emblem plus two tank items. Compare two-star Rakan/Xayah retention and, separately, three-star Rakan/Xayah retention against one-star Fae Lux/Taric; swapped supports have zero completed items. Tristana’s three completed item identities, Sett’s emblem and tank items, and remaining allocations should match across each comparison. Verify recorded four-Fae activation and Lux form; the emblem occupies one item slot, so Sett has two tank items rather than three.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Keep three separate support states: Rakan2/Xayah2, Rakan3/Xayah3, and Fae Lux1/Taric1, all against the same named shared core and Sett2.",
+          "Preserve Tristana3’s three matched item identities; Sett2 holds one Fae Emblem and two tank items, and each swapped support has zero completed items. Match other declared allocations where possible.",
+          "Verify the actual Lux form, Fae Emblem holder and recorded four-Fae activation; do not infer equal trait strength, Pixie stacks, or duration from a trait count alone.",
+          "Report counts and placement outcomes separately for each retention stratum, with denominators and uncertainty or suppression disclosed.",
+          "State the exact-roster evidence available: a reportable board-size-eight row with the named core can establish eight stored records, but not occupied capacity or global item matching. Do not merge the two- and three-star retention populations.",
+          "Bind any claimed multi-item build to a single unit occurrence. Holder-specific item predicates alone can span duplicate same-name units; use a one-copy guard across all stars or occurrence-bound loadout evidence, with the star and completed-item constraints applied separately."
+        ],
+        "reference": "No outcome winner or numerical answer is preselected. Assess claims against the actual scoped observations and denominators. Prepared anchors are analytical definitions, not proof those observations were collected."
+      },
+      "metadata": {
+        "source_case_id": "TR-2-C06",
+        "lane": "TR-2",
+        "subject": "traits",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/traits/lanes/tr-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "proposal_lineage": [],
+        "benchmark_type": "evidence_relative_investigation",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "investigate_the_named_package_comparison",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

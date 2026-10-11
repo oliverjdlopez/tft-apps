@@ -3063,3 +3063,11 @@ pre.ddl {
     .chat-bar-actions { width: 100%; flex-wrap: wrap; }
   }
 }
+
+/* Assistant workspace: bounded saved-source and receipt inspection. */
+.spec-readonly { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 26rem; overflow: auto; }
+.spec-action-buttons { display: flex; flex-wrap: wrap; gap: .5rem; }
+.spec-dialog { margin-top: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: .5rem; }
+.spec-dialog label { display: block; margin-block: .5rem; }
+.spec-dialog select { max-width: 100%; color: var(--foreground); background: var(--background); }
+.spec-case { display: flex !important; align-items: center; gap: .5rem; }

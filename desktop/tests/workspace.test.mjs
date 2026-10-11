@@ -36,11 +36,15 @@ class View {
   setVisible(value) { this.visible = value; }
 }
 const ipcMain = new EventEmitter();
+const handlers = new Map();
+ipcMain.handle = (channel, handler) => handlers.set(channel, handler);
+ipcMain.removeHandler = (channel) => handlers.delete(channel);
 const partition = { setPermissionRequestHandler() {}, setPermissionCheckHandler() {} };
-globalThis.desktopElectronFixture = { WebContentsView: View, ipcMain, session: { fromPartition: () => partition } };
+const clipboard = { value: "", writeText(value) { this.value = value; } };
+globalThis.desktopElectronFixture = { clipboard, WebContentsView: View, ipcMain, session: { fromPartition: () => partition } };
 const hooks = registerHooks({
   resolve(specifier, context, next) {
-    if (specifier === "electron") return { url: "data:text/javascript,export const {WebContentsView,ipcMain,session}=globalThis.desktopElectronFixture", shortCircuit: true };
+    if (specifier === "electron") return { url: "data:text/javascript,export const {WebContentsView,ipcMain,session,clipboard}=globalThis.desktopElectronFixture", shortCircuit: true };
     return next(specifier, context);
   },
 });
@@ -70,7 +74,7 @@ test("switching retains loaded pages; errors and retries remain independent of C
     workspace.select("langfuse");
     assert.equal(workspace.pages.get("langfuse").view.webContents.loads.length, 1);
     assert.deepEqual(workspace.pages.get("langfuse").view.bounds, { x: 0, y: 48, width: 1000, height: 652 });
-    workspace.pages.get("langfuse").view.webContents.emit("did-fail-load", {}, -102, "refused", "http://localhost:15500", true);
+    workspace.pages.get("langfuse").view.webContents.emit("did-fail-load", {}, -102, "refused", "http://localhost:15510", true);
     assert.equal(workspace.state, "error");
     assert.equal(workspace.pages.get("langfuse").view.visible, false);
     assert.equal(workspace.chat.webContents.destroyed, undefined);
@@ -83,6 +87,32 @@ test("switching retains loaded pages; errors and retries remain independent of C
   assert.equal(workspace.chat.webContents.destroyed, true);
   assert.equal(workspace.pages.get("langfuse").view.webContents.destroyed, true);
   assert.equal(ipcMain.listenerCount("desktop-workspace"), 0);
+});
+
+test("Langfuse uses the configured URL after its isolated session is prepared", async () => {
+  let finishPreparation;
+  const prepared = new Promise((resolve) => { finishPreparation = resolve; });
+  const calls = [];
+  const url = "http://localhost:15510/project/tft-apps-evals";
+  const workspace = new DesktopWorkspace(windowFixture(), () => {}, undefined, undefined, {
+    langfuseUrl: url,
+    async prepareLangfuse(received) {
+      assert.equal(received, partition);
+      calls.push("prepare");
+      await prepared;
+    },
+  });
+  try {
+    workspace.select("langfuse");
+    const contents = workspace.pages.get("langfuse").view.webContents;
+    assert.equal(contents.loads.length, 0);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(calls, ["prepare"]);
+    assert.equal(contents.loads.length, 0);
+    finishPreparation();
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(contents.loads, [url]);
+  } finally { workspace.close(); }
 });
 
 test("hosted pages lack a preload and unsafe navigation cannot escape the origin", () => {
@@ -110,7 +140,7 @@ test("only the exact shell main frame can send a fixed desktop action", () => {
   assert.equal(workspaceCommandAllowed(event, contents, contents.mainFrame.url, "execute"), false);
   assert.equal(workspaceCommandAllowed({ ...event, sender: new Contents() }, contents, contents.mainFrame.url, "chat"), false);
   assert.equal(workspaceCommandAllowed({ ...event, senderFrame: { url: contents.mainFrame.url } }, contents, contents.mainFrame.url, "chat"), false);
-  assert.equal(workspaceCommandAllowed(event, contents, "http://localhost:15500", "retry"), false);
+  assert.equal(workspaceCommandAllowed(event, contents, "http://localhost:15510", "retry"), false);
 });
 
 test("three views retain state and retries target only the selected external page", (t) => {
@@ -126,7 +156,7 @@ test("three views retain state and retries target only the selected external pag
     workspace.select("database");
     assert.equal(workspace.currentContents(), database.view.webContents);
     assert.equal(workspace.state, "loading");
-    assert.equal(database.view.webContents.loads[0], "http://localhost:8978");
+    assert.equal(database.view.webContents.loads[0], "http://localhost:8979");
     database.view.webContents.emit("did-finish-load");
     workspace.select("chat");
     workspace.select("database");
@@ -170,13 +200,13 @@ test("CloudBeaver uses a separate sandbox and cannot navigate to privileged sche
     assert.equal(view.options.webPreferences.nodeIntegration, false);
     assert.equal(view.options.webPreferences.sandbox, true);
     assert.equal(view.options.webPreferences.contextIsolation, true);
-    for (const url of ["file:///secrets", "javascript:alert(1)", "http://localhost:15500", "https://example.com"]) {
+    for (const url of ["file:///secrets", "javascript:alert(1)", "http://localhost:15510", "https://example.com"]) {
       let prevented = false;
       view.webContents.emit("will-redirect", { url, preventDefault() { prevented = true; } });
       assert.equal(prevented, true);
     }
     let prevented = false;
-    view.webContents.emit("will-navigate", { url: "http://localhost:8978/#editor", preventDefault() { prevented = true; } });
+    view.webContents.emit("will-navigate", { url: "http://localhost:8979/#editor", preventDefault() { prevented = true; } });
     assert.equal(prevented, false);
     assert.deepEqual(view.webContents.popup({ url: "file:///secrets" }), { action: "deny" });
     view.webContents.popup({ url: "https://dbeaver.com/docs" });
@@ -234,30 +264,26 @@ test("Flowchart retains its own local view and is reachable from the shell bridg
   assert.equal(contents.isDestroyed(), true);
 });
 
-test("VOD Review and Wisps load separate checkouts and retain independent recovery state", async () => {
+test("VOD Review retains its renderer and recovers without a Wisps view", async () => {
   const workspace = new DesktopWorkspace(windowFixture(), () => {});
   try {
-    for (const [tab, url] of [["vod", "http://localhost:5174"], ["wisps", "http://localhost:5175/wisp_classifier"]]) {
-      workspace.select(tab);
-      await Promise.resolve();
-      const page = workspace.pages.get(tab);
-      assert.deepEqual(page.view.webContents.loads, [url]);
-      assert.equal(page.view.options.webPreferences.preload, undefined);
-      page.view.webContents.emit("did-finish-load");
-      assert.equal(workspace.state, "ready");
-    }
-    assert.notEqual(workspace.pages.get("vod").partition, workspace.pages.get("wisps").partition);
-    workspace.fail("vod");
-    assert.equal(workspace.pages.get("wisps").state, "ready");
+    assert.equal(workspace.pages.has("wisps"), false);
     workspace.select("vod");
+    await Promise.resolve();
+    const page = workspace.pages.get("vod");
+    assert.deepEqual(page.view.webContents.loads, ["http://localhost:5174"]);
+    assert.equal(page.view.options.webPreferences.preload, undefined);
+    page.view.webContents.emit("did-finish-load");
+    assert.equal(workspace.state, "ready");
+    workspace.select("chat");
+    workspace.select("vod");
+    assert.equal(page.view.webContents.loads.length, 1);
+    workspace.fail("vod");
     workspace.loadExternal("vod");
     await Promise.resolve();
-    assert.equal(workspace.pages.get("vod").view.webContents.loads.length, 2);
-    workspace.select("wisps");
-    assert.equal(workspace.pages.get("wisps").view.webContents.loads.length, 1);
+    assert.equal(page.view.webContents.loads.length, 2);
   } finally { workspace.close(); }
 });
-
 
 test("Compositions waits for enabled configuration and retains its renderer across tab switches", () => {
   const window = windowFixture();
@@ -278,4 +304,41 @@ test("Compositions waits for enabled configuration and retains its renderer acro
     assert.equal(workspace.compositions.options.webPreferences.sandbox, true);
   } finally { workspace.close(); }
   assert.equal(workspace.compositions.webContents.isDestroyed(), true);
+});
+
+
+test("Media uses the shell and restricts catalogue IPC to its main frame", async () => {
+  const window = windowFixture();
+  const calls = [];
+  const workspace = new DesktopWorkspace(window, () => {}, undefined, async (...args) => {
+    calls.push(args);
+    return { text: "Shared transcript" };
+  });
+  try {
+    window.webContents.mainFrame.url = new URL("../workspace.html", import.meta.url).href;
+    const shellEvent = { sender: window.webContents, senderFrame: window.webContents.mainFrame };
+    ipcMain.emit("desktop-workspace", shellEvent, "media");
+    assert.equal(workspace.active, "media");
+    assert.equal(workspace.currentContents(), window.webContents);
+    assert.equal(workspace.chat.visible, false);
+    assert([...workspace.pages.values()].every((page) => !page.view.visible));
+    const handler = handlers.get("desktop-media");
+    assert.deepEqual(await handler(shellEvent, "read", "example"), { text: "Shared transcript" });
+    assert.deepEqual(calls, [["read", "example"]]);
+    for (const event of [
+      { sender: workspace.chat.webContents, senderFrame: workspace.chat.webContents.mainFrame },
+      { ...shellEvent, senderFrame: { url: window.webContents.mainFrame.url } },
+    ]) assert.equal((await handler(event, "list", 0)).error, "Media access is unavailable.");
+    assert.equal(calls.length, 1);
+    const reference = `tft-resource:${"a".repeat(32)}`;
+    assert.deepEqual(await handler(shellEvent, "copy", reference), { copied: true });
+    assert.equal(clipboard.value, reference);
+    assert.match((await handler(shellEvent, "copy", "https://example.com")).error, /Invalid media reference/);
+    assert.equal(clipboard.value, reference);
+    const hosted = workspace.chat.webContents;
+    assert.equal((await handler({ sender: hosted, senderFrame: hosted.mainFrame }, "copy", reference)).error, "Media access is unavailable.");
+    workspace.select("chat");
+    assert.equal(workspace.chat.visible, true);
+  } finally { workspace.close(); }
+  assert.equal(handlers.has("desktop-media"), false);
 });

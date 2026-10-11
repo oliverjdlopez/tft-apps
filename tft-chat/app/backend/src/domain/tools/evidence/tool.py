@@ -4,8 +4,8 @@ from typing import Any
 from agents import function_tool
 from agents.tool_context import ToolContext
 from domain.types import AssistantToolGroup
-from .models import DisplaySpec, EvidenceStore
-from .utils import resolve_presentation
+from .models import DisplaySpec
+from .utils import resolve_evidence_store, resolve_presentation
 
 
 @function_tool(strict_mode=True)
@@ -18,12 +18,13 @@ async def present_evidence(
     row identity, and source context are resolved on the backend, not supplied
     by the assistant. Leave table options empty for a distribution.
     """
-    if not isinstance(ctx.context, EvidenceStore):
+    store = resolve_evidence_store(ctx.context)
+    if store is None:
         return {
             "error": "Evidence presentation is unavailable on this execution surface; answer in prose."
         }
     try:
-        presentation = resolve_presentation(ctx.context, request, ctx.tool_call_id)
+        presentation = resolve_presentation(store, request, ctx.tool_call_id)
     except ValueError as error:
         return {"error": str(error)}
     return {"presented": True, "presentation_id": presentation.id}

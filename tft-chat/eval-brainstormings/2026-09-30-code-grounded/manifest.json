@@ -1,0 +1,218 @@
+{
+  "case_count": 69,
+  "lanes": [
+    {
+      "lane": "IT-1",
+      "subject": "items",
+      "title": "Completed-item alternatives across comparable holders and builds",
+      "case_count": 2,
+      "cases": [
+        "IT-1-C01",
+        "IT-1-C02"
+      ],
+      "directory": "lanes/it-1"
+    },
+    {
+      "lane": "IT-2",
+      "subject": "items",
+      "title": "Fixed-inventory holder comparisons and item allocation",
+      "case_count": 3,
+      "cases": [
+        "IT-2-C01",
+        "IT-2-C02",
+        "IT-2-C03"
+      ],
+      "directory": "lanes/it-2"
+    },
+    {
+      "lane": "IT-3",
+      "subject": "items",
+      "title": "How item performance varies with board and trait context",
+      "case_count": 6,
+      "cases": [
+        "IT-3-C01",
+        "IT-3-C02",
+        "IT-3-C03",
+        "IT-3-C04",
+        "IT-3-C05",
+        "IT-3-C06"
+      ],
+      "directory": "lanes/it-3"
+    },
+    {
+      "lane": "IT-4",
+      "subject": "items",
+      "title": "Special-item comparisons across carry and frontline roles",
+      "case_count": 6,
+      "cases": [
+        "IT-4-C01",
+        "IT-4-C02",
+        "IT-4-C03",
+        "IT-4-C04",
+        "IT-4-C05",
+        "IT-4-C06"
+      ],
+      "directory": "lanes/it-4"
+    },
+    {
+      "lane": "UN4-1",
+      "subject": "units",
+      "title": "Unit investment, carry versions and alternative holders",
+      "case_count": 4,
+      "cases": [
+        "UN4-1-C01",
+        "UN4-1-C02",
+        "UN4-1-C03",
+        "UN4-1-C04"
+      ],
+      "directory": "lanes/un4-1"
+    },
+    {
+      "lane": "UN4-2",
+      "subject": "units",
+      "title": "Unit build alternatives and their board conditions",
+      "case_count": 4,
+      "cases": [
+        "UN4-2-C01",
+        "UN4-2-C02",
+        "UN4-2-C03",
+        "UN4-2-C04"
+      ],
+      "directory": "lanes/un4-2"
+    },
+    {
+      "lane": "UN4-3",
+      "subject": "units",
+      "title": "Unit partnerships and fit across board contexts",
+      "case_count": 6,
+      "cases": [
+        "UN4-3-C01",
+        "UN4-3-C02",
+        "UN4-3-C03",
+        "UN4-3-C04",
+        "UN4-3-C05",
+        "UN4-3-C06"
+      ],
+      "directory": "lanes/un4-3"
+    },
+    {
+      "lane": "UN4-4",
+      "subject": "units",
+      "title": "Alternative units within similar board structures",
+      "case_count": 3,
+      "cases": [
+        "UN4-4-C01",
+        "UN4-4-C02",
+        "UN4-4-C03"
+      ],
+      "directory": "lanes/un4-4"
+    },
+    {
+      "lane": "CO4-1",
+      "subject": "compositions",
+      "title": "Composition repertoires and statistical claims",
+      "case_count": 3,
+      "cases": [
+        "CO4-1-C01",
+        "CO4-1-C02",
+        "CO4-1-C03"
+      ],
+      "directory": "lanes/co4-1"
+    },
+    {
+      "lane": "CO4-2",
+      "subject": "compositions",
+      "title": "Recurring final-board cores and flexible slots",
+      "case_count": 6,
+      "cases": [
+        "CO4-2-C01",
+        "CO4-2-C02",
+        "CO4-2-C03",
+        "CO4-2-C04",
+        "CO4-2-C05",
+        "CO4-2-C06"
+      ],
+      "directory": "lanes/co4-2"
+    },
+    {
+      "lane": "CO4-3",
+      "subject": "compositions",
+      "title": "Composition variants with alternative partner packages",
+      "case_count": 5,
+      "cases": [
+        "CO4-3-C01",
+        "CO4-3-C02",
+        "CO4-3-C03",
+        "CO4-3-C04",
+        "CO4-3-C05"
+      ],
+      "directory": "lanes/co4-3"
+    },
+    {
+      "lane": "CO4-4",
+      "subject": "compositions",
+      "title": "Finished-board package comparisons and caps",
+      "case_count": 4,
+      "cases": [
+        "CO4-4-C01",
+        "CO4-4-C02",
+        "CO4-4-C03",
+        "CO4-4-C04"
+      ],
+      "directory": "lanes/co4-4"
+    },
+    {
+      "lane": "TR-1",
+      "subject": "traits",
+      "title": "Trait performance within composition families",
+      "case_count": 3,
+      "cases": [
+        "TR-1-C01",
+        "TR-1-C02",
+        "TR-1-C03"
+      ],
+      "directory": "lanes/tr-1"
+    },
+    {
+      "lane": "TR-2",
+      "subject": "traits",
+      "title": "Vertical breakpoints versus conditional splashes",
+      "case_count": 6,
+      "cases": [
+        "TR-2-C01",
+        "TR-2-C02",
+        "TR-2-C03",
+        "TR-2-C04",
+        "TR-2-C05",
+        "TR-2-C06"
+      ],
+      "directory": "lanes/tr-2"
+    },
+    {
+      "lane": "TR-3",
+      "subject": "traits",
+      "title": "Emblem-enabled board variants",
+      "case_count": 4,
+      "cases": [
+        "TR-3-C01",
+        "TR-3-C02",
+        "TR-3-C04",
+        "TR-3-C05"
+      ],
+      "directory": "lanes/tr-3"
+    },
+    {
+      "lane": "TR-4",
+      "subject": "traits",
+      "title": "Trait combinations and conditional splashes",
+      "case_count": 4,
+      "cases": [
+        "TR-4-C01",
+        "TR-4-C02",
+        "TR-4-C03",
+        "TR-4-C04"
+      ],
+      "directory": "lanes/tr-4"
+    }
+  ]
+}

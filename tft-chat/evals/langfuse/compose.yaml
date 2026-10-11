@@ -1,6 +1,6 @@
-name: chattft-evals
+name: tft-apps-evals
 x-langfuse-environment: &langfuse-environment
-  NEXTAUTH_URL: http://localhost:15500
+  NEXTAUTH_URL: http://localhost:15510
   DATABASE_URL: postgresql://langfuse:${POSTGRES_PASSWORD:?Run chat-tft-evals up first}@postgres:5432/langfuse
   SALT: ${SALT:?}
   ENCRYPTION_KEY: ${ENCRYPTION_KEY:?}
@@ -44,14 +44,14 @@ services:
     image: docker.langfuse.com/langfuse/langfuse:4.35.0
     restart: unless-stopped
     depends_on: *langfuse-dependencies
-    ports: ["127.0.0.1:15500:3000"]
+    ports: ["127.0.0.1:15510:3000"]
     environment:
       <<: *langfuse-environment
       HOSTNAME: 0.0.0.0
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?}
       LANGFUSE_INIT_ORG_ID: chattft
       LANGFUSE_INIT_ORG_NAME: ChatTFT
-      LANGFUSE_INIT_PROJECT_ID: chattft-evals
+      LANGFUSE_INIT_PROJECT_ID: tft-apps-evals
       LANGFUSE_INIT_PROJECT_NAME: ChatTFT evaluations
       LANGFUSE_INIT_PROJECT_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:?}
       LANGFUSE_INIT_PROJECT_SECRET_KEY: ${LANGFUSE_SECRET_KEY:?}
@@ -126,7 +126,7 @@ services:
       retries: 20
   mock-model:
     profiles: [test]
-    image: chattft-evals-runner:local
+    image: tft-apps-evals-runner:local
     read_only: true
     tmpfs: ["/tmp"]
     environment:
@@ -139,7 +139,7 @@ services:
     build:
       context: ../..
       dockerfile: evals/langfuse/Dockerfile
-    image: chattft-evals-runner:local
+    image: tft-apps-evals-runner:local
     restart: unless-stopped
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     read_only: true
@@ -156,7 +156,7 @@ services:
       CHAT_TFT_GIT_REVISION: ${CHAT_TFT_GIT_REVISION:-unknown}
       CHAT_TFT_WORKING_TREE_FINGERPRINT: ${CHAT_TFT_WORKING_TREE_FINGERPRINT:-unknown}
       LANGFUSE_BASE_URL: http://langfuse-web:3000
-      LANGFUSE_PUBLIC_URL: http://localhost:15500
+      LANGFUSE_PUBLIC_URL: http://localhost:15510
       LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:?}
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:?}
       LANGFUSE_EXPERIMENT_TOKEN: ${LANGFUSE_EXPERIMENT_TOKEN:?}

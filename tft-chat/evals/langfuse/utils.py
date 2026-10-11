@@ -71,7 +71,7 @@ def atomic_write(path: Path, data: bytes) -> None:
 
 def default_config() -> dict[str, Any]:
     """Return isolated native webhook defaults shared by seeded datasets."""
-    return {"action": "run", "cases": [], "variants": [{"name": "baseline", "model": None, "prompts": {}}],
+    return {"action": "run", "cases": [], "variants": [{"name": "Active", "model": None, "prompts": {}}],
             "dataset_version": None, "concurrency": 4, "repetitions": 1,
             "selection_live": False, "data_snapshot_label": None, "snapshot": None}
 
@@ -144,7 +144,7 @@ def resolved_prompt(client: Any, reference: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any]) -> None:
+def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captured_names: set[str] | None = None) -> None:
     """Validate frozen run controls and candidate targets without remote requests."""
     from .models import RunConfig
     inbound = deepcopy(config)
@@ -164,13 +164,17 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any]) -> Non
         if suite["family"] != "assistant" or suite["execution"] != "live":
             raise ValueError("Assistant selection requires a live assistant suite")
         from .prompts import repository_prompts
-        if config["assistant"] not in repository_prompts():
+        if config["assistant"] not in (captured_names if captured_names is not None else repository_prompts()):
             raise ValueError(f"Unknown assistant: {config['assistant']}")
     candidates = {target for variant in config.get("variants", []) for target in variant.get("prompts", {})}
     if not candidates:
         return
     if suite["family"] != "assistant" or suite["execution"] != "live":
         raise ValueError("Prompt candidates require a live assistant suite")
+    if captured_names is not None:
+        if candidates - captured_names:
+            raise ValueError('Prompt candidates target uncaptured assistants')
+        return
     from domain.assistants.registry import assistant_registry
     reachable = set()
     pending = [assistant]
@@ -196,7 +200,8 @@ def validate_case_semantics(suite: dict[str, Any], items: list[dict[str, Any]]) 
         cases = [{**item["input"]["expected"], "name": item["metadata"]["case"], "query": item["input"]["input"]} for item in items]
         if suite["family"] == "context_selection":
             from evals.context_selection.utils import validate_cases
-            from domain.providers.context import _all_context_candidates, discover_context_files
+            from domain.providers.context import discover_context_files
+            from domain.providers.utils import all_context_candidates as _all_context_candidates
             validate_cases(cases, _all_context_candidates(discover_context_files(), set_number=None))
         else:
             from evals.skill_selection.utils import validate_cases, ignore_unknown_skill_references
@@ -259,7 +264,7 @@ def configured_workspace():
     from dotenv import dotenv_values
     from .workspace import Workspace
     local = dotenv_values(Path(__file__).parent / '.env')
-    return Workspace(os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15500'),
+    return Workspace(os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
                      os.environ.get('LANGFUSE_PUBLIC_KEY') or local['LANGFUSE_PUBLIC_KEY'],
                      os.environ.get('LANGFUSE_SECRET_KEY') or local['LANGFUSE_SECRET_KEY'])
 
@@ -275,9 +280,9 @@ def configured_native_workspace():
     from dotenv import dotenv_values
     from .native import NativeWorkspace
     values = {**dotenv_values(Path(__file__).parent / '.env'), **os.environ}
-    return NativeWorkspace(values.get('LANGFUSE_BASE_URL', 'http://localhost:15500'),
+    return NativeWorkspace(values.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
                            values['LANGFUSE_INIT_USER_EMAIL'], values['LANGFUSE_INIT_USER_PASSWORD'],
-                           values.get('LANGFUSE_PROJECT_ID', 'chattft-evals'))
+                           values.get('LANGFUSE_PROJECT_ID', 'tft-apps-evals'))
 
 
 def native_score_name(name: str) -> str:
@@ -306,8 +311,8 @@ def host_runner_environment(root: Path) -> dict[str, str]:
                    **os.environ}
     environment.update({k: v for k, v in dotenv_values(root / '.env').items()
                         if v is not None and k.startswith('LANGFUSE_')})
-    environment.update(LANGFUSE_BASE_URL='http://localhost:15500',
-                       LANGFUSE_PUBLIC_URL='http://localhost:15500',
+    environment.update(LANGFUSE_BASE_URL='http://localhost:15510',
+                       LANGFUSE_PUBLIC_URL='http://localhost:15510',
                        LANGFUSE_RUNTIME_DIR=str(root / '.runtime'),
                        LANGFUSE_SNAPSHOT_DIR=str(root / 'snapshots'),
                        PYTHONDONTWRITEBYTECODE='1')
@@ -395,10 +400,13 @@ def playground_payload(body) -> dict:
     maximum = body.max_completion_tokens or body.max_tokens
     if maximum is not None:
         settings["max_tokens"] = maximum
+    from .assistant_workspace import current_execution
+    execution = current_execution({"assistant": name}, [{"name": "Playground"}])
     return {
         "operation": "evaluate", "identity": {"suite": "playground", "case": name},
         "config": {"family": "assistant", "execution": "live", "assistant": name, "max_turns": 10,
-                   "model_settings": settings,
+                   "model_settings": settings, "surface": "playground",
+                   "captured_graph": execution["graphs"]["Playground"],
                    "prompt_candidates": {name: {"text": "\n\n".join(system), "native_reference": None}} if system else {}},
         "input": {"input": users[-1], "messages": messages},
         "playground_messages": [message.model_dump() for message in body.messages],
@@ -431,3 +439,58 @@ async def close_proxy_stream(response, client) -> None:
     """Release both socket response and transport after native streaming ends."""
     await response.aclose()
     await client.aclose()
+
+
+# ===========================================================================
+# Completed-run Markdown artifacts
+# Preserve authored prompts and final answers; format only tool arguments.
+# Full tool return payloads remain in Langfuse and never enter these exports.
+# ===========================================================================
+
+
+def artifact_execution_fields(result: dict) -> dict:
+    """Retain argument evidence in durable reports without tool return payloads."""
+    trace = result.get("metadata", {}).get("tft_trace")
+    calls = None if trace is None else [
+        {key: call[key] for key in ("name", "arguments", "agent", "call_id") if key in call}
+        for call in trace.get("tool_calls", [])
+    ]
+    return {"tool_calls": calls, "execution_error": result.get("error")}
+
+
+def markdown_scalar(value: Any) -> str:
+    """Escape a scalar for Markdown lists while distinguishing JSON nulls."""
+    if value is None:
+        return "Not set (`null`)"
+    if isinstance(value, bool):
+        return "`true`" if value else "`false`"
+    if isinstance(value, (int, float)):
+        return f"`{value}`"
+    text = str(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    text = re.sub(r"([\\`*_{}\[\]()#+.!|>~-])", r"\\\1", text)
+    return text.replace("\n", "<br>") if text else "Empty string"
+
+
+def markdown_arguments(value: Any, depth: int = 0) -> list[str]:
+    """Format nested argument fields and ordered arrays without JSON blocks."""
+    if not isinstance(value, (dict, list)):
+        return ["    " * depth + "- Value: " + markdown_scalar(value)]
+    lines = []
+    entries = value.items() if isinstance(value, dict) else enumerate(value, 1)
+    for key, child in entries:
+        label = markdown_scalar(key) if isinstance(value, dict) else f"Item {key}"
+        prefix = "    " * depth + f"- **{label}**:"
+        if isinstance(child, (dict, list)):
+            if not child:
+                lines.append(prefix + (" Empty object" if isinstance(child, dict) else " Empty list"))
+            else:
+                lines.append(prefix)
+                lines.extend(markdown_arguments(child, depth + 1))
+        else:
+            lines.append(prefix + " " + markdown_scalar(child))
+    return lines
+
+
+def markdown_content(value: Any) -> str:
+    """Keep text byte-for-byte and render structured prompts or outputs as lists."""
+    return value if isinstance(value, str) else "\n".join(markdown_arguments(value))

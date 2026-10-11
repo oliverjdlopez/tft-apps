@@ -6,7 +6,7 @@ import {pathToFileURL} from 'node:url';
 assert.equal(process.env.LANGFUSE_TEST_DEPLOYMENT, '1', 'Use an isolated mock deployment');
 const {chromium} = await import(pathToFileURL(process.env.PLAYWRIGHT_MODULE || '/tmp/chattft-browser/node_modules/playwright/index.mjs').href);
 const env = Object.fromEntries(fs.readFileSync(process.env.LANGFUSE_BROWSER_ENV_FILE || 'evals/langfuse/.env','utf8').trim().split(/\r?\n/).map(line=>[line.slice(0,line.indexOf('=')),line.slice(line.indexOf('=')+1)]));
-const base = process.env.LANGFUSE_BROWSER_URL || 'http://localhost:15500';
+const base = process.env.LANGFUSE_BROWSER_URL || 'http://localhost:15510';
 const headers = {Authorization:`Basic ${Buffer.from(`${env.LANGFUSE_PUBLIC_KEY}:${env.LANGFUSE_SECRET_KEY}`).toString('base64')}`};
 const browser = await chromium.launch({headless:true,args:['--no-sandbox']});
 const page = await browser.newPage({viewport:{width:1440,height:1000}});
@@ -31,7 +31,7 @@ async function edit(editor, text) {
 
 /** Submit the real application via the native Custom Experiment integration. */
 async function trigger(dataset, config) {
-  await page.goto(`${base}/project/chattft-evals/datasets/${dataset.id}/items`);
+  await page.goto(`${base}/project/tft-apps-evals/datasets/${dataset.id}/items`);
   await page.getByRole('link',{name:'Experiments',exact:true}).last().click();
   await page.getByRole('button',{name:'Run experiment',exact:true}).click();
   await page.getByRole('dialog').getByRole('button',{name:'Run',exact:true}).click();
@@ -49,7 +49,7 @@ try {
   await page.getByRole('button',{name:'Sign in',exact:true}).click();
   await page.waitForURL(url=>!url.pathname.includes('auth'));
   const dataset=await api(`v2/datasets/${encodeURIComponent('end-to-end')}`);
-  await page.goto(`${base}/project/chattft-evals/datasets/${dataset.id}/items`);
+  await page.goto(`${base}/project/tft-apps-evals/datasets/${dataset.id}/items`);
   await page.getByRole('button',{name:'New item',exact:true}).click();
   let dialog=page.getByRole('dialog');
   await edit(dialog.locator('.cm-content').nth(0),JSON.stringify(`Hello! ${stamp}`));
@@ -64,7 +64,7 @@ try {
 
   const evaluator=(await api('v2/evaluators')).data.find(row=>row.name==='answer_quality');
   const evaluatorText=Array.isArray(evaluator.prompt) ? evaluator.prompt.map(message=>message.content).join('\n') : evaluator.prompt;
-  await page.goto(`${base}/project/chattft-evals/evals`);
+  await page.goto(`${base}/project/tft-apps-evals/evals`);
   await page.getByText('answer_quality',{exact:true}).click();
   await page.waitForFunction(prompt=>document.querySelector('.cm-content')?.innerText===prompt,evaluatorText);
   await edit(page.locator('.cm-content').first(),`${evaluatorText}\nBrowser acceptance ${stamp}.`);
@@ -77,7 +77,7 @@ try {
   assert.ok(JSON.stringify(edited.prompt).includes(stamp));
   console.log('Native evaluator edit created a new frozen version.');
   const baselinePrompt=await api(`v2/prompts/${encodeURIComponent('chattft/assistants/chat')}`,{label:'baseline'});
-  await page.goto(`${base}/project/chattft-evals/prompts/${encodeURIComponent(baselinePrompt.name)}`);
+  await page.goto(`${base}/project/tft-apps-evals/prompts/${encodeURIComponent(baselinePrompt.name)}`);
   await page.getByRole('button',{name:'New version',exact:true}).click();
   await edit(page.locator('.cm-content').first(),`${baselinePrompt.prompt}\nCandidate acceptance ${stamp}.`);
   await page.getByRole('button',{name:'Save new prompt version',exact:true}).click();
@@ -116,7 +116,7 @@ try {
   const queue=(await api('annotation-queues')).data.find(row=>row.name==='ChatTFT review');
   const added=await page.request.post(`${base}/api/public/annotation-queues/${queue.id}/items`,{headers,data:{objectId:failed.observation_id,objectType:'OBSERVATION'}});
   assert.ok(added.ok());
-  await page.goto(`${base}/project/chattft-evals/annotation-queues/${queue.id}`);
+  await page.goto(`${base}/project/tft-apps-evals/annotation-queues/${queue.id}`);
   await page.getByText('Process queue',{exact:true}).click();
   await page.getByText('TEST_FAILURE: contradicted requirements',{exact:true}).first().waitFor();
   await page.getByRole('combobox').click();
@@ -124,13 +124,13 @@ try {
   await page.getByRole('radio',{name:'False',exact:true}).click();
   await page.getByRole('button',{name:/Mark Completed/}).click();
   console.log('Failing native output received human acceptance and failure-category annotations.');
-  await page.goto(`${base}/project/chattft-evals/traces/${failed.trace_id}?observation=${failed.observation_id}`);
+  await page.goto(`${base}/project/tft-apps-evals/traces/${failed.trace_id}?observation=${failed.observation_id}`);
   await page.getByRole('tab',{name:'Scores',exact:true}).click();
   await page.getByLabel('View comment for answer_quality: 0.20',{exact:true}).hover();
   await page.getByText('Mock evaluator: requirement violated.',{exact:false}).first().waitFor();
 
   const source=JSON.parse(fs.readFileSync('/tmp/chattft-development-trace.json'));
-  await page.goto(`${base}/project/chattft-evals/traces/${source.traceId}?observation=${source.id}`);
+  await page.goto(`${base}/project/tft-apps-evals/traces/${source.traceId}?observation=${source.id}`);
   await page.getByRole('button',{name:'Add to datasets',exact:true}).click();
   dialog=page.getByRole('dialog');
   await dialog.getByText('Select datasets',{exact:true}).click();

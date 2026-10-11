@@ -14,3 +14,22 @@ class MediaRequest:
     profile: str = "audio"
     height: int | None = None
     playable: bool = False
+
+
+@dataclass(frozen=True)
+class Resource:
+    """Describe one immutable shared artifact and its application provenance."""
+
+    id: str
+    kind: str
+    source: str
+    name: str
+    content_type: str
+    size: int
+    sha256: str
+    metadata: dict
+
+    @property
+    def reference(self) -> str:
+        """Return a portable reference usable by either application's store."""
+        return "tft-resource:" + self.id

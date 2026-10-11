@@ -22,7 +22,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
-from backend import annotations
+from round_classifier.config import load_round_labels
 from backend.processor import process_video_all_frames
 from backend.tracing import (
     capture_trace_events,
@@ -166,9 +166,7 @@ def main() -> int:
     configure_performance_logging(args.trace_output)
     width, height, source_frames = _probe_video(video)
     box = dict(zip(("x", "y", "width", "height"), args.box, strict=True))
-    labels = tuple(
-        label["id"] for label in annotations.load_task_config()["round_classifier"]["labels"]
-    )
+    labels = load_round_labels()
     classifier = get_ocr_classifier(labels)
     benchmark_id = uuid.uuid4().hex
     common = {

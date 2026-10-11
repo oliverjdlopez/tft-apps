@@ -17,7 +17,7 @@ and is retained in the frozen snapshot, including replay. This is separate from
 Advanced options include named model/prompt variants, reachable handoff prompt
 overrides, subsets, repetitions, historical dataset versions, and offline/live
 selectors. Each variant/repetition creates a separate experiment named
-`baseline · <timestamp> · r1`. Job IDs and snapshot hashes live in metadata.
+`Active · <timestamp> · r1`. Job IDs and snapshot hashes live in metadata.
 Export and replay remain maintenance actions in the advanced payload and CLI.
 
 The root datasets `end-to-end` and `data-analysis` accept only string inputs.
@@ -26,6 +26,30 @@ The seven former intake prompts are now cases in `end-to-end`, marked with
 completion still requires an SDK result without an execution error. Scored cases
 in the same experiment retain their existing acceptance requirements. Historical
 execution-only suite snapshots remain readable.
+
+## Assistant drafts and captured definitions
+
+The [Specs workspace](assistant-workspace.md) owns edit/save/try/compare/apply.
+Fresh assistant experiments capture current repository definitions for every
+dataset schema. Each variant retains prompts, model defaults, handoffs, tool
+access, and resource permissions. Specs comparisons supply their exact Active and
+Draft captures. Execution verifies captures before dispatch and uses
+`Assistant.from_capture(...).prepare(..., record=True)` through
+`evals/assistant_execution.py`; there is no static prompt-only worker path.
+
+Bundles without captures remain readable and exportable as historical artifacts,
+but live execution and replay reject them with an instruction to export a fresh
+bundle. Existing snapshots are never backfilled with current definitions. Fixtures
+and selector benchmarks do not require bundle captures; selector model calls use
+`Assistant.run_sync`.
+
+The worker retains actual instruction text and hashes, configured per-agent model
+settings, separate run-level setting overrides, selected resource hashes, activity,
+and source provenance. Model failures retain this evidence. Preparation and execution
+share an explicit complete `RDS_EVAL_*` target. Surfaces are `eval`, `playground`,
+and `specs` for workspace comparisons/trials. SDK tracing retains suite/case identity;
+local workspace trials disable trace export. Capturing definitions does not freeze
+resource files, tool implementations, database contents, or model behavior.
 
 ## Acceptance
 
@@ -64,6 +88,36 @@ names receive stable hash suffixes; `original_check_name` and exported
 
 `weighted_score` remains available when reading legacy reports. It is not the
 natural workflow's decision metric; every required check must pass.
+
+## Automatic Markdown artifacts
+
+Completed dataset jobs automatically write a private Markdown artifact to
+`evals/langfuse/.runtime/artifacts/<job-id>.md`. A configured
+`LANGFUSE_RUNTIME_DIR` relocates this directory with the runner's other state.
+Each experiment variant/repetition contains its selected frozen prompts, full
+final responses, and tool calls in recorded order beneath each response.
+Arguments are rendered as nested Markdown lists, including explicit nulls;
+tool return values are excluded. Structured prompts and outputs are rendered
+as lists, while text prompts and responses are preserved verbatim.
+
+The execution report now retains argument-only tool captures before entering
+`awaiting_scores`, so grading can resume after a restart without retrieving
+tool arguments from Langfuse. `JobStore.finish()` exports when execution and
+grading reach a terminal `completed` or `failed` outcome, including grading
+timeouts. Export-only requests and still-pending jobs do not produce a report.
+Early failures produce an artifact with the selected prompts and explicit
+missing-response notes; uncaptured tool arguments are distinguished from a
+captured trace containing no calls. Interrupted executions retain the existing
+explicit-replay requirement.
+
+`GET /jobs/<job-id>` exposes `result.markdown_artifact` with `status: "written"`
+and the absolute file `path`. Export failures instead record `status: "failed"`
+and an `error`, without changing the evaluation outcome or discarding results.
+The native completion status event includes the same report. The CLI `run`
+path also exports automatically and prints this field in its result JSON;
+runs without asynchronous grading use the comparison group ID as the filename.
+Files are replaced atomically and remain ignored runtime artifacts. Older
+saved jobs do not acquire tool arguments retroactively.
 
 ## Traces
 
@@ -138,3 +192,8 @@ retains its concurrency slot, and exports its trace. Invalid requests fail
 before execution, capacity returns 429, and execution failures expose a private
 trace link without forwarding raw provider/connection errors. The adapter does
 not implement Responses API, custom client tools, images, or structured output.
+
+Playground captures the selected repository graph before worker submission. System
+and developer messages replace only the root's durable prompt; dynamic context and
+skill permissions remain enforced. Generation settings pass through SDK RunConfig,
+and conversation history/task wrapping use the normal Assistant preparation path.

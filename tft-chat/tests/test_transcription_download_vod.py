@@ -47,6 +47,12 @@ class ResolveFfmpegLocationTest(unittest.TestCase):
 
 
 class CliTest(unittest.TestCase):
+    def setUp(self) -> None:
+        """Keep legacy downloader tests independent of shared catalogue routing."""
+        sharing = patch("scripts.transcription.utils.configured_media_store", return_value=None)
+        sharing.start()
+        self.addCleanup(sharing.stop)
+
     def test_download_source_detection_accepts_twitch_and_youtube(self) -> None:
         self.assertEqual(
             detect_download_source("https://www.twitch.tv/videos/1234567890"),

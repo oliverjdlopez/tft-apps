@@ -1,0 +1,104 @@
+{
+  "UN4-1-C01": {
+    "scenario": "Veigar2/3 crossed with zero, partial and three completed items; four-star versions kept separate. 'Carry' and 'support' are declared investment proxies, not measured damage roles.",
+    "plan": "Use query_cohort for Veigar board families, grouping unit_name with unit_star_level and unit_item_count, selecting Veigar rows explicitly. Discover recurring partners with cohort unit/trait deltas and verify joint core predicates. compare_cohorts compares item-count/star cells within shared named support and final-level conditions; rank_unit_loadouts distinguishes actual ordinary/special trios.",
+    "checks": "Report role-cell counts/shares and mean/top4/win without combining independent item and star marginals. Keep partial and four-star groups visible. Explain which supported companions and item packages accompany stronger finishes; do not equate Veigar3 average with payoff from rolling for him.",
+    "limits": "No attempted-reroll denominator, stacking history, automatic whole-board matching or generic carry-role field. Cell shares use a declared board family and cannot be reconstructed from suppressed rows."
+  },
+  "UN4-1-C02": {
+    "scenario": "Master Yi2 versus Draven1, exactly Flickerblades, radiant Quicksilver and ordinary Edge of Night on the candidate. Supporting boards are discovered, not preset.",
+    "plan": "Resolve named holders and exact special variants, then rank_unit_loadouts for legal recorded trios and compare_cohorts for the two one-copy holder/star/trio groups. Separate both-holder boards; discover support with query_cohort/deltas and repeat in shared supported contexts.",
+    "checks": "Preserve Yi2/Draven1 asymmetry and radiant identity. Show both exact samples, outcomes and conditional board dependence. Yi3 and Draven2 are explicitly separate sensitivities. Do not infer Yi form from identity route, build label or a vague offensive-item category.",
+    "limits": "Local context is older than 18.3B and cannot settle disputed effect values. Presence of a recorded exact trio establishes an observed build, not complete current item legality or acquisition opportunity."
+  },
+  "UN4-1-C03": {
+    "scenario": "Veigar3 with three items; distinguish ordinary-only holder builds, Dawncore builds, and Flora Fatalis-active support, including their overlap.",
+    "plan": "Discover exact loadouts and resolve Flora Fatalis as a trait, not an item. Define ordinary on Veigar from named trio identities; compare Dawncore/ordinary holder packages within shared cores and recorded Flora Fatalis activation. Query named Fiddlesticks/Soraka support and frontline loadouts. Global ordinary-only boards require separate certification.",
+    "checks": "Report placement distribution/top4/win with sample sizes and the contribution of each disjoint declared group to observed top finishes where histograms allow it. Higher special-group win rate alone does not prove most wins came from that group. Preserve Dawncore+Flora overlap.",
+    "limits": "Flora Fatalis is not an ordinary-versus-artifact item category. No generic board-wide artifact exclusion or survival-to-reroll denominator; no numerical ceiling or winner is fixed in advance."
+  },
+  "UN4-1-C04": {
+    "scenario": "Veigar3 end states with Ornn and Alistar considered as frontline investments. Start with explicit item-count allocations, such as 3/0, 0/3 and 1/2 or 2/1 across the two holders, and exact-star strata.",
+    "plan": "Inspect both tanks' star/item-count/loadout rows, then declare supported allocation cells rather than assuming an arbitrary 3/3 split is comparable to 3/0. compare_cohorts uses shared Veigar/core/level and named tank star/item constraints; query_cohort reports total-item distribution. Preserve absent-tank and both-three-star groups explicitly.",
+    "checks": "Define focused/split quantitatively in input or visible analytical assumptions. Report each joint cell's counts, mean/top4/win and exact tank build context. Compare equal named-holder item budgets where possible and separate richer 3/3 boards.",
+    "limits": "Equal allocation across these two tanks does not match the rest of the board. Item count is not a defensive-item taxonomy; named tank loadouts must justify the role label. No tank survival or artifact-production timeline."
+  },
+  "UN4-2-C01": {
+    "scenario": "Nidalee2 with exactly three ordinary items, partitioning explicit AP-oriented, AD-oriented and mixed triplets; compare within observed cores and Invoker strata.",
+    "plan": "rank_unit_loadouts discovers actual exact trios; use the item catalogue to declare a reproducible orientation taxonomy. compare_cohorts contrasts named triplets within shared supports and trait contribution intervals. query_cohort/deltas discovers the allied package, with entity names retained in grouped rows.",
+    "checks": "Keep mixed/ambiguous trios separate and show support/outcomes for each compared package. Investigate whether differences persist inside named contexts, not only aggregate AP/AD labels. No fixed preferred build or ranking is expected.",
+    "limits": "No AP/AD filter or observed Adaptor-form field exists. A named item-based orientation proxy must be explicit and must not be called confirmed ranged/melee form. Other inventory and global investment remain residual confounders."
+  },
+  "UN4-2-C02": {
+    "scenario": "Azir3 with Guinsoo's, one shared named damage item, and either Shojin or a second named damage item, ordinary three-item trios only.",
+    "plan": "Discover exact fixed-pair loadouts, classify the second damage item without assuming all damage items lack mana benefits, and compare explicit holder trios. Repeat in supported Blackthorn/Executioner/Summoner contribution contexts and named frontline shells.",
+    "checks": "Preserve Guinsoo's and the shared item, report exact third-slot cells with counts/mean/top4/win and available intervals. Explain board-context variation from crossed observations, not a mana theory alone.",
+    "limits": "No mana-generation/combat simulator gold. Additional damage-item definitions are preparation choices; total board-item equality and Blackthorn sacrifice are not enforceable."
+  },
+  "UN4-2-C03": {
+    "scenario": "Nidalee2 with Rapidfire Emblem plus two declared AP-oriented ordinary items versus the same pair plus each observed ordinary third; three items on one holder.",
+    "plan": "Discover ordinary pairs and emblem loadouts, then compare exact holder-bound packages within supported Rapidfire contribution and allied-core strata. Query final level, board item count, frontline upgrades and other carry loadouts as comparability diagnostics.",
+    "checks": "Bind the emblem to Nidalee and preserve the shared pair. Show cell samples/outcomes and whether support differs across observed packages. Do not use emblem-wide or Nidalee-wide averages as the exact build comparison.",
+    "limits": "AP orientation is an item-defined proxy, not guaranteed form. Emblem source and complete board wealth cannot be controlled with current tools; residual selection may explain outcome gaps."
+  },
+  "UN4-2-C04": {
+    "scenario": "Ahri2: two ordinary Blue Buff copies plus a shared damage item versus one Blue Buff plus that item and another damage item. Shojin alternatives are separate.",
+    "plan": "Resolve Blue Buff and query rank_unit_loadouts with duplicate required item terms: distinct-slot matching supports multiplicity discovery. If the chosen scope/reference permits and records this inventory, compare exact single-copy Ahri trios using explicit item multiplicity and per-holder item count. Split Blossom/Spellweaver/Invoker contexts.",
+    "checks": "Verify two copies, not the same item condition repeated twice with default one-copy semantics. Preserve the shared damage item and star level, show counts/outcomes, and report an empty/suppressed build distinctly from an illegality conclusion.",
+    "limits": "The local catalogue does not establish Blue Buff uniqueness/stacking legality for 18.3B. Do not invent a rule or fabricate sample support; record legality/reference uncertainty while still performing supported discovery. The simulator is motivation, not an expected result."
+  },
+  "UN4-3-C01": {
+    "scenario": "Morgana end states with an itemized Ahri versus itemized Sivir partner; declare Morgana and partner star/loadout strata, and keep dual-partner boards separate.",
+    "plan": "Discover Morgana loadouts and recurring partners, then compare explicit partner investment cohorts in shared final-level and named frontline shells. Use query_cohort to show Invoker/Hunter support, holder builds and total-item/board-size distributions.",
+    "checks": "Report partner-specific joint counts, mean/top4/win and uncertainty. Make AP-versus-AD inventory differences visible instead of assuming identical items transfer. Three-star and dual-carry variants are separate; pooled Morgana statistics cannot identify a partner winner.",
+    "limits": "Exact board size and budget are groupable but not shared-filter fields. Comparisons describe final states rather than a causal replacement of Ahri with Sivir."
+  },
+  "UN4-3-C02": {
+    "scenario": "Itemized Aphelios boards, Mama Beak present versus absent; split Mama Beak zero/partial/three-item and star strata, including three-star.",
+    "plan": "Use compare_cohorts with Mama Beak target and omitted baseline inside a shared Aphelios build/star/core shell, then inspect itemized variants. get_cohort_unit_deltas/query_cohort discovers real absent-group alternative anchors through explicit named-absence predicates. Verify Summoner/Riftbeast contexts by trait data.",
+    "checks": "Report the inclusion association inside several supported Aphelios contexts, not Mama Beak's all-board average. State the absent cohort's actual observed substitutes and investment distributions; distinguish utility from itemized carry proxies.",
+    "limits": "The complement is all otherwise eligible boards without the target, not one forced replacement. Alpha Mark, emergency selection and item-transfer histories are not observed."
+  },
+  "UN4-3-C03": {
+    "scenario": "Fixed Draven star/build strata with secondary damage equipment concentrated on Kennen, Gnar or Ezreal. Use observed shared named inventories where supported.",
+    "plan": "Discover candidate holder loadouts in Draven cohorts, define investment with exact items and stars, then compare joint allocations in shared Draven/frontline/level conditions. Keep naked other candidates distinct from itemized ones and inspect actual trait packages.",
+    "checks": "Preserve Draven's build and show candidate stars, allocated items and sample/outcome tradeoffs. Do not compare optimized unlike inventories as a same-inventory swap. Gloves, artifacts and emblem packages remain distinct exact builds.",
+    "limits": "No automatic classification of damage items or boardwide equal budget. Final items do not establish removers, availability or when an allocation changed."
+  },
+  "UN4-3-C04": {
+    "scenario": "Spellweaver boards with Fiddlesticks in a declared tank-item role. Discover actual additional Defenders and non-Defender alternatives at common final levels and carry investment.",
+    "plan": "Use unit/trait/loadout discovery before selecting candidates; confirm joint Fiddlesticks, main carry and support predicates. compare_cohorts contrasts named extra-Defender versus named alternative packages while querying resulting contribution counts and same-board supports.",
+    "checks": "Do not choose a non-Defender comparator from memory or treat a pooled trait ranking as the slot decision. Report support and outcomes for actual packages, how their breakpoints differ, and exact Fiddlesticks/carry investment.",
+    "limits": "Tank role is a declared loadout proxy; no damage absorbed field. Same level does not certify one-for-one deployed-slot equality. Complete roster verification is a separate grouped/prepared constraint."
+  },
+  "UN4-3-C05": {
+    "scenario": "Finished Draven boards with Taric2 without active Vanguard versus Amumu2 with active Juggernaut; separate boards containing both tanks.",
+    "plan": "Define common Draven stars/build and named tank item packages. Use a complement of active Vanguard inside the Taric shell to cover missing trait rows, while explicit Amumu/Juggernaut predicates describe the other package. Compare reportable returned package summaries descriptively; full direct head-to-head needs a certified Taric-without-Vanguard population or enumerated valid negative conditions.",
+    "checks": "Preserve tank stars and asymmetrical trait requirements. Report actual companion frontliners, samples and mean/top4/win; do not mistake active:false for missing-trait inclusion. Package-level differences must not be assigned solely to tank identity.",
+    "limits": "The DSL cannot nest a complement within a new explicit cohort. No linked target, position, targeting history or complete automatic matching is available; absence route and its limitations must be explicit."
+  },
+  "UN4-3-C06": {
+    "scenario": "Sett2 as a declared main-tank investment proxy, with and without Ravager Emblem, across discovered itemized carry cores.",
+    "plan": "Discover Sett's exact defensive loadouts and companion stars/item counts. Define named carry-core cohorts independently of the emblem, compare bound-emblem versus ordinary Sett builds within each, and test actual alternative named tanks where support exists.",
+    "checks": "Give core-specific support/outcomes and emblem-free observations, not Sett's marginal top4. State the tank-role criterion and actual builds. Avoid declaring a family universally good from one frequent unit row.",
+    "limits": "No generic main-tank or six-trait-family classifier; core recurrence requires conjunction checks. Damage absorbed, survival and why Sett was chosen are unobserved."
+  },
+  "UN4-4-C01": {
+    "scenario": "Primary interpretation: final level eight, both Soraka2 and Zyra2, exactly one Lillia2 or Malphite2 with an explicit three-item defensive build; dual-tank boards separate.",
+    "plan": "Discover candidate tank trios and support packages, then compare disjoint named tank cohorts within the shared carry/star/level shell. query_cohort reports deployed-unit count, item budget and Fae/Defender/Blackthorn support; repeat named common-core comparisons with actual item identities.",
+    "checks": "Carry the two-carry interpretation into input. Show both tank samples/outcomes and any supported alternative contexts, with differences in trait package stated. Preserve star and defensive-build definitions; do not pool single-carry families silently.",
+    "limits": "Final level is not actual capacity; exact whole-board matching and Blackthorn choice are unavailable. Three items alone do not prove three defensive items."
+  },
+  "UN4-4-C02": {
+    "scenario": "Final level nine, itemized Maokai2, exactly one Ashe2 or Draven2 with three completed items; dual carries, level ten and one-star carry versions separate.",
+    "plan": "Discover carry/tank exact loadouts and support units; compare the two exclusive carry packages with shared Maokai investment and level. Query actual support and Elder Dragon presence, then repeat inside supported named core/Dragon strata.",
+    "checks": "Report counts/outcomes for common and different variants; explain whether the pooled ordering persists inside inspected overlaps. AP/AD or carry-specific build suitability means forced identical trios are not required. No all-board Maokai marginal answers this.",
+    "limits": "Generic legendary count, accumulated Maokai health, Draven rewards and occupied capacity are not filterable. Observe named legendaries and unit-record counts without claiming exact wealth matching."
+  },
+  "UN4-4-C03": {
+    "scenario": "Final level-nine Draven2/Maokai2 boards with equal declared main-carry/tank investment; itemized Elder Dragon2 versus Ezreal2, primary groups excluding the other candidate.",
+    "plan": "Compare explicit secondary-holder packages inside the shared core after discovering exact itemizations. Query board_size, total completed items, traits and support-unit rows; separate named emblem variants and inspect whether the occupied-slot comparison can actually be certified.",
+    "checks": "Report mean/top4/win separately, full comparison histograms and samples where possible. Keep Elder Dragon's double-capacity issue visible and show changed supporting packages rather than presenting equal level as equal deployed capacity.",
+    "limits": "board_size counts unit records; actual occupied capacity and boardwide no-emblem categories are not exposed predicates. A fully capacity-matched gold comparison needs prepared aggregate evidence; the current route is a qualified package comparison."
+  }
+}

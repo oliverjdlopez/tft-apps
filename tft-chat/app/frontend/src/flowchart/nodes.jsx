@@ -7,9 +7,10 @@
  * notes. Every outline is drawn by `Outline` from the same stroke, radius, and
  * role-color tokens in `flowchart.css`, so the shapes stay visually consistent.
  */
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Handle, NodeResizer, Position } from "@xyflow/react";
 import { X } from "lucide-react";
+import TextField from './TextField.jsx';
 import EntityTile from "./EntityTile.jsx";
 import { useFlowchart } from "./context.js";
 import { DEFAULT_SIZES } from "./utils.js";
@@ -91,25 +92,10 @@ function TitleRow({ id, data, label, placeholder }) {
   const { readOnly, updateNodeData } = useFlowchart();
   return (
     <div className="flowchart-title-row">
-      <input
-        className="nodrag flowchart-title"
-        aria-label={label}
-        placeholder={placeholder}
-        value={data.title}
-        maxLength={120}
-        readOnly={readOnly}
-        onChange={(event) => updateNodeData(id, { title: event.target.value })}
-      />
-      <input
-        className="nodrag flowchart-stage"
-        aria-label="Stage hint"
-        placeholder="Stage"
-        value={data.stage_hint}
-        maxLength={40}
-        readOnly={readOnly}
-        size={Math.max(3, Math.min(data.stage_hint.length || 5, 8))}
-        onChange={(event) => updateNodeData(id, { stage_hint: event.target.value })}
-      />
+      <TextField className="flowchart-title" label={label} placeholder={placeholder} value={data.title}
+        maxLength={120} onCommit={(title) => updateNodeData(id, { title })} />
+      <TextField className="flowchart-stage" label="Stage hint" placeholder="Stage" value={data.stage_hint}
+        maxLength={40} onCommit={(stage_hint) => updateNodeData(id, { stage_hint: stage_hint || null })} />
     </div>
   );
 }
@@ -163,8 +149,9 @@ export function PlanNode({ id, data, selected, width, height }) {
   return (
     <div className="flowchart-shape flowchart-card flowchart-state">
       <Outline shape="rect" kind="plan" width={width} height={height} selected={selected} />
-      {!readOnly && <NodeResizer isVisible={selected} minWidth={176} minHeight={80} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
+      {!readOnly && !data.positionLocked && <ResizeControl id={id} isVisible={selected} minWidth={176} minHeight={80} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
       <SideHandles />
+      <OverflowNotice id={id} data={data} />
       <div className="flowchart-card-header">
         <Role>State</Role>
         <TitleRow id={id} data={data} label="State title" placeholder="Opener, comp, or line" />
@@ -182,8 +169,9 @@ export function ActionNode({ id, data, selected, width, height }) {
   return (
     <div className="flowchart-shape flowchart-card flowchart-action">
       <Outline shape="rect" kind="action" width={width} height={height} selected={selected} />
-      {!readOnly && <NodeResizer isVisible={selected} minWidth={160} minHeight={56} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
+      {!readOnly && !data.positionLocked && <ResizeControl id={id} isVisible={selected} minWidth={160} minHeight={56} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
       <SideHandles />
+      <OverflowNotice id={id} data={data} />
       <Role>Action</Role>
       <TitleRow id={id} data={data} label="Action" placeholder="Slam items, roll, level…" />
       <EntityChips id={id} data={data} />
@@ -203,18 +191,11 @@ export function DecisionNode({ id, data, selected, width, height }) {
   return (
     <div className="flowchart-shape flowchart-decision">
       <Outline shape="rhombus" kind="decision" width={width} height={height} selected={selected} />
-      {!readOnly && <NodeResizer isVisible={selected} minWidth={96} minHeight={64} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
+      {!readOnly && !data.positionLocked && <ResizeControl id={id} isVisible={selected} minWidth={96} minHeight={64} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
       <SideHandles />
-      <textarea
-        className="nodrag nowheel"
-        aria-label="Decision question"
-        placeholder="Hit 3-star?"
-        rows={2}
-        value={data.title}
-        maxLength={120}
-        readOnly={readOnly}
-        onChange={(event) => updateNodeData(id, { title: event.target.value })}
-      />
+      <OverflowNotice id={id} data={data} />
+      <TextField label="Decision question" placeholder="Hit 3-star?" value={data.title} multiline
+        maxLength={120} onCommit={(title) => updateNodeData(id, { title })} />
     </div>
   );
 }
@@ -225,15 +206,15 @@ export function DecisionNode({ id, data, selected, width, height }) {
  * Orientation follows the saved size: wider than tall is a horizontal bar for
  * top-to-bottom flow. The resizer only changes the bar's length.
  */
-export function ForkNode({ selected, width, height }) {
+export function ForkNode({ id, data, selected, width, height }) {
   const { readOnly } = useFlowchart();
   const w = width || DEFAULT_SIZES.fork.width;
   const h = height || DEFAULT_SIZES.fork.height;
   const horizontal = w >= h;
   return (
     <div className="flowchart-shape flowchart-fork" data-selected={selected || undefined} aria-label="Fork or join" role="group">
-      {!readOnly && (
-        <NodeResizer
+      {!readOnly && !data.positionLocked && (
+        <ResizeControl id={id}
           isVisible={selected}
           lineClassName="flowchart-resize-line"
           handleClassName="flowchart-resize-handle"
@@ -287,17 +268,11 @@ export function NoteNode({ id, data, selected, width, height }) {
   return (
     <div className="flowchart-shape flowchart-note">
       <Outline shape="note" kind="note" width={width} height={height} selected={selected} />
-      {!readOnly && <NodeResizer isVisible={selected} minWidth={160} minHeight={64} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
+      {!readOnly && !data.positionLocked && <ResizeControl id={id} isVisible={selected} minWidth={160} minHeight={64} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
       <SideHandles />
-      <textarea
-        className="nodrag nowheel"
-        aria-label="Note"
-        placeholder="If contested, if you hit early 2-star, vs. many AD boards..."
-        value={data.text}
-        maxLength={4000}
-        readOnly={readOnly}
-        onChange={(event) => updateNodeData(id, { text: event.target.value })}
-      />
+      <OverflowNotice id={id} data={data} />
+      <TextField label="Note" placeholder="Situational detail…" value={data.text} multiline
+        maxLength={4000} onCommit={(text) => updateNodeData(id, { text })} />
     </div>
   );
 }
@@ -311,4 +286,43 @@ export const nodeTypes = {
   end: EndNode,
   entity: EntityNode,
   note: NoteNode,
+  group: GroupNode,
 };
+
+/** Bridge resizer gestures to canonical history so a whole resize is one transaction. */
+function ResizeControl({ id, ...props }) {
+  const { beginGesture, endGesture } = useFlowchart();
+  return <NodeResizer {...props} onResizeStart={() => beginGesture()} onResizeEnd={() => endGesture()} />;
+}
+/** Flag explicit sizes whose content overflows and expose a direct fit command. */
+function OverflowNotice({ id, data }) {
+  const { readOnly, fitContent } = useFlowchart();
+  const marker = useRef(null), [overflow, setOverflow] = useState(false);
+  useEffect(() => {
+    const shape = marker.current?.parentElement;
+    if (!shape || !data.explicitSize) { setOverflow(false); return; }
+    const measure = () => setOverflow(shape.scrollHeight > shape.clientHeight + 2 || [...shape.querySelectorAll('.flowchart-text')].some((el) => el.scrollHeight > el.clientHeight + 2));
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(measure); observer.observe(shape);
+    return () => observer.disconnect();
+  }, [data.explicitSize, data.title, data.text, data.entities]);
+  return <span ref={marker} className="flowchart-overflow-marker">{overflow && <button type="button" className="nodrag flowchart-overflow"
+    disabled={readOnly || data.positionLocked} onClick={() => fitContent(id)} title="Complete text is available in Properties">Overflow · Fit to content</button>}</span>;
+}
+/** A nested visual container with a personal collapse state and descendant count. */
+export function GroupNode({ id, data, selected, width, height }) {
+  const { readOnly, updateNodeData, toggleCollapse, groupMinimum } = useFlowchart();
+  const minimum = groupMinimum(id);
+  return <div className="flowchart-shape flowchart-group" data-selected={selected || undefined}
+    data-collapsed={data.collapsed || undefined} style={{ backgroundColor: data.tint ?? '#dbeafe' }}>
+    {!readOnly && !data.collapsed && !data.positionLocked && <ResizeControl id={id} isVisible={selected}
+      minWidth={minimum.width} minHeight={minimum.height} lineClassName="flowchart-resize-line" handleClassName="flowchart-resize-handle" />}
+    <SideHandles />
+    <div className="flowchart-group-heading"><TextField label="Container name" value={data.title} placeholder="Group"
+      maxLength={120} onCommit={(title) => updateNodeData(id, { title })} />
+      <button type="button" className="nodrag nopan" aria-label={data.collapsed ? 'Expand group' : 'Collapse group'}
+        onClick={() => toggleCollapse(id)}>{data.collapsed ? '+' : '−'}</button></div>
+    {data.collapsed && <span>{data.count} descendants</span>}
+  </div>;
+}

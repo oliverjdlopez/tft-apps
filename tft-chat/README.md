@@ -1,5 +1,10 @@
 # ChatTFT
 
+Normal entry point: run `python3 scripts/setup.py` from the suite root, then
+`npm start` or `npm run dev` from `../desktop/`. See [suite setup](../docs/desktop.md).
+Standalone commands below remain available for testing and troubleshooting.
+
+
 A Teamfight Tactics chat app backed by a scoped Postgres match store and native
 OpenAI Agents SDK tools.
 
@@ -13,6 +18,10 @@ Riot match ingestion -> current-patch/current-queue tables -> chat
 Chat answers non-statistical conversation directly and hands every data-backed
 TFT question to `data_analyst`, which owns the investigation and answers with
 the minimum sufficient evidence.
+
+Edit, save, try, compare, and apply existing assistants in the
+[Specs workspace](docs/development/assistant-workspace.md). Langfuse owns scored
+experiments; saving a local draft leaves active application definitions unchanged.
 
 ## Agent-facing tools
 
@@ -40,9 +49,10 @@ mutation tools.
 3. Search and cohort tools expose only bounded structured JSON results. Raw
    rows, query relations, scope ids, counters, player identifiers, and
    timestamps remain private.
-4. `tft-rebuild-tables` projects the configured queue's `chat_tft_patch` (or
-   latest patch when unset) into the compatibility projection and refreshes the
-   aggregate tables. Structured tools read those projections internally.
+4. `chat-tft-rebuild-tables` catches up the configured patch/queue/set scope,
+   reusing existing facts and aggregate counters. Add `--full-rebuild` to clear
+   and recalculate that scope's derived data. Structured tools read those
+   projections internally.
 
 `player_units.cost` is the normalized 1-based shop gold cost. Existing databases
 with the old zero-based `rarity` column are migrated when the schema opens.
@@ -78,8 +88,11 @@ Common commands:
 # Ingest recent ranked matches.
 tft-ingest --platform na1 --max-new-matches 50
 
+# Reuse existing calculations and process newly stored matches.
+chat-tft-rebuild-tables
+
 # Explicitly reset and fully rebuild the configured analysis scope.
-tft-rebuild-tables
+chat-tft-rebuild-tables --full-rebuild
 
 # Legacy-v1 only: install its covering indexes before relational cutover.
 tft-add-analysis-indexes

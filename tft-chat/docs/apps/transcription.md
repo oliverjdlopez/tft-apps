@@ -14,6 +14,14 @@ state, and unique temporary paths so concurrent runs do not share intermediate
 output. It prefers a system ffmpeg executable and falls back to
 `imageio-ffmpeg`.
 
+Downloads now use the suite-owned shared media catalogue by default and reuse
+compatible VOD files with audio before transferring anything. Shared mode
+requires system `ffmpeg` and `ffprobe`; an explicitly empty `TFT_MEDIA_DIR`
+restores local download behavior. Completed media is discoverable through both
+backends at `/api/shared-media`. Transcript outputs remain app-local unless
+explicitly published. See [suite media sharing](../../../docs/shared-media.md)
+for storage, references, and the resource CLI.
+
 `transcribe.py` runs faster-whisper and writes transcript text, JSON, SRT, and
 segment checkpoints. CUDA with float16 is the operational default. The
 faster-whisper dependency is part of the optional `transcription` extra, so
@@ -35,6 +43,11 @@ stages synchronously:
 1. The cleaning assistant returns structured edits.
 2. Python applies valid edits to the JSONL transcript.
 3. The compacting and analysis assistants produce the final result.
+
+The `clean_transcript`, `compact_transcript`, and `analyze_transcript` definitions
+use plain `system.md` instructions, descriptive `agent.json` configuration, and
+`task.md` input wrappers. These files preserve the system and input text previously
+loaded from assistant frontmatter; the pipeline and structured outputs are unchanged.
 
 Invalid or non-JSON cleaning output leaves the original transcript unchanged
 instead of terminating the pipeline.

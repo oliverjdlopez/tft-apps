@@ -579,7 +579,9 @@ def isolated_operation(payload: dict[str, Any], timeout: float) -> dict[str, Any
         Execution output and metadata, or raises for process/transport failures.
     """
     worker_environment = os.environ.copy()
-    if payload.get('operation') == 'evaluate':
+    if payload.get('config', {}).get('workspace_trial'):
+        payload = {**payload, 'parent_pid': os.getpid()}
+    if payload.get('operation') == 'evaluate' and not payload.get('config', {}).get('workspace_trial'):
         try:
             from opentelemetry import propagate, trace
             if trace.get_current_span().get_span_context().is_valid:
@@ -591,7 +593,7 @@ def isolated_operation(payload: dict[str, Any], timeout: float) -> dict[str, Any
                 for key in ('LANGFUSE_PUBLIC_KEY', 'LANGFUSE_SECRET_KEY'):
                     if key not in worker_environment and local.get(key):
                         worker_environment[key] = local[key]
-                worker_environment.setdefault('LANGFUSE_BASE_URL', 'http://localhost:15500')
+                worker_environment.setdefault('LANGFUSE_BASE_URL', 'http://localhost:15510')
         except ImportError:
             pass
     process = subprocess.Popen(
@@ -756,23 +758,6 @@ def render_judge_prompt(template: str, item: dict, result: dict, rubric: str) ->
     return re.sub(r"{{\s*(rubric|output|input)\s*}}", lambda match: values[match.group(1)], template)
 
 
-def eval_graph_instructions(name: str, prompt: str, candidates: dict) -> dict[str, str]:
-    """Assemble each reachable assistant's frozen base with its own context policy."""
-    from domain.assistants import assistant_handoff_names, build_assistant_instructions
-    instructions = {}
-    pending = [name]
-    while pending:
-        current = pending.pop()
-        if current in instructions:
-            continue
-        candidate = candidates.get(current)
-        instructions[current] = build_assistant_instructions(
-            current, prompt, base_instructions=candidate["text"] if candidate else None)
-        pending.extend(assistant_handoff_names(current))
-    return instructions
-
-
-
 def frozen_langfuse_prompt(prompt: dict[str, Any] | None) -> Any:
     """Reconstruct an SDK prompt reference from frozen text without fetching edits."""
     if prompt is None or ("native_reference" in prompt and prompt["native_reference"] is None):
@@ -803,7 +788,7 @@ def public_experiment_url(url: str | None) -> str | None:
     if not url:
         return None
     from urllib.parse import urlsplit, urlunsplit
-    public = urlsplit(os.environ.get("LANGFUSE_PUBLIC_URL", "http://localhost:15500"))
+    public = urlsplit(os.environ.get("LANGFUSE_PUBLIC_URL", "http://localhost:15510"))
     internal = urlsplit(url)
     return urlunsplit((public.scheme, public.netloc, public.path.rstrip("/") + internal.path,
                        internal.query, internal.fragment))

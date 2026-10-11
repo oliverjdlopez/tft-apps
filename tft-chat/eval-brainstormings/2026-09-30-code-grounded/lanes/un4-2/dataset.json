@@ -1,0 +1,297 @@
+{
+  "items": [
+    {
+      "case": "UN4-2-C01",
+      "input": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?\n\nInvestigate final boards with exactly two-star Nidalee holding exactly three ordinary completed items. Use the active item catalogue to define and disclose a reproducible AP-oriented and AD-oriented item-name taxonomy before comparing exact triplets; keep mixed or ambiguous triplets separate. Compare supported builds within recurring named allied cores and observed Invoker contribution strata. Item orientation is a proxy and does not verify Nidalee’s form.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve the player terms against the active scope and establish exact Nidalee two-star, three-item loadout support. State the catalogue-backed item-name rules used to label AP-oriented and AD-oriented packages; keep mixed/ambiguous packages separate and do not infer ranged/melee form from item labels.",
+          "Compare exact observed triplets rather than pooled Nidalee or item marginals. Report boards and available mean placement, top-four rate and win rate for each supported package; separate unavailable or suppressed cells from measured zero.",
+          "Investigate whether the comparison changes within recurring named allied cores and supported Invoker contribution strata. State which strata were actually compared and their support; do not treat the trait name or one pooled result as a matched board.",
+          "Answer from returned scoped evidence with direction or unresolved comparison and uncertainty. Describe other item investment and unobserved board strength as residual confounders; do not make causal claims or use historical web results as current gold.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ],
+        "reference": "No package is predetermined to win. Grade the taxonomy, exact-build investigation, context coverage and evidence-relative interpretation."
+      },
+      "metadata": {
+        "source_case_id": "UN4-2-C01",
+        "lane": "UN4-2",
+        "subject": "units",
+        "proposal_lineage": [
+          "UN4-2-R2-P1"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_unit_and_item_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_exact_star_three_item_loadouts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts",
+              "arguments": {
+                "star_level": 2,
+                "item_count": 3
+              }
+            }
+          },
+          {
+            "name": "compare_named_build_contexts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-2-C02",
+      "input": "Does three-star Azir need Shojin, or can I build Guinsoo’s plus two damage items? Are there boards where spending that slot on mana looks more worthwhile?\n\nCompare final boards with exactly three-star Azir and exactly three ordinary completed items on him. Hold Guinsoo’s and one shared named damage item fixed, then compare Shojin in the third slot with each reportable second damage item. Choose and disclose the shared item from observed, catalogue-backed builds; define what counts as the second-damage comparison without assuming every damage item lacks mana benefits. Examine common Blackthorn, Executioner and Summoner contribution contexts plus discovered named frontline shells; total board item equality and Blackthorn sacrifice are not enforceable.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Azir, Guinsoo’s, Shojin and the chosen shared/alternative items against the active scope. Establish exact Azir3 three-item loadout support and explicitly name the fixed shared item and every compared third-slot item; preserve Guinsoo’s and the shared item in both arms.",
+          "For each reportable exact triplet, give board support and available mean placement, top-four and win rates. Compare Shojin with each selected second-damage item rather than pooling unrelated triplets, and distinguish missing or suppressed support from zero.",
+          "Investigate common Blackthorn, Executioner and Summoner contribution contexts and useful named frontline shells where reportable. State actual sample support and whether each contrast shares that context; do not infer context effects from unstratified outcomes.",
+          "Answer the item-slot question from returned evidence and describe uncertainty. Note that the comparison does not simulate mana generation or combat, that some nominal damage items may have mana effects, and that overall board investment and Blackthorn sacrifice remain uncontrolled; avoid causal claims.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ],
+        "reference": "The source comparison is unfinished and has no expected winner. Grade exact-slot coverage, context-aware comparison and honest limits."
+      },
+      "metadata": {
+        "source_case_id": "UN4-2-C02",
+        "lane": "UN4-2",
+        "subject": "units",
+        "proposal_lineage": [
+          "UN4-2-R2-P2"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_build_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_azir_three_star_triplets",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts",
+              "arguments": {
+                "star_level": 3,
+                "item_count": 3
+              }
+            }
+          },
+          {
+            "name": "compare_exact_slot_alternatives",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          },
+          {
+            "name": "inspect_supporting_board_strata",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_trait_deltas",
+                "get_cohort_unit_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-2-C03",
+      "input": "Does AP Nidalee with a Rapidfire emblem actually outperform ordinary AP builds, or is it mainly showing up on much stronger endgame boards?\n\nCompare final boards with two-star Nidalee holding exactly three completed items: Rapidfire Emblem plus two ordinary items classified as AP-oriented under a disclosed catalogue-backed taxonomy, versus that same ordinary pair plus each observed ordinary third item, with no emblem on Nidalee in the ordinary arm. Keep all three items on Nidalee. Compare supported packages within Rapidfire contribution and named allied-core strata; inspect final level, grouped board item investment, frontline upgrades and other carry loadouts as descriptive comparability diagnostics. Item labels do not verify Nidalee’s form, and these diagnostics cannot guarantee equal overall board strength or emblem source.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Nidalee, Rapidfire Emblem and item terms against the active scope. State the exact catalogue-backed AP-oriented pair(s) investigated and establish that each complete trio is on one Nidalee2: the AP pair plus the emblem in one arm, and that same pair plus an ordinary third item without the emblem in the other arm.",
+          "Compare the emblem package with the same ordinary pair plus each observed ordinary third item. Report supported exact-package counts and available mean placement, top-four and win rates; do not substitute emblem-wide or Nidalee-wide averages for the exact build.",
+          "Inspect Rapidfire contribution and recurring named allied cores, and use final level, grouped board item count, frontline upgrades and other carry loadouts as diagnostics where the tools support them. State the observed support and limits; do not claim complete-board wealth or emblem acquisition source was matched.",
+          "Answer whether the observed comparison favors a package or remains unresolved, with uncertainty and noncausal framing. Treat AP orientation as an item-defined proxy, not proof of form, and suppressed/missing packages as unknown rather than zero.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ],
+        "reference": "No build or outcome is predetermined. Grade exact holder binding, supported context inspection and explicit selection/confounding limits."
+      },
+      "metadata": {
+        "source_case_id": "UN4-2-C03",
+        "lane": "UN4-2",
+        "subject": "units",
+        "proposal_lineage": [
+          "UN4-2-R2-P1"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_unit_emblem_and_item_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_nidalee_two_star_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts",
+              "arguments": {
+                "star_level": 2,
+                "item_count": 3
+              }
+            }
+          },
+          {
+            "name": "compare_emblem_builds",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          },
+          {
+            "name": "inspect_package_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_trait_deltas",
+                "get_cohort_unit_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-2-C04",
+      "input": "A simulator suggested double Blue Buff for Ahri. Do two-star Ahri endgame boards with that build actually hold up against a single mana item and two damage items, and does the surrounding board change the comparison?\n\nInvestigate final boards with exactly two-star Ahri and exactly three ordinary completed items. Verify double Blue Buff using two distinct item slots and preserve a shared named damage item in both the two-Blue-Buff build and the one-Blue-Buff build; compare the latter with each reportable second damage item. Select and disclose the shared damage item from observed exact builds. Keep Shojin-containing alternatives separate. Examine recurring allied cores and Blossom, Spellweaver and Invoker contribution contexts. The selected scope’s rules/reference must establish whether two Blue Buff copies are legal; an empty or suppressed row alone does not settle legality.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Ahri, Blue Buff and the selected shared/alternative items against the active scope. Establish exact Ahri2 three-item support. To verify the duplicate build, use duplicate Blue Buff requirements bound to distinct slots (or equivalent exact evidence), preserve the shared named damage item, and separately enumerate the one-Blue-Buff plus shared-item plus second-damage triplets; keep Shojin alternatives separate.",
+          "State whether the chosen scope/reference establishes the legality of two Blue Buff copies. Do not infer illegality from a missing, empty or suppressed loadout. Report support and available mean placement, top-four and win rates for each exact package, and distinguish unknown/suppressed from measured zero.",
+          "Investigate whether the comparison changes across supported recurring allied cores and Blossom, Spellweaver and Invoker contribution strata. State the contexts and sample support actually inspected; do not treat broad trait or item marginals as the exact build comparison.",
+          "Answer from the observed scoped evidence or identify the unresolved cell, with uncertainty. The simulator is motivation rather than gold; final-board outcomes do not prove a causal item effect or combat mechanism.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ],
+        "reference": "There is no preset answer about double Blue Buff. Grade duplicate-slot verification, separate package coverage, legality caution and context-aware interpretation."
+      },
+      "metadata": {
+        "source_case_id": "UN4-2-C04",
+        "lane": "UN4-2",
+        "subject": "units",
+        "proposal_lineage": [],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_ahri_and_item_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_two_star_three_item_loadouts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts",
+              "arguments": {
+                "star_level": 2,
+                "item_count": 3
+              }
+            }
+          },
+          {
+            "name": "compare_ahri_builds",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          },
+          {
+            "name": "inspect_trait_contexts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_trait_deltas",
+                "get_cohort_unit_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

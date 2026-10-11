@@ -1,0 +1,195 @@
+{
+  "items": [
+    {
+      "case": "CO4-4-C01",
+      "input": "On a level-9 Aphelios board, when is keeping Eclipse worth the slots compared with a stronger frontline and utility package? Does that change if the Solar units are already three-star?\n\nPlease investigate final level-nine boards with itemized Aphelios. Compare boards with active Eclipse against its complement within shared carry, level, and upgrade shells, and discover named frontline or utility alternatives from the observed results rather than assuming a fixed roster. Check Solar member star levels and verify Eclipse activation from its own observable record. Separate named Solar three-star vectors from predominantly two-star cases where the data permits. These final-board comparisons describe associations; they do not show that buying or keeping Eclipse caused an outcome.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the applicable active analysis scope and report its readiness and population limits; do not treat historical or online results as ground truth for this database.",
+          "Define the observed Aphelios carry and Eclipse comparison populations, verify active Eclipse independently of generic Solar presence, and identify the named frontline or utility packages actually inspected. Do not present a contains-core cohort as an exact roster.",
+          "Where supported, distinguish named Solar three-star vectors from predominantly two-star variants and report the sample denominators and available mean placement, top-four rate, win rate, and uncertainty for each comparison. Lower mean placement is better; outcomes may disagree.",
+          "Describe package substitutions and investment differences visible in the compared boards. Do not infer a causal benefit from spending slots, claim generic global investment equality, or assume that itemized Aphelios makes the rest of the board ordinary.",
+          "Treat suppressed groups and missing comparisons as unknown rather than zero. State that the named vectors and packages are bounded coverage, since there is no generic all-three-star or exact roster filter, and do not turn an end-state win rate into the chance of choosing the composition successfully."
+        ],
+        "reference": "Grade the evidence-relative package discovery, independently verified Eclipse activation, upgrade-vector comparisons, denominators and outcome interpretation, and honest limits on roster and investment controls. Either supported direction or an unresolved comparison is acceptable."
+      },
+      "metadata": {
+        "source_case_id": "CO4-4-C01",
+        "lane": "CO4-4",
+        "subject": "compositions",
+        "proposal_lineage": [
+          "CO4-4-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_observed_aphelios_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_eclipse_and_support_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-4-C02",
+      "input": "For a level-8 Azir–Mama Beak board, how do the Ezreal–Scuttle Crab and Kennen–Amumu versions compare as finished boards? Is one more likely to win rather than just make top four?\n\nTreat this as a reconstruction study of final boards with Azir carrying a Rapidfire Emblem. The five known shared units are itemized Azir, itemized Mama Beak, Krug, Sett, and Yunara; the original question's sixth shared unit is unknown and must be discovered from the scoped observations, not guessed. Compare the Ezreal plus Scuttle Crab package with the Kennen plus Amumu package, then inspect candidate shared companions and any supported matched package cells. Level eight and the seven known members do not prove an exact roster. If a supported eighth member is discovered, compare the eight-record versions separately where available.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the applicable scoped Azir and Mama Beak board results without inventing the unknown sixth shared unit or importing historical answer numbers.",
+          "Use the five known shared anchors and Azir's Rapidfire Emblem as the discovery shell, identify observed companion candidates, and check candidate conjunctions separately with each cap. Keep the Ezreal–Scuttle Crab and Kennen–Amumu pair membership exclusive when defining comparison arms.",
+          "Report the observed sample count and available mean placement, top-four rate, and win rate for each reportable cap or matched discovered-companion cell. Explain denominators, interpret placement direction correctly, and allow win rate and top-four rate to favor different caps.",
+          "Describe relevant Azir and Krug upgrade, item, and utility differences that are visible in the returned groups. Do not claim that a named contains-all shell is a complete eight-unit roster or that level eight fixes unit count.",
+          "Label this as a reconstruction from available final-board facts unless full legal rosters are independently certified. State that exact roster closure, Alpha Mark, acquisition timing, and choice-conditioned win probability are unavailable; report suppressed or absent results as unknown rather than zero.",
+          "After discovering a candidate eighth identity, requiring all eight distinct names and using a reportable board_size=8 query row can establish stored-roster closure for that row’s count and outcomes. Do not assign the broader compare_cohorts intervals to that slice or imply the original image roster was recovered."
+        ],
+        "reference": "Grade the discovery of the unknown companion, separate cap membership, observed outcome reporting, upgrade and item context, and explicit reconstruction limits. Either cap may look better, or the evidence may remain unresolved."
+      },
+      "metadata": {
+        "source_case_id": "CO4-4-C02",
+        "lane": "CO4-4",
+        "subject": "compositions",
+        "proposal_lineage": [
+          "CO4-4-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "discovers_shared_companions_and_package_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-4-C03",
+      "input": "For level-nine Primal Aphelios–Nidalee end boards in the scoped data, is the most common finishing unit also getting the best average placement and win rate? Compare the Alune, Brambleback and Ivern versions around the shared core.\n\nUse this shared eight-unit core for the investigation: Amumu, Aphelios, Nidalee, Sentinel, Diana, Kog'Maw, Vi, and Varus. Inspect boards adding Alune, Brambleback, or Ivern at final level nine. Keep candidate overlap, other inventory, and star differences visible. Where available, compare each fully named roster’s outcomes specifically among boards with nine stored unit records. Distinguish these results from broader core-containing boards; neither player level nor record count alone proves occupied capacity or covers every possible finishing unit.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Compare the three named finishing-unit candidates using current results from the applicable scoped data; do not carry over the historical website ordering or percentages as expected values.",
+          "Define each candidate population around the shared core, inspect support counts and outcomes, and report counts and denominators. Separate popularity ordering from average-placement and win-rate ordering; lower mean placement is better.",
+          "Where the candidates overlap or differ in stars, inventory, or other companions, describe that composition and explain how it limits a direct comparison. Use reportable group outcomes or comparisons and do not claim matched boards unless the query actually defines them.",
+          "Requiring the nine distinct named units and selecting the reportable board_size=9 query row establishes stored-roster closure for that row. Use its own sample and outcomes; broader compare_cohorts summaries and intervals do not inherit the restriction. This does not establish occupied capacity or exhaustive eligible ninth-unit coverage.",
+          "Treat end-board outcomes as associations, not as causal evidence or a recommendation that replacing one unit will improve results. Report suppressed or unobserved outcomes as unknown rather than zero."
+        ],
+        "reference": "Grade the independent popularity and outcome comparisons, clear sample denominators, overlap and roster caveats, and evidence-relative interpretation. The observed ordering may differ from the historical panel."
+      },
+      "metadata": {
+        "source_case_id": "CO4-4-C03",
+        "lane": "CO4-4",
+        "subject": "compositions",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_named_finishing_unit_frequencies",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_status": "grounded",
+        "source_answer_status": "supported",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked",
+        "adaptation": "Removed dependence on a mutable TFT Codex panel while preserving the popularity-versus-performance investigation and its known shared roster. Original website snapshot numbers remain historical provenance, not gold for a different database."
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-4-C04",
+      "input": "For level-ten Elder Dragon–Draven end boards in the scoped data, is there convincing evidence that the Alune support version performs better than the Lux or Soraka versions, once the shared core and observed investment differences are considered?\n\nCompare support versions around these shared eight unit records: Draven, Elder Dragon, Ivern, Kennen, Maokai, Taric, Amumu, and Sentinel, plus Alune, Lux, or Soraka. Elder Dragon occupies two slots in the reference, so nine stored unit records do not mean a level-nine board or nine occupied slots. Compare the candidates within named carry and tank star or loadout strata where supported, and inspect other companions and board size as roster diagnostics. Resolve Lux to an observable variant when possible; otherwise describe the generic-Lux mix.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the three support versions in the applicable level-ten scoped data without assuming that Alune is better or using the old website percentages as ground truth.",
+          "Define candidate cohorts around the shared core and report each reportable sample count, mean placement, top-four rate, and win rate. Compare within named carry or tank star and loadout strata when the data supports those slices, and describe investment differences that remain.",
+          "Report pairwise effect estimates and confidence intervals when available, including overlap and warnings. A small rounded difference or interval spanning zero does not prove superiority or equivalence; suppressed groups are unknown, not zero.",
+          "Use board size and companions as roster diagnostics. Requiring all nine distinct named identities and selecting a reportable board_size=9 query row establishes stored-roster closure for that row, but it does not filter compare_cohorts or supply its confidence intervals. Explain that stored unit-record count differs from occupied capacity because Elder Dragon uses two slots; neither a partial core nor level alone establishes closure or capacity.",
+          "Identify generic-Lux variant heterogeneity if the variant cannot be resolved. Interpret final-board win rate as an end-state association, not the chance of winning after choosing the composition, and do not infer causal effects from selected finished boards."
+        ],
+        "reference": "Grade the scoped candidate comparisons, outcome and uncertainty reporting, shared-core and investment interpretation, and explicit capacity and Lux-identity limits. A supported preference or an unresolved ranking is acceptable."
+      },
+      "metadata": {
+        "source_case_id": "CO4-4-C04",
+        "lane": "CO4-4",
+        "subject": "compositions",
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_candidate_roster_diagnostics",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_support_version_effects",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-4/cases.md",
+        "source_status": "grounded",
+        "source_answer_status": "supported",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked",
+        "adaptation": "Converted the website-panel interpretation into a ChatTFT scoped-data uncertainty comparison, keeping the shared core and three alternatives. The previously supported web-only answer is not considered measured support for this new benchmark."
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

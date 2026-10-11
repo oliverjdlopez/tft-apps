@@ -1,0 +1,364 @@
+{
+  "items": [
+    {
+      "case": "UN4-3-C01",
+      "input": "Is Ahri actually Morgana’s best carry partner, or do Morgana boards do just as well with Sivir?\n\nPlease compare completed Morgana boards with an itemized Ahri partner against boards with an itemized Sivir partner. Hold Morgana and partner star and loadout strata explicit, separate three-star and dual-partner boards, and inspect shared final-level/frontline contexts; treat board size and item budget as reported distributions rather than controlled filters.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Identify the observed Morgana, Ahri, and Sivir star and loadout strata, and keep dual-partner and three-star variants separate from the primary comparison.",
+          "Compare joint partner cohorts within shared final-level and named-frontline contexts where support allows; provide board counts, mean placement, top-four and win rates, and uncertainty when available.",
+          "Show the actual AP-versus-AD item packages and report board-size and completed-item-count distributions as descriptive context, not as matched filters.",
+          "State whether the evidence favors one observed package, is inconclusive, or is too sparse; do not infer a causal partner swap or treat an absent/suppressed group as zero.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed."
+      },
+      "metadata": {
+        "source_case_id": "UN4-3-C01",
+        "lane": "UN4-3",
+        "subject": "units",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "proposal_lineage": [
+          "UN4-3-R2-P1"
+        ],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare observed cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect candidate builds or cohort composition",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "rank_units"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C02",
+      "input": "Which Aphelios boards actually do well with Mama Beak, and which do better without her?\n\nCompare itemized Aphelios boards with Mama Beak against otherwise eligible boards without it inside shared Aphelios star/build contexts. Separate Mama Beak holders by star and zero, partial, or three completed items, including three-star Aphelios. The without group is the full eligible complement, not a single replacement; report its observed alternatives and investment proxies.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Compare Mama Beak inclusion within multiple supported Aphelios star/build contexts, separating Mama Beak star and item-count variants, including three-star Aphelios.",
+          "Report the actual sample and outcome tradeoffs for eligible boards with and without Mama Beak, and name observed substitutes and investment distributions in the complement when evidence exposes them.",
+          "Distinguish utility-item presence from itemized carry investment; the complement is not one forced replacement, and no Alpha Mark, emergency-selection, or item-transfer history is observed.",
+          "Describe results as scoped final-board associations, and distinguish a supported comparison from a sparse, suppressed, or otherwise unsupported estimate.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed."
+      },
+      "metadata": {
+        "source_case_id": "UN4-3-C02",
+        "lane": "UN4-3",
+        "subject": "units",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "proposal_lineage": [
+          "UN4-3-R2-P2"
+        ],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare observed cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect candidate builds or cohort composition",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "rank_units"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C03",
+      "input": "On finished Draven boards, when does giving Kennen the secondary damage items work better than leaving them on Gnar or Ezreal?\n\nCompare finished boards with the same Draven star and item-build strata, where observed secondary completed items are on Kennen, Gnar, or Ezreal. Keep the other two units naked versus itemized as distinct cases, and use actual shared named inventories only where the data supports them; do not treat unlike optimized inventories as a same-item transfer.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Preserve Draven star and item-build strata while identifying Kennen, Gnar, and Ezreal star levels and their exact observed item allocations.",
+          "Compare supported joint allocation packages and report sample counts, mean placement, top-four and win rates, plus actual trait and frontline context.",
+          "Keep naked candidates separate from itemized candidates; only call inventories shared when the observed named items support that claim, and keep gloves, artifacts, and emblems distinct.",
+          "Do not classify items with an invented generic damage category, claim equal boardwide budgets, or infer item availability, removal history, or causal benefit from final-board outcomes.",
+          "State which observed package performs better, if the evidence supports a direction, or explain why the scoped comparison remains unresolved.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed."
+      },
+      "metadata": {
+        "source_case_id": "UN4-3-C03",
+        "lane": "UN4-3",
+        "subject": "units",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "proposal_lineage": [],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare observed cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect candidate builds or cohort composition",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "rank_units"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C04",
+      "input": "For finished Spellweaver boards with Fiddlesticks tanking, does adding another Defender actually outperform using that slot for another carry or support?\n\nCompare finished Spellweaver boards where Fiddlesticks has a declared tank-investment proxy: an observed defensive completed-item loadout. Discover actual additional Defender and non-Defender alternatives from these boards, then compare supported packages at common final levels and carry investment. Same level does not prove a one-unit-for-one-unit roster swap.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define Fiddlesticks tanking only by the stated defensive-item investment proxy, and report his exact observed star and item loadout alongside the carry investment.",
+          "Discover and name actual additional Defender and non-Defender packages from the eligible Spellweaver boards rather than selecting a comparator from memory or a pooled trait ranking.",
+          "Compare supported packages at common final levels, report their samples and outcomes, and describe same-board supports and relevant trait contribution/breakpoint differences.",
+          "Do not claim damage absorbed, a one-for-one deployed-slot swap, or a complete-roster match from level or board size; explain when no supported package comparison can be made.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed."
+      },
+      "metadata": {
+        "source_case_id": "UN4-3-C04",
+        "lane": "UN4-3",
+        "subject": "units",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "proposal_lineage": [],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare observed cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect candidate builds or cohort composition",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "rank_units"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C05",
+      "input": "In finished Draven boards, is two-star Taric still better than two-star Amumu when Taric has no Vanguard active but Amumu has Juggernaut?\n\nCompare finished Draven boards with two-star Taric against boards with two-star Amumu, keeping Draven build and named tank-item packages visible. Taric boards must have no active Vanguard, including boards where that trait is absent, while Amumu boards must have active Juggernaut. Keep boards containing both tanks separate and describe package associations rather than attributing differences to tank identity alone.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Preserve the two-star Taric versus two-star Amumu distinction, common Draven build, and observed named tank-item packages; report actual companion frontliners.",
+          "Represent Taric without active Vanguard using the complement of active Vanguard within the shared Taric shell, and represent the Amumu package with active Juggernaut; never treat active:false as a missing-row match.",
+          "Keep boards containing both tanks separate and report each supported package’s sample counts, mean placement, top-four and win outcomes.",
+          "Explain that these are package-level descriptive associations with asymmetrical trait requirements; do not assign an observed difference solely to tank identity or claim a certified direct head-to-head where the DSL cannot express it.",
+          "Distinguish a reportable result from sparse, suppressed, or otherwise unsupported evidence rather than interpreting missing output as zero.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed."
+      },
+      "metadata": {
+        "source_case_id": "UN4-3-C05",
+        "lane": "UN4-3",
+        "subject": "units",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "proposal_lineage": [],
+        "source_status": "disputed",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare observed cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect candidate builds or cohort composition",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "rank_units"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C06",
+      "input": "Which finished carry cores actually perform well with Sett as the main tank, and does that hold without a Ravager emblem on him?\n\nTreat Sett at two stars with an observed defensive completed-item loadout as a main-tank investment proxy, and compare that proxy with and without Ravager Emblem across discovered itemized carry cores. Define the carry core independently of Sett’s emblem, report the exact observed builds and trait context, and compare only supported named packages; the data does not observe damage absorbed or why Sett was chosen.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Define Sett as the main-tank investment proxy only for two-star Sett holding the reported defensive completed-item loadout, and show his exact observed build.",
+          "Discover named itemized carry cores independently of Sett’s emblem status, then compare supported cores with and without Ravager Emblem and report core-specific samples and outcome tradeoffs.",
+          "Show companion unit stars/item counts and relevant trait context; do not infer a universal family effect from a frequent unit row or Sett’s marginal ranking.",
+          "State that damage absorbed, survival, and the reason Sett was chosen are unobserved, and distinguish a supported comparison from sparse, suppressed, or unresolved evidence.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed."
+      },
+      "metadata": {
+        "source_case_id": "UN4-3-C06",
+        "lane": "UN4-3",
+        "subject": "units",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "proposal_lineage": [],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare observed cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect candidate builds or cohort composition",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "rank_units"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

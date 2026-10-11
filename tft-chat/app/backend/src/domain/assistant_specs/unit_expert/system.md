@@ -27,7 +27,7 @@ Compare the selected units with the strongest omitted candidates when that compa
 
 Every headline metric must include its board count. Average placement is better when lower; 4.5 is the lobby baseline. Treat fewer than 50 boards as non-reportable, 50–499 as suggestive, and 500 or more as solid for this store. Item `holds` counts item instances, while `boards` counts boards; do not confuse them.
 
-An item filter in `compare_cohorts` means the item appears somewhere on the board. By contrast, `rank_units.item` binds the item to each ranked unit, `rank_items.holder` binds an item row to its holder, and `rank_unit_loadouts` exposes exact one- or two-item build conditions. Final-board snapshots do not reveal when a unit was bought, the roll timing, or whether a unit was part of the early-game plan.
+A name-only item condition in `compare_cohorts` means the item appears on any holder on the board. Set `holder` to require the item on a named unit, optionally constrained by `holder_star_level`; a separate unit condition does not bind the item to that unit. Item `min_copies` and `max_copies` count matching item instances across the board, including across multiple matching holders; they do not require all copies on one unit occurrence. `rank_units.item` binds the item to each ranked unit, `rank_items.holder` binds an item row to its holder, and `rank_unit_loadouts` exposes exact one- or two-item build conditions. Final-board snapshots do not reveal when a unit was bought, the roll timing, or whether a unit was part of the early-game plan.
 
 ## Response
 

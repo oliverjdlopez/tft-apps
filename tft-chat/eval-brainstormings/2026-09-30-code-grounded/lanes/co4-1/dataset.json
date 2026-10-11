@@ -1,0 +1,165 @@
+{
+  "items": [
+    {
+      "case": "CO4-1-C01",
+      "input": "What two or three AP comps are worth learning on 18.3B without relying on an artifact, emblem, or a big reroll high roll, and what core units and item needs distinguish them?\n\nI’m building an AP learning repertoire for a verified 18.3B standard-ranked scope. Please start from ordinary-item named carry builds and avoid relying on multiple three-star supports; Ahri, Soraka, and Zyra are leads to investigate, not the only candidates. Since the available board filters cannot certify that every item and star level across a whole board is ordinary, show which carry and support proxies you inspected and how far the evidence supports the broader restriction.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate the applicable scoped Set 18 standard-ranked observations without assuming a winning repertoire in advance; state any scope or candidate-coverage limitation rather than reusing historical or online performance as ground truth.",
+          "Identify two or three substantively different AP-oriented packages from observed named carry builds and recurring support combinations. For each, name the core units and relevant item-holder needs, and verify joint package membership instead of inferring a core from separate unit marginals.",
+          "Give the reportable board counts and available mean placement, top-four, and win outcomes for the builds or packages used to support the recommendations. Explain the sample denominator and interpret lower mean placement as better; popularity alone does not establish a good learning choice.",
+          "Describe the actual ordinary-item and support-investment proxies inspected. Do not claim whole-board artifact, emblem, or high-roll exclusion from a carry-only item check, and do not treat observed final three-star support counts as a measure of luck. Identify uninspected candidates or pages that limit completeness.",
+          "Treat observed final-board outcomes as associations rather than proof of a comp's causal strength or the probability that choosing it succeeds. Report suppressed or unavailable results as unknown, not zero."
+        ],
+        "reference": "Grade the evidence-relative candidate discovery, joint package support, outcomes, and honest scope of the ordinary-resource proxy. Any supported candidates and outcome direction are acceptable; no fixed winning comps are expected."
+      },
+      "metadata": {
+        "source_case_id": "CO4-1-C01",
+        "lane": "CO4-1",
+        "subject": "compositions",
+        "proposal_lineage": [
+          "CO4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "investigates_named_cohort_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_supported_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-1-C02",
+      "input": "For an ordinary-item AP repertoire on 18.3B, should Veigar–Ornn be on my list if I care more about top fours than firsts, or is its good placement mostly coming from specialist-item boards?\n\nPlease compare named ordinary-item Veigar–Ornn carry builds with observed Veigar specialist-item versions, allowing Veigar reroll, and prioritize top-four outcomes. As repertoire context, look at a separately defined ordinary Zyra–Amumu package; it is a comparison of packages, not a matched Veigar swap. Ordinary items on Veigar alone do not establish that the rest of his board is ordinary, so describe this as a carry-build comparison and say what whole-board evidence is unavailable.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Investigate current scoped Set 18 standard-ranked results without assuming whether Veigar–Ornn belongs in the repertoire or which item category wins.",
+          "Discover observed Veigar loadouts and named Veigar–Ornn support/build cells. Compare named ordinary-item carry builds with specialist-item versions where reportable, keeping Veigar reroll boards eligible and item-holder conditions explicit.",
+          "For clearly defined nonoverlapping categories within a named reportable Veigar–Ornn family, report both top-four rate and each category's contribution to that family's observed top fours using the same denominator. Give board counts and the available win-rate tradeoff. Do not infer top-four contribution from a higher category rate or sum overlapping specialist cohorts.",
+          "Compare a separately defined ordinary Zyra–Amumu package as repertoire context, not as a matched Veigar swap. Give its sample size and available top-four, win, and placement outcomes, and state why differences across those package families do not isolate an item effect.",
+          "Do not call a Veigar ordinary-item board globally ordinary or claim the specialist-item partition covers all boards unless whole-board item counts and disjoint categories are actually certified. Avoid deriving exact counts from rounded rates; keep suppressed or unavailable categories unknown rather than zero.",
+          "State any scope and sample readiness limits. Interpret final-board associations carefully; they do not establish causal item effects or the probability that choosing a reroll succeeds."
+        ],
+        "reference": "Grade the explicit carry-build categories, common-denominator top-four contribution, win tradeoff, separate Zyra–Amumu context, and limits on whole-board partition claims. Either result direction or an unresolved comparison is acceptable."
+      },
+      "metadata": {
+        "source_case_id": "CO4-1-C02",
+        "lane": "CO4-1",
+        "subject": "compositions",
+        "proposal_lineage": [
+          "CO4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "discovers_veigar_loadouts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort"
+              ]
+            }
+          },
+          {
+            "name": "compares_reportable_build_groups",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-1-C03",
+      "input": "Is Azir reroll actually a reasonable comp to choose on 18.3B, or do his good three-star stats mostly come from boards where someone else is carrying? What would make the Azir version worth choosing?\n\nPlease investigate Set 18 standard-ranked final boards with three-star Azir, separating named carry-investment proxies into primary-carry, co-carry, support, and ambiguous end states based on Azir's completed items and named teammate investment. Include the sensitivity where Azir has three completed items and Kha’Zix is present with zero items. These are board-state proxies: item counts do not reveal damage roles, reroll attempts, timing, or intent, and a bounded candidate list may leave some boards unclassified.",
+      "expected_output": {
+        "requirements": [
+          "Investigate applicable scoped Set 18 standard-ranked three-star Azir board results without presupposing whether Azir reroll is worth choosing or attributing the outcome to one teammate.",
+          "Define explicit primary-carry, co-carry, support, and ambiguous role-proxy categories using joint named-unit star/item-count conditions. Preserve ambiguous and incomplete coverage rather than forcing all boards into a role; do not confuse a missing Kha’Zix with a present zero-item Kha’Zix.",
+          "Include the three-completed-item Azir and present zero-item Kha’Zix sensitivity as its own explicitly defined cohort when reportable. Identify recurring core candidates through joint checks, not separate partner marginals.",
+          "For reportable role-proxy groups, give board counts and shares over a clearly named three-star-Azir denominator, plus available mean placement, top-four, and win outcomes. Identify suppressed cells as unknown and state how much of the denominator the explicit groups cover.",
+          "Separate high-performing itemized Azir end states from the chance of success after choosing reroll. Explain that final boards do not expose actual damage roles, reroll attempts, timing, generic teammate investment totals, form, or sacrifice choice, and label bounded role partitioning accordingly.",
+          "State scope and sample readiness limitations without using a generic refusal in place of investigating supported cohorts. Interpret lower mean placement as better and avoid causal claims from final-board associations."
+        ],
+        "reference": "Grade the joint role-proxy definitions, coverage and outcome reporting, named zero-item Kha’Zix sensitivity, and distinction between end-state associations and reroll success probability. Either supported strategic conclusion or an explicitly unresolved comparison is acceptable."
+      },
+      "metadata": {
+        "source_case_id": "CO4-1-C03",
+        "lane": "CO4-1",
+        "subject": "compositions",
+        "proposal_lineage": [
+          "CO4-1-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "name": "queries_joint_azir_role_proxies",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            }
+          },
+          {
+            "name": "compares_reportable_role_groups",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-1/cases.md",
+        "source_status": "disputed",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

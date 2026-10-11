@@ -269,6 +269,9 @@ def load_assistant_spec(path: Path, *, root_dir: Path = ROOT_DIR) -> AssistantSp
 
 
 def discover_assistants_specs() -> list[AssistantSpec]:
+    from common.assistant_workspace import recover
+
+    recover(ROOT_DIR / '.runtime' / 'assistant-workspace', ASSISTANT_SPECS_DIR)
     return discover_unique(
         ASSISTANT_SPECS_DIR,
         ["*.md", "*/system.md"],

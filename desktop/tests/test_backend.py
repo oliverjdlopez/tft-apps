@@ -13,6 +13,7 @@ import subprocess
 import sys
 import threading
 import time
+import tempfile
 import unittest
 from urllib.request import urlopen
 
@@ -31,7 +32,7 @@ class OwnershipTests(unittest.TestCase):
             f"runpy.run_path({str(desktop / 'backend.py')!r}); "
             "assert importlib.util.find_spec('utils.tft').origin.endswith('utils/tft.py')"
         )
-        result = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, timeout=10)
+        result = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, timeout=10, cwd=tempfile.gettempdir())
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_socket_is_exclusive(self) -> None:

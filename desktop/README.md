@@ -1,21 +1,14 @@
-# ChatTFT desktop
+# tft-apps desktop
 
-Source-launched Electron wrapper for the existing ChatTFT web application.
-It starts the checkout's Python backend automatically and stops its services
-when the desktop application quits.
-
-See [desktop setup and operation](../docs/apps/desktop.md) for prerequisites,
-Windows/macOS instructions, launch options, troubleshooting, and validation.
-
-After installing the documented prerequisites, run from this directory:
+From the suite root run `python3 scripts/setup.py` once, then:
 
 ```sh
+cd desktop
 npm start
-# Or use frontend hot reload:
+# Or, for ChatTFT frontend hot reload:
 npm run dev
 ```
 
-For an existing WSL checkout, run `npm run setup:wsl` once, then `npm start` or
-`npm run dev` from this directory in WSL. Windows needs Node 22 with npm; Python
-and frontend dependencies stay in WSL. See the linked guide for setup and
-`--windows-node` / `--python` overrides.
+See [suite setup and lifecycle](../docs/desktop.md) for WSL setup, ports,
+process ownership and troubleshooting. Python and React dependencies stay in
+`tft-chat/` and `vod-review/`; this directory owns only the Electron shell.

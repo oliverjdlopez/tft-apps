@@ -1,0 +1,15 @@
+# IT-2 dataset authoring report
+
+Authored 3 active evidence-relative itemization cases in `dataset.json`. Each keeps its original player question first and adds the reconciled analytical constraints to the input because the evaluated assistant cannot see grading requirements or arbitrary metadata.
+
+The deterministic checks confirm name resolution and use of appropriate registered comparison, grouping, or trait-delta tools. They do not assert successful results, nested holder binding, or output values: trace checks only observe calls and top-level argument fields. Case-specific quality requirements state the intended checks for joint cohort definitions, reportable samples and outcomes, overlap, trait context, uncertainty, and limits. Current `execution_evidence` gives the native quality judge only a bounded trace summary and presentation evidence, not full analytical tool outputs, so it cannot independently verify numeric fidelity or cohort result claims from those outputs.
+
+Inputs fix the same item trio and two-star holders for C01, the five-item Azir/Malphite allocation pair for C02, and the two full reversed three-item builds for C03. They explicitly leave remaining roster and inventory differences observable rather than asserting whole-board matches. No expected winner or historical online ranking is encoded. Every item declares `grading_scope: investigation_behavior_and_answer_coverage` and `numeric_ground_truth_verified: false`; numeric fidelity requires a frozen reference or a full-trace audit.
+
+Preparation gaps remain external: verify the selected Set 18 standard-ranked scope, fact readiness, population provenance, applicable patch window and sample support before scoring. The local context corpus and these research sources do not certify those facts or establish outcome gold. No registration, live evaluation, database call, or web outcome research was performed.
+
+Validation performed: parsed the authored JSON; checked source-case IDs, lineage, required metadata, and leading original questions; confirmed deterministic check types and tool names against the current trace evaluator and tool registry; checked current registration item structure and cohort/loadout schemas. Pure validation passed for all 3 items: trace assertion schemas, registered tool references, assistant registry semantics, and schema-v3 bundle validation. No dataset registration, snapshot export, database access, or model execution occurred. The evidence limit means this is a prepared dataset, not a numeric gold set; full result verification remains unperformed.
+
+## Final coordinator verification
+
+After lane authoring, the coordinator reviewed and normalized this file alongside the full collection. The final lane contains 3 cases and 9 trace checks. The [coordinator review](../../docs/coordinator-review.md) records content corrections; the [validation report](../../validation/dataset-validation.json) is authoritative for the final import and assertion results. The original authoring observations above describe the lane submission, before any coordinator refinements.

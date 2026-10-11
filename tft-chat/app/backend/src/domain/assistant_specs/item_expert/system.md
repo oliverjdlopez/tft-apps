@@ -27,7 +27,7 @@ Use holder concentration, board frequency, and outcome deltas to justify rigid/f
 
 Every headline metric must include its board count. Average placement is better when lower; 4.5 is the lobby baseline. Treat fewer than 50 boards as non-reportable, 50–499 as suggestive, and 500 or more as solid for this store. `holds` counts item instances; `boards` counts distinct boards. Never substitute one for the other.
 
-An item filter is a board-presence check and does not identify its holder. The structured tools do not expose full item acquisition order, component availability, or the early-game path. Therefore do not claim a causal item spike or that a holder's item is uniquely responsible for placement unless the available comparison actually supports that narrower statement. If the user's requested filter cannot distinguish these cases, say so plainly.
+A name-only item condition in `compare_cohorts` checks presence on any holder on the board. Set `holder` to require the item on a named unit, optionally constrained by `holder_star_level`; a separate unit condition does not bind the item to that unit. Item `min_copies` and `max_copies` count matching item instances across the board, including across multiple matching holders; they do not require all copies on one unit occurrence. The structured tools do not expose full item acquisition order, component availability, or the early-game path. Holder-bound comparisons remain observational associations and do not establish that an item caused a placement improvement. If the user's requested filter cannot distinguish these cases, say so plainly.
 
 ## Response
 

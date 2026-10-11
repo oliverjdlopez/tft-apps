@@ -1,0 +1,293 @@
+{
+  "items": [
+    {
+      "case": "CO4-3-C01",
+      "input": "What frontline packages work with AD Nidalee and Sivir when I leave out Malphite, and which supporting units tend to change with them? I'm interested in level-eight boards without emblems.\n\nPlease treat this as a final level-eight comparison with Nidalee and Sivir present and Malphite absent. Establish the AD-oriented Nidalee variants from observed named item builds, then compare supported frontline and support packages at comparable named carry and tank investment. I want the emblem-free intent checked as far as the available board evidence allows: report inspected equipped-emblem restrictions separately, since those do not rule out every possible trait grant.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Establish the observed AD-oriented Nidalee item-build strata alongside Sivir on final level-eight boards, and ensure Malphite is absent from the target population.",
+          "Identify recurring frontline and support combinations using joint board evidence, with counts and mean placement, top-four rate, and win rate for supported package comparisons; distinguish observed package results from marginal partner frequencies.",
+          "Compare packages only within comparable named carry and tank investment strata where supported, and state clearly which emblem restriction was actually inspected. Equipped-emblem exclusions do not establish that no other trait grant occurred.",
+          "Treat an absent or suppressed package as unknown rather than zero, describe outcomes as final-board associations, and do not use historical 18.2 guide numbers as current outcome evidence."
+        ],
+        "reference": "Evidence-relative grading: report what the applicable scoped observations support, including an inconclusive or unavailable comparison when warranted; no package winner is presumed."
+      },
+      "metadata": {
+        "source_case_id": "CO4-3-C01",
+        "lane": "CO4-3",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "proposal_lineage": [
+          "CO4-3-R2-P1"
+        ],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare observed packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect frontline and support patterns",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "get_cohort_unit_deltas",
+                "query_cohort",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C02",
+      "input": "What versions of Master Yi reroll work without Rengar? I'd like to keep Kog'Maw and see how the supporting board changes around Vi or Krug as the tank.\n\nFocus on final boards with itemized Master Yi and Kog'Maw, with Rengar absent. Separate Yi two-star and three-star and common final-level strata where the samples support it. Compare Vi-focused, Krug-focused, shared-investment, and unclear frontline patterns; a board containing both tanks must remain visible as a shared case. Use star and named item investment only as observable proxies for tank investment, not as damage-absorbed roles or equal whole-board budgets.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Analyze itemized Master Yi plus Kog'Maw boards with Rengar absent, keeping Yi two-star and three-star cohorts distinct and separating supported final-level strata.",
+          "Define Vi-focused and Krug-focused patterns from explicit observed star and named item allocations; report shared-tank and unclear-investment boards separately instead of assigning them to one side.",
+          "Report joint recurrence and sample counts with mean placement, top-four rate, win rate, and observed supporting units or traits for supported package comparisons.",
+          "Distinguish tank identity from investment differences and from Yi's item build. State that tank investment is a board proxy rather than measured damage absorbed, and do not claim matched artifact/emblem totals or a complete equal-budget comparison."
+        ],
+        "reference": "Evidence-relative grading: no tank package is designated the winner. Use applicable scoped results and identify sparse, overlapping, or unsupported comparisons honestly."
+      },
+      "metadata": {
+        "source_case_id": "CO4-3-C02",
+        "lane": "CO4-3",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "proposal_lineage": [
+          "CO4-3-R2-P2"
+        ],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare frontline allocations",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect tank and companion patterns",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "get_cohort_unit_deltas",
+                "query_cohort",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C03",
+      "input": "With Ahri and Sett on my final board, how does keeping Yorick and Karma for the Blossom package compare with using Alune and Amumu for an Executioner package? Are the results different at level eight and level nine?\n\nCompare final boards containing Ahri and Sett with the Yorick-plus-Karma partner pair against boards with the Alune-plus-Amumu pair, separately at levels eight and nine. Keep shared Ahri and Sett star and named item investment strata explicit where supported. Treat boards that satisfy both pairs as an overlapping package and report them separately when the comparison supports doing so. Inspect the remaining supports and actual trait contributions rather than assuming the package labels alone describe the board.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Compare all four package-by-level cells: Yorick plus Karma at levels eight and nine, and Alune plus Amumu at levels eight and nine, with Ahri and Sett present in the shared context; keep shared Ahri and Sett star and named item investment strata explicit where supported.",
+          "For supported cells report board counts, mean placement, top-four and win rates, and confidence intervals where available; identify overlapping boards before describing the pairs as exclusive.",
+          "Inspect remaining support units and recorded Blossom and Executioner contribution differences using joint board evidence, not trait labels alone.",
+          "Explain that a pair condition means those units are present, not that the board has an exact complete roster; equal final level does not guarantee equal deployed capacity. Do not assert controlled global budget or special-state matching."
+        ],
+        "reference": "Evidence-relative grading: report each supported level/package result as observed; do not presume a winning trait package or interpret an unavailable cell as zero."
+      },
+      "metadata": {
+        "source_case_id": "CO4-3-C03",
+        "lane": "CO4-3",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "proposal_lineage": [],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare partner packages by level",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect partner and trait composition",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C04",
+      "input": "With Akali and Camille both three-star, how do Solar-heavy end boards compare with Adaptor-focused support packages? Which supporting units change together, and does the comparison hold when the other three-stars and artifacts are similar?\n\nRestrict the investigation to final boards with three-star Akali and Camille. Define Solar-heavy and Adaptor-focused as explicit observed support packages, keeping supporting-unit stars and named item builds visible. Compare complete named support patterns and incomplete support-upgrade patterns separately, and use common final levels and named additional-upgrade or item strata where available. The available board facts do not identify Adaptor form or provide a global three-star, artifact-count, or upgraded-board-cost filter, so describe those limits instead of claiming exact equality.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Keep the required three-star Akali and Camille anchors and identify the actual observed support-unit star and item-build patterns that define the compared Solar-heavy and Adaptor-focused packages.",
+          "Explain which support units occur together and report counts and mean placement, top-four and win rates for supported complete and incomplete named upgrade patterns, retaining those groups separately.",
+          "Compare within common final levels and named additional-upgrade or item strata when supported, and describe other observed three-star and item differences without generalizing from a selected high-placement subset.",
+          "Do not infer Adaptor form from a label or assert control of total three-stars, artifact count, upgraded-board cost, or broader equality that the available filters cannot enforce."
+        ],
+        "reference": "Evidence-relative grading: describe the package associations returned for the scoped population; no Solar or Adaptor result is presumed superior."
+      },
+      "metadata": {
+        "source_case_id": "CO4-3-C04",
+        "lane": "CO4-3",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "proposal_lineage": [],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare named support packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "discover joint support patterns",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "CO4-3-C05",
+      "input": "For Ahri–Morgana end boards, is there actually a payoff to the Alune/Lux/Taric support package compared with versions using Kog'Maw or Hecarim? I'd like a comparison at the same final level, including what fills the remaining slots.\n\nCompare final boards with Ahri and Morgana present at the same final level: the Alune/Lux/Taric support core against observed Kog'Maw-containing and Hecarim-containing versions. Discover what else fills the board and keep shared named Ahri and Morgana carry and tank investment strata explicit where the observations support them. Report overlap where boards satisfy more than one package condition. Resolve and describe the observed Lux identity if the data exposes it; a generic Lux observation by itself does not identify which variant is present. Same level is a useful stratum, not proof of equal capacity or an exact roster match.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Compare Ahri-Morgana end boards at the same final level across the Alune/Lux/Taric core and observed Kog'Maw- or Hecarim-containing support variants, stating the actual bounded package definitions and keeping shared named carry/tank investment strata explicit where supported.",
+          "Name the other observed supporting units or explicitly describe the bounded core, and report sample counts, mean placement, top-four rate, win rate, and supported trait contribution differences.",
+          "Report package overlap rather than assuming Kog'Maw and Hecarim variants are mutually exclusive. Treat generic Lux as heterogeneous unless an observed identity resolves the variant.",
+          "Do not use broad composition-family totals as variant denominators or claim full-roster closure, exact board capacity, global special-item exclusion, or a controlled Lux choice based on unrelated board traits."
+        ],
+        "reference": "Evidence-relative grading: report actual scoped package results or an unresolved comparison; the reference carries no assumed payoff direction."
+      },
+      "metadata": {
+        "source_case_id": "CO4-3-C05",
+        "lane": "CO4-3",
+        "subject": "compositions",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/compositions/lanes/co4-3/cases.md",
+        "proposal_lineage": [],
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "deterministic_checks": [
+          {
+            "name": "compare same-level package cohorts",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ],
+              "min_count": 1
+            }
+          },
+          {
+            "name": "inspect supporting roster and traits",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas"
+              ],
+              "min_count": 1
+            }
+          }
+        ],
+        "benchmark_type": "evidence_relative_investigation",
+        "set_number": 18,
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

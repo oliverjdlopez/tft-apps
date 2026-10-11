@@ -121,6 +121,16 @@ references. Tool calls can fetch additional collections. References are rendered
 as facts, never instructions; private analyst schema and procedural skills remain
 separate. Requests for another set cannot retrieve Set 18 sources.
 
+Chat prepares its initial selections once and stores them in
+`AssistantRunContext.resources`; each agent's factory-installed instruction
+callback only renders those selections under its own specification's permissions,
+including nested handoffs. Without typed context the callback returns the durable
+prompt without selection. `request_additional_context` receives SDK tool context and uses the
+invocation's `context_provider` and `runtime.set_number`. It returns newly fetched
+collections as tool output without replacing the initial prompt resources.
+Callers without the typed context retain the default provider and configured set.
+The model-facing request schema and complete-collection result format are unchanged.
+
 ## Verification
 
 ```bash
@@ -135,8 +145,10 @@ Stage regressions verify corpus-wide Stage 2 membership, cross-stage windows,
 all-band entries, complete reconstruction across chunks, retained conditions,
 Markdown introductions, and lossless fallback for unknown eligibility syntax.
 
-The context evaluation adapter uses the same catalogue and complete sources.
-It no longer requires a 75% payload reduction or an empty catalogue for unrelated
-queries: the selected result, rather than available source inventory, must be
-empty for an unrelated question. Frozen historical evaluations expecting retired
-part titles must be migrated separately rather than rewritten in place.
+The offline evaluation adapter currently imports retired provider symbols
+(`MAX_SELECTOR_CHARS` and `_ContextCandidate`). That pre-existing mismatch blocks
+the context-evaluation regression and offline manifest validation; runtime
+provider tests remain independently runnable. Repairing the adapter is separate
+from the invocation-context refactor. Its intended contract is coverage of full
+selected collections rather than a compression target. Frozen historical
+evaluations must not be rewritten to hide the mismatch.

@@ -195,7 +195,7 @@ def test_export_then_read_only_json_source_and_import(client, tmp_path):
     assert exported.json()["path"] == "gameplans/ashe-reroll.json"
     written = json.loads((tmp_path / "gameplans" / "ashe-reroll.json").read_text())
     assert written == exported.json()["workspace"]
-    assert written["schema_version"] == "flowchart.v1" and written["name"] == "Ashe Reroll!"
+    assert written["schema_version"] == "flowchart.v2" and written["name"] == "Ashe Reroll!"
     assert written["gameplan"]["flowchart"]["connections"][0]["condition"] == "Hit 3-star by 3-2"
 
     listed = client.get("/api/flowchart/workspaces", params={"source": "json"}).json()
@@ -264,3 +264,101 @@ def test_saved_groups_create_list_rename_and_delete(client):
     assert client.delete(f"/api/flowchart/groups/{group['id']}").status_code == 204
     assert client.delete(f"/api/flowchart/groups/{group['id']}").status_code == 404
     assert client.get("/api/flowchart/groups").json() == {"groups": []}
+
+
+def nested_document(name="Nested"):
+    """Build a v2 graph covering containment, locks, and manual route metadata."""
+    value = document(name)
+    value["schema_version"] = "flowchart.v2"
+    value["gameplan"]["flowchart"]["elements"] = [
+        {"id": "outer", "kind": "group", "title": "Branch", "tint": "#dbeafe",
+         "position": {"x": 100, "y": 100}, "size": {"width": 700, "height": 600}},
+        {"id": "inner", "kind": "group", "parent_id": "outer",
+         "position": {"x": 24, "y": 48}, "size": {"width": 500, "height": 400}},
+        {"id": "open", "kind": "action", "parent_id": "inner", "locked": True,
+         "position": {"x": 24, "y": 48}, "title": "Roll"},
+        {"id": "comp", "kind": "plan", "parent_id": "outer",
+         "position": {"x": 400, "y": 450}, "title": "Pivot"},
+    ]
+    value["gameplan"]["flowchart"]["connections"] = [
+        {"id": "t", "source": "open", "target": "comp", "condition": "hit", "notes": "preserve",
+         "waypoints": [{"x": 700, "y": 200}, {"x": 700, "y": 500}], "label_offset": {"x": 15, "y": -20}},
+    ]
+    return value
+
+
+def test_v2_nested_save_import_export_and_library(client, tmp_path):
+    """V2 metadata survives every portable/storage boundary with unchanged revision checks."""
+    imported = client.post("/api/flowchart/workspaces/import", json={"workspace": nested_document()})
+    assert imported.status_code == 201
+    record = imported.json()
+    assert record["workspace"]["schema_version"] == "flowchart.v2"
+    exported = client.post(f"/api/flowchart/workspaces/{record['id']}/export")
+    assert exported.json()["workspace"] == record["workspace"]
+    assert json.loads((tmp_path / "gameplans" / "nested.json").read_text()) == record["workspace"]
+    saved = client.put(f"/api/flowchart/workspaces/{record['id']}",
+                       json={"revision": 1, "workspace": record["workspace"]})
+    assert saved.status_code == 200 and saved.json()["revision"] == 2
+    assert client.put(f"/api/flowchart/workspaces/{record['id']}",
+                      json={"revision": 1, "workspace": record["workspace"]}).status_code == 409
+    graph = record["workspace"]["gameplan"]["flowchart"]
+    fragment = {"elements": graph["elements"], "connections": graph["connections"]}
+    group = client.post("/api/flowchart/groups", json={"name": "Nested branch", "fragment": fragment})
+    assert group.status_code == 201
+    assert client.get("/api/flowchart/groups").json()["groups"][0]["fragment"] == fragment
+
+
+def test_open_legacy_sources_never_rewrites_or_increments_revision(client, tmp_path):
+    """Opening v1 upgrades only the response, preserving source JSON and database contents."""
+    original = document("Legacy")
+    directory = tmp_path / "gameplans"
+    directory.mkdir()
+    path = directory / "legacy.json"
+    content = json.dumps(original)
+    path.write_text(content)
+    record = client.get("/api/flowchart/workspaces/legacy?source=json").json()
+    assert record["workspace"]["schema_version"] == "flowchart.v2"
+    assert path.read_text() == content
+    with service.open_db() as session:
+        session.add(DevWorkspace(workspace_id="legacy", name="Legacy", revision=9, document=original))
+        session.commit()
+    loaded = client.get("/api/flowchart/workspaces/legacy").json()
+    assert loaded["revision"] == 9 and loaded["workspace"]["schema_version"] == "flowchart.v2"
+    with service.open_db() as session:
+        row = session.get(DevWorkspace, "legacy")
+        assert row.revision == 9 and row.document == original
+
+
+@pytest.mark.parametrize("invalid", ["missing", "ancestor_missing", "non_group", "self", "cycle", "infinite", "size", "waypoints", "label", "tint", "container_link"])
+def test_v2_invalid_containment_and_routing_are_rejected(client, invalid):
+    """Reject malformed nested graphs and bounded metadata at the HTTP request boundary."""
+    value = nested_document()
+    graph = value["gameplan"]["flowchart"]
+    outer, inner, child, _ = graph["elements"]
+    edge = graph["connections"][0]
+    if invalid == "missing": child["parent_id"] = "missing"
+    if invalid == "ancestor_missing":
+        inner["parent_id"] = "missing"
+        graph["elements"] = [child, outer, inner, graph["elements"][3]]
+    if invalid == "non_group": inner["parent_id"] = "comp"
+    if invalid == "self": outer["parent_id"] = "outer"
+    if invalid == "cycle": outer["parent_id"] = "inner"
+    if invalid == "infinite": child["position"]["x"] = 1_000_001
+    if invalid == "size": outer["size"]["width"] = 4001
+    if invalid == "waypoints": edge["waypoints"] = [{"x": 0, "y": 0}] * 65
+    if invalid == "label": edge["label_offset"]["y"] = 1_000_001
+    if invalid == "tint": outer["tint"] = "url(external)"
+    if invalid == "container_link": edge["source"] = "outer"
+    assert client.post("/api/flowchart/workspaces/import", json={"workspace": value}).status_code == 422
+
+
+def test_nonfinite_model_geometry():
+    """Pydantic rejects NaN and infinity even outside the HTTP JSON decoder."""
+    from pydantic import ValidationError
+    from services.flowchart.models import PatchWorkspace
+
+    for coordinate in (float("nan"), float("inf"), float("-inf")):
+        value = nested_document()
+        value["gameplan"]["flowchart"]["elements"][0]["position"]["x"] = coordinate
+        with pytest.raises(ValidationError):
+            PatchWorkspace.model_validate(value)

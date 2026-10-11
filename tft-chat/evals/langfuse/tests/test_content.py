@@ -70,8 +70,15 @@ def test_committed_inventory_preserves_authored_checks():
     """Keep all authored cases, grading weights, and the empty suite visible."""
     entries = load_catalog(ROOT)
     bundles = [load_snapshot(e["snapshot"], ROOT) for e in entries]
-    assert len(entries) == 9
-    assert sum(len(b["items"]) for b in bundles) == 84
+    assert len(entries) == 14
+    assert sum(len(b["items"]) for b in bundles) == 153
+    experts = {b["suite"]["name"]: b for b in bundles if "expert" in b["suite"]["name"]}
+    assert {name: len(bundle["items"]) for name, bundle in experts.items()} == {
+        "comp-expert": 18, "item-expert": 17, "meta-expert": 0,
+        "trait-expert": 17, "unit-expert": 17,
+    }
+    assert sum(len(item["metadata"].get("deterministic_checks", []))
+               for bundle in experts.values() for item in bundle["items"]) == 162
     assertions = [
         assertion
         for bundle in bundles
@@ -84,7 +91,7 @@ def test_committed_inventory_preserves_authored_checks():
                           if bundle["schema_version"] >= 2
                           else item["expected_output"]["assertions"])
     ]
-    assert sum(a["kind"] == "trace" for a in assertions) == 86
+    assert sum(a["kind"] == "trace" for a in assertions) == 248
     assert sum(a["kind"] == "rubric" for a in assertions) == 13
     assert next(b for b in bundles if b["suite"]["name"] == "analyze_transcript")["items"] == []
     assert all("file://" not in json.dumps(b) for b in bundles)
@@ -239,3 +246,45 @@ def test_context_response_smoke_seeds_thirty_cases_without_overwriting_ui(tmp_pa
     dataset.items[0].input = "Edited in Langfuse"
     assert seed_content(client, tmp_path, natural=True) == {"datasets": 0, "items": 0, "prompts": 0}
     assert dataset.items[0].input == "Edited in Langfuse"
+
+
+@pytest.mark.parametrize('schema', [1, 2, 3])
+def test_fresh_live_exports_capture_every_dataset_format(tmp_path, schema, monkeypatch):
+    """Even older hosted dataset formats freeze current definitions on fresh export."""
+    baseline = fixture_bundle()
+    baseline['suite'].update(name='chat', assistant='chat', execution='live')
+    baseline['items'][0]['id'] = 'chat/case'
+    baseline['items'][0]['input'].pop('fixture')
+    if schema != 1:
+        baseline['schema_version'] = schema
+        baseline['suite']['scoring'] = 'none'
+        baseline['dataset_name'] = 'chattft/chat'
+        baseline['schemas'] = {'input': {'type': 'string' if schema == 3 else 'object'}, 'expected_output': None}
+        baseline['items'][0].update(input='Question' if schema == 3 else {'messages': [{'role': 'user', 'content': 'Question'}]},
+            expected_output=None, metadata={'case': 'case', 'case_id': 'chat/case', 'scoring': 'none'})
+    export_snapshot(baseline, tmp_path)
+    client = FakeClient()
+    seed_content(client, tmp_path)
+    if schema != 1:
+        dataset = client.datasets['chattft/chat']
+        dataset.metadata = {'contract_version': schema}
+        dataset.input_schema = {'type': 'string'} if schema == 3 else {'type': 'object'}
+        dataset.expected_output_schema = {'type': 'string'} if schema == 3 else {'type': 'object'}
+        class Native:
+            """Provide hosted native items without credentials or network access."""
+            def items(self, dataset_id, **kwargs):
+                """Return one unscored case under the selected dataset schema."""
+                return [{'id': 'native-case', 'status': 'ACTIVE',
+                         'input': 'Question' if schema == 3 else {'messages': [{'role': 'user', 'content': 'Question'}]},
+                         'expectedOutput': None, 'metadata': {'case': 'case', 'case_id': 'chat/case', 'scoring': 'none'},
+                         'createdAt': '2026-09-13T00:00:00Z', 'updatedAt': '2026-09-13T00:00:00Z'}]
+
+            def close(self):
+                """Close the fake native session."""
+        monkeypatch.setattr('evals.langfuse.utils.configured_native_workspace', Native)
+    frozen = fetch_bundle(client, 'chattft/chat', {'dataset_version': '2026-09-13T00:00:00Z'}, tmp_path)
+    execution = frozen['execution']
+    assert set(execution['graphs']) == {variant['name'] for variant in frozen['config']['variants']}
+    for captured in execution['graphs'].values():
+        assert {'chat', 'data_analyst', 'final_responder', 'context_selector', 'skill_selector'} <= set(captured['specs'])
+    assert '/workspace/' in frozen['prompts']['chat']['name']

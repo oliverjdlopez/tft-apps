@@ -21,8 +21,8 @@ ElementId = Annotated[str, Field(min_length=1, max_length=64, pattern=r"^[A-Za-z
 WorkspaceName = Annotated[str, Field(min_length=1, max_length=120)]
 PatchLabel = Annotated[str, Field(min_length=1, max_length=40)]
 SetNumber = Annotated[int, Field(ge=1, le=99)]
-Coordinate = Annotated[float, Field(ge=-1_000_000, le=1_000_000)]
-ElementKind = Literal["plan", "action", "decision", "fork", "start", "end", "entity", "note"]
+Coordinate = Annotated[float, Field(ge=-1_000_000, le=1_000_000, allow_inf_nan=False)]
+ElementKind = Literal["plan", "action", "decision", "fork", "start", "end", "entity", "note", "group"]
 HandleSide = Literal["top", "right", "bottom", "left"]
 
 # Kinds that may carry entity chips; ``entity`` nodes hold exactly one instead.
@@ -55,7 +55,7 @@ class EntityRef(FlowchartModel):
 
 
 class Position(FlowchartModel):
-    """Place an element's top-left corner in React Flow canvas coordinates."""
+    """Place an element relative to its parent, or in canvas coordinates for a root."""
 
     x: Coordinate
     y: Coordinate
@@ -64,8 +64,8 @@ class Position(FlowchartModel):
 class Size(FlowchartModel):
     """Record a user-resized element's canvas dimensions."""
 
-    width: Annotated[float, Field(gt=0, le=4000)]
-    height: Annotated[float, Field(gt=0, le=4000)]
+    width: Annotated[float, Field(gt=0, le=4000, allow_inf_nan=False)]
+    height: Annotated[float, Field(gt=0, le=4000, allow_inf_nan=False)]
 
 
 class Viewport(FlowchartModel):
@@ -73,7 +73,7 @@ class Viewport(FlowchartModel):
 
     x: Coordinate = 0
     y: Coordinate = 0
-    zoom: Annotated[float, Field(gt=0, le=10)] = 1
+    zoom: Annotated[float, Field(gt=0, le=10, allow_inf_nan=False)] = 1
 
 
 class FlowchartElement(FlowchartModel):
@@ -91,12 +91,19 @@ class FlowchartElement(FlowchartModel):
     - ``start`` / ``end``: where the gameplan begins and where a line finishes.
     - ``entity``: a single dropped icon.
     - ``note``: a situational annotation whose content lives in ``text``.
+    - ``group``: a visual container with explicit nested membership and tint.
+
+    Child geometry is relative to ``parent_id``. Locks constrain movement and
+    resizing; collapse and focus are per-viewer state, never document fields.
     """
 
     id: ElementId
     kind: ElementKind
     position: Position
     size: Size | None = None
+    parent_id: ElementId | None = None
+    locked: bool = False
+    tint: Annotated[str, Field(pattern=r"^#[0-9A-Fa-f]{6}$")] | None = None
     title: Annotated[str, Field(max_length=120)] = ""
     stage_hint: Annotated[str, Field(max_length=40)] | None = None
     entities: Annotated[list[EntityRef], Field(max_length=MAX_ENTITIES_PER_ELEMENT)] = []
@@ -105,6 +112,8 @@ class FlowchartElement(FlowchartModel):
     @model_validator(mode="after")
     def validate_kind_contents(self) -> "FlowchartElement":
         """Keep each node kind's contents consistent with how the canvas renders it."""
+        if self.tint is not None and self.kind != "group":
+            raise ValueError("only groups have a tint")
         if self.kind == "entity" and len(self.entities) != 1:
             raise ValueError("entity elements hold exactly one entity")
         if self.kind not in CHIP_KINDS | {"entity"} and self.entities:
@@ -120,7 +129,8 @@ class FlowchartConnection(FlowchartModel):
     beside that transition. An annotation attaches a note to the element it
     explains. ``source_handle`` and ``target_handle`` remember which side of a
     multi-handle node (a decision) the link uses; ``None`` means the node's
-    only handle.
+    only handle. ``waypoints`` hold up to 64 manual canvas-space bends;
+    ``label_offset`` moves a label relative to its automatic position.
     """
 
     id: ElementId
@@ -131,6 +141,8 @@ class FlowchartConnection(FlowchartModel):
     notes: Annotated[str, Field(max_length=2000)] = ""
     source_handle: HandleSide | None = None
     target_handle: HandleSide | None = None
+    waypoints: Annotated[list[Position], Field(max_length=64)] = []
+    label_offset: Position | None = None
 
 
 class FlowchartFragment(FlowchartModel):
@@ -157,9 +169,24 @@ class FlowchartFragment(FlowchartModel):
         if len(set(connection_ids)) != len(connection_ids):
             raise ValueError("connection ids must be unique")
         kinds = {element.id: element.kind for element in self.elements}
+        parents = {element.id: element.parent_id for element in self.elements}
+        for element in self.elements:
+            if element.parent_id is not None and kinds.get(element.parent_id) != "group":
+                raise ValueError("element parent must reference an existing group")
+            seen = {element.id}
+            parent = element.parent_id
+            while parent is not None:
+                if parent in seen:
+                    raise ValueError("group containment must be acyclic")
+                if kinds.get(parent) != "group":
+                    raise ValueError("element parent must reference an existing group")
+                seen.add(parent)
+                parent = parents[parent]
         for connection in self.connections:
             if connection.source not in kinds or connection.target not in kinds:
                 raise ValueError(f"connection {connection.id} references a missing element")
+            if "group" in (kinds[connection.source], kinds[connection.target]):
+                raise ValueError("connections must reference activity elements, not containers")
             if connection.source == connection.target:
                 raise ValueError(f"connection {connection.id} cannot connect an element to itself")
             if connection.kind == "annotation" and "note" not in (
@@ -191,11 +218,24 @@ class Gameplan(FlowchartModel):
 class PatchWorkspace(FlowchartModel):
     """Portable player-named workspace document, identical to its JSON export."""
 
-    schema_version: Literal["flowchart.v1"] = "flowchart.v1"
+    schema_version: Literal["flowchart.v2"] = "flowchart.v2"
+
     name: WorkspaceName
     patch: PatchLabel | None = None
     set_number: SetNumber | None = None
     gameplan: Gameplan = Field(default_factory=Gameplan)
+
+    @model_validator(mode="before")
+    @classmethod
+    def normalize_legacy_document(cls, value: object) -> object:
+        """Upgrade v1 in memory without writing its source row or JSON file.
+
+        Ordinary saves and exports serialize the resulting v2 document. Reading
+        never increments a revision or rewrites the stored JSON.
+        """
+        if isinstance(value, dict) and value.get("schema_version") == "flowchart.v1":
+            return {**value, "schema_version": "flowchart.v2"}
+        return value
 
 
 class WorkspaceRecord(FlowchartModel):

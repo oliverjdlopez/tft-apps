@@ -1,13 +1,14 @@
 /** Run the checkout's Vite build or development server with native Node. */
 import { createRequire } from "node:module";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { pathToFileURL } from "node:url";
 import path from "node:path";
+import { launcherPaths } from "./paths.mjs";
 import { emitEvent, watchParent } from "./utils.mjs";
 
 /** Reuse frontend configuration while making desktop service ownership explicit. */
 async function main() {
   const [mode, port, backendPort] = process.argv.slice(2);
-  const root = fileURLToPath(new URL("../app/frontend/", import.meta.url));
+  const root = path.join(launcherPaths().chat, "app/frontend");
   let server;
   watchParent(async () => { await server?.close(); });
   const require = createRequire(path.join(root, "package.json"));

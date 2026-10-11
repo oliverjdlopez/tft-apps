@@ -23,17 +23,26 @@ uv run --extra evals chat-tft-evals up
 uv run --extra evals chat-tft-evals down
 ```
 
-The UI opens at <http://localhost:15500>. First startup downloads images, builds
+The UI opens at <http://localhost:15510>. First startup downloads images, builds
 the forwarding image, waits for schema migrations, seeds missing evaluation content
 from the host interpreter, and starts the detached host experiment listener. Later startup preserves content edited in
 Langfuse. `up --no-browser` starts the same services without opening a browser.
 
-Sign in with `evals@chattft.local`. The password is the value of
-`LANGFUSE_INIT_USER_PASSWORD` in the generated `evals/langfuse/.env` file. The
-launcher creates random credentials once with owner-only permissions and prints
-their location, never their values. Do not replace this file while retaining the
-existing volumes: database passwords, encryption keys, and API credentials must
-stay paired with their data.
+This is the canonical evaluation project. After the 2026-10-06 cutover, the
+legacy `chattft-evals` stack on port 15500 is stopped with its volumes retained.
+Its October 4 unit-expert result is preserved under the suite's ignored
+`.migration/legacy-langfuse-cutover-20261006/` archive. New runs use the
+`tft-apps-evals` project and this checkout's host runner. The historical run
+was exported for review, not recreated as a native suite experiment.
+
+Sign in with `LANGFUSE_INIT_USER_EMAIL` and `LANGFUSE_INIT_USER_PASSWORD`
+from the generated `evals/langfuse/.env` file. The default email is
+`evals@chattft.local`. The launcher creates random credentials once with
+owner-only permissions and prints the configured email and password location,
+never the password value. The suite desktop tab can use these fields for
+automatic sign-in; see [suite desktop setup](../../../docs/desktop.md).
+Do not replace this file while retaining the existing volumes: database
+passwords, encryption keys, and API credentials must stay paired with their data.
 
 Only the UI is published to loopback. Langfuse sends its authenticated webhook
 requests to `http://experiments/experiments` on internal port 80. That container
@@ -79,9 +88,9 @@ docker compose --env-file evals/langfuse/.env -f evals/langfuse/compose.yaml log
 ```
 
 Validation and the offline fixture need no Docker or model credentials. A missing
-Docker executable, daemon permission failure, occupied port 15500, failed image
+Docker executable, daemon permission failure, occupied port 15510, failed image
 pull, or unhealthy migration stops startup with the underlying command error.
-Stop an older Promptfoo viewer before starting this stack on the same port.
+Stop any older service occupying the configured port before starting this stack.
 
 If **via Webhook** reports HTTP 503, inspect `.runtime/runner.log` and the `experiments` forwarding service logs.
 A healthy `/health` response only confirms the queue consumer is alive; content
@@ -109,7 +118,7 @@ when preparing a new online experiment.
 `down` preserves all named volumes. Back up the generated `.env`, exported
 snapshots, `.runtime`, and the Compose volumes together. Stop the stack first so
 PostgreSQL, ClickHouse, Redis, and object storage form a consistent local backup.
-Docker volume names use the `chattft-evals_` prefix. Restore those volumes and the
+Docker volume names use the `tft-apps-evals_` prefix. Restore those volumes and the
 same credentials before running `up` again. Do not use `down --volumes` unless
 intentionally deleting platform history; Git snapshots restore definitions but
 cannot restore results, annotations, or UI edit history.
@@ -131,7 +140,7 @@ warnings, including references to removed skills.
 An explicit CLI `run` executes the selected definition even when its catalog
 entry came from the UI's export-only action. It records `action: run` in the
 new effective snapshot. Runner-generated result links use the public
-`LANGFUSE_PUBLIC_URL` (`http://localhost:15500`) rather than the Compose hostname.
+`LANGFUSE_PUBLIC_URL` (`http://localhost:15510`) rather than the Compose hostname.
 
 ## Upgrade an existing workspace
 

@@ -1,7 +1,7 @@
 # Natural Langfuse workspace validation
 
 Validated against self-hosted Langfuse **4.35.0** on September 15, 2026.
-The ordinary workspace remains at `http://localhost:15500`. Browser/model
+The ordinary workspace remains at `http://localhost:15510`. Browser/model
 acceptance also used a separate disposable Compose project with a local mock
 OpenAI endpoint.
 

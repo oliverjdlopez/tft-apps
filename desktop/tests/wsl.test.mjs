@@ -58,6 +58,9 @@ test("Windows staging copies shell only and source edits produce a fresh immutab
   assert.equal(await stageWindowsShell(path.join(root, "desktop"), cache), staged);
   assert.match(await readFile(path.join(staged, "workspace.mjs"), "utf8"), /persist:cloudbeaver/);
   assert.match(await readFile(path.join(staged, "main.mjs"), "utf8"), /sandbox: true/);
+  for (const name of ["media.mjs", "media.js"]) {
+    assert.equal(await readFile(path.join(staged, name), "utf8"), await readFile(path.join(root, "desktop", name), "utf8"));
+  }
   await assert.rejects(readFile(path.join(staged, "backend.py")), { code: "ENOENT" });
   await writeFile(path.join(staged, "status.css"), "new style");
   const updated = await stageWindowsShell(staged, cache);
@@ -107,4 +110,19 @@ test("Linux guardian bounds shutdown when a service ignores stdin", { skip: proc
   handle.child.stdin.write(`${JSON.stringify({ command: process.execPath, args: ["-e", "setInterval(() => {}, 1000)"], env: process.env })}\n`);
   handle.child.stdin.end();
   assert.equal((await abortable(handle.finished, AbortSignal.timeout(15000))).code, 1);
+});
+
+test("Linux guardian forwards the selected application cwd and private environment", { skip: process.platform === "win32" }, async (t) => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), "suite WSL cwd "));
+  t.after(() => rm(cwd, { recursive: true, force: true }));
+  const handle = ownedProcess(process.execPath, [worker], { cwd: root, label: "WSL environment fixture" });
+  t.after(() => stopProcess(handle));
+  const script = 'console.log("CHAT_TFT_DESKTOP " + JSON.stringify({type:"context",cwd:process.cwd(),value:process.env.SUITE_FIXTURE_VALUE})); process.stdin.on("end",()=>process.exit(0)); process.stdin.resume();';
+  handle.child.stdin.write(`${JSON.stringify({ command: process.execPath, args: ["-e", script], cwd,
+    env: { ...process.env, SUITE_FIXTURE_VALUE: "literal $value ' with spaces" } })}\n`);
+  const context = await waitForRecord(handle, "context", AbortSignal.timeout(5000));
+  assert.equal(context.cwd, cwd);
+  assert.equal(context.value, "literal $value ' with spaces");
+  handle.child.stdin.end();
+  assert.equal((await abortable(handle.finished, AbortSignal.timeout(5000))).code, 0);
 });

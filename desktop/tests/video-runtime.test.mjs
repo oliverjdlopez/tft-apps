@@ -5,10 +5,9 @@ import { once } from "node:events";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { VideoRuntime } from "../video-runtime.mjs";
-import { probeVideoService } from "../utils.mjs";
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const fixture = fileURLToPath(new URL("./fixtures/video-service.mjs", import.meta.url));
-const schema = { info: { title: "Framewise Video Analysis and Annotation" }, paths: {
+const schema = { info: { title: "VOD Review and Round Classification" }, paths: {
   "/api/health": { get: {} }, "/api/videos": { get: {} },
 } };
 
@@ -47,30 +46,29 @@ async function setup(t, keepBackend, keepFrontend) {
   return runtime;
 }
 
-for (const [backend, frontend] of [[true, true], [true, false], [false, true], [false, false]]) {
-  test(`attach-or-start with existing backend=${backend}, frontend=${frontend}`, async (t) => {
+for (const [backend, frontend] of [[true, true], [true, false], [false, true]]) {
+  test(`occupied backend=${backend}, frontend=${frontend} rejects compatible original services`, async (t) => {
     const runtime = await setup(t, backend, frontend);
-    await runtime.start();
-    assert.equal(runtime.children.length, Number(!backend) + Number(!frontend));
-    await runtime.stop();
-    assert(runtime.children.every((child) => child.ended));
-    if (backend) assert.equal((await fetch(`http://127.0.0.1:${runtime.backendPort}/api/health`)).status, 200);
-    if (frontend) assert.equal((await fetch(`http://127.0.0.1:${runtime.frontendPort}/`)).status, 200);
+    await assert.rejects(runtime.start(), /occupied/);
+    assert.equal(runtime.children.length, 0);
+    if (backend) assert.equal((await fetch(`http://127.0.0.1:${runtime.backendPort}`)).status, 200);
+    if (frontend) assert.equal((await fetch(`http://127.0.0.1:${runtime.frontendPort}`)).status, 200);
   });
 }
 
-test("an incompatible occupied port is never adopted or stopped", async (t) => {
-  const runtime = await setup(t, true, true);
-  const wrong = await external(t, { unrelated: true });
-  runtime.frontendPort = wrong.port;
-  await assert.rejects(runtime.start(), /not a compatible/);
-  assert.equal(runtime.children.length, 0);
-  assert.equal((await fetch(`http://127.0.0.1:${wrong.port}`)).status, 200);
-});
-
-test("Wisps requires the Wisps API and rejects a plain video backend", async (t) => {
-  const plain = await external(t, schema);
-  await assert.rejects(probeVideoService(`http://127.0.0.1:${plain.port}`, "backend", "wisps", new AbortController().signal), /not a compatible/);
+test("concurrent VOD requests share one owned pair and idempotent shutdown", async (t) => {
+  const runtime = await setup(t, false, false);
+  const vod = runtime.start();
+  const secondStart = runtime.start();
+  assert.equal(vod, secondStart);
+  assert.equal(await vod, await secondStart);
+  assert.equal(runtime.children.length, 2);
+  await Promise.all([runtime.stop(), runtime.stop()]);
+  assert(runtime.children.every((child) => child.ended));
+  await assert.rejects(fetch(await vod));
+  const retry = await setup(t, false, false);
+  await Promise.all([retry.start(), retry.start()]);
+  assert.equal(retry.children.length, 2);
 });
 
 test("shutdown during startup cannot create a child after the ownership snapshot", async (t) => {

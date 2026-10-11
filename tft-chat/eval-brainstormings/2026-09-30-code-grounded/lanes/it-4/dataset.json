@@ -1,0 +1,392 @@
+{
+  "items": [
+    {
+      "case": "IT-4-C01",
+      "input": "For Kayle–Aphelios boards, how do Wit's End, Shiv, Collector and Infinity Force compare between the two carries when the frontline already has its items?\n\nUse two-star Kayle with Rageblade/JG and two-star Aphelios with Last Whisper/Red Buff. Compare each of Wit's End, Statikk Shiv, Gold Collector and Infinity Force on each carry, keeping the other carry's two named items in place. Include a discovered, named three-item frontline tank shell in the like-for-like comparisons. I want all eight holder/item cells investigated, not a presumed best holder.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve the player terms to the active scope's stored names and investigate all eight combinations: each of the four named special items on Kayle2 and Aphelios2, with that carrier's stated two-item core and the other carry retaining its stated pair. Use exact holder/star/item-count evidence and guard joint holder filters against multiple copies; describe unsupported or suppressed cells explicitly instead of treating them as zero.",
+          "Discover a reportable named frontline tank and its three-item loadout, then compare the eight cells within common supported frontline shells and any useful common final-level/core strata. State which exact shell and strata were actually held or inspected; do not claim the whole board or total special-item inventory was matched.",
+          "For each reportable cell, give board support and mean placement, top-four rate and win rate; for comparisons, report returned target-minus-baseline effects and intervals, overlap, suppression and warnings. Interpret lower mean placement as better, and do not infer an exhaustive ranking when cells do not share support.",
+          "Answer which carry/item combinations look better only from the current scoped evidence. Distinguish absent, suppressed and unsupported results from a measured zero, explain uncertainty, and do not treat observed placement associations as causal item effects or reuse historical web numbers as current gold evidence.",
+          "State any scope or population limitations that affect interpretation. No per-call patch/date filter exists, so a Set 18 standard-ranked scope and its collection provenance are execution preflight facts, not assumptions established by this question.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade against the active scoped evidence actually returned. No cell has a predetermined winner; unsupportable or suppressed cells remain unresolved rather than becoming zero."
+      },
+      "metadata": {
+        "source_case_id": "IT-4-C01",
+        "lane": "IT-4",
+        "subject": "items",
+        "proposal_lineage": [
+          "IT-4-R2-P1"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_items_and_holders",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_build_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "rank_unit_loadouts",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          },
+          {
+            "name": "compare_holder_allocations",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-4-C02",
+      "input": "For Zyra–Malphite boards, is radiant Archangel on Zyra worth more than radiant Bramble or Dragon's Claw on Malphite? I'm thinking of Zyra with Shojin and JG and Malphite with just Warmog's.\n\nCompare two-star Zyra with Shojin/JG and two-star Malphite with Warmog: radiant Archangel on Zyra (three items on Zyra, one on Malphite) versus radiant Bramble or radiant Dragon's Claw on Malphite (two items on each). Keep that deliberate 3/1 versus 2/2 allocation difference. Treat this as a comparison of those holder allocations; check other item holders and support descriptively, without assuming other radiants elsewhere were ruled out.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Zyra, Malphite and the exact ordinary/radiant item variants in the active scope. Investigate the three specified joint holder allocations, retaining the stated two-star holders, core items and 3/1 versus 2/2 item-count asymmetry; do not silently make item counts equal.",
+          "Compare radiant Archangel on Zyra with radiant Bramble and radiant Dragon's Claw on Malphite using holder-bound cohorts, guarded against multiple copies of either named holder. Report each cell's support and, when reportable, histogram or mean placement, top-four and win rates, effects and intervals, overlap, suppression and warnings.",
+          "Inspect other item holders and available named support packages before drawing a shared-stratum conclusion. State separately whether another radiant elsewhere was actually ruled out. The public filters cannot enforce exactly one radiant on the entire board, total-board item equality, or Blackthorn sacrifice; describe this as the bounded holder-allocation comparison unless an externally prepared population certifies those restrictions.",
+          "Give the evidence-relative direction or say the comparison is unresolved. Treat suppressed/missing cells as unknown rather than zero, explain uncertainty and residual differences, and do not make causal or hidden-mechanic claims from final-board placement data.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade the quality of the investigation and interpretation of its returned samples. Either allocation can lead; the exact-one-radiant global restriction is not certified by the supported cohort predicates."
+      },
+      "metadata": {
+        "source_case_id": "IT-4-C02",
+        "lane": "IT-4",
+        "subject": "items",
+        "proposal_lineage": [
+          "IT-4-R2-P2"
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_radiant_variants",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "compare_holder_allocations",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          },
+          {
+            "name": "inspect_holder_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "rank_unit_loadouts",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-4-C03",
+      "input": "On finished Elderwood Veigar boards that already have Dawncore on Veigar, does a second artifact do more for the board as Luden's on Veigar or as Lightshield Crest on Alistar?\n\nCompare these two three-star Veigar/Alistar allocations within a shared Elderwood stratum: concentrated, Veigar Dawncore/JG/Luden's and Alistar Warmog/Gargoyle/Spirit Visage; split, Veigar Dawncore/JG/Blue Buff and Alistar Warmog/Gargoyle/Lightshield Crest. Discover and report the support for the shared Elderwood/core/level conditions instead of assuming the trait name alone fixes the roster.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve the named units, items and Elderwood trait against the active scope, then compare the two exact joint six-item allocations with one-copy guards for each named holder. Both arms must retain Veigar3 Dawncore/JG and Alistar3 Warmog/Gargoyle, with the specified two artifact items and six completed items across those two units.",
+          "Establish support and discover what the shared Elderwood stratum actually contains. Use supported common trait contribution, final-level and roster/core conditions where available; do not imply Elderwood alone means an identical or complete roster. Verify both item replacements in the contrasted packages.",
+          "Report each arm's boards and placement histogram or mean, top-four and win rates, plus returned effect intervals, overlap, suppression and warnings. Frame the result as a whole allocation-package contrast, not the isolated causal effect of Luden's or Lightshield Crest.",
+          "Either package may be favored. If a cell or shared stratum is suppressed or missing, identify that limit without treating it as zero. State that global special-item count, Veigar permanent AP and Ornn generation history are not fixed by the exposed predicates; do not use historical marginals as the expected winner."
+        ],
+        "reference": "Grade against the observed package comparison and its limitations; there is no fixed winning allocation."
+      },
+      "metadata": {
+        "source_case_id": "IT-4-C03",
+        "lane": "IT-4",
+        "subject": "items",
+        "proposal_lineage": [],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_items_units_and_trait",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "compare_complete_packages",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          },
+          {
+            "name": "inspect_stratum_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "rank_unit_loadouts",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-4-C04",
+      "input": "For completed three-star Caitlyn boards, how much better is radiant Rageblade than Flickerblades or ordinary Rageblade once the frontline and the rest of her build are comparable?\n\nCompare Caitlyn3 holding ordinary Kraken's Fury and Hextech Gunblade plus one of radiant Rageblade, Flickerblades or ordinary Rageblade. Discover the supported exact builds and compare them within common named frontline packages and similar remaining item investment where the data allows; additional special items elsewhere and economic access may still differ.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Caitlyn and the three distinct item variants in the active scope. Establish support for the exact Caitlyn3 Kraken's Fury/Gunblade pair plus each alternative, using exact loadout evidence; do not merge radiant Rageblade with ordinary Rageblade or use broad item marginals as a substitute.",
+          "Compare all three exact builds and report support and mean placement, top-four and win rate for each reportable cell. Inspect remaining investment and recurring frontline partners, then compare alternatives within named tank star/loadout and common core/final-level strata where support permits.",
+          "Assess whether an apparent pooled advantage persists in the inspected frontline strata. Report returned effects and intervals, overlap, suppression and warnings. Treat small differences cautiously; an interval crossing zero does not prove equivalence, and a missing or suppressed row is not zero.",
+          "Explain that whole-board radiant/artifact inventory and economic access cannot be matched by these predicates. Do not claim a live Expedition choice, acquisition probability, fixed numerical improvement or item causation from final-board outcomes; do not reuse historical online rankings as current gold evidence.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Either build may lead in the active evidence. Grade sample coverage, common-stratum reasoning and honest uncertainty rather than a preset effect size or winner."
+      },
+      "metadata": {
+        "source_case_id": "IT-4-C04",
+        "lane": "IT-4",
+        "subject": "items",
+        "proposal_lineage": [],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_build_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_exact_caitlyn_builds",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "rank_unit_loadouts",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          },
+          {
+            "name": "compare_builds",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-4-C05",
+      "input": "Do six-Brawler boards with Ravager Sett actually perform better with Hellfire Hatchet or Void Gauntlet on him than with a normal defensive item?\n\nFocus on two-star Sett holding Ravager Emblem and Warmog, with Hellfire Hatchet, Void Gauntlet or ordinary Gargoyle as his third completed item, in a board with the six-Brawler activation. State the six-Brawler activation band you use and keep any exact-six-contributor slice distinct. Compare within discovered named carry stars/loadouts where support allows.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Sett, Ravager Emblem, the candidate artifacts and ordinary Gargoyle against the active scope. Investigate all three exact two-star Sett trios with one Sett copy, Ravager Emblem and Warmog fixed; ensure the chosen third item is held by Sett.",
+          "Establish the six-Brawler activation from compatible rules and returned trait contribution evidence. Do not treat a named trait filter or medal alone as proof of exactly six contributors where the breakpoint includes a range. Discover supported named carry stars/loadouts and compare each third-item allocation only within common, reportable strata when possible.",
+          "Report each cell's board count, placement histogram or mean, top-four and win rates and returned effect intervals, overlap, suppression and warnings. Inspect other artifacts and completed-item distributions as diagnostics, but do not claim global inventory equality. This restrictive cell may be suppressed; preserve its requested scope rather than broadening it silently.",
+          "Answer from the measured evidence or identify which comparison remains unresolved. Do not infer damage share, survival time, attack frequency, gold value or causal performance from final boards; treat missing/suppressed results as unknown, not zero.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "No preset artifact winner. Grade whether the answer investigates the requested joint Sett builds and the six-Brawler evidence, with uncertainty when support is inadequate."
+      },
+      "metadata": {
+        "source_case_id": "IT-4-C05",
+        "lane": "IT-4",
+        "subject": "items",
+        "proposal_lineage": [],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_sett_build_and_trait",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_trait_and_carry_support",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "rank_unit_loadouts",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          },
+          {
+            "name": "compare_sett_allocations",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "IT-4-C06",
+      "input": "Does Eternal Pact on Veigar hold up against Dawncore when I separate completed boards by their main tank and tank itemization, or is its overall item ranking hiding a frontline dependency?\n\nCompare three-star Veigar with JG and ordinary Blue Buff plus either Eternal Pact or Dawncore. First discover recurring tank partners and declare a practical main-tank proxy from observed named unit stars and defensive item investment; compare the two Veigar builds within reportable common tank/core/final-level strata. Treat this as a frontline investment comparison, not identification of Eternal Pact's actual linked ally.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "expected_output": {
+        "requirements": [
+          "Resolve Veigar, the two Veigar item alternatives and named candidate tanks/items against the active scope. Discover exact Veigar3 triplets with JG and ordinary Blue Buff plus Eternal Pact or Dawncore, and discover recurring named tank partners with their stars and defensive loadouts.",
+          "Define the main-tank proxy from observed named unit star level and item investment, then compare the two exact Veigar builds within reportable common tank/core/final-level strata. Show each cell's support and placement mean, top-four and win rates with returned effects and intervals, overlap, suppression and warnings.",
+          "Assess frontline dependence using within-tank-stratum comparisons before discussing pooled rankings. A changed pooled ordering alone is not an interaction. Describe the explanatory feature as tank presence/investment; do not imply that the data identifies the Eternal Pact-linked ally.",
+          "State limitations: actual Pact partner, dynamic health, partner death time and casting are unobserved, as are global special-item count and whole-board budget equality. Explain suppression and uncertainty accurately; either item may lead, and a missing cell is not zero. Do not reuse historical marginals as a fixed winner or claim causal item effects.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ],
+        "reference": "Grade evidence-relative frontline stratification and answer coverage. Final-board data cannot verify the hidden Eternal Pact linkage or select a predetermined winner."
+      },
+      "metadata": {
+        "source_case_id": "IT-4-C06",
+        "lane": "IT-4",
+        "subject": "items",
+        "proposal_lineage": [],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "numeric_ground_truth_verified": false,
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "deterministic_checks": [
+          {
+            "name": "resolve_veigar_and_tank_terms",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            }
+          },
+          {
+            "name": "discover_builds_and_tank_partners",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort",
+                "rank_unit_loadouts",
+                "get_cohort_unit_deltas",
+                "get_cohort_trait_deltas",
+                "get_cohort_item_deltas"
+              ]
+            }
+          },
+          {
+            "name": "compare_within_tank_strata",
+            "kind": "trace",
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            }
+          }
+        ],
+        "set_number": 18,
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/items/lanes/it-4/cases.md",
+        "source_status": "provisional",
+        "source_answer_status": "incomplete",
+        "benchmark_type": "evidence_relative_investigation",
+        "queue_context": "standard_ranked"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

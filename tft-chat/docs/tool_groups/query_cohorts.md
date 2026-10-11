@@ -91,6 +91,11 @@ For frequency-first entity breakouts within a cohort, use the separate
 - Name-only conditions are the board-presence form; add condition fields only
   for attributes that should further restrict membership.
 - Item conditions with holder fields bind an item to its exact unit copy.
+- Separate unit and item conditions require same-board co-occurrence, not
+  item-to-unit binding. Set the item condition's `holder` and optionally
+  `holder_star_level` for that binding. Item copy bounds count matching item
+  instances across the board, including across multiple matching holders; they
+  do not require all requested copies on one unit occurrence.
 - Confidence intervals describe observational associations, not causation.
 - All tools use the shared read-only database boundary and bounded PostgreSQL
   statement timeout; the execution-boundary implementation is authoritative

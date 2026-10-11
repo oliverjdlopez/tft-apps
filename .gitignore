@@ -11,3 +11,9 @@
 .migration/
 profiles/
 *.log
+**/.venv/
+**/profiles/
+**/*.tsbuildinfo
+vod-review/frames/
+vod-review/boxes/
+/media/

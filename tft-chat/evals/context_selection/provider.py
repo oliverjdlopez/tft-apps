@@ -2,10 +2,14 @@
 from __future__ import annotations
 import time
 from typing import Any
-from agents import Runner
-from domain.assistants import create_assistant
+from domain.assistants import Assistant
 from domain.assistants.constants import AssistantName
-from domain.providers.context import MAX_CONTEXT_SNIPPETS, MAX_SELECTOR_CHARS, _rank_context_candidates, _ContextCandidate, _all_context_candidates, _context_selector_prompt, _selected_context_ids, _shortlist_context_candidates, discover_context_files
+from domain.providers.constants import MAX_CONTEXT_SNIPPETS, MAX_SELECTOR_CHARS
+from domain.providers.models import ContextCandidate as _ContextCandidate
+from domain.providers.context import discover_context_files
+from domain.providers.utils import (rank_context_candidates as _rank_context_candidates,
+    all_context_candidates as _all_context_candidates, context_selector_prompt as _context_selector_prompt,
+    selected_context_ids as _selected_context_ids, shortlist_context_candidates as _shortlist_context_candidates)
 from domain.assistants.models import ContextSelection
 
 from .utils import coverage, validate_cases, validate_payload, selected_candidates, local_selection
@@ -89,9 +93,8 @@ def select_live(
     prompt: str, candidates: list[_ContextCandidate], model: str | None = None
 ) -> list[_ContextCandidate]:
     """Run one model-backed selector and decode its bounded candidate IDs."""
-    output = Runner.run_sync(
-        create_assistant(AssistantName.CONTEXT_SELECTOR, model=model, output_type=ContextSelection),
-        input=prompt,
+    output = Assistant(AssistantName.CONTEXT_SELECTOR, model=model, output_type=ContextSelection, surface="eval").run_sync(
+        prompt,
         max_turns=1,
     ).final_output
     selected_ids = _selected_context_ids(

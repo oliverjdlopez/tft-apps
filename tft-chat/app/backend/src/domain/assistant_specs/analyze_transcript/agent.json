@@ -1,0 +1,5 @@
+{
+  "name": "analyze_transcript",
+  "description": "Analyze compact TFT transcript notes into coaching insights.",
+  "handoff_description": "Analyze compact TFT transcript notes into coaching insights, highlights, and takeaways."
+}

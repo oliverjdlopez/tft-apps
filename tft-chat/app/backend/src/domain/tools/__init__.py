@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import inspect
 import json
+import time
 from copy import copy
 from typing import Any
 
@@ -11,8 +13,13 @@ from agents import function_tool as _sdk_function_tool
 from agents.tool_context import ToolContext
 
 from common.serialization import model_jsonable
+from domain.runtime.models import AssistantRunContext
 from domain.types import AssistantTool, AssistantToolGroup
-from domain.tools.evidence import EvidenceStore, EVIDENCE_TOOL_GROUP, capture_evidence
+from domain.tools.evidence import (
+    EVIDENCE_TOOL_GROUP,
+    capture_evidence,
+    resolve_evidence_store,
+)
 from domain.tools.context import CONTEXT_TOOL_GROUP
 from domain.tools.db_tools.cohort_tools import COHORT_TOOL_GROUP
 from domain.tools.db_tools.deltas import DELTA_TOOL_GROUP
@@ -48,8 +55,21 @@ def _ensure_sdk_tool(tool: Any) -> Any:
     async def invoke(ctx: ToolContext[Any], payload: str) -> Any:
         """Invoke the SDK tool and normalize its structured result."""
 
-        output = await original_invoke(ctx, payload)
-        references = capture_evidence(ctx.context, sdk_tool.name, output) if isinstance(ctx.context, EvidenceStore) else None
+        try:
+            output = await original_invoke(ctx, payload)
+        except (Exception, asyncio.CancelledError) as error:
+            # SDK hooks have no error callback; retain the actual outcome when
+            # an invocation raises before on_tool_end can run.
+            if isinstance(ctx.context, AssistantRunContext):
+                activity = ctx.context.activity.calls.get(ctx.tool_call_id)
+                if activity is not None:
+                    activity.status = (
+                        "cancelled" if isinstance(error, asyncio.CancelledError) else "failed"
+                    )
+                    activity.ended_at = time.perf_counter()
+            raise
+        store = resolve_evidence_store(ctx.context)
+        references = capture_evidence(store, sdk_tool.name, output) if store is not None else None
         result = model_jsonable(output)
         if references is not None:
             # SDK tools may return serialized JSON; evidence references accompany

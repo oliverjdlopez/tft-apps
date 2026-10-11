@@ -36,6 +36,23 @@ changes to evidence ownership or transport. Grader execution evidence recognizes
 `present_evidence` and legacy `present_inline_data` calls from historical traces;
 frozen historical snapshots retain their original prompt and tool names.
 
+Invocation preparation is covered by `tests/test_assistant_runtime.py`, alongside
+`tests/test_assistants.py`, `tests/test_chat_service.py`, and `tests/test_task_service.py`.
+These use fake providers and runners to verify selection once, dynamic root and
+nested handoff policy, definition snapshots, fresh evidence/activity, task input
+wrappers, synchronous/asynchronous entry points, and failure cleanup without
+paid calls. `evals/langfuse/tests/test_assistant_workspace.py` additionally executes
+a captured graph in a real SDK subprocess against a local mock model server;
+this needs localhost socket access but no PostgreSQL or paid model calls.
+
+The Assistant encapsulation checks passed 194 focused tests, including that
+subprocess acceptance test and the model-default snapshot regression. Seven failures in `tests/test_evaluation_catalog.py` reproduced
+on an untouched export of dev commit `e07f3b6`: stale inventory counts, stale
+preflight expectations, a mock missing the `require_explicit` argument, and four
+cases referencing a removed probability fixture. The offline validator also reaches the same `exact_unit` missing-corpus-gold
+failure on the changed tree and that untouched dev export. No live grading,
+database tools, ingestion, or projection rebuilds were used for this validation.
+
 Current cohort and delta registry coverage is in `tests/test_cohort_facts.py`
 and `tests/test_openai_tools.py`.
 
@@ -45,6 +62,26 @@ Python traceback instead of blocking the suite.
 Set `PYTEST_TEST_TIMEOUT_SECONDS` to change the repository default, or use
 `@pytest.mark.timeout(seconds)` for a targeted override. A marker value of `0`
 explicitly disables the guardrail for that test.
+
+### Development database benchmark coverage
+
+`tests/test_db_benchmarks.py` checks workload definitions and CLI defaults,
+input/result validation, insufficient-data classification, successful-sample
+statistics, timeout cleanup, and the database-free `--list` path without
+connecting to PostgreSQL. `tests/test_db_benchmarks_integration.py` seeds a
+synthetic ready fact population and aggregate rows in the isolated `RDS_TEST_*`
+database, then checks benchmark discovery, holder-conditioned queries, result
+grouping, and read-only behavior. It never targets the configured application
+database and skips locally when the isolated target is unavailable.
+
+Run both suites with:
+
+```bash
+uv run pytest -q tests/test_db_benchmarks.py tests/test_db_benchmarks_integration.py
+```
+
+CI probes its isolated PostgreSQL target before pytest so a configured but
+unreachable database cannot turn these integration checks into silent skips.
 
 ## Configured database smoke tests
 
@@ -72,16 +109,20 @@ public unit, item, or trait names used to verify the response.
 ## Langfuse evaluations
 
 Langfuse is the separate evaluation workspace. Start it with
-`uv run --extra evals python -m evals up` and open <http://localhost:15500>.
+`uv run --extra evals python -m evals up` and open <http://localhost:15510>.
 Workflow datasets, prompt versions, native evaluators, and annotations are edited
 in its UI. See the [browser walkthrough](langfuse-onboarding.md). Native Custom Experiment buttons call the local Python service, which
 runs the real assistant graph and publishes traces, scores, and comparisons.
 
-The hosted workspace contains `end-to-end` (28 cases, including seven unscored
-intake prompts) and `data-analysis` (seven cases), with string-only inputs. The
-local catalog retains nine suites and 84 cases including historical offline
-regressions. The retained benchmark corpus has 86 deterministic assistant checks
-and 13 rubrics. Reusable trace, selector, worker,
+The initial copied workspace had six datasets and 56 cases, including 11 archived
+cases. On 2026-10-01, an explicitly requested unit expert import added 17 active
+cases to the existing `chattft/unit-expert` dataset. The 2026-10-06 cutover added
+17 item, 18 composition and 17 trait cases, and refreshed the unit cases from
+the latest authored source. The suite now has eight datasets and 125 cases in
+total, including 69 active expert cases and the original 11 archived cases.
+Active workflow inputs retain their authored schemas. The local catalog
+retains immutable historical snapshots plus registered workflows. See the suite
+[migration record](../../../docs/migration.md) for exact inventory and verification. Reusable trace, selector, worker,
 and database logic lives
 in `evals/`; platform integration and exported definitions live in
 `evals/langfuse/`. Every run exports its frozen inputs into content-addressed
@@ -111,9 +152,9 @@ The offline context cases `numeric_heading`, `partial_heading_category`,
 `semantic_description`, and `semantic_unit_mechanic` still fail. Ten skill cases
 reference removed definitions and are archived with repair metadata and intact expectations.
 CI runs the passing fixture without weakening benchmark expectations.
-Full pytest collection currently fails because `tests/test_assistant_access.py`
-imports `assistant_reachable_names` from the registry module, which no longer
-exports it. Full eval validation also reports that `exact_unit` has required
+The obsolete assistant access test has been replaced with current spec parsing and
+prepared-invocation permission checks; removed APIs are not restored for compatibility.
+Full eval validation also reports that `exact_unit` has required
 gold absent from the current corpus. Both failures reproduce on the `dev`
 baseline used for the display integration; the focused evidence/chat tests and
 offline fixture are independent of these blockers.
@@ -123,6 +164,14 @@ Historical Promptfoo results are retained untouched. The
 integration, not current commands. The ChatTFT in-app Evals API/editor remain removed.
 
 The [natural workspace validation record](langfuse-validation.md) documents migration identity checks, browser acceptance, native mock scheduling, timeout evidence, and existing repository test failures.
+
+The 2026-10-02 [retirement of the older checkout](../../../docs/retiring-tft-suite.md)
+preserved its complete 69-case authored Set 18 collection under
+`eval-brainstormings/2026-09-30-code-grounded/`, 16 additional immutable snapshots,
+and its historical catalogue under `evals/langfuse/archives/tft-suite-20261002/`.
+These copies preserve authoring and historical definitions; they do not replace
+the active catalogue or register cases in the hosted workspace. The existing
+17-case unit expert import and other local work remain intact.
 
 ## Context and response smoke checks
 
@@ -136,7 +185,7 @@ completeness.
 ## Flowchart checks
 
 Run `uv run pytest -q tests/test_flowchart_api.py tests/test_flowchart_persistence.py tests/test_entity_assets.py`,
-`npm --prefix app/frontend test`, and `npm --prefix desktop test`. The API tests
+`npm --prefix app/frontend test`, and `npm --prefix ../desktop test`. The API tests
 use a disposable SQLite table and a temporary `gameplans/` directory; the
 persistence test uses the isolated `RDS_TEST_*` target and skips when it is
 unavailable. `app/frontend/src/flowchart/Flowchart.test.jsx` stubs `fetch` and
@@ -148,7 +197,7 @@ autosave revisions, conflicts, and read-only JSON import. See
 
 Run `uv run --extra compositions pytest -q tests/compositions`,
 `npm --prefix app/frontend test`, `npm --prefix app/frontend run build`, and
-`npm --prefix desktop test`. Shared JSON fixtures validate Pydantic/Zod acceptance,
+`npm --prefix ../desktop test`. Shared JSON fixtures validate Pydantic/Zod acceptance,
 unknown-field rejection, duplicates, null outcomes, score semantics, and denominators.
 Regenerate exported JSON schemas/fixtures with
 `uv run python scripts/export_composition_contracts.py`.
@@ -160,3 +209,91 @@ They verify immutable reruns, separate full-population results, interruption rec
 worker failure, cancellation, and unchanged source analytics. The opt-in native
 Electron workspace smoke additionally checks Compositions visibility, retention,
 renderer isolation, and cleanup. See [the adapter contract](../architecture/compositions/adapter.md).
+
+Suite CI lives at `../.github/workflows/ci.yml`. Desktop Python tests have their
+own `../desktop/pytest.ini` with the suite root on the import path.
+
+
+## Flowchart editor validation
+
+Run the focused document/storage checks, the full frontend suite/build, and
+suite desktop tests:
+
+```bash
+uv run pytest -q tests/test_flowchart_api.py tests/test_flowchart_persistence.py
+npm --prefix app/frontend test
+npm --prefix app/frontend run build
+npm --prefix ../desktop test
+uv run pytest -q ../desktop/tests/test_backend.py ../desktop/tests/test_vod_backend.py
+```
+
+The API tests use in-memory SQLite and temporary export files. They verify v1
+reads do not rewrite either source, v2 nested save/import/export/library round
+trips, invalid/cyclic parents, bounded routing metadata and optimistic revisions.
+PostgreSQL checks skip when the isolated `RDS_TEST_*` target is unavailable.
+Frontend tests cover commands/history, editor keys, clipboard, nested groups,
+collapse proxies, cyclic search/focus, locks, reconnection, insertion, geometry,
+read-only views, no-save loading and stale layout responses.
+
+For real production-worker smoke, first build the frontend, then run the
+provided disposable server in one terminal and the Playwright script in another:
+
+```bash
+uv run python -m uvicorn --app-dir tests flowchart_smoke_server:app --host 127.0.0.1 --port 8429
+# Use an existing Playwright install or install it in a temporary directory.
+FLOWCHART_PLAYWRIGHT_MODULE=/absolute/path/to/playwright/index.mjs node tests/flowchart_browser_smoke.mjs
+```
+
+`tests/flowchart_smoke_server.py` uses a temporary SQLite store and export root,
+empty asset catalog, and the built frontend; it does not start production
+lifespan, connect to RDS, or edit live workspaces. The smoke imports disposable
+fixtures, checks empty-canvas deselection after a marquee, short right-click
+menus, right-drag/hold selection preservation, popup targeting and dismissal,
+then groups/collapses a connected branch, arranges it, edits a long guard,
+drags a manual bend, copies/pastes, undoes/redoes and reloads to verify document
+and personal-view persistence. `FLOWCHART_SMOKE_URL` can change its loopback URL;
+`FLOWCHART_SMOKE_SCREENSHOT` optionally saves a screenshot. The script also
+imports 400 elements/800 connections, verifies worker progress and responsive
+search during routing/layout, and rejects console/page errors. The synthetic
+fixture allows overlap warnings where clear routes or labels are impossible.
+A Chromium smoke does not validate native Electron/Windows shell behavior;
+report that boundary separately from desktop unit tests.
+
+## Specs workspace acceptance
+
+See [assistant workspace](assistant-workspace.md) for the draft lifecycle and API.
+Focused acceptance tests cover SQLite revisions, invalid saves, source/runtime
+conflicts, optional files, rollback/restart recovery, restore/import, bounded local
+trials, exact graphs, and durable duplicate-submission handling.
+`evals/langfuse/tests/test_assistant_workspace.py` also executes the real SDK in a
+bounded worker against a local deterministic HTTP model, with an explicit `_test`
+database identity. It exercises frozen models/reasoning, handoffs, tools, wrappers,
+and instruction assembly without connecting to PostgreSQL or spending tokens.
+Frontend coverage exercises saved actions, conflicts, imports, and result links.
+Browser smoke verification should use disposable specs and mocked optional services.
+Live hosted grading and database tools are separate checks; report them explicitly
+when unavailable. Never use ingestion or projection rebuilds as validation.
+
+## Captured evaluation execution checks
+
+Live assistant experiments and Playground require captured definitions; historical
+snapshots remain readable. Run focused checks from the ChatTFT root:
+
+```bash
+uv run --extra evals pytest -q tests/test_assistant_runtime.py tests/test_assistant_access.py tests/test_assistants.py tests/test_langfuse_execution.py tests/test_evaluation_assistant.py tests/test_evaluation_selectors.py tests/test_task_service.py tests/test_spec_service.py evals/langfuse/tests
+```
+
+Local HTTP mock
+acceptance needs localhost socket access, but no paid model calls or PostgreSQL.
+Captured configured models and SDK run overrides are recorded separately.
+
+Migration validation passed 284 focused tests, including the real SDK subprocess
+against the deterministic local HTTP model, with seven baseline failures deselected.
+The added direct-attempt missing-capture regression passed separately. All seven
+excluded failures reproduced on the saved untouched baseline: catalog inventory,
+stale preflight expectations, four removed probability-case lookups, and the
+natural-workspace conversion lookup for `comp-expert`. The offline fixture passed;
+full catalog validation still reports missing corpus gold for `exact_unit`.
+Checks used the existing temporary isolated Python environment because this checkout
+has no `.venv`. No paid calls, hosted content edits, ingestion, projection rebuilds,
+or production database tests were used.

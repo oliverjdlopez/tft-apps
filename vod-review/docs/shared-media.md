@@ -1,12 +1,20 @@
 # Shared media across independent applications
 
-ChatTFT and `oliverjdlopez/vod-review` can point to the same media catalog and
-disk directory. This integration does not use the consolidated TFT Suite repo
-and does not connect VOD Review to ChatTFT's match database.
+In `tft-apps`, both backends now default to the suite-owned `media/` catalogue.
+Desktop launches enforce that shared coordinate. Both expose publication,
+discovery, and verified content by `tft-resource:<id>`; VOD can publish an
+existing review or import a reference as a separate review. See the current
+[suite media sharing guide](../../docs/shared-media.md) for APIs and examples.
+The reuse rules below still apply. An explicitly empty `TFT_MEDIA_DIR` disables
+sharing; leaving it unset in this suite selects the default shared directory.
+
+ChatTFT and VOD Review use the same media catalogue and disk directory while
+keeping application databases and installed environments independent.
 
 ## Setup
 
-On the same Linux/macOS host, export this setting in **both** process environments:
+On the same Linux/macOS host, both suite applications default to `<suite>/media`.
+For standalone processes, an optional override must match in **both** environments:
 
 ```bash
 export TFT_MEDIA_DIR=/absolute/path/to/shared-tft-media
@@ -18,13 +26,13 @@ read/write access. Use a local disk, or a bind-mounted local volume shared by
 containers on the same host. Do not place the SQLite database or advisory locks
 on NFS, cloud-synced folders, or independent disks on different servers.
 
-Shared mode requires system `ffmpeg` **and** `ffprobe` on PATH. It currently
-uses POSIX file locks. Existing local mode remains available by leaving
-`TFT_MEDIA_DIR` unset. The environment setting is read when a download is
-requested; this standalone media integration does not use the app RDS loader.
+URL reuse requires system `ffmpeg` **and** `ffprobe` on PATH. It currently
+uses POSIX file locks. Existing local mode remains available with an explicitly
+empty `TFT_MEDIA_DIR`. The setting is read when a download is requested;
+this media integration does not use the app RDS loader.
 
 Start each application with its existing command. No new server, Python package
-dependency, database credentials, or consolidated repository is needed.
+dependency or database credentials are needed.
 
 ## Reuse rules
 
@@ -81,7 +89,7 @@ requests in either application use the shared entry.
 
 ## Ownership and cleanup
 
-VOD review IDs, boxes, jobs, annotations, and playback derivatives remain in
+VOD review IDs, boxes, jobs, and playback derivatives remain in
 its own database/directories. A persistent `videos.shared_media` flag prevents
 the delete endpoint from unlinking a shared source, even if shared mode is
 later disabled. Local uploads retain their existing deletion behavior.
@@ -92,6 +100,21 @@ manually remove files still referenced by a review or active transcription.
 `--overwrite` in ChatTFT publishes a new asset without replacing files already
 in use. Back up the catalog together with its media directory. Work/checkpoint
 cleanup should only be done while both apps are stopped.
+
+## Completed transcript sharing
+
+VOD retains recognized text in its app-local `transcription_tasks` records and
+publishes immutable UTF-8 snapshots in the shared catalogue after recognition
+completes. The desktop **Media** tab lists these under **Text / transcripts**.
+Names match the source VOD when available, and metadata records the task, video
+and detected language. Both backends can read the same portable reference.
+
+Backend startup also shares existing completed transcripts without downloading
+or recognizing them again. Repeated recovery reuses verified matching snapshots;
+missing/corrupt shared files can be restored from local text. If storage is
+unavailable, the local task remains completed, a warning is logged, and sharing
+is retried on the next startup. An empty `TFT_MEDIA_DIR` disables sharing.
+Original review/transcription records remain independent of catalogue snapshots.
 
 ## Code ownership and validation
 
@@ -107,7 +130,7 @@ Offline tests generate tiny local videos and exercise reuse, range/quality
 matching, process concurrency, missing-file recovery, and immutable refresh:
 
 ```bash
-uv run pytest -q backend/tests/test_shared_media.py backend/tests/test_shared_video_integration.py backend/tests/test_api.py
+uv run pytest -q backend/tests/test_shared_media.py backend/tests/test_shared_video_integration.py backend/tests/test_shared_transcripts.py backend/tests/test_api.py
 ```
 
 VOD Review's corresponding tests are `backend/tests/test_shared_media.py` and

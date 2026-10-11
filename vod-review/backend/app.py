@@ -20,27 +20,28 @@ from pathlib import Path
 from typing import Any, Callable
 from urllib.parse import urlparse
 
-from fastapi import Query, FastAPI, File, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from round_classifier.predict import get_ocr_classifier
+from round_classifier.config import load_round_labels
 
 try:
-    from . import annotations, db, wisps, frame_cache
+    from . import db, frame_cache
+    from .shared_transcripts import publish_completed_transcripts
     from .constants import (
         DEFAULT_BATCH_SIZE,
         MAX_COLLECTION_PROGRESS_UPDATES,
         PROGRESS_WRITE_INTERVAL_SECONDS,
         SAMPLE_INTERVAL_SECONDS,
     )
-    from .models import AnnotationFrameRequest, AnnotationProjectRequest, BoundingBox, DownloadQuality, ReplayDiscoveryRequest, WispProcessingRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, TaskKey, VideoUrlRequest
+    from .models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest
 except ImportError:  # Running with `uvicorn app:app` from the backend directory.
-    import annotations
-    import wisps
     import frame_cache
     import db
+    from shared_transcripts import publish_completed_transcripts
     from constants import DEFAULT_BATCH_SIZE, MAX_COLLECTION_PROGRESS_UPDATES, PROGRESS_WRITE_INTERVAL_SECONDS, SAMPLE_INTERVAL_SECONDS
-    from models import AnnotationFrameRequest, AnnotationProjectRequest, BoundingBox, DownloadQuality, ReplayDiscoveryRequest, WispProcessingRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, TaskKey, VideoUrlRequest
+    from models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest
 
 try:
     from .processor import process_cached_crops, process_video_all_frames
@@ -54,6 +55,7 @@ WORKERS: ThreadPoolExecutor | None = None
 PLAYBACK_TASKS: dict[str, asyncio.Task[None]] = {}
 PLAYBACK_ERRORS: dict[str, str] = {}
 DOWNLOAD_TASKS: dict[str, asyncio.Task[None]] = {}
+TRANSCRIPTION_TASKS: dict[str, asyncio.Task[None]] = {}
 DOWNLOAD_PAUSE_REQUESTS: set[str] = set()
 ROOT = Path(__file__).resolve().parent.parent
 SAVE_PROCESSED_FRAMES = os.environ.get("VOD_SAVE_FRAMES", "").lower() in {"1", "true", "yes", "on"}
@@ -649,7 +651,7 @@ def download_video_url_local(
                 partial.unlink(missing_ok=True)
 
 
-def download_audio_url(url: str, task_id: str, progress_callback: Callable[[float], None] | None = None) -> Path:
+def download_audio_url_local(url: str, task_id: str, progress_callback: Callable[[float], None] | None = None) -> Path:
     """Download source audio to the local download cache for optional transcription."""
     if not is_supported_video_url(url):
         raise HTTPException(status_code=400, detail="Enter a valid Twitch or YouTube video URL")
@@ -686,6 +688,19 @@ def download_audio_url(url: str, task_id: str, progress_callback: Callable[[floa
         raise HTTPException(status_code=400, detail=f"Audio download failed: {detail[:300]}") from exc
 
 
+def download_audio_url(url: str, task_id: str, progress_callback: Callable[[float], None] | None = None) -> Path:
+    """Reuse suite audio or a video audio stream before the local audio downloader."""
+    try:
+        from .shared_media import download_shared_audio
+    except ImportError:
+        from shared_media import download_shared_audio
+
+    path = download_shared_audio(url, lambda: download_audio_url_local(url, task_id, progress_callback))
+    if progress_callback:
+        progress_callback(100)
+    return path
+
+
 def _transcribe_audio_file(path: str) -> tuple[str, str | None]:
     try:
         from faster_whisper import WhisperModel
@@ -707,10 +722,59 @@ async def _run_transcription_task(task_id: str) -> None:
             return
         transcript, language = await asyncio.to_thread(_transcribe_audio_file, row["media_path"])
         db.update_transcription_task(task_id, status="completed", transcript=transcript, language=language)
+    except asyncio.CancelledError:
+        db.update_transcription_task(task_id, status="failed", error="Transcription was interrupted; retry this transcription.")
+        raise
     except HTTPException as exc:
         db.update_transcription_task(task_id, status="failed", error=str(exc.detail))
+        return
     except Exception as exc:
         db.update_transcription_task(task_id, status="failed", error=str(exc))
+        return
+    await asyncio.to_thread(publish_completed_transcripts, task_id)
+
+
+def launch_video_transcription(video_id: str, *, reuse_completed: bool = False) -> tuple[dict, asyncio.Task | None]:
+    """Create or reuse a tracked transcription before yielding to concurrent requests.
+
+    Args:
+        video_id: Library video to transcribe from its existing media file.
+        reuse_completed: Return successful recognition instead of running Whisper again.
+
+    Returns:
+        The persisted task payload and its owned task, if recognition is needed.
+    """
+    path = db.video_path(video_id)
+    payload = db.find_video_transcription(video_id, reusable_only=True)
+    if payload and payload["status"] == "completed":
+        if reuse_completed:
+            return payload, None
+        latest = db.find_video_transcription(video_id)
+        payload = latest if latest and latest["status"] in {"queued", "running"} else None
+    if payload is None:
+        payload = db.create_transcription_task(uuid.uuid4().hex, str(path), video_id)
+    task_id = payload["task_id"]
+    task = TRANSCRIPTION_TASKS.get(task_id)
+    if task is None:
+        task = asyncio.create_task(_run_transcription_task(task_id), name=f"transcribe-video-{task_id}")
+        TRANSCRIPTION_TASKS[task_id] = task
+        task.add_done_callback(lambda completed: TRANSCRIPTION_TASKS.pop(task_id, None))
+    return payload, task
+
+
+async def transcribe_imported_video(video_id: str, media_id: str) -> None:
+    """Recognize an imported VOD, reusing completed/manual work and persisting retries."""
+    try:
+        from .replay_automation import store
+    except ImportError:
+        from replay_automation import store
+    payload, task = launch_video_transcription(video_id, reuse_completed=True)
+    store.associate_transcription(media_id, payload["task_id"])
+    if task is not None:
+        await asyncio.shield(task)
+    result = db.get_transcription_task(payload["task_id"])
+    if result["status"] != "completed":
+        raise RuntimeError(result["error"] or "Transcription did not complete")
 
 
 def _download_url_metadata(url: str) -> dict[str, Any]:
@@ -993,9 +1057,7 @@ def run_job(job_id: str) -> None:
         last_progress_write = now
 
     try:
-        round_labels = tuple(
-            label["id"] for label in annotations.load_task_config()["round_classifier"]["labels"]
-        )
+        round_labels = load_round_labels()
         classifier = get_ocr_classifier(round_labels)
         if job["reuse_cached_crops"]:
             cache_dir = ocr_cache_dir() / str(job["source_job_id"])
@@ -1073,8 +1135,7 @@ def startup() -> None:
     global WORKERS
     configure_performance_logging()
     db.init_db()
-    wisps.initialize()
-    annotations.initialize_datasets()
+    publish_completed_transcripts()
     if WORKERS is None:
         WORKERS = ThreadPoolExecutor(max_workers=1, thread_name_prefix="video-processor")
 
@@ -1094,20 +1155,53 @@ def shutdown() -> None:
 
 
 @asynccontextmanager
-async def lifespan(_: FastAPI):
+async def lifespan(application: FastAPI):
+    """Own the creator scheduler and existing VOD workers for one backend lifetime."""
     startup()
+    automation = None
     try:
+        try:
+            from .replay_automation.discovery import discover_window
+            from .replay_automation.service import ReplayAutomation
+        except ImportError:  # Support the documented backend-directory launch.
+            from replay_automation.discovery import discover_window
+            from replay_automation.service import ReplayAutomation
+        automation = ReplayAutomation(discover_window, import_discovered_video, transcribe_imported_video)
+        application.state.replay_automation = automation
+        await automation.start()
         yield
     finally:
+        if automation is not None:
+            await automation.stop()
+        application.state.replay_automation = None
+        # Recognition tasks are owned even when a user closes the requesting view.
+        tasks = list(TRANSCRIPTION_TASKS.values())
+        for task in tasks:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+        TRANSCRIPTION_TASKS.clear()
         shutdown()
 
 
-app = FastAPI(title="Framewise Video Analysis and Annotation", lifespan=lifespan)
+app = FastAPI(title="VOD Review and Round Classification", lifespan=lifespan)
 try:
     from .gdrive.router import router as gdrive_router
 except ImportError:  # Support the documented backend-directory launch.
     from gdrive.router import router as gdrive_router
 app.include_router(gdrive_router)
+try:
+    from .replay_automation.router import router as replay_automation_router
+except ImportError:
+    from replay_automation.router import router as replay_automation_router
+app.include_router(replay_automation_router)
+try:
+    from .media_store.router import router as shared_media_router
+    from .shared_resources import router as shared_video_router
+except ImportError:
+    from media_store.router import router as shared_media_router
+    from shared_resources import router as shared_video_router
+app.include_router(shared_media_router)
+app.include_router(shared_video_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -1156,11 +1250,6 @@ async def discover_replays(request: ReplayDiscoveryRequest) -> dict[str, Any]:
         reverse=True,
     )
     return {"replays": ordered, "errors": errors}
-
-
-@app.get("/api/annotation-tasks")
-async def annotation_tasks() -> list[dict[str, Any]]:
-    return annotations.task_definitions()
 
 
 @app.post("/api/videos", status_code=201)
@@ -1269,14 +1358,37 @@ async def import_video_url(request: VideoUrlRequest) -> dict[str, Any]:
     return payload
 
 
+async def import_discovered_video(request: VideoUrlRequest, media_id: str) -> dict[str, Any]:
+    """Import scheduled media through the same tracked task and playback path as a URL upload."""
+    try:
+        from .replay_automation import store
+    except ImportError:
+        from replay_automation import store
+    payload = await import_video_url(request)
+    task_id = payload["task_id"]
+    store.update_import(media_id, status="downloading", task_id=task_id)
+    task = DOWNLOAD_TASKS.get(task_id)
+    if task is not None:
+        # Stopping discovery does not itself cancel an ordinary download. Backend
+        # shutdown still owns cancellation of every DOWNLOAD_TASKS entry.
+        await asyncio.shield(task)
+    completed = db.get_download_task(task_id)
+    if completed["status"] != "completed" or completed["video"] is None:
+        raise RuntimeError(completed["error"] or "Scheduled video download did not complete")
+    return completed["video"]
+
+
 @app.post("/api/videos/{video_id}/transcription", status_code=202)
 async def start_video_transcription(video_id: str) -> dict[str, Any]:
-    path = db.video_path(video_id)
-    task_id = uuid.uuid4().hex
-    payload = db.create_transcription_task(task_id, str(path), video_id)
-    task = asyncio.create_task(_run_transcription_task(task_id), name=f"transcribe-video-{task_id}")
-    task.add_done_callback(lambda completed: None)
+    payload, _task = launch_video_transcription(video_id)
     return payload
+
+
+@app.get("/api/videos/{video_id}/transcription")
+async def get_video_transcription(video_id: str) -> dict[str, Any] | None:
+    """Retrieve saved automatic/manual recognition when reopening a library video."""
+    db.video_path(video_id)
+    return db.find_video_transcription(video_id)
 
 
 @app.get("/api/transcriptions/{task_id}")
@@ -1513,68 +1625,3 @@ async def start_processing(video_id: str, request: ProcessingRequest | None = No
         WORKERS = ThreadPoolExecutor(max_workers=1, thread_name_prefix="video-processor")
     WORKERS.submit(run_job, job_id)
     return payload
-
-
-@app.get("/api/videos/{video_id}/annotation-projects/{task}")
-async def get_annotation_project(video_id: str, task: TaskKey) -> dict[str, Any] | None:
-    return annotations.get_project(video_id, task)
-
-
-@app.put("/api/videos/{video_id}/annotation-projects/{task}")
-async def put_annotation_project(
-    video_id: str,
-    task: TaskKey,
-    request: AnnotationProjectRequest,
-) -> dict[str, Any]:
-    return annotations.put_project(video_id, task, request)
-
-
-@app.delete("/api/videos/{video_id}/annotation-projects/{task}", status_code=204)
-async def delete_annotation_project(video_id: str, task: TaskKey) -> None:
-    annotations.delete_project(video_id, task)
-
-
-@app.put("/api/videos/{video_id}/annotation-projects/{task}/frames/{sample_index}")
-async def put_annotation_frame(
-    video_id: str,
-    task: TaskKey,
-    sample_index: int,
-    request: AnnotationFrameRequest,
-) -> dict[str, Any]:
-    return annotations.put_frame(video_id, task, sample_index, request)
-
-
-@app.delete("/api/videos/{video_id}/annotation-projects/{task}/frames/{sample_index}")
-async def delete_annotation_frame(video_id: str, task: TaskKey, sample_index: int) -> dict[str, Any]:
-    return annotations.delete_frame(video_id, task, sample_index)
-
-
-@app.get('/api/videos/{video_id}/wisps')
-def get_wisp_video(video_id: str):
-    return wisps.get_video(video_id)
-
-
-@app.put('/api/videos/{video_id}/wisps/bounding-box')
-def save_wisp_box(video_id: str, box: BoundingBox):
-    return wisps.save_box(video_id, box.model_dump())
-
-
-@app.post('/api/videos/{video_id}/wisps/process', status_code=202)
-async def start_wisp_processing(video_id: str, request: WispProcessingRequest | None = None):
-    global WORKERS
-    job, created = wisps.create_job(video_id, request.sample_interval_seconds if request else 0)
-    if created:
-        if WORKERS is None:
-            WORKERS = ThreadPoolExecutor(max_workers=1, thread_name_prefix='video-processor')
-        WORKERS.submit(wisps.run_job, video_id, job['id'])
-    return job
-
-
-@app.get('/api/videos/{video_id}/wisps/jobs/{job_id}/detections')
-def get_wisp_detections(video_id: str, job_id: str, page: int = Query(default=1, ge=1)):
-    return wisps.detections(video_id, job_id, page)
-
-
-@app.get('/api/videos/{video_id}/wisps/jobs/{job_id}/frame')
-def get_wisp_frame(video_id: str, job_id: str, timestamp: float = Query(default=0, ge=0), offset: int = 0):
-    return wisps.review_frame(video_id, job_id, timestamp, offset)

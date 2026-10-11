@@ -1,0 +1,541 @@
+{
+  "adaptations": [
+    {
+      "case": "IT-2-C01",
+      "changes": [
+        {
+          "check": "inspect_trait_support",
+          "original_values": [
+            "get_cohort_trait_deltas",
+            "query_cohort"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-2-C02",
+      "changes": [
+        {
+          "check": "inspect_shell_context",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_trait_deltas",
+            "get_cohort_unit_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-2-C03",
+      "changes": [
+        {
+          "check": "inspect_trait_support",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-4-C01",
+      "changes": [
+        {
+          "check": "discover_build_support",
+          "original_values": [
+            "query_cohort",
+            "rank_unit_loadouts",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort",
+            "rank_unit_loadouts"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-4-C02",
+      "changes": [
+        {
+          "check": "inspect_holder_support",
+          "original_values": [
+            "query_cohort",
+            "rank_unit_loadouts",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort",
+            "rank_unit_loadouts"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-4-C03",
+      "changes": [
+        {
+          "check": "inspect_stratum_support",
+          "original_values": [
+            "query_cohort",
+            "rank_unit_loadouts",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort",
+            "rank_unit_loadouts"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-4-C04",
+      "changes": [
+        {
+          "check": "discover_exact_caitlyn_builds",
+          "original_values": [
+            "query_cohort",
+            "rank_unit_loadouts",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort",
+            "rank_unit_loadouts"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-4-C05",
+      "changes": [
+        {
+          "check": "discover_trait_and_carry_support",
+          "original_values": [
+            "query_cohort",
+            "rank_unit_loadouts",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort",
+            "rank_unit_loadouts"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "IT-4-C06",
+      "changes": [
+        {
+          "check": "discover_builds_and_tank_partners",
+          "original_values": [
+            "query_cohort",
+            "rank_unit_loadouts",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort",
+            "rank_unit_loadouts"
+          ]
+        }
+      ],
+      "dataset": "item-expert"
+    },
+    {
+      "case": "UN4-2-C02",
+      "changes": [
+        {
+          "check": "inspect_supporting_board_strata",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_trait_deltas",
+            "get_cohort_unit_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-2-C03",
+      "changes": [
+        {
+          "check": "inspect_package_support",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_trait_deltas",
+            "get_cohort_unit_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-2-C04",
+      "changes": [
+        {
+          "check": "inspect_trait_contexts",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_trait_deltas",
+            "get_cohort_unit_deltas",
+            "get_cohort_item_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-3-C01",
+      "changes": [
+        {
+          "check": "inspect candidate builds or cohort composition",
+          "original_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "rank_units"
+          ],
+          "supported_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "rank_units"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-3-C02",
+      "changes": [
+        {
+          "check": "inspect candidate builds or cohort composition",
+          "original_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "rank_units"
+          ],
+          "supported_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "rank_units"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-3-C03",
+      "changes": [
+        {
+          "check": "inspect candidate builds or cohort composition",
+          "original_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "rank_units"
+          ],
+          "supported_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "rank_units"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-3-C04",
+      "changes": [
+        {
+          "check": "inspect candidate builds or cohort composition",
+          "original_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "rank_units"
+          ],
+          "supported_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "rank_units"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-3-C05",
+      "changes": [
+        {
+          "check": "inspect candidate builds or cohort composition",
+          "original_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "rank_units"
+          ],
+          "supported_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "rank_units"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "UN4-3-C06",
+      "changes": [
+        {
+          "check": "inspect candidate builds or cohort composition",
+          "original_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "rank_units"
+          ],
+          "supported_values": [
+            "rank_unit_loadouts",
+            "query_cohort",
+            "rank_units"
+          ]
+        }
+      ],
+      "dataset": "unit-expert"
+    },
+    {
+      "case": "CO4-2-C01",
+      "changes": [
+        {
+          "check": "investigate_the_declared_board_population",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_unit_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-2-C02",
+      "changes": [
+        {
+          "check": "investigate_the_declared_board_population",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-2-C03",
+      "changes": [
+        {
+          "check": "investigate_the_declared_board_population",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_unit_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-2-C04",
+      "changes": [
+        {
+          "check": "investigate_the_declared_board_population",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_unit_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-2-C06",
+      "changes": [
+        {
+          "check": "investigate_the_declared_board_population",
+          "original_values": [
+            "query_cohort",
+            "compare_cohorts",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort",
+            "compare_cohorts"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-3-C01",
+      "changes": [
+        {
+          "check": "inspect frontline and support patterns",
+          "original_values": [
+            "get_cohort_unit_deltas",
+            "query_cohort",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-3-C02",
+      "changes": [
+        {
+          "check": "inspect tank and companion patterns",
+          "original_values": [
+            "get_cohort_unit_deltas",
+            "query_cohort",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-3-C03",
+      "changes": [
+        {
+          "check": "inspect partner and trait composition",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-3-C04",
+      "changes": [
+        {
+          "check": "discover joint support patterns",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    },
+    {
+      "case": "CO4-3-C05",
+      "changes": [
+        {
+          "check": "inspect supporting roster and traits",
+          "original_values": [
+            "query_cohort",
+            "get_cohort_unit_deltas",
+            "get_cohort_trait_deltas"
+          ],
+          "supported_values": [
+            "query_cohort"
+          ]
+        }
+      ],
+      "dataset": "comp-expert"
+    }
+  ],
+  "routing": {
+    "compositions": {
+      "assistant": "comp_expert",
+      "cases": 18,
+      "dataset": "comp-expert"
+    },
+    "items": {
+      "assistant": "item_expert",
+      "cases": 17,
+      "dataset": "item-expert"
+    },
+    "traits": {
+      "assistant": "chat",
+      "cases": 17,
+      "dataset": "trait-expert"
+    },
+    "units": {
+      "assistant": "unit_expert",
+      "cases": 17,
+      "dataset": "unit-expert"
+    }
+  },
+  "source_dataset": "set18-grounded-investigations",
+  "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+  "source_items": 69
+}

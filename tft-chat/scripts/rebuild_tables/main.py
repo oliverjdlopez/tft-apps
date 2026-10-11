@@ -1,4 +1,4 @@
-"""CLI to rebuild AI-facing derived tables."""
+"""CLI to catch up AI-facing derived tables or explicitly rebuild them."""
 
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ from core.config import load_config
 from aws.rds import build_rds_client
 from common.sql import quote_identifier
 from db.build_query_tables import rebuild_query_tables as rebuild_db_query_tables
+from db.build_query_tables import catch_up_query_tables
 from db.models import (
     AnalysisProcessedMatch,
     AnalysisScope,
@@ -66,8 +67,17 @@ def _drop_retired_aggregate_tables(session: Any) -> list[str]:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Fully rebuild the configured analysis scope and all AI-facing tables."
+            "Update the configured analysis scope using existing calculations. "
+            "Use --full-rebuild to replace its derived tables from scratch."
         )
+    )
+    parser.add_argument(
+        "--full-rebuild",
+        action="store_true",
+        help=(
+            "Clear the configured scope's facts, aggregates, and processed-match "
+            "ledger and recalculate every eligible match. Required to repair a dirty scope."
+        ),
     )
     parser.add_argument(
         "--dsn",
@@ -85,7 +95,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Log PostgreSQL planner estimates for catch-up and normalized "
-            "cohort join paths."
+            "cohort join paths. Requires --full-rebuild."
         ),
     )
     parser.add_argument(
@@ -93,7 +103,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Execute and log EXPLAIN ANALYZE, BUFFERS for those diagnostic "
-            "paths. Use only during maintenance profiling."
+            "paths. Requires --full-rebuild. Use only during maintenance profiling."
         ),
     )
     parser.add_argument(
@@ -129,7 +139,12 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    return build_parser().parse_args(argv)
+    """Parse maintenance options and require a full rebuild for planner profiling."""
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if (args.explain or args.explain_analyze) and not args.full_rebuild:
+        parser.error("--explain and --explain-analyze require --full-rebuild")
+    return args
 
 
 def _query_table_counts(session: Any) -> dict[str, int]:
@@ -384,6 +399,9 @@ def _temporary_rds_upgrade(args: argparse.Namespace) -> Iterator[None]:
 
 
 def rebuild_tables(args: argparse.Namespace) -> dict[str, Any]:
+    """Catch up the configured scope, or replace it when explicitly requested."""
+    full_rebuild = bool(getattr(args, "full_rebuild", False))
+    mode = "full_rebuild" if full_rebuild else "catch_up"
     instance_id = (
         None
         if _is_local_database_target(args)
@@ -395,9 +413,11 @@ def rebuild_tables(args: argparse.Namespace) -> dict[str, Any]:
         label = database_label(args.dsn)
         try:
             logger.info("Database: %s", label)
-            retired = _drop_retired_aggregate_tables(session)
-            if retired:
-                logger.info("Removed retired aggregate tables: %s", retired)
+            logger.info("Query table update mode: %s", mode)
+            if full_rebuild:
+                retired = _drop_retired_aggregate_tables(session)
+                if retired:
+                    logger.info("Removed retired aggregate tables: %s", retired)
             raw_before = db_stats(session)
             query_before = _query_table_counts(session)
             logger.info(
@@ -407,16 +427,23 @@ def rebuild_tables(args: argparse.Namespace) -> dict[str, Any]:
                 query_before,
             )
             started = time.perf_counter()
-            rebuild_options = {
-                "explain": bool(getattr(args, "explain", False)),
-                "explain_analyze": bool(getattr(args, "explain_analyze", False)),
-            }
+            options: dict[str, Any] = {}
             if getattr(args, "patch", None) is not None:
-                rebuild_options["patch"] = args.patch
-            counts = rebuild_db_query_tables(session, **rebuild_options)
+                options["patch"] = args.patch
+            if full_rebuild:
+                options.update(
+                    explain=bool(getattr(args, "explain", False)),
+                    explain_analyze=bool(getattr(args, "explain_analyze", False)),
+                )
+                counts = rebuild_db_query_tables(session, **options)
+            else:
+                progress = catch_up_query_tables(session, **options)
+                # Keep aggregate totals while reporting only this run's ledger additions.
+                counts = {**_query_table_counts(session), **progress}
             elapsed = time.perf_counter() - started
             result = {
                 "database": label,
+                "mode": mode,
                 "elapsed_seconds": round(elapsed, 3),
                 "before": {
                     "raw_matches": raw_before["matches"],
@@ -428,8 +455,9 @@ def rebuild_tables(args: argparse.Namespace) -> dict[str, Any]:
                 **counts,
             }
             logger.info(
-                "Rebuilt query tables in %.1fs. counts=%s",
+                "Updated query tables in %.1fs. mode=%s counts=%s",
                 elapsed,
+                mode,
                 counts,
             )
             return result

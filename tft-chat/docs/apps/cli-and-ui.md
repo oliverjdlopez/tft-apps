@@ -65,8 +65,16 @@ maintenance database through that same socket. Pass `--drop-existing-objects`
 only when the matching objects in an existing local database should be
 replaced.
 
-`tft-rebuild-tables`, `tft-update-tables`, and `tft-add-analysis-indexes` use
-the app target by default and accept an explicit maintenance override.
+`chat-tft-rebuild-tables`, `chat-tft-update-tables`, and
+`chat-tft-add-analysis-indexes` use the app target by default and accept an
+explicit maintenance override.
+
+`uv run chat-tft-rebuild-tables` reuses existing calculations and processes only
+ledger-missing matches. Use `uv run chat-tft-rebuild-tables --full-rebuild` to
+clear and recalculate the configured scope's derived data, including repairs to
+dirty scopes. Planner profiling flags (`--explain` and `--explain-analyze`)
+require `--full-rebuild`. See [query table maintenance](../data/persistence-and-analytics.md#query-table-maintenance-cli)
+for counts, transaction behavior, and target options.
 
 ## Documentation site
 

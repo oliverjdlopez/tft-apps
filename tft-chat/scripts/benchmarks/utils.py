@@ -17,10 +17,20 @@ import time
 from typing import Any, Iterator, Mapping
 
 from agents.tool_context import ToolContext
+from jsonschema import Draft202012Validator
+from pydantic import ValidationError
 
 from common.serialization import to_jsonable
 from domain.tools import get_tool
 from domain.tools.db_tools import utils as db_tool_utils
+from domain.tools.db_tools.models import (
+    AnalysisComparisonResult,
+    AnalysisErrorResult,
+    AnalysisResolutionResult,
+    AnalysisTableResult,
+)
+from domain.tools.schemas import invocation_schema
+from db.session import open_db as _real_open_db
 
 from .models import (
     BenchmarkCase,
@@ -37,6 +47,24 @@ _LOGGER_NAMES = (
     "tft.analysis.db",
     "tft.analysis.ranking_tools",
 )
+
+
+class _InvocationValidationComplete(Exception):
+    """Stop one invocation after recording an input-schema failure."""
+
+
+async def _drain_database_workers() -> None:
+    """Wait for every DB worker before replacing the executor.
+
+    ``run_db_tool`` shields its worker future, so cancelling the SDK callback
+    does not stop synchronous database work. Executor shutdown waits for all
+    outstanding submissions before the session override can be restored.
+    """
+    executor = db_tool_utils._DB_TOOL_EXECUTOR
+    executor.shutdown(wait=True)
+    db_tool_utils._DB_TOOL_EXECUTOR = ThreadPoolExecutor(
+        thread_name_prefix="tft-db-tool"
+    )
 
 
 class JsonlEventHandler(logging.Handler):
@@ -110,6 +138,28 @@ def event_logging(path: Path) -> Iterator[JsonlEventHandler]:
             logger.setLevel(level)
             logger.propagate = propagate
         handler.close()
+
+
+@contextmanager
+def benchmark_session_scope() -> Iterator[None]:
+    """Disable runtime schema creation for all benchmark database sessions.
+
+    Discovery, timing, and profiling should exercise the configured database
+    without allowing a benchmark run to create or repair application schema.
+    The DB tool opens and closes a new session for every operation as usual.
+    """
+    original_opener = db_tool_utils.open_db
+
+    def open_read_only_schema_session(*args: Any, **kwargs: Any) -> Any:
+        """Delegate to the application opener while forbidding schema setup."""
+        kwargs["ensure_schema"] = False
+        return _real_open_db(*args, **kwargs)
+
+    db_tool_utils.open_db = open_read_only_schema_session
+    try:
+        yield
+    finally:
+        db_tool_utils.open_db = original_opener
 
 
 def log_event(event: str, **details: Any) -> None:
@@ -261,22 +311,109 @@ def call_id_for(
 
 
 def registered_tool_callback(tool: Any) -> Any:
-    """Return the registered tool callback without runner error decoration.
-
-    The Agents SDK stores schema parsing and the actual function invocation in
-    ``_invoke_tool_impl`` behind its runner-oriented failure handler. The
-    benchmark has its own bounded failure recording, so it uses that validated
-    implementation when available and falls back to the public callback for
-    other SDK tool implementations.
+    """Return the public callback registered for one Agents SDK tool.
 
     Args:
         tool: Registered SDK tool returned by the native tool registry.
 
     Returns:
-        Async callback that validates arguments and invokes the registered tool.
+        Public async callback used by the SDK runner to invoke the tool.
     """
-    callback = getattr(tool, "on_invoke_tool")
-    return getattr(callback, "_invoke_tool_impl", callback)
+    return getattr(tool, "on_invoke_tool")
+
+
+def validate_case_arguments(case: BenchmarkCase, tool: Any) -> None:
+    """Validate supplied arguments against the tool's ordinary input schema.
+
+    Args:
+        case: Workload whose arguments will be invoked.
+        tool: Registered SDK tool providing the strict schema.
+
+    Raises:
+        jsonschema.ValidationError: If arguments violate the invocation schema.
+    """
+    schema = invocation_schema(tool.params_json_schema)
+    Draft202012Validator(schema).validate(case.arguments)
+
+
+def validate_tool_result(case: BenchmarkCase, value: Any) -> tuple[Any, str | None, str | None]:
+    """Validate a normalized output and assess whether it has usable data.
+
+    Args:
+        case: Workload expectations for result kind and table grain.
+        value: JSON-compatible callback output.
+
+    Returns:
+        A normalized Pydantic result, optional failure status, and diagnostic.
+    """
+    if not isinstance(value, Mapping):
+        return value, "invalid_result", "Tool returned a non-object result."
+    kind = value.get("kind")
+    models = {
+        "table": AnalysisTableResult,
+        "resolution": AnalysisResolutionResult,
+        "comparison": AnalysisComparisonResult,
+        "error": AnalysisErrorResult,
+    }
+    model = models.get(str(kind))
+    if model is None:
+        return value, "invalid_result", "Tool result has an unknown kind."
+    try:
+        validated = model.model_validate(value)
+    except ValidationError as exc:
+        return value, "invalid_result", bounded_text(exc)
+    normalized = validated.model_dump(mode="json")
+    if kind == "error":
+        code = str(normalized.get("error", {}).get("code", "tool_error"))
+        if code in {
+            "cancelled",
+            "timeout",
+            "timed_out",
+            "database_timeout",
+            "pool_timeout",
+        }:
+            return normalized, "timeout", bounded_text(
+                normalized.get("error", {}).get("message", "Tool invocation timed out.")
+            )
+        status = "invalid_input" if code in {"invalid_input", "invalid_arguments", "validation_error"} else "tool_error"
+        return normalized, status, bounded_text(normalized.get("error", {}).get("message", code))
+    if kind != case.expected_kind:
+        return normalized, "invalid_result", f"Expected {case.expected_kind}, received {kind}."
+    warnings = normalized.get("warnings", [])
+    if any(
+        isinstance(warning, Mapping)
+        and ("suppress" in str(warning.get("code", "")).lower())
+        for warning in warnings
+    ):
+        return normalized, "insufficient_data", "Result contains suppressed data."
+    if kind == "table":
+        actual_group = tuple(normalized.get("context", {}).get("group_by", []))
+        if case.group_by and actual_group != case.group_by:
+            return normalized, "invalid_result", "Table result grouping does not match the workload."
+        rows = normalized.get("results", [])
+        if case.group_by and any(
+            any(key not in row for key in case.group_by) for row in rows
+        ):
+            return normalized, "invalid_result", "Table rows omit a declared grouping field."
+        if not rows or normalized.get("page", {}).get("count", 0) == 0:
+            return normalized, "insufficient_data", "Table result contains no reportable rows."
+    elif kind == "resolution":
+        entries = normalized.get("results", [])
+        if not entries:
+            return normalized, "insufficient_data", "No submitted names resolved to reportable data."
+        for entry in entries:
+            exact_matches = [
+                match for match in entry.get("matches", [])
+                if match.get("match") == "exact"
+            ]
+            if not entry.get("resolved") or not exact_matches:
+                return normalized, "insufficient_data", "One or more submitted names lacked an exact resolution."
+            if all(match.get("count_suppressed") for match in exact_matches):
+                return normalized, "insufficient_data", "An exact resolution count is suppressed."
+    elif kind == "comparison":
+        if any(normalized.get(name, {}).get("suppressed") for name in ("target", "baseline")):
+            return normalized, "insufficient_data", "Comparison cohort data is suppressed."
+    return normalized, None, None
 
 
 async def invoke_tool(
@@ -315,8 +452,16 @@ async def invoke_tool(
     status = "success"
     error_type: str | None = None
     error: str | None = None
+    measured_elapsed_ms: float | None = None
     try:
         tool = get_tool(case.tool_name)
+        try:
+            validate_case_arguments(case, tool)
+        except Exception as exc:
+            status = "invalid_input"
+            error_type = type(exc).__name__
+            error = bounded_text(exc)
+            raise _InvocationValidationComplete from exc
         payload = json.dumps(case.arguments, default=str, sort_keys=True)
         context = ToolContext(
             None,
@@ -331,15 +476,40 @@ async def invoke_tool(
                 timeout=tool_timeout,
             )
         )
-        if isinstance(result, Mapping) and "error" in result:
-            status = "tool_error"
-            error_type = "ToolResultError"
-            error = bounded_text(result.get("error"))
+        if isinstance(result, str) and result.lower().startswith(
+            ("error running tool", "tool error", "error invoking tool")
+        ):
+            result_status, result_error = "tool_error", bounded_text(result)
+        elif isinstance(result, Mapping) and "error" in result and "kind" not in result:
+            result_status, result_error = "tool_error", bounded_text(result.get("error"))
+        else:
+            result, result_status, result_error = validate_tool_result(case, result)
+        if result_status is not None:
+            status = result_status
+            error_type = "ToolResultError" if result_status == "tool_error" else result_status
+            error = result_error
+        if status == "timeout" and phase in {"discovery", "warmup"}:
+            # These phases run alone. Drain a cancelled synchronous query
+            # before another operation can begin.
+            measured_elapsed_ms = (time.perf_counter_ns() - started_at) / 1_000_000
+            await _drain_database_workers()
+    except _InvocationValidationComplete:
+        # Validation failures are recorded as input errors, not callback errors.
+        pass
+    except asyncio.TimeoutError as exc:
+        status = "timeout"
+        error_type = type(exc).__name__
+        error = "Tool invocation exceeded its timeout."
+        measured_elapsed_ms = (time.perf_counter_ns() - started_at) / 1_000_000
+        if phase in {"discovery", "warmup"}:
+            await _drain_database_workers()
     except Exception as exc:  # Benchmark runs should continue to later cases.
         status = "exception"
         error_type = type(exc).__name__
         error = bounded_text(exc)
-    elapsed_ms = (time.perf_counter_ns() - started_at) / 1_000_000
+    elapsed_ms = measured_elapsed_ms or (
+        (time.perf_counter_ns() - started_at) / 1_000_000
+    )
     metadata = result_metadata(result)
     timing = database_timing_for_call(event_records, call_id)
     record = InvocationRecord(
@@ -480,6 +650,8 @@ async def run_case(
     profile_enabled: bool,
     profile_dir: Path,
     event_records: list[dict[str, Any]],
+    *,
+    concurrency: int = 1,
 ) -> CaseReport:
     """Run warmup, timed, and optional profile phases for one case.
 
@@ -490,18 +662,36 @@ async def run_case(
         profile_enabled: Whether to run the separate worker profile pass.
         profile_dir: Run-specific profile output directory.
         event_records: In-memory logger records for DB timing correlation.
+        concurrency: Maximum number of simultaneous timed invocations (1-4).
 
     Returns:
         Case report containing all invocation metadata and status.
     """
+    if not 1 <= concurrency <= 4:
+        raise ValueError("concurrency must be between 1 and 4")
     report = CaseReport(case=case)
     warmup = await invoke_tool(case, "warmup", 0, run_id, event_records)
     report.records.append(warmup)
-    for iteration in range(iterations):
-        report.records.append(
-            await invoke_tool(case, "timed", iteration, run_id, event_records)
+    timed_timeout = warmup.status == "timeout"
+    # Small explicit batches keep outstanding calls bounded. A timed timeout
+    # stops subsequent batches, while gather drains every call already started.
+    for batch_start in range(0, iterations, concurrency):
+        if timed_timeout:
+            break
+        indices = range(batch_start, min(iterations, batch_start + concurrency))
+        batch = await asyncio.gather(
+            *(
+                invoke_tool(case, "timed", iteration, run_id, event_records)
+                for iteration in indices
+            )
         )
-    if profile_enabled:
+        report.records.extend(batch)
+        timed_timeout = any(record.status == "timeout" for record in batch)
+        if timed_timeout:
+            # All callbacks in this batch have returned. Stop and drain the
+            # shared executor before the caller can restore its opener scope.
+            await _drain_database_workers()
+    if profile_enabled and not timed_timeout:
         profile_record, artifact = await profile_case(
             case, run_id, profile_dir, event_records
         )
@@ -522,11 +712,11 @@ def numeric_values(records: list[InvocationRecord], field: str) -> list[float]:
         field: ``elapsed_ms`` or a DB timing field.
 
     Returns:
-        Numeric values from successful or failed timed records.
+        Numeric values from successful timed records only.
     """
     values: list[float] = []
     for record in records:
-        if record.phase != "timed":
+        if record.phase != "timed" or record.status != "success":
             continue
         value = record.elapsed_ms if field == "elapsed_ms" else record.database_timing.get(field)
         if isinstance(value, (int, float)):
@@ -535,23 +725,24 @@ def numeric_values(records: list[InvocationRecord], field: str) -> list[float]:
 
 
 def timing_summary(values: list[float]) -> dict[str, Any]:
-    """Summarize timing samples without implying statistical rigor.
+    """Summarize successful timing samples with a bounded p95 threshold.
 
     Args:
         values: Timing values in milliseconds.
 
     Returns:
-        Count and basic min/median/mean/max values.
+        Count always, p50 for nonempty samples, and p95 at 20 or more samples.
     """
     if not values:
         return {"count": 0}
-    return {
-        "count": len(values),
-        "min_ms": round(min(values), 3),
-        "median_ms": round(statistics.median(values), 3),
-        "mean_ms": round(statistics.fmean(values), 3),
-        "max_ms": round(max(values), 3),
-    }
+    summary: dict[str, Any] = {"count": len(values)}
+    if values:
+        ordered = sorted(values)
+        summary["p50_ms"] = round(statistics.median(ordered), 3)
+        if len(values) >= 20:
+            quantiles = statistics.quantiles(ordered, n=100, method="inclusive")
+            summary["p95_ms"] = round(quantiles[94], 3)
+    return summary
 
 
 def invocation_dict(record: InvocationRecord) -> dict[str, Any]:
@@ -586,13 +777,32 @@ def case_report_dict(report: CaseReport) -> dict[str, Any]:
     Returns:
         JSON-compatible case summary.
     """
+    timed_records = [record for record in report.records if record.phase == "timed"]
+    attempted_count = len(timed_records)
+    success_count = sum(record.status == "success" for record in timed_records)
+    invocation_success_count = sum(
+        record.status == "success" for record in report.records
+    )
     return {
         "name": report.case.name,
         "tier": report.case.tier,
         "tool": report.case.tool_name,
         "description": report.case.description,
+        "arguments": report.case.arguments,
+        "expected_kind": report.case.expected_kind,
+        "group_by": list(report.case.group_by),
+        "prerequisites": list(report.case.prerequisites),
         "status": report.status,
         "error": report.error,
+        "attempted_count": attempted_count,
+        "success_count": success_count,
+        "failure_count": attempted_count - success_count,
+        "timed_attempted_count": attempted_count,
+        "timed_success_count": success_count,
+        "timed_failure_count": attempted_count - success_count,
+        "invocation_attempted_count": len(report.records),
+        "invocation_success_count": invocation_success_count,
+        "invocation_failure_count": len(report.records) - invocation_success_count,
         "timing_ms": {
             "end_to_end": timing_summary(numeric_values(report.records, "elapsed_ms")),
             "database_acquisition": timing_summary(

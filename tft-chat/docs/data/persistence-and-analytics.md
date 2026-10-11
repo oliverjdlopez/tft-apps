@@ -80,6 +80,40 @@ A mutation to already-processed raw ORM data marks the affected scope dirty.
 Catch-up cannot repair that state because the ledger says those matches were
 already processed; repair requires a full rebuild.
 
+## Query table maintenance CLI
+
+From the repository root, update the configured patch/queue/set scope while
+reusing existing calculations:
+
+```bash
+uv run chat-tft-rebuild-tables
+```
+
+This default calls `catch_up_query_tables`: existing facts and aggregate counters
+are retained, and only eligible matches absent from the processed-match ledger
+are added. Published metrics are refreshed and facts validated after processing.
+Repeated runs skip already-processed matches. Catch-up commits each batch, so a
+failed run can resume from its committed ledger entries.
+
+To discard the selected scope's derived facts, aggregate counters, and ledger
+and recalculate every eligible match from the preserved raw graph:
+
+```bash
+uv run chat-tft-rebuild-tables --full-rebuild
+```
+
+Use `--full-rebuild` after changing processed raw data, calculations, or projection
+schemas. Catch-up refuses dirty scopes and never automatically falls back to a
+full rebuild. Only the explicit full rebuild drops retired aggregate tables.
+Both modes accept `--patch` and `--dsn` and retain the existing RDS resize/restore
+behavior for remote targets. `--explain` and `--explain-analyze` require
+`--full-rebuild`; using either with default catch-up is an argument error.
+
+Logs and JSON output include `mode` (`catch_up` or `full_rebuild`). In catch-up
+output, aggregate table counts describe the resulting projection;
+`processed_matches` and `boards` describe additions made by this run, and
+`remaining_matches` reports outstanding ledger entries.
+
 ## Database targets and maintenance
 
 Runtime app, eval, and test access uses typed RDS targets. Test databases end
@@ -95,7 +129,7 @@ After deploying the initial Set 17 wide tables, run a full analytics rebuild to
 populate one feature row of each kind for every anonymous board:
 
 ```bash
-uv run chat-tft-rebuild-tables
+uv run chat-tft-rebuild-tables --full-rebuild
 ```
 
 The maintenance rebuild also removes physical aggregate projections that are
@@ -131,7 +165,7 @@ maintenance migration and then rebuild analytics:
 
 ```bash
 uv run python scripts/migrate_item_metadata.py
-uv run chat-tft-rebuild-tables
+uv run chat-tft-rebuild-tables --full-rebuild
 ```
 
 The migration is rerunnable. It reports empty, current, and partial states,
@@ -216,23 +250,35 @@ context. Runtime model tuples, migration code, and tests remain authoritative.
 
 ## Development database benchmarks
 
-The development-only benchmark runner measures common read paths through the
-registered database tools against the configured application database. It is
-sequential and read-only; it does not run assistants, HTTP routes, ingestion,
-maintenance commands, or concurrent load tests.
+The development-only runner exercises registered read-only database tools
+against the configured application database. It does not call assistants or
+HTTP routes and does not run ingestion or analytics maintenance. Tool calls run
+in read-only transactions; benchmark sessions disable schema creation. Workloads
+cover name resolution, unit/item/trait rankings, conditioned unit and loadout
+rankings, three-way cohort grouping, cohort comparisons, and unit/item/trait
+cohort deltas. The runner discovers exact stored names and verifies their entity
+types before binding workloads. Cases whose required names or reportable data
+are unavailable are recorded as unavailable or insufficient instead of being
+counted as successful samples.
 
-Run the default light and heavy workloads with:
+Run the light and heavy workloads with:
 
 ```bash
 uv run chat-tft-benchmarks
 ```
 
-Use `--suite light` or `--suite heavy` to select one tier, `--no-profile` for
-timing-only runs, and `--list` to inspect workloads without connecting to the
-database. Each run writes `summary.json`, `events.jsonl`, and worker-thread
-profiles under the ignored `profiles/benchmarks/<run-id>/` directory. The summary
-contains basic sample timings and the existing database-boundary acquisition,
-execution, and total timings; it is an observational development report, not
+Use `--suite light` or `--suite heavy` to select one tier, `--light-runs` and
+`--heavy-runs` to set timed sample counts, `--concurrency N` (1 to 4) to bound
+timed calls per case (default `1`, sequential), and `--no-profile` to skip the
+separate worker-thread cProfile pass. `--list` prints workload definitions
+without connecting to the database. Each run writes `summary.json`,
+`events.jsonl`, and optional worker-thread profiles under the ignored
+`profiles/benchmarks/<run-id>/` directory. The summary records the revision and
+dirty state, effective workload arguments and prerequisites, attempted,
+successful, and failed call counts, and database-boundary acquisition,
+execution, and total timings. Timing summaries use successful timed samples
+only; p50 is included when at least one sample succeeded, while p95 requires at
+least 20 successful samples. This is an observational development report, not
 a CI performance gate.
 
 ## Private flowchart workspaces

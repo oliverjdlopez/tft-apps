@@ -1,0 +1,1384 @@
+{
+  "items": [
+    {
+      "case": "UN4-1-C01",
+      "expected_output": {
+        "reference": "Grade whether the investigation distinguishes joint Veigar star/item investment cells, supported team contexts, and observed item packages. Either supported direction or an unresolved comparison is acceptable; no fixed winner is expected.",
+        "requirements": [
+          "Investigate the applicable scoped Set 18 standard-ranked final-board results; do not supply a preferred winning build or reuse historical or online outcomes as ground truth.",
+          "Report Veigar star level jointly with Veigar completed-item count, retaining two-star, three-star, and any reportable four-star rows, and zero, partial, and three-item allocations. Do not combine independent star and item marginals into invented joint cells.",
+          "For every reported role cell, give its board count and share with the denominator explicitly defined as the reportable Veigar-containing family. Treat stars and holder item counts as investment proxies, not proof of carry damage or trait-only intent.",
+          "Identify observed Veigar item trios and supported companion/core combinations. Select Veigar rows explicitly when a cohort query groups all units on qualifying boards, and verify joint partner conditions rather than inferring a core from separate marginal frequencies.",
+          "Compare supported cells within shared named support and final-level contexts where the available tools allow it. Give available average placement, top-four, and win outcomes with sample sizes; lower average placement is better. Keep partial-item and four-star results visible, and describe suppressed or unavailable cells as unknown rather than zero.",
+          "Explain that finished-board outcomes cannot establish whether rolling for Veigar was worthwhile: there is no attempted-reroll denominator, investment timing, stacking history, whole-board signature filter, or generic carry-role field. State data-scope or sample limitations precisely.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "What separates a Veigar reroll carry board from a board that just uses him for traits? How much do his items and the rest of the team change whether three-star Veigar is worth building around?\n\nPlease analyze Set 18 standard-ranked final boards containing Veigar. Use Veigar’s star level and completed-item count together as investment proxies: keep two-star and three-star Veigar separate, and show four-star Veigar separately if present; within each, distinguish zero, one-to-two, and three completed items. Treat these as carry-investment cells, not measured damage roles. For companion analysis, state the bounded board family used and verify joint companion/core combinations rather than combining separate partner marginals. Compare supported star/item cells within shared named support and final-level contexts where possible, and inspect actual Veigar loadouts so ordinary and special-item versions are not pooled. Report cell counts and shares only over a clearly named reportable Veigar-containing denominator. Do not infer reroll attempts, timing, or payoff from a finished-board star-level association.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-1-C01",
+        "case_id": "unit-expert/UN4-1-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "argument": "unit",
+              "query": "Veigar",
+              "type": "tool_argument_resolved",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "veigar_name_resolved_for_loadout_lookup"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_veigar_board_cells"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_veigar_cells"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-1",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-1/cases.md",
+        "source_case_id": "UN4-1-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "d338df087577b8be814db9172a62b238fb31fe6d803cc9474479c3042ce0c6ac",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-1-C01",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-1-C02",
+      "expected_output": {
+        "reference": "Grade the exact holder-bound, star-asymmetric comparison and the treatment of both-holder and supported contexts. Either direction or insufficient reportable support may be valid.",
+        "requirements": [
+          "Use applicable scoped Set 18 standard-ranked final-board observations without assuming which candidate wins.",
+          "Preserve the asymmetry: primary comparison is two-star Master Yi versus one-star Draven. Compare only observed three-item loadouts with Flickerblade, radiant Quicksilver, and ordinary Edge of Night all bound to the candidate holder. Keep ordinary and radiant Quicksilver distinct.",
+          "Give the reportable board counts and available average placement, top-four, and win results for each exact holder/star/trio group, with comparison direction and uncertainty where returned. A missing or suppressed group is unknown, not zero.",
+          "Separate boards containing both candidates from one-candidate groups and explain how the other board context varies. Discover and verify joint support conditions, then report shared-support comparisons only where their cohorts meet the public reporting floor.",
+          "Keep three-star Yi and two-star Draven sensitivities separate from the primary comparison. Do not infer a Yi form from a name, build label, or offensive-item category.",
+          "Describe the results as final-board associations, not proof of carry role or causal item effect. An observed trio does not establish current patch legality, complete acquisition opportunity, or matching on the rest of the board. Note that local context may not verify disputed 18.3B item effects, and state scope/sample readiness gaps rather than making a generic refusal.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "With Flickerblade, radiant Quicksilver and Edge of Night, is two-star Master Yi or one-star Draven the better carry? How much does the rest of the board change that?\n\nPlease analyze Set 18 standard-ranked final boards. Compare exactly two-star Master Yi and exactly one-star Draven, each on boards where that named candidate holds the same recorded trio: Flickerblade, radiant Quicksilver, and ordinary Edge of Night. Bind all three items to the candidate; do not substitute ordinary Quicksilver or treat board-level item presence as a holder build. Keep boards containing both candidates distinct from boards containing only one. Discover support from the data, then repeat the head-to-head in shared named support contexts when the sample permits. Treat three-star Yi and two-star Draven only as separate sensitivities. Report whether each exact holder/star/trio sample and conditional context is reportable before interpreting outcomes.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-1-C02",
+        "case_id": "unit-expert/UN4-1-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "argument": "unit",
+              "query": "Master Yi",
+              "type": "tool_argument_resolved",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "master_yi_name_resolved_for_loadout_lookup"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "ranks_exact_candidate_loadouts"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_candidate_cohorts"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-1",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-1-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-1/cases.md",
+        "source_case_id": "UN4-1-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "b9f9c4e8576f5ede6aca421b5193fdf67f458d1e4b74216b00e2bff19fc27551",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-1-C02",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-1-C03",
+      "expected_output": {
+        "reference": "The intended answer contrasts observed Veigar-held Dawncore and named ordinary packages, handles Flora Fatalis overlap, and tests the word “most” with a contribution denominator. No winner or numerical ceiling is preselected.",
+        "requirements": [
+          "Investigate current scoped Set 18 standard-ranked final-board evidence without choosing a preferred Veigar version before observing results.",
+          "Hold Veigar at three stars and exactly three completed items for the primary comparison. Identify observed holder-bound item trios; distinguish explicitly named ordinary trios from Veigar-held Dawncore packages.",
+          "Treat Flora Fatalis as an active trait support condition, not an item. Preserve the overlap between Dawncore and active Flora Fatalis, and state the definitions for any mutually exclusive groups used to count top finishes.",
+          "Report counts and available placement distribution, average placement, top-four, and win outcomes for each reportable group. To answer whether a group accounts for most top finishes, give its supported share/count among top finishes using histograms or direct counts; do not infer contribution from a group win rate alone.",
+          "Where supported, inspect Fiddlesticks, Soraka, and frontline loadouts as contextual associations. Report joint support evidence rather than combining independent marginals.",
+          "Do not claim Veigar’s build is globally ordinary-only or that the whole board contains no artifact/special items unless that is separately certified; the filters lack a generic board-wide special-item exclusion. Do not infer damage ceiling, causality, item legality, or acquisition timing from final boards. Treat suppressed groups as unavailable, not zero, and note data and scope preflight limits.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "Does three-star Veigar with normal items still have a strong endgame, or do Dawncore and Flora Fatalis versions account for most of his top finishes?\n\nPlease analyze Set 18 standard-ranked final boards with three-star Veigar holding exactly three completed items. Identify observed Veigar loadouts and compare named ordinary-item trios with Veigar-held Dawncore packages. Separately identify boards where Flora Fatalis is active, and preserve the overlap between Dawncore and Flora Fatalis rather than treating those groups as exclusive. Inspect Fiddlesticks and Soraka support and frontline/loadout context where reportable. Call a Veigar trio 'ordinary' only for the explicitly named ordinary items being analyzed; do not describe it as globally artifact-free unless whole-board special-item exclusion is independently certified. For top finishes, show disjoint counts only where you can define disjoint groups, and use placement histograms or explicit counts to assess each group's contribution rather than equating a high win rate with 'most' wins.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-1-C03",
+        "case_id": "unit-expert/UN4-1-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "argument": "unit",
+              "query": "Veigar",
+              "type": "tool_argument_resolved",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "veigar_name_resolved_for_loadout_lookup"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "ranks_veigar_loadouts"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_veigar_packages"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-1",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-1/cases.md",
+        "source_case_id": "UN4-1-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "7173e6ca861de9a48babe4afd01085c49062baef781ff76ff068aca1cd17c717",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-1-C03",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-1-C04",
+      "expected_output": {
+        "reference": "Grade whether the answer uses the declared joint item-count allocations, retains tank stars and richer/absent groups, and reports supported outcome contrasts without claiming whole-board matching.",
+        "requirements": [
+          "Investigate the applicable scoped Set 18 standard-ranked finished-board results without presuming which frontline allocation is better.",
+          "Keep Veigar exactly three-star in the primary analysis. Define focused allocations as Ornn 3 items / Alistar 0 and Alistar 3 / Ornn 0; define splits as Ornn 1 / Alistar 2 and Ornn 2 / Alistar 1. Report each joint cell separately, with item count and exact star strata for each present tank.",
+          "Separate absent-tank groups, present zero-item groups, and both-three-item 3/3 boards where observable. Do not merge the richer 3/3 boards into an equal-budget focused comparison.",
+          "Report board counts and available average placement, top-four, and win outcomes for each supported cell. Compare like shared Veigar/core/final-level contexts where reportable; explain which cells cannot be compared because of suppression or support limits.",
+          "Use observed named tank loadouts as evidence for item context; item count by itself does not establish a defensive-item taxonomy or prove that the holder functioned as a tank. State that equal item counts on Ornn and Alistar do not match the rest of the board, total-item budget, artifacts, or other resources.",
+          "Treat the results as final-board associations. Do not infer survival, combat role, or an item-acquisition timeline. Missing/suppressed cells are unavailable, not zero, and scope or population readiness must be stated precisely.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "On finished three-star Veigar boards, how do Ornn-focused, Alistar-focused and split frontline investment compare?\n\nPlease analyze Set 18 standard-ranked final boards with three-star Veigar. Define Ornn-focused as exactly three completed items on Ornn and zero on Alistar; define Alistar-focused symmetrically. Define split investment as one-plus-two or two-plus-one completed items across Ornn and Alistar, and report those two allocations separately. Keep exact star strata for both tanks visible; do not imply that an absent tank is a zero-item present tank. Treat boards with three items on both tanks as a separate, richer 3/3 group. Compare supported allocation cells within shared Veigar/core/final-level contexts where possible. Use named loadouts to describe tank itemization, since item count alone is not a defensive-item or tank-role classification. State clearly that equal investment across these two units does not match other board resources.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-1-C04",
+        "case_id": "unit-expert/UN4-1-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "argument": "unit",
+              "query": "Ornn",
+              "type": "tool_argument_resolved",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "ornn_name_resolved_for_loadout_lookup"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "queries_joint_frontline_cells"
+          },
+          {
+            "check": {
+              "min_count": 2,
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compares_frontline_allocations"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-1",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-1-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-1/cases.md",
+        "source_case_id": "UN4-1-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "78cbb246c2216cc466a3a40259f57c77ac6a5c029611ee3732bb35011afb3a5d",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-1-C04",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-2-C01",
+      "expected_output": {
+        "reference": "No package is predetermined to win. Grade the taxonomy, exact-build investigation, context coverage and evidence-relative interpretation.",
+        "requirements": [
+          "Resolve the player terms against the active scope and establish exact Nidalee two-star, three-item loadout support. State the catalogue-backed item-name rules used to label AP-oriented and AD-oriented packages; keep mixed/ambiguous packages separate and do not infer ranged/melee form from item labels.",
+          "Compare exact observed triplets rather than pooled Nidalee or item marginals. Report boards and available mean placement, top-four rate and win rate for each supported package; separate unavailable or suppressed cells from measured zero.",
+          "Investigate whether the comparison changes within recurring named allied cores and supported Invoker contribution strata. State which strata were actually compared and their support; do not treat the trait name or one pooled result as a matched board.",
+          "Answer from returned scoped evidence with direction or unresolved comparison and uncertainty. Describe other item investment and unobserved board strength as residual confounders; do not make causal claims or use historical web results as current gold.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ]
+      },
+      "input": "Are AP builds on two-star Nidalee competitive with AD builds, or do they only hold up on certain boards?\n\nInvestigate final boards with exactly two-star Nidalee holding exactly three ordinary completed items. Use the active item catalogue to define and disclose a reproducible AP-oriented and AD-oriented item-name taxonomy before comparing exact triplets; keep mixed or ambiguous triplets separate. Compare supported builds within recurring named allied cores and observed Invoker contribution strata. Item orientation is a proxy and does not verify Nidalee’s form.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-2-C01",
+        "case_id": "unit-expert/UN4-2-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "kind": "trace",
+            "name": "resolve_unit_and_item_terms"
+          },
+          {
+            "check": {
+              "arguments": {
+                "item_count": 3,
+                "star_level": 2
+              },
+              "type": "tool_called",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "discover_exact_star_three_item_loadouts"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compare_named_build_contexts"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-2-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_case_id": "UN4-2-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "3ed1035984831ae54eaed1373270f7c1f94fccc0e096b384c3615af708241307",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-2-C01",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-2-C02",
+      "expected_output": {
+        "reference": "The source comparison is unfinished and has no expected winner. Grade exact-slot coverage, context-aware comparison and honest limits.",
+        "requirements": [
+          "Resolve Azir, Guinsoo’s, Shojin and the chosen shared/alternative items against the active scope. Establish exact Azir3 three-item loadout support and explicitly name the fixed shared item and every compared third-slot item; preserve Guinsoo’s and the shared item in both arms.",
+          "For each reportable exact triplet, give board support and available mean placement, top-four and win rates. Compare Shojin with each selected second-damage item rather than pooling unrelated triplets, and distinguish missing or suppressed support from zero.",
+          "Investigate common Blackthorn, Executioner and Summoner contribution contexts and useful named frontline shells where reportable. State actual sample support and whether each contrast shares that context; do not infer context effects from unstratified outcomes.",
+          "Answer the item-slot question from returned evidence and describe uncertainty. Note that the comparison does not simulate mana generation or combat, that some nominal damage items may have mana effects, and that overall board investment and Blackthorn sacrifice remain uncontrolled; avoid causal claims.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ]
+      },
+      "input": "Does three-star Azir need Shojin, or can I build Guinsoo’s plus two damage items? Are there boards where spending that slot on mana looks more worthwhile?\n\nCompare final boards with exactly three-star Azir and exactly three ordinary completed items on him. Hold Guinsoo’s and one shared named damage item fixed, then compare Shojin in the third slot with each reportable second damage item. Choose and disclose the shared item from observed, catalogue-backed builds; define what counts as the second-damage comparison without assuming every damage item lacks mana benefits. Examine common Blackthorn, Executioner and Summoner contribution contexts plus discovered named frontline shells; total board item equality and Blackthorn sacrifice are not enforceable.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-2-C02",
+        "case_id": "unit-expert/UN4-2-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "kind": "trace",
+            "name": "resolve_build_terms"
+          },
+          {
+            "check": {
+              "arguments": {
+                "item_count": 3,
+                "star_level": 3
+              },
+              "type": "tool_called",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "discover_azir_three_star_triplets"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compare_exact_slot_alternatives"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect_supporting_board_strata"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect_supporting_board_strata",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_trait_deltas",
+              "get_cohort_unit_deltas",
+              "get_cohort_item_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-2-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_case_id": "UN4-2-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "2e841b6fcac56747496f3bf6217fc4d75cbe2377f9f503f49e8a24a80dfbb5d8",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-2-C02",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-2-C03",
+      "expected_output": {
+        "reference": "No build or outcome is predetermined. Grade exact holder binding, supported context inspection and explicit selection/confounding limits.",
+        "requirements": [
+          "Resolve Nidalee, Rapidfire Emblem and item terms against the active scope. State the exact catalogue-backed AP-oriented pair(s) investigated and establish that each complete trio is on one Nidalee2: the AP pair plus the emblem in one arm, and that same pair plus an ordinary third item without the emblem in the other arm.",
+          "Compare the emblem package with the same ordinary pair plus each observed ordinary third item. Report supported exact-package counts and available mean placement, top-four and win rates; do not substitute emblem-wide or Nidalee-wide averages for the exact build.",
+          "Inspect Rapidfire contribution and recurring named allied cores, and use final level, grouped board item count, frontline upgrades and other carry loadouts as diagnostics where the tools support them. State the observed support and limits; do not claim complete-board wealth or emblem acquisition source was matched.",
+          "Answer whether the observed comparison favors a package or remains unresolved, with uncertainty and noncausal framing. Treat AP orientation as an item-defined proxy, not proof of form, and suppressed/missing packages as unknown rather than zero.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ]
+      },
+      "input": "Does AP Nidalee with a Rapidfire emblem actually outperform ordinary AP builds, or is it mainly showing up on much stronger endgame boards?\n\nCompare final boards with two-star Nidalee holding exactly three completed items: Rapidfire Emblem plus two ordinary items classified as AP-oriented under a disclosed catalogue-backed taxonomy, versus that same ordinary pair plus each observed ordinary third item, with no emblem on Nidalee in the ordinary arm. Keep all three items on Nidalee. Compare supported packages within Rapidfire contribution and named allied-core strata; inspect final level, grouped board item investment, frontline upgrades and other carry loadouts as descriptive comparability diagnostics. Item labels do not verify Nidalee’s form, and these diagnostics cannot guarantee equal overall board strength or emblem source.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-2-C03",
+        "case_id": "unit-expert/UN4-2-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "kind": "trace",
+            "name": "resolve_unit_emblem_and_item_terms"
+          },
+          {
+            "check": {
+              "arguments": {
+                "item_count": 3,
+                "star_level": 2
+              },
+              "type": "tool_called",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "discover_nidalee_two_star_packages"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compare_emblem_builds"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect_package_support"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect_package_support",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_trait_deltas",
+              "get_cohort_unit_deltas",
+              "get_cohort_item_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-2-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_case_id": "UN4-2-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "891a85a1f2483cd904a3c20a81dd10c391a7e3eda438a8e778def2014dbe757c",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-2-C03",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-2-C04",
+      "expected_output": {
+        "reference": "There is no preset answer about double Blue Buff. Grade duplicate-slot verification, separate package coverage, legality caution and context-aware interpretation.",
+        "requirements": [
+          "Resolve Ahri, Blue Buff and the selected shared/alternative items against the active scope. Establish exact Ahri2 three-item support. To verify the duplicate build, use duplicate Blue Buff requirements bound to distinct slots (or equivalent exact evidence), preserve the shared named damage item, and separately enumerate the one-Blue-Buff plus shared-item plus second-damage triplets; keep Shojin alternatives separate.",
+          "State whether the chosen scope/reference establishes the legality of two Blue Buff copies. Do not infer illegality from a missing, empty or suppressed loadout. Report support and available mean placement, top-four and win rates for each exact package, and distinguish unknown/suppressed from measured zero.",
+          "Investigate whether the comparison changes across supported recurring allied cores and Blossom, Spellweaver and Invoker contribution strata. State the contexts and sample support actually inspected; do not treat broad trait or item marginals as the exact build comparison.",
+          "Answer from the observed scoped evidence or identify the unresolved cell, with uncertainty. The simulator is motivation rather than gold; final-board outcomes do not prove a causal item effect or combat mechanism.",
+          "When independent holder-bound item predicates define a joint trio, require exactly one copy of the named holder across all star levels and separately its exact star and completed-item count, so items cannot be spread across duplicate holders."
+        ]
+      },
+      "input": "A simulator suggested double Blue Buff for Ahri. Do two-star Ahri endgame boards with that build actually hold up against a single mana item and two damage items, and does the surrounding board change the comparison?\n\nInvestigate final boards with exactly two-star Ahri and exactly three ordinary completed items. Verify double Blue Buff using two distinct item slots and preserve a shared named damage item in both the two-Blue-Buff build and the one-Blue-Buff build; compare the latter with each reportable second damage item. Select and disclose the shared damage item from observed exact builds. Keep Shojin-containing alternatives separate. Examine recurring allied cores and Blossom, Spellweaver and Invoker contribution contexts. The selected scope’s rules/reference must establish whether two Blue Buff copies are legal; an empty or suppressed row alone does not settle legality.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-2-C04",
+        "case_id": "unit-expert/UN4-2-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "kind": "trace",
+            "name": "resolve_ahri_and_item_terms"
+          },
+          {
+            "check": {
+              "arguments": {
+                "item_count": 3,
+                "star_level": 2
+              },
+              "type": "tool_called",
+              "value": "rank_unit_loadouts"
+            },
+            "kind": "trace",
+            "name": "discover_two_star_three_item_loadouts"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "compare_cohorts"
+            },
+            "kind": "trace",
+            "name": "compare_ahri_builds"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect_trait_contexts"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect_trait_contexts",
+            "original_values": [
+              "query_cohort",
+              "get_cohort_trait_deltas",
+              "get_cohort_unit_deltas",
+              "get_cohort_item_deltas"
+            ],
+            "supported_values": [
+              "query_cohort"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-2",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-2/cases.md",
+        "source_case_id": "UN4-2-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "e240956b481a31aab2ad2d5a91ff1c0fdfca8c930b0a8b364c510a3dd79c1388",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-2-C04",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C01",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed.",
+        "requirements": [
+          "Identify the observed Morgana, Ahri, and Sivir star and loadout strata, and keep dual-partner and three-star variants separate from the primary comparison.",
+          "Compare joint partner cohorts within shared final-level and named-frontline contexts where support allows; provide board counts, mean placement, top-four and win rates, and uncertainty when available.",
+          "Show the actual AP-versus-AD item packages and report board-size and completed-item-count distributions as descriptive context, not as matched filters.",
+          "State whether the evidence favors one observed package, is inconclusive, or is too sparse; do not infer a causal partner swap or treat an absent/suppressed group as zero.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "Is Ahri actually Morgana’s best carry partner, or do Morgana boards do just as well with Sivir?\n\nPlease compare completed Morgana boards with an itemized Ahri partner against boards with an itemized Sivir partner. Hold Morgana and partner star and loadout strata explicit, separate three-star and dual-partner boards, and inspect shared final-level/frontline contexts; treat board size and item budget as reported distributions rather than controlled filters.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C01",
+        "case_id": "unit-expert/UN4-3-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed cohorts"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect candidate builds or cohort composition"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect candidate builds or cohort composition",
+            "original_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "rank_units"
+            ],
+            "supported_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "rank_units"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-3-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "3e348906f65298628a3e0c466910c3048bacaf28a5b6547eef52b0f3c99a4e4e",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C01",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C02",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed.",
+        "requirements": [
+          "Compare Mama Beak inclusion within multiple supported Aphelios star/build contexts, separating Mama Beak star and item-count variants, including three-star Aphelios.",
+          "Report the actual sample and outcome tradeoffs for eligible boards with and without Mama Beak, and name observed substitutes and investment distributions in the complement when evidence exposes them.",
+          "Distinguish utility-item presence from itemized carry investment; the complement is not one forced replacement, and no Alpha Mark, emergency-selection, or item-transfer history is observed.",
+          "Describe results as scoped final-board associations, and distinguish a supported comparison from a sparse, suppressed, or otherwise unsupported estimate.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "Which Aphelios boards actually do well with Mama Beak, and which do better without her?\n\nCompare itemized Aphelios boards with Mama Beak against otherwise eligible boards without it inside shared Aphelios star/build contexts. Separate Mama Beak holders by star and zero, partial, or three completed items, including three-star Aphelios. The without group is the full eligible complement, not a single replacement; report its observed alternatives and investment proxies.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C02",
+        "case_id": "unit-expert/UN4-3-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed cohorts"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect candidate builds or cohort composition"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect candidate builds or cohort composition",
+            "original_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "rank_units"
+            ],
+            "supported_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "rank_units"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-3-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "f830aae110744d926a1e5e9b251af1850f730b9dc5c4d0b53c700d70209284d0",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C02",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C03",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed.",
+        "requirements": [
+          "Preserve Draven star and item-build strata while identifying Kennen, Gnar, and Ezreal star levels and their exact observed item allocations.",
+          "Compare supported joint allocation packages and report sample counts, mean placement, top-four and win rates, plus actual trait and frontline context.",
+          "Keep naked candidates separate from itemized candidates; only call inventories shared when the observed named items support that claim, and keep gloves, artifacts, and emblems distinct.",
+          "Do not classify items with an invented generic damage category, claim equal boardwide budgets, or infer item availability, removal history, or causal benefit from final-board outcomes.",
+          "State which observed package performs better, if the evidence supports a direction, or explain why the scoped comparison remains unresolved.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "On finished Draven boards, when does giving Kennen the secondary damage items work better than leaving them on Gnar or Ezreal?\n\nCompare finished boards with the same Draven star and item-build strata, where observed secondary completed items are on Kennen, Gnar, or Ezreal. Keep the other two units naked versus itemized as distinct cases, and use actual shared named inventories only where the data supports them; do not treat unlike optimized inventories as a same-item transfer.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C03",
+        "case_id": "unit-expert/UN4-3-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed cohorts"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect candidate builds or cohort composition"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect candidate builds or cohort composition",
+            "original_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "rank_units"
+            ],
+            "supported_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "rank_units"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "78fae1cf4d3af28a5bf47483f133cac1d7e217382d92e89f255de62f0302b75e",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C03",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C04",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed.",
+        "requirements": [
+          "Define Fiddlesticks tanking only by the stated defensive-item investment proxy, and report his exact observed star and item loadout alongside the carry investment.",
+          "Discover and name actual additional Defender and non-Defender packages from the eligible Spellweaver boards rather than selecting a comparator from memory or a pooled trait ranking.",
+          "Compare supported packages at common final levels, report their samples and outcomes, and describe same-board supports and relevant trait contribution/breakpoint differences.",
+          "Do not claim damage absorbed, a one-for-one deployed-slot swap, or a complete-roster match from level or board size; explain when no supported package comparison can be made.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "For finished Spellweaver boards with Fiddlesticks tanking, does adding another Defender actually outperform using that slot for another carry or support?\n\nCompare finished Spellweaver boards where Fiddlesticks has a declared tank-investment proxy: an observed defensive completed-item loadout. Discover actual additional Defender and non-Defender alternatives from these boards, then compare supported packages at common final levels and carry investment. Same level does not prove a one-unit-for-one-unit roster swap.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C04",
+        "case_id": "unit-expert/UN4-3-C04",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed cohorts"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect candidate builds or cohort composition"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect candidate builds or cohort composition",
+            "original_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "rank_units"
+            ],
+            "supported_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "rank_units"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C04",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "3e1f62bf929f84bf73bc105a5f49300bae6b56494b9c0c9ede188769e7f942f1",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C04",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C05",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed.",
+        "requirements": [
+          "Preserve the two-star Taric versus two-star Amumu distinction, common Draven build, and observed named tank-item packages; report actual companion frontliners.",
+          "Represent Taric without active Vanguard using the complement of active Vanguard within the shared Taric shell, and represent the Amumu package with active Juggernaut; never treat active:false as a missing-row match.",
+          "Keep boards containing both tanks separate and report each supported package’s sample counts, mean placement, top-four and win outcomes.",
+          "Explain that these are package-level descriptive associations with asymmetrical trait requirements; do not assign an observed difference solely to tank identity or claim a certified direct head-to-head where the DSL cannot express it.",
+          "Distinguish a reportable result from sparse, suppressed, or otherwise unsupported evidence rather than interpreting missing output as zero.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "In finished Draven boards, is two-star Taric still better than two-star Amumu when Taric has no Vanguard active but Amumu has Juggernaut?\n\nCompare finished Draven boards with two-star Taric against boards with two-star Amumu, keeping Draven build and named tank-item packages visible. Taric boards must have no active Vanguard, including boards where that trait is absent, while Amumu boards must have active Juggernaut. Keep boards containing both tanks separate and describe package associations rather than attributing differences to tank identity alone.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C05",
+        "case_id": "unit-expert/UN4-3-C05",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed cohorts"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect candidate builds or cohort composition"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect candidate builds or cohort composition",
+            "original_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "rank_units"
+            ],
+            "supported_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "rank_units"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C05",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "3a7c675a9af154cac2b66f97a73e693829d380607474330a6d68a14696e7e40a",
+        "source_status": "disputed",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C05",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-3-C06",
+      "expected_output": {
+        "reference": "Evidence-relative grading: report the result returned by the applicable scoped data, including an unresolved or unsupported comparison when warranted; no historical or online winner is presumed.",
+        "requirements": [
+          "Define Sett as the main-tank investment proxy only for two-star Sett holding the reported defensive completed-item loadout, and show his exact observed build.",
+          "Discover named itemized carry cores independently of Sett’s emblem status, then compare supported cores with and without Ravager Emblem and report core-specific samples and outcome tradeoffs.",
+          "Show companion unit stars/item counts and relevant trait context; do not infer a universal family effect from a frequent unit row or Sett’s marginal ranking.",
+          "State that damage absorbed, survival, and the reason Sett was chosen are unobserved, and distinguish a supported comparison from sparse, suppressed, or unresolved evidence.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "Which finished carry cores actually perform well with Sett as the main tank, and does that hold without a Ravager emblem on him?\n\nTreat Sett at two stars with an observed defensive completed-item loadout as a main-tank investment proxy, and compare that proxy with and without Ravager Emblem across discovered itemized carry cores. Define the carry core independently of Sett’s emblem, report the exact observed builds and trait context, and compare only supported named packages; the data does not observe damage absorbed or why Sett was chosen.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-3-C06",
+        "case_id": "unit-expert/UN4-3-C06",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare observed cohorts"
+          },
+          {
+            "check": {
+              "min_count": 1,
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "inspect candidate builds or cohort composition"
+          }
+        ],
+        "expert_tool_alternative_adjustments": [
+          {
+            "check": "inspect candidate builds or cohort composition",
+            "original_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "get_cohort_unit_deltas",
+              "rank_units"
+            ],
+            "supported_values": [
+              "rank_unit_loadouts",
+              "query_cohort",
+              "rank_units"
+            ]
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-3",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-3/cases.md",
+        "source_case_id": "UN4-3-C06",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "f59ffa54862686ceb35eafcb31a1d2a4e081cae7b244d845ec54b8cdca27db91",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-3-C06",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-4-C01",
+      "expected_output": {
+        "reference": "No tank is predetermined to win. Grade the exact carry/tank shell, item-definition transparency, package and support-context coverage, and evidence-relative conclusion.",
+        "requirements": [
+          "Resolve the player names in the selected scope and establish support for the exact two-star Soraka and Zyra carry shell and each mutually exclusive two-star tank with exactly three completed items on that tank. Disclose the reproducible item-name rule used to classify a tank's three items as defensive; keep mixed or uncertain builds distinct rather than calling any three-item build defensive.",
+          "Compare Lillia and Malphite boards within the shared carry, star and final-level shell, reporting each cohort's sample and available mean placement, top-four rate and win rate. Show differences in actual tank item packages and trait/support composition; do not substitute broad unit marginals for the named tank comparison.",
+          "Inspect recurring named common cores and relevant Fae, Defender and Blackthorn support where the tools and sample sizes permit. State which core or trait-contribution slices were actually compared and their sample support; do not imply that a named core is an exact roster or a matched Blackthorn choice.",
+          "Use grouped final-level, stored unit-record count and completed-item-count evidence to describe board shape and other item investment where available. Explain that final level is not deployed unit count or occupied capacity, and that these diagnostics cannot hold complete roster, global item budget or all defensive item categories fixed.",
+          "Answer from observed scoped evidence with the direction or an unresolved result, including sample counts and outcome tradeoffs. Distinguish suppressed or unavailable cells from measured zero, avoid causal claims, and do not use historical or external rankings as current gold.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "How do Soraka and Zyra boards with Lillia as the main tank compare with similar boards using Malphite? Are there versions where Lillia holds up, or is she usually a weaker substitute?\n\nCompare final level-eight boards that contain both two-star Soraka and two-star Zyra, with exactly one two-star Lillia or exactly one two-star Malphite carrying three completed items classified as defensive under a disclosed item-name rule. Keep the two tank versions disjoint and do not combine them with boards carrying both candidates. Discover the actual item packages and compare within recurring named support cores where there is enough data; report Fae, Defender and Blackthorn support when observable. Also inspect final level, stored unit-record count and total completed-item investment as descriptive board-shape checks. Level and stored unit count are different measurements, neither certifies occupied capacity, and three items do not by themselves establish a defensive build. A named core means the board contains those units, not that it contains only them.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-4-C01",
+        "case_id": "unit-expert/UN4-4-C01",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "kind": "trace",
+            "name": "resolve_carry_tank_and_trait_terms"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "discover_exact_tank_packages"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts",
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare_supported_tank_outcomes"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "inspect_board_shape_and_support"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-4",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-4-R2-P1"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+        "source_case_id": "UN4-4-C01",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "5d3520649a662a1159df9881bd36b390449db37f3b299c61894c5b5c9762be48",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-4-C01",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-4-C02",
+      "expected_output": {
+        "reference": "The original answer is incomplete and disputed; no carry is predetermined to win. Grade exclusive carry/package comparison, inspected board variants, and honest residual-confounding limits.",
+        "requirements": [
+          "Resolve the player terms and establish each exclusive two-star carry arm with three completed items on exactly one carry occurrence, plus the shared itemized two-star Maokai shell. Discover and report the observed carry and Maokai package identities rather than relying on all-board Ashe, Draven or Maokai marginals.",
+          "Compare Ashe and Draven outcomes inside the shared final-level and Maokai-star shell, reporting boards and available mean placement, top-four rate and win rate. Where supported, repeat within recurring named common cores and Elder Dragon presence strata; explain which pooled differences persist, change or remain unresolved in the inspected overlaps.",
+          "Inspect named support units, final level, stored unit-record count and grouped completed-item investment to describe board variants and other investment. State the actual slices and their samples; do not claim equal wealth, Maokai accumulated health, Draven rewards, exact roster, or occupied capacity from these proxies.",
+          "Account for carry-specific item suitability by comparing observed packages rather than requiring identical Ashe and Draven trios. Keep dual carries, one-star carry boards and level ten out of the primary comparison, or identify them separately instead of silently pooling them.",
+          "Answer from returned scoped evidence with sample counts and outcome tradeoffs, or explain why a comparison cannot be resolved. Distinguish missing or suppressed evidence from zero, avoid causal claims, and do not use disputed historical answers as current gold.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "Is Ashe really the better carry than Draven on Maokai endgame boards, or are they succeeding in different versions of the board?\n\nCompare final level-nine boards with exactly one itemized two-star Maokai, and exactly one two-star Ashe or exactly one two-star Draven carrying three completed items. Keep the carry arms exclusive; report dual-carry, level-ten and one-star-carry boards separately if useful. Discover actual carry and Maokai item packages, then compare within recurring named support cores and Elder Dragon strata when samples allow. Inspect final level, stored unit-record count, named supporting legendaries and total completed-item investment as descriptive checks; equal level does not mean equal deployed units, occupied capacity or total board investment. Do not treat a named core as an exact roster, or infer Maokai health, Draven rewards or Elder Dragon occupied-space equivalence from these fields.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-4-C02",
+        "case_id": "unit-expert/UN4-4-C02",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "kind": "trace",
+            "name": "resolve_carry_tank_and_support_terms"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "discover_carry_and_tank_packages"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts",
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare_carry_package_outcomes"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "inspect_board_variants_and_investment"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-4",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-4-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+        "source_case_id": "UN4-4-C02",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "09d801501e85552e1e9d63d9cd92c60fc193f4737521498a2ffdb0b6393ca37c",
+        "source_status": "disputed",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-4-C02",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "case": "UN4-4-C03",
+      "expected_output": {
+        "reference": "No secondary package or winner is predetermined. Grade the shared investment declaration, exclusive package outcomes, required board-shape diagnostics, and accurate limits on Elder Dragon capacity and global emblem matching.",
+        "requirements": [
+          "Resolve the named units and establish the shared two-star Draven/Maokai core and exclusive itemized two-star Elder Dragon versus Ezreal arms. Use a common supported completed-item-count stratum for Draven and Maokai where possible, state its chosen value and sample, and report the discovered secondary-holder item packages without presupposing a winning trio.",
+          "Compare the two exclusive packages at final level nine and report separate sample counts, mean placement, top-four rate and win rate where available, including comparison histograms or placement distribution when returned. Do not silently pool boards carrying both candidates, or treat a missing/suppressed package as zero.",
+          "Inspect upgrade distributions, stored unit-record count, total completed-item investment, named emblem-bearing variants and support-trait composition. Show which variants were actually examined and their support; treat grouping as descriptive evidence, not a filter that fixed boardwide investment or full roster composition.",
+          "Explicitly account for Elder Dragon's two-space occupancy: board_size is a count of stored unit records, player level is a separate field, and neither establishes actual occupied capacity. Explain that global emblem, radiant, artifact or other special-item exclusions are not generally enforceable by these cohort predicates, so residual package and capacity confounding remains.",
+          "Answer whether observed top-four and win outcomes differ or the evidence is unresolved, with counts and available uncertainty. Do not claim a fully capacity-matched or emblem-matched gold comparison, infer causal effects, or substitute historical or external ranking numbers for scoped results.",
+          "Support any exact same-holder multi-item claim with occurrence-bound loadout evidence or a one-copy guard across all stars plus separate star and item-count conditions; separate holder predicates can otherwise match items on different same-name copies."
+        ]
+      },
+      "input": "Among finished Draven–Maokai boards, how do the Elder Dragon and Ezreal versions compare for top fours and wins once board size, upgrades and emblem differences are accounted for?\n\nCompare final level-nine boards with exactly one two-star Draven and one two-star Maokai, each on the same supported completed-item-count stratum, plus exactly one itemized two-star Elder Dragon or exactly one itemized two-star Ezreal; keep the other candidate absent from the primary arm. Discover and report actual secondary-unit item packages. Inspect upgrades, stored unit-record count, boardwide completed-item totals, named emblem-bearing variants and support traits as descriptive diagnostics. Elder Dragon occupies two spaces, while stored unit count counts records; neither that count nor equal player level certifies equal occupied capacity. The tools cannot filter every global emblem, radiant or special-item category, so report the remaining mismatch instead of claiming full emblem or capacity matching.\n\nUse the available Set 18 standard-ranked final-board data.",
+      "metadata": {
+        "benchmark_type": "evidence_relative_investigation",
+        "case": "UN4-4-C03",
+        "case_id": "unit-expert/UN4-4-C03",
+        "data_readiness": "not_measured_scope_and_samples_require_preflight",
+        "deterministic_checks": [
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "resolve_tft_names"
+            },
+            "kind": "trace",
+            "name": "resolve_core_secondary_and_item_terms"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "rank_unit_loadouts",
+                "query_cohort",
+                "rank_units"
+              ]
+            },
+            "kind": "trace",
+            "name": "discover_secondary_unit_builds"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "values": [
+                "compare_cohorts",
+                "query_cohort"
+              ]
+            },
+            "kind": "trace",
+            "name": "compare_secondary_package_outcomes"
+          },
+          {
+            "check": {
+              "type": "tool_called",
+              "value": "query_cohort"
+            },
+            "kind": "trace",
+            "name": "inspect_capacity_upgrade_and_item_diagnostics"
+          }
+        ],
+        "grading_scope": "investigation_behavior_and_answer_coverage",
+        "lane": "UN4-4",
+        "numeric_ground_truth_verified": false,
+        "proposal_lineage": [
+          "UN4-4-R2-P2"
+        ],
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "queue_context": "standard_ranked",
+        "set_number": 18,
+        "source_answer_status": "incomplete",
+        "source_case_file": "eval-brainstormings/2026-09-28-set18-player-needs/case-drafts/2026-09-29-approved-lanes/units/lanes/un4-4/cases.md",
+        "source_case_id": "UN4-4-C03",
+        "source_dataset": "set18-grounded-investigations",
+        "source_dataset_id": "cmuo7kkp60006uf07rue7hztz",
+        "source_item_id": "08719080c721c3529632e51638067d9ab7fd359820b399e7b16c665eeba2db0d",
+        "source_status": "provisional",
+        "source_suite_case_id": "set18_grounded_investigations/UN4-4-C03",
+        "subject": "units",
+        "suite": "unit-expert"
+      },
+      "status": "ACTIVE"
+    }
+  ]
+}

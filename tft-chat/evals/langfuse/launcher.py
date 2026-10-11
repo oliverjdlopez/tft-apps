@@ -14,8 +14,8 @@ import webbrowser
 from domain.assistants.constants import AssistantName
 
 PLATFORM_ROOT = Path(__file__).resolve().parent
-SNAPSHOT_ROOT = PLATFORM_ROOT / "snapshots"
-PUBLIC_URL = "http://localhost:15500"
+SNAPSHOT_ROOT = Path(os.environ.get("LANGFUSE_SNAPSHOT_DIR", str(PLATFORM_ROOT / "snapshots")))
+PUBLIC_URL = "http://localhost:15510"
 
 
 def prepare_environment(root: Path = PLATFORM_ROOT) -> Path:
@@ -94,7 +94,7 @@ def compose(arguments: list[str], root: Path = PLATFORM_ROOT) -> None:
     if environment.get("LANGFUSE_TEST_DEPLOYMENT") == "1":
         environment["LANGFUSE_LLM_CONNECTION_WHITELISTED_HOST"] = "mock-model"
     subprocess.run([
-        "docker", "compose", "--project-directory", str(root),
+        "docker", "compose", "--project-name", "tft-apps-evals", "--project-directory", str(root),
         "--env-file", str(root / ".env"), "-f", str(root / "compose.yaml"),
         *(["-f", str(root / "compose.test.yaml")] if environment.get("LANGFUSE_TEST_DEPLOYMENT") == "1" else []),
         *arguments,
@@ -129,7 +129,9 @@ def up(*, open_browser: bool = True) -> None:
                        env=host_runner_environment(PLATFORM_ROOT), check=True)
         start(PLATFORM_ROOT)
     compose(["up", "-d", "--wait", "--wait-timeout", "120", "experiments"])
-    print(f"Langfuse: {PUBLIC_URL}\nLogin: evals@chattft.local\nPassword: LANGFUSE_INIT_USER_PASSWORD in {environment}")
+    from dotenv import dotenv_values
+    login_email = dotenv_values(environment).get("LANGFUSE_INIT_USER_EMAIL") or "evals@chattft.local"
+    print(f"Langfuse: {PUBLIC_URL}\nLogin: {login_email}\nPassword: LANGFUSE_INIT_USER_PASSWORD in {environment}")
     if open_browser:
         webbrowser.open(PUBLIC_URL)
 
@@ -219,8 +221,12 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
                 from .contracts import DATASET_NAMES
                 dataset_name = bundle.get('dataset_name') or DATASET_NAMES[suite]
                 bundle = fetch_bundle(client, dataset_name, bundle['config'], SNAPSHOT_ROOT)
+            from evals.assistant_execution import require_bundle_captures
+            require_bundle_captures(bundle)
             bundle = bind_dataset_identity(bundle, client)
         bundle = validate_bundle(bundle)
+        from evals.assistant_execution import require_bundle_captures
+        require_bundle_captures(bundle)
         validate_case_semantics(bundle["suite"], bundle["items"])
         snapshot_id = export_snapshot(bundle, SNAPSHOT_ROOT, expected_revision=revision)
         identity = capture_provenance()
@@ -235,7 +241,7 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
             from .grading import reconcile_report
             from .utils import configured_workspace
             import time
-            store = JobStore(PLATFORM_ROOT / '.runtime')
+            store = JobStore(Path(os.environ.get('LANGFUSE_RUNTIME_DIR', str(PLATFORM_ROOT / '.runtime'))))
             job_id = store.submit(bundle, snapshot_id, awaiting_result=result)
             workspace = configured_workspace()
             try:
@@ -251,6 +257,12 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
                 store.finish(job_id, 'completed' if result['passed'] else 'failed', result=result)
             finally:
                 workspace.close()
+        if "markdown_artifact" not in result:
+            from .artifacts import write_run_artifact
+            from uuid import uuid4
+            runtime = Path(os.environ.get("LANGFUSE_RUNTIME_DIR", str(PLATFORM_ROOT / ".runtime")))
+            write_run_artifact(bundle, result, runtime / "artifacts", result.get("group_id") or uuid4().hex,
+                               state="completed" if result["passed"] else "failed")
         result["snapshot"] = snapshot_id
         print(json.dumps(result, indent=2, default=str))
         return 0 if result["passed"] else 1

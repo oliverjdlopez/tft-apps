@@ -1,0 +1,114 @@
+{
+  "CO4-1-C01": {
+    "scenario": "An AP learning repertoire for a verified 18.3B scope. Start with ordinary-item named carry builds and avoid relying on multiple three-star supports; Ahri/Soraka/Zyra are discovery leads rather than a closed eligible pool.",
+    "plan": "Use rank_units and rank_unit_loadouts to identify reportable AP-oriented candidates from context, then cohort unit/trait discovery and conjunction checks to define recurring support packages. Compare reportable named build/star/level cohorts and inspect global equipment distributions with query_cohort. State the candidate-pool coverage and what no-high-roll proxy was actually checked.",
+    "checks": "Provide two or three substantively different supported packages with core, item-holder needs, counts and mean/top4/win. Popularity alone is insufficient. Do not select only winning boards or equate final three-stars with luck. Missing eligible candidates/pages limits completeness.",
+    "limits": "No composition-cluster tool, generic AP filter, boardwide artifact/emblem exclusion or global three-star-count filter is exposed. A strictly ordinary whole-board/no-multiple-three-star benchmark needs a prepared population; current-tool results must be labeled ordinary carry builds with inspected support, not falsely certified full-resource eligibility."
+  },
+  "CO4-1-C02": {
+    "scenario": "Veigar–Ornn ordinary versus specialist-item versions, with Veigar reroll permitted and top-four priority; compare a separately defined ordinary Zyra–Amumu package as repertoire context.",
+    "plan": "Discover Veigar loadouts and named Ornn/carry support cells, partition explicit holder trios and named special-item conditions, and compare within shared level/star/core strata. Use returned comparison histograms to count top-four outcomes for disjoint reportable categories; compare Zyra–Amumu as a separate package, not a matched Veigar swap.",
+    "checks": "Report both group top4_rate and contribution to the family's observed top fours, with the same denominator and nonoverlapping category definition. Include win-rate tradeoff and sample sizes. A higher artifact-group rate does not mean it supplies most successes.",
+    "limits": "Ordinary items on Veigar do not imply ordinary items across the board. Generic special-item-count predicates are absent, so whole-board partition/share claims need preparation or must remain explicitly incomplete. Do not sum overlapping special cohorts or multiply rounded rates into exact counts."
+  },
+  "CO4-1-C03": {
+    "scenario": "Azir3 end states partitioned by his completed-item investment and named teammate investment: primary-carry proxy, co-carry proxy, support proxy and ambiguous. Include a three-item Azir/zero-item Kha'Zix sensitivity.",
+    "plan": "Use query_cohort for joint named-unit star/item-count cells and repeated unit/trait discovery to identify recurring cores. Compare explicit role-proxy cohorts with shared level and named tank/carry conditions. Require Kha'Zix presence with zero items for that sensitivity, not absence mistaken for zero items.",
+    "checks": "Report role-cell counts/shares and placement/top4/win, preserving incomplete/ambiguous categories and actual denominator coverage. Distinguish high-performing itemized Azir end states from the probability that choosing reroll succeeds.",
+    "limits": "No actual damage role, attempt-level reroll denominator, generic teammate investment sum, form or sacrifice choice. The whole role partition may be incomplete under bounded candidate enumeration; label it rather than forcing every board into a role."
+  },
+  "CO4-2-C01": {
+    "scenario": "Level-nine 'five-cost soup' as a declared candidate family. Start with observed cost-five partner frequency, then explicitly investigate repeated named pairs/cores without excluding low-cost anchors by definition.",
+    "plan": "query_cohort at final level nine grouped by unit_name/unit_cost discovers relevant candidates. There is no board-level at-least-N-five-cost predicate: enumerate named candidate-pair cohorts and use unit deltas/grouping within them, then test complete support conjunctions. Compare core prevalence before optional outcomes; keep overlapping families explicit.",
+    "checks": "Return supported recurring cores and flex alternatives with counts and denominators, not a list of high marginal win-rate units. Verify at least one joint recurrence claim per named core; distinguish absent core members and candidate coverage. Vary the declared soup inclusion proxy transparently.",
+    "limits": "No automatic full-roster clustering, arbitrary pair grouping or exact global legendary-count rule. This is bounded anchored discovery; exhaustive family partitions require prepared composition aggregates beyond the public tools."
+  },
+  "CO4-2-C02": {
+    "scenario": "Veigar3 with recorded active Elderwood, without requiring a guide roster in the initial family. Discover core and flex from all-placement boards.",
+    "plan": "Use unit/trait deltas and query_cohort for partner stars/loadouts and level/board-size distributions. Test candidate core conjunctions by adding named unit conditions, then compare with/without alleged members in the broader family. Keep the family independent of Ornn until his recurrence is measured.",
+    "checks": "Show measured joint support and member absence, not only independent high-frequency rows. Separate final-level/tank-star/build contexts and distinguish ordinary holder builds from full-board categories. Outcomes describe observed cores, not compulsory guide templates.",
+    "limits": "No complete-roster signature or flex-slot identity is returned; a contains-core query includes additional units. Topological clustering and boardwide special exclusions remain preparation gaps."
+  },
+  "CO4-2-C03": {
+    "scenario": "Investigate all six named pairs among Aphelios, Brambleback, Sivir and Nidalee, including cross-pairs and higher-order overlaps, with itemized-carry versus filler proxies.",
+    "plan": "The DSL has no at-least-two-of-four OR condition. Run bounded conjunctive queries for each pair and selected triple/quad intersections; define mutually exclusive pair-only cells through explicit absence where needed. Within cells discover support frequencies and verify proposed joint support packages.",
+    "checks": "Cover all six pairs rather than just the two named templates. Report overlapping cells without summing them into unique family totals; identify actual itemized roles, recurring shared support and inspected-page coverage. No causal pair ordering required.",
+    "limits": "Cannot get a union denominator or full family partition by blindly summing pair rows. Generic AD/form labels require explicit item-based proxies; joint roster discovery remains bounded."
+  },
+  "CO4-2-C04": {
+    "scenario": "Separate itemized Zyra-only, Soraka-only and both-carry families; investigate final boards lacking both Malphite and Sentinel before separately labeling single-anchor-absent variants.",
+    "plan": "Use explicit named absence predicates and carry investment to construct disjoint families. Discover replacement frontliners and companion loadouts with query_cohort/deltas, then verify recurrent joint packages. Query level/board_size/item-budget distributions and compare named support packages where support is adequate.",
+    "checks": "State whether 'without the frontline' means neither anchor or a partial replacement. Show recurrence counts and concrete multi-unit alternatives, not isolated tank ranks. Preserve inclusive Zyra/Soraka interpretation and itemized versus naked carry proxies.",
+    "limits": "'Emergency board' is player intent/history and cannot be inferred. Complete package coverage and exact deployed-slot matching need richer prepared evidence."
+  },
+  "CO4-2-C05": {
+    "scenario": "Teemo-containing top-four final boards, distinguishing Teemo itemized-carry and low-item companion proxies; retain all-placement sensitivity separately.",
+    "plan": "No placement filter exists in FilterGroup. Use query_cohort with placement among at most three dimensions, selecting returned placements 1–4 for reportable role/partner groups. Sum only disjoint returned placement cells for the same group when complete; otherwise mark top-four support incomplete. Discover candidate cores on all placements, then verify each candidate's top-four counts through reportable compare_cohorts histograms without selecting on outcome inside the DSL.",
+    "checks": "Do not silently replace the requested top-four population with all boards. Report top-four-specific recurrence/role denominators only when complete and distinguish them from outcome success rates. Same Teemo presence is not evidence of the same comp; verify joint core membership.",
+    "limits": "Suppressed placement cells prevent exact sums and may require a prepared top-four population. No complete-roster grouping, generic primary-carry role or automatic exhaustive comp partition."
+  },
+  "CO4-2-C06": {
+    "scenario": "Itemized Murkwolf end states: Murkwolf3+Warwick3, high recorded Riftbeast contribution strata, and the hybrid intersection.",
+    "plan": "Create explicit star/item-count anchor cohorts, query their unit/trait support, and verify repeated named cores. compare_cohorts or grouped queries measure overlap and package outcomes; cross Riftbeast contribution intervals rather than treating a guide label as a condition.",
+    "checks": "Report each core's recurrence, shares with declared denominators and hybrid overlap. Preserve Murkwolf stars/items and Warwick investment, with level/unit-count differences visible. A prediction or marginal Murkwolf average is not a family map.",
+    "limits": "Contains-core queries cannot identify every flex slot or certify a full-roster partition. Alpha Mark, sacrifices and combat behavior are unavailable."
+  },
+  "CO4-3-C01": {
+    "scenario": "Final level-eight AD-oriented Nidalee and Sivir, no Malphite; ordinary emblem-free intent is retained but only named-holder/inspected-inventory exclusions can be certified publicly.",
+    "plan": "Declare Nidalee orientation using named exact loadouts, enforce Malphite absence, and discover alternative frontliners/support via cohort deltas and query_cohort. Verify multi-unit package conjunctions and compare their supported outcomes, with a separately labeled Malphite reference cohort.",
+    "checks": "Give recurring frontline/support combinations, counts and outcome tradeoffs at comparable named carry/tank investment. State which no-emblem restriction was actually verified; no equipped emblem does not imply no other trait grant. Do not substitute a historical 18.2 guide for current outcomes.",
+    "limits": "No guaranteed Adaptor-form field, global emblem-family predicate, complete roster signature or exact whole-board investment match. Strict emblem-free eligibility needs prepared data or exhaustive feasible exact-name exclusions."
+  },
+  "CO4-3-C02": {
+    "scenario": "Itemized Master Yi plus Kog'Maw, with Rengar absent. Compare Vi-focused, Krug-focused, shared and unclear frontline investments; do not exclude one tank merely because the other is present.",
+    "plan": "Use named absence and Yi/Kog conditions, discover tank star/item-count/loadout patterns, then define supported focused/split roles by explicit named allocations. Compare package cohorts within Yi2/3 and common level strata; query actual companions/traits.",
+    "checks": "Preserve shared-tank groups and uncertain roles, report joint recurrence/counts/mean/top4/win and actual supporting units. Distinguish tank identity from greater resources or a different Yi item package.",
+    "limits": "Tank role is an investment proxy, not damage absorbed. Global artifact/emblem count and complete equal-budget matching are not supported filters."
+  },
+  "CO4-3-C03": {
+    "scenario": "Ahri and Sett present, Yorick+Karma versus Alune+Amumu, separately at final levels eight and nine; overlap packages reported separately.",
+    "plan": "Resolve anchors and define exact partner pairs in compare_cohorts with shared Ahri/Sett investment and each level. Discover remaining unit and trait frequencies, verify plausible complete support conjunctions, and identify boards satisfying both pairs before calling cohorts exclusive.",
+    "checks": "Show all four package-by-level cells, counts and mean/top4/win/intervals where possible. Report observed remaining supports and actual Blossom/Executioner contribution differences; no label-only comparison.",
+    "limits": "Contains-pair conditions do not define a complete exact roster. Same level need not imply identical deployed capacity; global budget and special-state matching remain limited."
+  },
+  "CO4-3-C04": {
+    "scenario": "Akali3 and Camille3, comparing declared Solar-heavy versus Adaptor-focused support packages, preserving supporting stars and named artifact builds.",
+    "plan": "Discover support-unit stars/loadouts and recorded Solar/Adaptor contributions, then explicitly define joint packages and overlap. compare_cohorts compares those packages in named additional-upgrade and item strata at common levels; incomplete support upgrades remain separate observations.",
+    "checks": "Explain which support units change together, with counts/outcomes for both complete and incomplete named upgrade patterns. Do not cherry-pick only high-placement or fully upgraded boards and generalize to all Akali/Camille end states.",
+    "limits": "No generic total-three-star, total-artifact, upgraded-board-cost or observed Adaptor-form filter. Named vectors can be controlled; broader equality cannot be asserted."
+  },
+  "CO4-3-C05": {
+    "scenario": "Ahri–Morgana end states with Alune/Lux/Taric versus actual Kog'Maw- or Hecarim-containing support packages at the same final level.",
+    "plan": "Discover remaining supports, exact carry/tank investment and resolvable Lux identities; define candidate conjunctions and report overlaps rather than presuming Kog and Hecarim alternatives are exclusive. Compare supported packages with shared named carry/level conditions.",
+    "checks": "Name the inspected supporting rosters or explicitly bounded cores and report counts/outcomes, including changed trait contributions. Do not use family headline totals as variant denominators. Generic Lux is a heterogeneous cohort unless an actual variant identity is available.",
+    "limits": "Same level is not exact board capacity; full-roster closure, global special-item exclusion and Lux choice from unrelated board traits are not supported."
+  },
+  "CO4-4-C01": {
+    "scenario": "Final level-nine itemized Aphelios; active Eclipse versus alternative named frontline/utility packages, split explicit Solar-unit three-star vectors from predominantly two-star variants.",
+    "plan": "Discover support packages rather than fixing Kennen/Amumu or Sentinel/Taric as complete boards. Compare recorded active Eclipse and its complement within shared carry/level/star shells, and compare named alternative packages where expressible. Query Solar member stars and verify actual Eclipse activation independently.",
+    "checks": "Report the Eclipse contrast inside each declared Solar upgrade vector and associated support substitutions, with counts/outcomes and uncertainty. Do not infer Eclipse from generic Solar presence or claim a causal benefit of spending slots.",
+    "limits": "No generic all-three-star or no-three-star-legendary filter; enumerate named vectors or mark incompleteness. Generic Lux identity and global investment equality need additional certification."
+  },
+  "CO4-4-C02": {
+    "scenario": "Level-eight itemized Azir/Mama Beak, primary Rapidfire Emblem on Azir, comparing Ezreal+Scuttlecrab versus Kennen+Amumu. Known common units include Krug, Sett and Yunara; the original sixth common unit is unknown.",
+    "plan": "Use the five known shared anchors and the emblem-holder constraint as a discovery shell. Query companion-unit frequencies and verify supported sixth-unit conjunctions separately for both candidate pairs, keeping one pair absent in the other arm. Compare matched discovered-sixth-unit package cells when available. After a sixth common identity is observed and verified, requiring all eight distinct names and selecting a reportable board_size=8 query row can certify stored-roster closure for its own outcomes. It does not recover the original image roster or confer a filtered compare_cohorts interval.",
+    "checks": "Do not invent the sixth unit or present a contains-seven-units shell as a certified exact eight-unit roster. Report observed completion candidates and pair-specific counts/top4/win, with carry/Krug upgrades and utility item differences. Win rate and top4 can favor different caps.",
+    "limits": "The original image-based exact roster cannot be recovered from code. Current-query cohorts are explicitly a reconstruction study unless complete legal rosters are independently certified; level eight is not an exact unit-count predicate. Alpha Mark remains unobserved."
+  },
+  "CO4-4-C03": {
+    "question": "For level-nine Primal Aphelios–Nidalee end boards in the scoped data, is the most common finishing unit also getting the best average placement and win rate? Compare the Alune, Brambleback and Ivern versions around the shared core.",
+    "scenario": "Shared eight: Amumu, Aphelios, Nidalee, Sentinel, Diana, Kog'Maw, Vi and Varus. Inspect Alune, Brambleback and Ivern additions at final level nine with candidate overlap separated; inventory/star differences remain visible.",
+    "plan": "Use three explicit contains-core-plus-candidate cohorts; query board_size to inspect the nine-unit-record slice descriptively, because final level alone does not close a roster. Get candidate counts and outcomes through query_cohort/compare_cohorts, then compare popularity ordering separately from mean-placement and win-rate ordering. For the fully enumerated 9-identity roster, query_cohort grouped by board_size can expose a reportable row equal to 9; that row establishes no extra or duplicate stored identities and supplies its own sample/outcomes. Keep these exact-record results separate from broader compare_cohorts summaries and intervals.",
+    "checks": "Rank the three inspected options from actual counts/metrics with explicit denominators. A reportable nine-record row after requiring all nine distinct names certifies stored-roster closure for that row; otherwise retain the broader contains-core qualification and overlap diagnostics. The answer need not reproduce the old Alune-most-popular/Brambleback-best result. Do not turn a final-state association into a replacement recommendation.",
+    "limits": "Exact contains-only roster/extra-slot control and an exhaustive eligible ninth-unit pool are not available by a single filter. Named-candidate coverage is explicit; public results may differ from the archived web panel. No direct exact-roster filter does not mean closure is impossible: the 9-required-identities/9-record grouped-row route is supported when the row is reportable. It certifies stored identities, not occupied capacity or legal deployment.",
+    "adaptation": "Removed dependence on a mutable TFT Codex panel while preserving the popularity-versus-performance investigation and its known shared roster. Original website snapshot numbers remain historical provenance, not gold for a different database."
+  },
+  "CO4-4-C04": {
+    "question": "For level-ten Elder Dragon–Draven end boards in the scoped data, is there convincing evidence that the Alune support version performs better than the Lux or Soraka versions, once the shared core and observed investment differences are considered?",
+    "scenario": "Shared eight unit records: Draven, Elder Dragon, Ivern, Kennen, Maokai, Taric, Amumu and Sentinel, plus Alune, Lux or Soraka. Elder Dragon uses two occupied slots in the reference; nine records do not mean a level-nine board.",
+    "plan": "Compare explicit candidate support cohorts at final level ten within named carry/tank star/loadout strata. Query board_size and other companions for roster diagnostics. Inspect compare_cohorts effect intervals and overlap; use resolvable Lux variants or label generic-Lux heterogeneity. For the fully enumerated 9-identity roster, query_cohort grouped by board_size can expose a reportable row equal to 9; that row establishes no extra or duplicate stored identities and supplies its own sample/outcomes. Keep these exact-record results separate from broader compare_cohorts summaries and intervals.",
+    "checks": "Report each sample, mean/top4/win and pairwise uncertainty from current returned results. Small rounded differences or an interval spanning zero do not establish either superiority or equivalence. A high selected end-state win rate is not the chance of winning after choosing the composition.",
+    "limits": "Exact occupied capacity and complete roster closure are not public filters. No gold ordering or old panel percentages are carried over, and unresolved Lux variants limit comparability. No direct exact-roster filter does not mean closure is impossible: the 9-required-identities/9-record grouped-row route is supported when the row is reportable. It certifies stored identities, not occupied capacity or legal deployment.",
+    "adaptation": "Converted the website-panel interpretation into a ChatTFT scoped-data uncertainty comparison, keeping the shared core and three alternatives. The previously supported web-only answer is not considered measured support for this new benchmark."
+  }
+}

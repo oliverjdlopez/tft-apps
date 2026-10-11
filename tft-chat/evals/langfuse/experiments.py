@@ -86,7 +86,10 @@ def evaluate_item(*, input: str | dict, output: dict, expected_output: str | dic
 def run_local_item(item: dict, *, suite: dict, variant: dict, prompts: dict) -> dict:
     """Run one credential-free fixture or selector and preserve its full scores."""
     result = execute_attempt(suite, item, variant, prompts)
-    return {"id": item["id"], "result": result, "scores": score_attempt(item, result, prompts)}
+    from .utils import artifact_execution_fields
+    return {"id": item["id"], "result": result, "result_is_execution_wrapper": True,
+            "scores": score_attempt(item, result, prompts),
+            **artifact_execution_fields(result)}
 
 
 def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None) -> dict:
@@ -102,6 +105,8 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
     """
     from evals.langfuse.content import validate_bundle
     bundle = validate_bundle(bundle)
+    from evals.assistant_execution import require_bundle_captures
+    require_bundle_captures(bundle)
     natural = bundle["schema_version"] in {2, 3}
     unscored = natural and bundle["suite"].get("scoring") == "none"
     started = datetime.now(timezone.utc)
@@ -128,6 +133,9 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
     for item in items:
         item["metadata"].setdefault("case_id", item["id"])
     suite = dict(bundle["suite"])
+    if bundle.get('execution'):
+        suite['captured_graphs'] = bundle['execution']['graphs']
+        suite['workspace_lineage'] = bundle['execution'].get('lineage')
     if config.get("assistant") is not None:
         suite["assistant"] = config["assistant"]
     if suite["family"] in {"context_selection", "skill_selection"}:
@@ -143,6 +151,7 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
     concurrency = min(config.get("concurrency", 4), cap)
     experiments = []
     for variant in config["variants"]:
+        variant_prompts = bundle.get('execution', {}).get('prompts', {}).get(variant['name'], bundle['prompts'])
         for repetition in range(1, config["repetitions"] + 1):
             name = (f"{variant['name']} · {started.isoformat(timespec='microseconds')} · r{repetition}" if natural
                     else f"{suite['name']}/{variant['name']}/{group_id}/r{repetition}")
@@ -150,7 +159,7 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
                 experiments.append({"name": name, "passed": True, "empty": True, "items": []})
                 continue
             if client is None:
-                task = partial(run_local_item, suite=suite, variant=variant, prompts=bundle["prompts"])
+                task = partial(run_local_item, suite=suite, variant=variant, prompts=variant_prompts)
                 with ThreadPoolExecutor(max_workers=concurrency) as pool:
                     results = list(pool.map(task, items))
                 experiments.append({"name": name, "passed": all(row["scores"][-1]["passed"] for row in results), "items": results})
@@ -164,18 +173,20 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
                                                                                  if key != "legacy_definition"},
                                 dataset_id=bundle["dataset_id"], dataset_name=bundle["dataset_name"],
                                 created_at=version, updated_at=version, media_references=[]) for item in items]
-            result_store = {} if natural else None
+            result_store = {}
             evaluators = [] if unscored else [partial(
-                evaluate_item, prompts=bundle["prompts"], result_store=result_store,
+                evaluate_item, prompts=variant_prompts, result_store=result_store if natural else None,
                 score_configs=bundle.get("grading", {}).get("score_configs", {}),
             )]
             result = client.run_experiment(
                 name=name, run_name=name, data=data, _dataset_version=version,
-                task=partial(run_item_task, suite=suite, variant=variant, prompts=bundle["prompts"], client=client,
+                task=partial(run_item_task, suite=suite, variant=variant, prompts=variant_prompts, client=client,
                              native_prompt_references=bundle.get("native_prompt_references"), result_store=result_store),
                 evaluators=evaluators,
                 max_concurrency=concurrency,
                 metadata={"comparison_group": group_id, "variant": variant["name"], "repetition": str(repetition),
+                          "workspace_lineage": bundle.get('execution', {}).get('lineage', {}),
+                          "assistant_graph_hash": bundle.get('execution', {}).get('graphs', {}).get(variant['name'], {}).get('hash'),
                           "snapshot": bundle.get("snapshot_id") or config.get("snapshot") or "",
                           **{key: str(value) for key, value in bundle.get("provenance", {}).items()}, "dataset_version": bundle["dataset_version"],
                           "data_snapshot_label": config.get("data_snapshot_label") or ""},
@@ -205,8 +216,15 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
             returned = {row["remote_id"] for row in reports}
             # The SDK may omit a failed task; retain that failure in CI artifacts.
             reports.extend({"id": item["id"], "remote_id": item["remote_id"], "scores": [],
-                            "result": {"error": "SDK did not return an experiment item result"}}
+                            "result": {"error": "SDK did not return an experiment item result"},
+                            "result_is_execution_wrapper": True}
                            for item in items if item["remote_id"] not in returned)
+            from .utils import artifact_execution_fields
+            for row in reports:
+                row.setdefault("result_is_execution_wrapper", not natural)
+                captured = result_store.get(row["id"])
+                if captured is not None:
+                    row.update(artifact_execution_fields(captured))
             experiments.append({"name": name, "passed": passed, "dataset_run_id": result.dataset_run_id,
                                 "url": public_experiment_url(result.dataset_run_url), "item_count": len(result.item_results), "items": reports})
     if client is not None:

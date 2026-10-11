@@ -1,4 +1,4 @@
-"""Command-line launcher for the Framewise backend."""
+"""Command-line launcher for the VOD Review backend."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the Framewise backend server")
+    parser = argparse.ArgumentParser(description="Run the VOD Review backend server")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--reload", action="store_true")

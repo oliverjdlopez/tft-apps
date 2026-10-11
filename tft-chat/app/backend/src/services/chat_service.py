@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
-import re
 import time
 from collections.abc import AsyncIterator, Mapping, Sequence
+from contextlib import aclosing
 from typing import Any
 
 from agents import Agent, MaxTurnsExceeded, Runner
-from domain.tools.evidence import EvidenceStore
 from agents.run_internal.items import run_items_to_input_items
 from agents.tracing import trace
 
@@ -17,25 +17,13 @@ from core.config import load_config
 from common.langfuse_tracing import development_trace
 from domain.assistants import (
     SPECS_DIR,
-    assistant_handoff_names,
     assistant_reachable_tool_names,
     assistant_spec,
-    assistant_tool_names,
-    build_assistant_instructions,
-    create_assistant,
+    Assistant,
     list_assistants,
 )
 from domain.assistants.constants import AssistantName
-from domain.providers.context import (
-    DEFAULT_CONTEXT_PROVIDER,
-    ContextProvider,
-    ContextSnippet,
-)
-from domain.providers.skills import (
-    DEFAULT_SKILL_PROVIDER,
-    SkillDefinition,
-    SkillProvider,
-)
+from domain.runtime.activity import finalize_activity
 from domain.model_catalog import chat_model_specs
 from domain.tools import list_tool_group_metadata, list_tool_metadata
 from services.streaming import stream_agent_events, stream_event
@@ -43,13 +31,6 @@ from services.streaming import stream_agent_events, stream_event
 logger = logging.getLogger(__name__)
 
 CHAT_ASSISTANT_NAME = AssistantName.CHAT
-_FOLLOW_UP_RE = re.compile(
-    r"\b(?:it|its|they|them|their|this|that|these|those|same|one|ones|above|"
-    r"previous)\b"
-    r"|\b(?:what|how)\s+about\b"
-    r"|\b(?:and|also)\s+(?:for|with|about|then)\b",
-    re.IGNORECASE,
-)
 
 ChatMessage = Mapping[str, str]
 
@@ -61,102 +42,6 @@ def _agent_input(messages: Sequence[ChatMessage]) -> list[dict[str, str]]:
         for message in messages
         if message["role"] in {"user", "assistant"}
     ]
-
-
-def _chat_query(messages: Sequence[ChatMessage]) -> str:
-    """Use recent user history only when the latest turn is a follow-up."""
-    prompts = [
-        message["content"].strip()
-        for message in messages
-        if message["role"] == "user"
-    ]
-    prompts = [prompt for prompt in prompts if prompt]
-    if not prompts:
-        return ""
-    latest = prompts[-1]
-    if len(prompts) == 1 or not _FOLLOW_UP_RE.search(latest):
-        return latest
-    return " ".join(prompts[-4:])
-
-
-async def _build_chat_instructions(
-    messages: Sequence[ChatMessage],
-    system: str | None,
-    *,
-    assistant_name: str = CHAT_ASSISTANT_NAME,
-    context_provider: ContextProvider = DEFAULT_CONTEXT_PROVIDER,
-    skill_provider: SkillProvider = DEFAULT_SKILL_PROVIDER,
-    timing: dict[str, Any] | None = None,
-) -> tuple[
-    str,
-    dict[str, str],
-    tuple[ContextSnippet, ...],
-    tuple[SkillDefinition, ...],
-]:
-    """Select request resources and prepare root and handoff instructions.
-
-    Args:
-        messages: Conversation messages used to select request resources.
-        system: Optional caller instructions prepended to the root prompt.
-        assistant_name: Registered assistant used as the root graph node.
-        context_provider: Repository context selector and renderer.
-        skill_provider: Repository skill selector and renderer.
-        timing: Optional request timing record to populate.
-
-    Returns:
-        Root instructions, handoff overrides, context references, and skills.
-    """
-    query = _chat_query(messages)
-    set_number = load_config().chat.set_number
-    stage_started = time.perf_counter()
-    references = (
-        tuple(await context_provider.aselect(query, set_number=set_number))
-        if query.strip()
-        else ()
-    )
-    if timing is not None:
-        timing["context_selection_ms"] = round(
-            (time.perf_counter() - stage_started) * 1000, 3
-        )
-    stage_started = time.perf_counter()
-    skills = tuple(await skill_provider.aselect(query))
-    if timing is not None:
-        timing["skill_selection_ms"] = round(
-            (time.perf_counter() - stage_started) * 1000, 3
-        )
-    stage_started = time.perf_counter()
-    base_instructions = assistant_spec(assistant_name).system_prompt
-    if system:
-        base_instructions = f"{system}\n\n{base_instructions}"
-    root_instructions = build_assistant_instructions(
-        assistant_name,
-        query,
-        context_provider=context_provider,
-        skill_provider=skill_provider,
-        base_instructions=base_instructions,
-        references=references,
-    )
-    handoff_instructions = {
-        name: build_assistant_instructions(
-            name,
-            query,
-            context_provider=context_provider,
-            skill_provider=skill_provider,
-            skills=skills,
-            references=references,
-        )
-        for name in assistant_handoff_names(assistant_name)
-    }
-    if timing is not None:
-        timing["instruction_assembly_ms"] = round(
-            (time.perf_counter() - stage_started) * 1000, 3
-        )
-    return (
-        root_instructions,
-        handoff_instructions,
-        references,
-        skills,
-    )
 
 
 async def stream_chat(
@@ -185,17 +70,17 @@ async def stream_chat(
     Yields:
         Plain assistant text and encoded browser activity events.
     """
-    (
-        root_instructions,
-        handoff_instructions,
-        references,
-        skills,
-    ) = await _build_chat_instructions(
-        messages,
-        system,
-        assistant_name=assistant_name,
-        timing=timing,
+    config = load_config()
+    request_label = request_id or "unknown"
+    assistant = Assistant(
+        assistant_name, model=model, set_number=config.chat.set_number, surface="chat",
     )
+    invocation = await assistant.prepare(
+        messages, system=system, request_id=request_label, timing=timing,
+    )
+    run_context = invocation.context
+    resources = run_context.resources
+    references, skills = resources.references, resources.skills
     for reference in references:
         yield stream_event(
             {
@@ -216,22 +101,21 @@ async def stream_chat(
                 "path": skill.path,
             }
         )
-    reachable_tool_names = assistant_reachable_tool_names(assistant_name)
+    reachable_tool_names = assistant.reachable_tool_names
     setup_started = time.perf_counter()
     tools_by_name = {
         tool["name"]: tool for tool in list_tool_metadata(reachable_tool_names)
     }
     started_at = time.perf_counter()
-    request_label = request_id or "unknown"
     reachable_groups = list_tool_group_metadata(reachable_tool_names)
-    with development_trace(_agent_input(messages), enabled=load_config().chat.langfuse_tracing) as development, trace(
+    with development_trace(_agent_input(messages), enabled=config.chat.langfuse_tracing) as development, trace(
         "chat_tft",
         metadata={
             "assistant": assistant_name,
             "model": model_name,
             "message_count": str(len(messages)),
             "direct_tool_names": ",".join(
-                assistant_tool_names(assistant_name)
+                assistant.tool_names
             ),
             "tool_names": ",".join(reachable_tool_names),
             "tool_group_names": ",".join(
@@ -247,22 +131,20 @@ async def stream_chat(
         yield stream_event(
             {"type": "trace", "name": chat_trace.name, "trace_id": trace_label}
         )
-        agent = create_assistant(
-            assistant_name,
-            instructions=root_instructions,
-            model=model,
-            instructions_by_name=handoff_instructions,
-        )
-        evidence_store = EvidenceStore()
+        agent = invocation.agent
+        hooks = invocation.hooks
         result = Runner.run_streamed(
             agent,
-            input=_agent_input(messages),
-            context=evidence_store,
+            input=invocation.input,
+            context=run_context,
+            hooks=hooks,
             max_turns=max_tool_rounds + 1,
         )
         if timing is not None:
             timing["agent_setup_ms"] = round(
-                (time.perf_counter() - setup_started) * 1000, 3
+                timing.get("agent_setup_ms", 0)
+                + (time.perf_counter() - setup_started) * 1000,
+                3,
             )
 
         def mark_model_event() -> None:
@@ -279,61 +161,71 @@ async def stream_chat(
                     (time.perf_counter() - timing["started_at"]) * 1000, 3
                 )
         try:
-            async for chunk in stream_agent_events(
-                result,
-                tools_by_name=tools_by_name,
-                request_id=request_label,
-                trace_id=trace_label,
-                evidence_store=evidence_store,
-                on_model_event=mark_model_event,
-                on_text_delta=mark_text_delta,
-            ):
-                yield chunk
-        except MaxTurnsExceeded as e:
-            logger.warning(
-                "chat tool limit reached; generating tool-free response request_id=%s trace_id=%s elapsed_ms=%.1f",
-                request_label,
-                trace_label,
-                (time.perf_counter() - started_at) * 1000,
-            )
-            final_agent = Agent(
-                name=(
-                    "chat_tft_final_response"
-                    if assistant_name == CHAT_ASSISTANT_NAME
-                    else f"{assistant_name}_final_response"
-                ),
-                instructions=root_instructions,
-                model=model,
-                model_settings=assistant_spec(assistant_name).model_settings(),
-                tools=[],
-                handoffs=[],
-            )
-            run_data = getattr(e, "run_data", None)
-            new_items = getattr(run_data, "new_items", None)
-            replay_items = run_items_to_input_items(new_items) if new_items else []
-            stop_prompt = (
-                SPECS_DIR / CHAT_ASSISTANT_NAME / "tool-loop-stop.md"
-            ).read_text(encoding="utf-8").strip()
-            final_result = Runner.run_streamed(
-                final_agent,
-                input=[
-                    *_agent_input(messages),
-                    *replay_items,
-                    {"role": "user", "content": stop_prompt},
-                ],
-                max_turns=1,
-                context=evidence_store,
-            )
-            async for chunk in stream_agent_events(
-                final_result,
-                tools_by_name={},
-                request_id=request_label,
-                trace_id=trace_label,
-                evidence_store=evidence_store,
-                on_model_event=mark_model_event,
-                on_text_delta=mark_text_delta,
-            ):
-                yield chunk
+            try:
+                async with aclosing(stream_agent_events(
+                    result,
+                    tools_by_name=tools_by_name,
+                    request_id=request_label,
+                    trace_id=trace_label,
+                    run_context=run_context,
+                    on_model_event=mark_model_event,
+                    on_text_delta=mark_text_delta,
+                )) as events:
+                    async for chunk in events:
+                        yield chunk
+            except MaxTurnsExceeded as e:
+                logger.warning(
+                    "chat tool limit reached; generating tool-free response request_id=%s trace_id=%s elapsed_ms=%.1f",
+                    request_label,
+                    trace_label,
+                    (time.perf_counter() - started_at) * 1000,
+                )
+                final_agent = Agent(
+                    name=(
+                        "chat_tft_final_response"
+                        if assistant_name == CHAT_ASSISTANT_NAME
+                        else f"{assistant_name}_final_response"
+                    ),
+                    instructions=agent.instructions,
+                    model=model,
+                    model_settings=agent.model_settings,
+                    tools=[],
+                    handoffs=[],
+                )
+                run_data = getattr(e, "run_data", None)
+                new_items = getattr(run_data, "new_items", None)
+                replay_items = run_items_to_input_items(new_items) if new_items else []
+                stop_prompt = (
+                    SPECS_DIR / CHAT_ASSISTANT_NAME / "tool-loop-stop.md"
+                ).read_text(encoding="utf-8").strip()
+                final_result = Runner.run_streamed(
+                    final_agent,
+                    input=[
+                        *invocation.input,
+                        *replay_items,
+                        {"role": "user", "content": stop_prompt},
+                    ],
+                    max_turns=1,
+                    context=run_context,
+                    hooks=hooks,
+                )
+                async with aclosing(stream_agent_events(
+                    final_result,
+                    tools_by_name={},
+                    request_id=request_label,
+                    trace_id=trace_label,
+                    run_context=run_context,
+                    on_model_event=mark_model_event,
+                    on_text_delta=mark_text_delta,
+                )) as events:
+                    async for chunk in events:
+                        yield chunk
+        except (asyncio.CancelledError, GeneratorExit):
+            finalize_activity(run_context, cancelled=True)
+            raise
+        except BaseException:
+            finalize_activity(run_context, cancelled=False)
+            raise
         if development is not None:
             try:
                 development.update(output=str((final_result if 'final_result' in locals() else result).final_output))

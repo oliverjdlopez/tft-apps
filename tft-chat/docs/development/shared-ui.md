@@ -7,12 +7,12 @@ The Electron shell uses matching plain CSS and retains its 48px navigation bar.
 
 ## Canonical sources and generation
 
-ChatTFT's `app/frontend/src/theme.css` is the canonical theme. The local independent
-`vod-review` and `vod-review-wt2` checkouts currently use their own `styles.css`
-and do not contain the shared `frontend/src/theme.css` previously described here.
-There is no shared runtime package or monorepo; updating ChatTFT does not restyle
-those applications.
-ChatTFT stays JavaScript/JSX; both video frontends stay TypeScript/TSX.
+ChatTFT's `app/frontend/src/theme.css` is the canonical theme source. The sibling
+`../vod-review/frontend/src/theme.css` retains its own fixed dark application
+theme and local primitives. VOD Review and Wisps are persistent views of that
+one TypeScript frontend. Both application builds and dependency environments
+remain independent inside this repository; no shared runtime package is introduced.
+ChatTFT stays JavaScript/JSX and the VOD frontend stays TypeScript/TSX.
 
 The initial component sources were generated with **shadcn CLI 4.21.0**:
 **New York**, **neutral**, **Radix**, **Lucide**, CSS variables enabled, RSC off.
@@ -39,7 +39,7 @@ Local adaptations to preserve during regeneration:
 - Tabs lists and triggers use automatic height (36px/32px minimums) so wrapped
   lists fit. Existing conditional panels have explicit accessible tab relationships.
 - Sidebar state belongs to the existing application local-storage contract.
-  The generated Sidebar cookie write is removed in all three copies.
+  The generated Sidebar cookie write is removed in both application copies.
 - Shared component imports use the local `@/lib/utils`, not an npm `cn` package.
 - `components/shared` owns application adapters, rather than editing Radix behavior
   at individual call sites: retained-content disclosures, asynchronous confirmations,
@@ -95,7 +95,7 @@ operation; Escape returns focus to the invoking control. Annotation shortcuts
 ignore an open confirmation. A2UI local controls retain local behavior and existing
 allowlisted investigation requests.
 
-## Updating the three independent builds
+## Updating the two application builds
 
 1. Make the component/theme change in ChatTFT. Review upstream diffs before
    replacing local sources. For additions, use the pinned command from the frontend:
@@ -105,20 +105,20 @@ allowlisted investigation requests.
    ```
 
 2. When a change also targets video frontends, first verify their current component
-   and theme setup. Checkouts using the shared theme should receive an exact copy;
-   older checkouts need a separate migration. Do not copy App, annotation, API, or
-   upload logic between the video branches: their feature sets differ.
-3. Mirror changed palette/typography values in `desktop/workspace.css` and
-   `desktop/status.css`. Both are already included in immutable Windows staging;
+   and theme setup. Keep the sibling VOD theme and primitive sources local;
+   port intended theme/component changes without replacing its App, annotation,
+   API or upload logic. Validate both VOD Review and Wisps views.
+3. Mirror changed palette/typography values in `../desktop/workspace.css` and
+   `../desktop/status.css`. Both are already included in immutable Windows staging;
    CSS changes produce a new shell hash. No shell React build is needed.
 4. In each frontend run `npm ci`, `npm test`, and `npm run build`. Run
-   `npm --prefix desktop test` after shell changes. Inspect component event payloads,
+   `npm --prefix desktop test` from the suite root after shell changes. Inspect component event payloads,
    keyboard navigation, focus return, disabled/loading states, and retained mounts.
 5. Capture the same fixture states at 1440, 1024, and 390px. Inspect internal table
    scrolling, toolbar wrapping, and video/canvas rectangles at each width. Separately
    validate native Windows tab switching, shortcuts, recovery, and staged assets.
 
-See [web runtime](../architecture/web-runtime.md), [desktop validation](../apps/desktop.md#validation),
+See [web runtime](../architecture/web-runtime.md), [desktop validation](../../../docs/verification.md),
 and [migration validation](shared-ui-validation.md). Upstream setup references:
 [existing Vite app](https://ui.shadcn.com/docs/installation/vite) and
 [JavaScript generation](https://ui.shadcn.com/docs/javascript).

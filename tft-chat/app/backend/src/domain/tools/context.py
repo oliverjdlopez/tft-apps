@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from agents import function_tool
+from agents.tool_context import ToolContext
 from pydantic import BaseModel, ConfigDict, Field
 
 from core.config import load_config
+from domain.runtime.models import AssistantRunContext
 from domain.types import AssistantToolGroup
 
 
@@ -38,6 +40,7 @@ def _context_provider():
 
 @function_tool(strict_mode=True)
 async def request_additional_context(
+    ctx: ToolContext[Any],
     request: AdditionalContextRequest,
 ) -> dict[str, object]:
     """Retrieve complete relevant collections from curated TFT references.
@@ -51,10 +54,16 @@ async def request_additional_context(
     from the game. Arbitrary local files are never accessible.
     """
     query = request.query.strip()
-    provider = _context_provider()
+    run_context = ctx.context
+    if isinstance(run_context, AssistantRunContext):
+        provider = run_context.context_provider
+        set_number = run_context.runtime.set_number
+    else:
+        provider = _context_provider()
+        set_number = load_config().chat.set_number
     snippets = await provider.aselect(
         query,
-        set_number=load_config().chat.set_number,
+        set_number=set_number,
     )
     return {
         "query": query,

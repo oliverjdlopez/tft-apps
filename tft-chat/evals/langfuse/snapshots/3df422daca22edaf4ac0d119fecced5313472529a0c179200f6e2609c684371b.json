@@ -1,0 +1,39 @@
+{
+  "config": {
+    "action": "run",
+    "cases": [],
+    "concurrency": 4,
+    "data_snapshot_label": null,
+    "dataset_version": null,
+    "repetitions": 1,
+    "selection_live": false,
+    "snapshot": null,
+    "variants": [
+      {
+        "model": null,
+        "name": "baseline",
+        "prompts": {}
+      }
+    ]
+  },
+  "dataset_name": "trait-expert",
+  "items": [],
+  "prompts": {},
+  "schema_version": 3,
+  "schemas": {
+    "expected_output": null,
+    "input": {
+      "type": "string"
+    }
+  },
+  "suite": {
+    "assistant": "chat",
+    "database": null,
+    "description": "Set 18 traits investigations from the original subject lanes. Evidence gathering and answer coverage; numerical gold unverified. Uses chat until a trait_expert assistant is registered.",
+    "execution": "live",
+    "family": "assistant",
+    "managed_workflow": true,
+    "max_turns": 40,
+    "name": "trait-expert"
+  }
+}

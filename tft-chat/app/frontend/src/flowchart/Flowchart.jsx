@@ -67,6 +67,7 @@ export default function Flowchart() {
   const timer = useRef(null);
   const inflight = useRef(null);
   const conflicted = useRef(false);
+  const mounted = useRef(true);
   // A workspace to open once a source switch has reloaded the list.
   const preferred = useRef(null);
 
@@ -101,7 +102,7 @@ export default function Flowchart() {
         }
       } finally {
         inflight.current = null;
-        if (succeeded && draft.current) timer.current = setTimeout(flush, SAVE_DELAY_MS);
+        if (succeeded && draft.current && mounted.current) timer.current = setTimeout(flush, SAVE_DELAY_MS);
       }
     })();
     return inflight.current;
@@ -122,9 +123,14 @@ export default function Flowchart() {
   }, [flush]);
 
   useEffect(() => {
+    mounted.current = true;
     const beforeUnload = () => { flush(); };
     window.addEventListener("beforeunload", beforeUnload);
-    return () => window.removeEventListener("beforeunload", beforeUnload);
+    return () => {
+      mounted.current = false;
+      clearTimeout(timer.current);
+      window.removeEventListener("beforeunload", beforeUnload);
+    };
   }, [flush]);
 
   const refresh = useCallback(async (nextSource) => {
@@ -309,7 +315,7 @@ export default function Flowchart() {
     if (!file) return;
     run(async () => {
       const parsed = PatchWorkspaceSchema.safeParse(JSON.parse(await file.text()));
-      if (!parsed.success) throw new Error(`${file.name} is not a flowchart.v1 workspace.`);
+      if (!parsed.success) throw new Error(`${file.name} is not a flowchart.v1 or flowchart.v2 workspace.`);
       await importDocument(parsed.data);
     });
   };
@@ -418,6 +424,7 @@ export default function Flowchart() {
             readOnly={readOnly}
             onChange={onCanvasChange}
             onSaveGroup={saveGroup}
+            workspaceKey={`${record.source}:${record.id}`}
             insertRef={insertRef}
           />
         </> : <>

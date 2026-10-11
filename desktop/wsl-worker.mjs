@@ -27,7 +27,7 @@ function start(spec) {
   // A private process group permits bounded cleanup of build subprocesses too;
   // no distro-wide shutdown or process-name-based termination is used.
   child = spawn(spec.command, spec.args, {
-    env: spec.env, detached: true, shell: false, stdio: ["pipe", "inherit", "inherit"],
+    cwd: spec.cwd, env: spec.env, detached: true, shell: false, stdio: ["pipe", "inherit", "inherit"],
   });
   child.stdin.on("error", () => {});
   child.on("error", () => {

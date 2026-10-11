@@ -2,24 +2,19 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import Any
 
-from agents import Agent
 
-from domain.assistants.assistants import (
-    build_assistant as _build_assistant,
-    build_assistant_instructions,
-    render_input as _render_input,
-)
 from domain.assistants.registry import AssistantRegistry, assistant_registry
+from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import (
     ASSISTANT_SPECS_DIR,
     SPECS_DIR,
     AssistantSpec,
     load_assistant_spec,
 )
-from domain.assistants.token_logging import log_agent_graph
+from domain.assistants.assistant import Assistant
+from domain.assistants.models import AssistantInvocation
 
 
 _ASSISTANT_REGISTRY = assistant_registry
@@ -137,67 +132,22 @@ def reload_assistant_specs() -> None:
     _ASSISTANT_REGISTRY.reload()
 
 
-def create_assistant(
-    name: str,
-    *,
-    model: object | None = None,
-    instructions: Any | None = None,
-    instructions_by_name: Mapping[str, Any] | None = None,
-    output_type: type[Any] | None = None,
-) -> Agent[Any]:
-    """Construct a fresh SDK assistant graph from the registry.
-
-    Args:
-        name: Root registered assistant name.
-        model: Optional model override propagated through the graph.
-        instructions: Optional root instruction override.
-        instructions_by_name: Optional instruction overrides by assistant name.
-        output_type: Optional structured output type for the root agent.
-
-    Returns:
-        A fresh SDK agent with fresh handoff agents.
-    """
-    _configure_tools()
-    agent = _build_assistant(
-        _ASSISTANT_REGISTRY,
-        name,
-        model=model,
-        instructions=instructions,
-        instructions_by_name=instructions_by_name,
-        output_type=output_type,
-    )
-    log_agent_graph(agent, task_prompt=_ASSISTANT_REGISTRY.get_spec(name).task_prompt)
-    return agent
-
-
-def render_assistant_input(name: str, input_text: str) -> str:
-    """Apply an assistant's optional task wrapper to SDK run input.
-
-    Args:
-        name: Registered assistant name.
-        input_text: Raw SDK run input.
-
-    Returns:
-        Input text with the optional task prompt applied.
-    """
-    return _render_input(_ASSISTANT_REGISTRY, name, input_text)
-
 
 __all__ = [
     "ASSISTANT_SPECS_DIR",
     "SPECS_DIR",
     "AssistantRegistry",
+    "Assistant",
+    "AssistantInvocation",
     "assistant_handoff_names",
     "assistant_reachable_tool_names",
     "assistant_spec",
     "assistant_skill_names",
     "assistant_tool_names",
     "assistant_tools",
-    "build_assistant_instructions",
-    "create_assistant",
     "list_assistants",
     "load_assistant_spec",
+    "prepare_resources",
     "reload_assistant_specs",
-    "render_assistant_input",
     "resolve_assistant_tools",
 ]

@@ -5,8 +5,8 @@ from types import SimpleNamespace
 import pytest
 
 from domain.tasks import transcript
-from domain.assistants import render_assistant_input
 from domain.assistants import assistant_spec
+from domain.assistants.utils import wrap_task_input
 from services import task_service
 
 
@@ -19,36 +19,26 @@ def test_transcription_pipeline_runs_the_three_assistants_in_order(monkeypatch) 
         "analyze_transcript": "analysis",
     }
 
-    monkeypatch.setattr(
-        transcript,
-        "create_assistant",
-        lambda name, **_kwargs: SimpleNamespace(name=name),
-    )
-    monkeypatch.setattr(
-        transcript,
-        "build_assistant_instructions",
-        lambda name, _input: assistant_spec(name).system_prompt,
-    )
-
-    def fake_run_sync(agent, *, input):
+    async def fake_run(agent, *, input, context, hooks, **kwargs):
+        """Observe wrapped input and typed context without model execution."""
+        from domain.runtime import AssistantRunContext
+        assert isinstance(context, AssistantRunContext)
+        assert callable(agent.instructions)
         calls.append((agent.name, input))
         return SimpleNamespace(final_output=outputs[agent.name])
 
-    monkeypatch.setattr(transcript.Runner, "run_sync", fake_run_sync)
+    monkeypatch.setattr("domain.assistants.assistant.Runner.run", fake_run)
 
     assert transcript.run_transcription_pipeline(original) == "analysis"
     assert calls == [
-        ("clean_transcript", render_assistant_input("clean_transcript", original)),
+        ("clean_transcript", wrap_task_input(original, assistant_spec("clean_transcript").task_prompt)),
         (
             "compact_transcript",
-            render_assistant_input(
-                "compact_transcript",
-                '{"id": 1, "text": "hello"}\n{"id": 2, "text": "world"}',
-            ),
+            wrap_task_input('{"id": 1, "text": "hello"}\n{"id": 2, "text": "world"}', assistant_spec("compact_transcript").task_prompt),
         ),
         (
             "analyze_transcript",
-            render_assistant_input("analyze_transcript", "compact transcript"),
+            wrap_task_input("compact transcript", assistant_spec("analyze_transcript").task_prompt),
         ),
     ]
 

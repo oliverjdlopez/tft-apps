@@ -29,12 +29,16 @@ def test_down_preserves_volumes(tmp_path: Path, monkeypatch) -> None:
 def test_start_seeds_before_worker_and_does_not_print_secrets(tmp_path: Path, capsys, monkeypatch) -> None:
     """Startup seeds missing content before accepting UI experiment requests."""
     monkeypatch.setenv("LANGFUSE_TEST_DEPLOYMENT", "1")
+    (tmp_path / ".env").write_text("LANGFUSE_INIT_USER_EMAIL=custom@example.test\nLANGFUSE_INIT_USER_PASSWORD=private-test-value\n")
     with patch.object(launcher.subprocess, "run"), patch.object(launcher, "prepare_environment", return_value=tmp_path / ".env"), patch.object(launcher, "compose") as compose:
         launcher.up(open_browser=False)
     calls = [call.args[0] for call in compose.call_args_list]
     assert calls[3] == ["run", "--rm", "--no-deps", "experiments", "python", "-m", "evals.langfuse.seed"]
     assert calls[4][-1] == "experiments"
-    assert "LANGFUSE_INIT_USER_PASSWORD" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "Login: custom@example.test" in output
+    assert "LANGFUSE_INIT_USER_PASSWORD" in output
+    assert "private-test-value" not in output
 
 
 def test_provenance_detects_untracked_content(tmp_path: Path) -> None:
@@ -64,6 +68,7 @@ def test_run_exports_effective_definition_before_execution(tmp_path: Path, monke
     bundle["config"]["action"] = "export"
     original = content.export_snapshot(bundle, tmp_path)
     monkeypatch.setattr(launcher, "SNAPSHOT_ROOT", tmp_path)
+    monkeypatch.setenv("LANGFUSE_RUNTIME_DIR", str(tmp_path / "runtime"))
     received = []
 
     def evaluate(value, client=None):
@@ -112,7 +117,7 @@ def test_host_environment_preserves_local_database_and_credentials(tmp_path, mon
     environment = host_runner_environment(root)
     assert environment['RDS_HOST'] == '127.0.0.1'
     assert environment['RDS_PASSWORD'] == 'private'
-    assert environment['LANGFUSE_BASE_URL'] == 'http://localhost:15500'
+    assert environment['LANGFUSE_BASE_URL'] == 'http://localhost:15510'
     assert environment['LANGFUSE_SECRET_KEY'] == 'platform-secret'
 
 
