@@ -656,7 +656,7 @@ def download_audio_url_local(url: str, task_id: str, progress_callback: Callable
     if not is_supported_video_url(url):
         raise HTTPException(status_code=400, detail="Enter a valid Twitch or YouTube video URL")
     output_template = str(db.DOWNLOAD_DIR / f"{task_id}.%(ext)s")
-    command = [sys.executable, "-m", "yt_dlp", "--no-playlist", "--format", "bestaudio/best", "--no-quiet", "--no-warnings", "--progress", "--newline", "--color", "never", "--progress-template", "download:FRAMEWISE_PROGRESS=%(info.format_id)s\\t%(info.vcodec|none)s\\t%(info.acodec|none)s\\t%(info.duration|0)s\\t%(progress)j", "--output", output_template, "--print", "after_move:FRAMEWISE_PATH=%(filepath)s", "--", url.strip()]
+    command = [sys.executable, "-m", "yt_dlp", "--no-playlist", "--format", "bestaudio", "--no-quiet", "--no-warnings", "--progress", "--newline", "--color", "never", "--progress-template", "download:FRAMEWISE_PROGRESS=%(info.format_id)s\\t%(info.vcodec|none)s\\t%(info.acodec|none)s\\t%(info.duration|0)s\\t%(progress)j", "--output", output_template, "--print", "after_move:FRAMEWISE_PATH=%(filepath)s", "--", url.strip()]
     try:
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         output_lines: list[str] = []

@@ -109,6 +109,11 @@ completes. The desktop **Media** tab lists these under **Text / transcripts**.
 Names match the source VOD when available, and metadata records the task, video
 and detected language. Both backends can read the same portable reference.
 
+In VOD Review, select a library video and click **View transcript** to open its
+saved text and detected language in a modal. Completed transcription-only URL
+imports use the same modal. Text stays hidden until requested; shared catalogue
+publication still happens automatically when recognition completes.
+
 Backend startup also shares existing completed transcripts without downloading
 or recognizing them again. Repeated recovery reuses verified matching snapshots;
 missing/corrupt shared files can be restored from local text. If storage is

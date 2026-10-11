@@ -95,6 +95,85 @@ def test_download_format_caps_quality_without_falling_back_above_the_cap():
     assert "best[ext=mp4]" not in selector
 
 
+def test_audio_download_requires_an_audio_only_stream(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    monkeypatch.setattr(db_module, "DOWNLOAD_DIR", tmp_path)
+    output = tmp_path / "audio-task.m4a"
+    captured_command = []
+
+    class FakeProcess:
+        def __init__(self, command, **kwargs):
+            captured_command.extend(command)
+            output.write_bytes(b"audio")
+            self.stdout = iter([f"FRAMEWISE_PATH={output}\n"])
+
+        def wait(self):
+            return 0
+
+    monkeypatch.setattr(app_module.subprocess, "Popen", FakeProcess)
+    assert app_module.download_audio_url("https://youtu.be/example", "audio-task") == output
+    assert captured_command[captured_command.index("--format") + 1] == "bestaudio"
+
+
+@pytest.mark.parametrize("transcription_fails", [False, True])
+def test_audio_url_import_automatically_transcribes_and_persists_result(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, transcription_fails: bool,
+):
+    monkeypatch.setattr(db_module, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(db_module, "VIDEO_DIR", tmp_path / "videos")
+    monkeypatch.setattr(db_module, "DOWNLOAD_DIR", tmp_path / "downloads")
+    monkeypatch.setattr(db_module, "DB_PATH", tmp_path / "vod.sqlite3")
+    db_module.init_db()
+    audio = db_module.DOWNLOAD_DIR / "audio.m4a"
+    calls = []
+
+    def fake_download(url, task_id, progress_callback):
+        calls.append("download")
+        audio.write_bytes(b"audio")
+        progress_callback(100)
+        return audio
+
+    def fake_transcribe(path):
+        calls.append("transcribe")
+        assert Path(path) == audio
+        if transcription_fails:
+            raise RuntimeError("Recognition unavailable")
+        return "Recognized speech.", "en"
+
+    def unexpected_video(*args, **kwargs):
+        pytest.fail("Audio import must not download or prepare video")
+
+    async def direct_to_thread(function, *args):
+        return function(*args)
+
+    monkeypatch.setattr(app_module.asyncio, "to_thread", direct_to_thread)
+    monkeypatch.setattr(app_module, "download_audio_url", fake_download)
+    monkeypatch.setattr(app_module, "_transcribe_audio_file", fake_transcribe)
+    monkeypatch.setattr(app_module, "download_video_url", unexpected_video)
+    monkeypatch.setattr(app_module, "start_playback_preparation", unexpected_video)
+
+    async def exercise():
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app_module.app), base_url="http://test") as client:
+            response = await client.post("/api/videos/from-url", json={
+                "url": "https://youtu.be/example", "media_type": "audio", "transcribe": True,
+            })
+            assert response.status_code == 202
+            task_id = response.json()["task_id"]
+            await asyncio.wait_for(app_module.DOWNLOAD_TASKS[task_id], timeout=5)
+            return (await client.get(f"/api/downloads/{task_id}")).json()
+
+    result = asyncio.run(exercise())
+    assert calls == ["download", "transcribe"]
+    assert result["media_type"] == "audio"
+    assert result["video"] is None
+    assert audio.is_file()
+    assert result["status"] == ("failed" if transcription_fails else "completed")
+    if transcription_fails:
+        assert result["transcription"]["error"] == "Recognition unavailable"
+    else:
+        assert result["transcription"]["transcript"] == "Recognized speech."
+        assert result["transcription"]["language"] == "en"
+
+
 def test_video_probe_uses_pyav_without_ffprobe(monkeypatch: pytest.MonkeyPatch):
     closed = False
 
