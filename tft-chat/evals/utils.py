@@ -758,23 +758,6 @@ def render_judge_prompt(template: str, item: dict, result: dict, rubric: str) ->
     return re.sub(r"{{\s*(rubric|output|input)\s*}}", lambda match: values[match.group(1)], template)
 
 
-def eval_graph_instructions(name: str, prompt: str, candidates: dict) -> dict[str, str]:
-    """Assemble each reachable assistant's frozen base with its own context policy."""
-    from domain.assistants import assistant_handoff_names, build_assistant_instructions
-    instructions = {}
-    pending = [name]
-    while pending:
-        current = pending.pop()
-        if current in instructions:
-            continue
-        candidate = candidates.get(current)
-        instructions[current] = build_assistant_instructions(
-            current, prompt, base_instructions=candidate["text"] if candidate else None)
-        pending.extend(assistant_handoff_names(current))
-    return instructions
-
-
-
 def frozen_langfuse_prompt(prompt: dict[str, Any] | None) -> Any:
     """Reconstruct an SDK prompt reference from frozen text without fetching edits."""
     if prompt is None or ("native_reference" in prompt and prompt["native_reference"] is None):

@@ -81,7 +81,11 @@ def test_live_execution_uses_neutral_worker_protocol(monkeypatch) -> None:
     monkeypatch.setattr(execution, "isolated_operation", operation)
     bundle = suite_bundle("chat")
     item = bundle["items"][0]
-    result = execution.execute_attempt(bundle["suite"], item, {}, bundle["prompts"])
+    from evals.langfuse.assistant_workspace import current_execution
+    variants = bundle["config"]["variants"]
+    captured = current_execution(bundle["suite"], variants)
+    suite = {**bundle["suite"], "captured_graphs": captured["graphs"]}
+    result = execution.execute_attempt(suite, item, variants[0], bundle["prompts"])
     assert result["output"] == "native call"
     assert calls[0][0]["input"] == legacy_execution_item(item)["input"]
     assert calls[0][0]["operation"] == "evaluate"
@@ -115,39 +119,28 @@ def test_assistant_execution_uses_real_assembly_and_scoped_target(monkeypatch) -
         """Supply a deterministic trace ID without contacting the dashboard."""
         yield SimpleNamespace(trace_id="trace_test")
 
-    def instructions(name, prompt, **kwargs):
-        """Observe the same dynamic instruction assembly used in production."""
-        calls["instructions"] = (name, prompt, kwargs)
-        assert calls["in_scope"]
-        return "assembled prompt"
+    from evals import assistant_execution
 
-    def create(name, **kwargs):
-        """Capture graph construction and its model override."""
-        calls["create"] = (name, kwargs)
-        return SimpleNamespace(model=kwargs["model"])
-
-    def run(agent, **kwargs):
-        """Stand in for network execution while preserving the SDK result shape."""
-        assert calls["in_scope"]
-        calls["run"] = kwargs
-        return SimpleNamespace(final_output="answer", new_items=[], last_agent=SimpleNamespace(name="chat"),
+    def run(prompt, config):
+        """Stand in for a prepared invocation while observing database ownership."""
+        assert calls['in_scope']
+        calls['config'] = config
+        result = SimpleNamespace(final_output='answer', new_items=[], last_agent=SimpleNamespace(name='chat'),
             context_wrapper=SimpleNamespace(usage=SimpleNamespace(input_tokens=10, output_tokens=2, total_tokens=12, requests=1)))
+        return result, {'instruction_hashes': {'chat': 'hash'}}
 
-    monkeypatch.setattr(worker, "resolve_eval_target", lambda _: SimpleNamespace(database="eval-snapshot"))
-    monkeypatch.setattr(worker, "eval_database_override", database_scope)
-    monkeypatch.setattr(assistants, "build_assistant_instructions", instructions)
-    monkeypatch.setattr(assistants, "create_assistant", create)
-    monkeypatch.setattr(assistants, "assistant_handoff_names", lambda _: [])
-    monkeypatch.setattr(assistants, "render_assistant_input", lambda name, prompt: "wrapped " + prompt)
-    monkeypatch.setattr(agents.Runner, "run_sync", run)
-    monkeypatch.setattr(agents.tracing, "trace", trace_scope)
-    response = worker.run_assistant("question", {"assistant": "chat", "model": "candidate", "prompt_candidates": {"chat": {"text": "new instructions"}}, "max_turns": 7}, {})
-    assert response["output"] == "answer"
-    assert response["metadata"]["tft_trace"]["trace_id"] == "trace_test"
-    assert calls["create"][1] == {"model": "candidate", "instructions": "assembled prompt", "instructions_by_name": {"chat": "assembled prompt"}}
-    assert calls["instructions"][2]["base_instructions"] == "new instructions"
-    assert calls["run"] == {"input": "wrapped question", "max_turns": 7}
-    assert not calls["in_scope"]
+    monkeypatch.setattr(worker, 'resolve_eval_target', lambda _, **kwargs: SimpleNamespace(database='eval-snapshot'))
+    monkeypatch.setattr(worker, 'eval_database_override', database_scope)
+    monkeypatch.setattr(assistant_execution, 'require_capture', lambda config: None)
+    monkeypatch.setattr(assistant_execution, 'run_captured', run)
+    monkeypatch.setattr(agents.tracing, 'trace', trace_scope)
+    response = worker.run_assistant('question', {'assistant': 'chat', 'captured_graph': {}, 'model': 'candidate',
+        'prompt_candidates': {'chat': {'text': 'new instructions'}}, 'max_turns': 7}, {})
+    assert response['output'] == 'answer'
+    assert response['metadata']['tft_trace']['trace_id'] == 'trace_test'
+    assert response['metadata']['instructions_sha256'] == 'hash'
+    assert calls['config']['max_turns'] == 7
+    assert not calls['in_scope']
 
 
 @pytest.mark.parametrize("output", ["5%", "five percent", "1 in 20", "0.05"])

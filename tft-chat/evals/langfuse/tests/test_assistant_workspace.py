@@ -206,6 +206,22 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
         assert 'Frozen task wrapper' in str(root['input'])
         assert result['token_usage']['numRequests'] >= 3
         assert metadata['model_settings']['fixture']['model'] == 'gpt-6-sol'
+        playground = isolated_operation({'operation': 'evaluate', 'config': {
+            'family': 'assistant', 'assistant': 'fixture', 'captured_graph': frozen,
+            'workspace_trial': True, 'surface': 'playground', 'max_turns': 10,
+            'prompt_candidates': {'fixture': {'text': 'Playground draft'}},
+            'model_settings': {'temperature': 0.2, 'max_tokens': 800}},
+            'input': {'input': 'Follow-up', 'messages': [
+                {'role': 'user', 'content': 'Earlier question'},
+                {'role': 'assistant', 'content': 'Earlier reply'},
+                {'role': 'user', 'content': 'Follow-up'}]}}, 30)
+        assert not playground.get('error'), playground
+        assert playground['metadata']['runtime']['surface'] == 'playground'
+        assert playground['metadata']['run_model_settings'] == {'temperature': 0.2, 'max_tokens': 800}
+        root_request = next(row for row in requests if row.get('instructions') == 'Playground draft')
+        assert root_request['temperature'] == 0.2 and root_request['max_output_tokens'] == 800
+        assert 'Earlier reply' in str(root_request['input'])
+        assert 'Frozen task wrapper' in str(root_request['input'])
         failed = isolated_operation({'operation': 'evaluate', 'config': {'family': 'assistant', 'assistant': 'fixture',
             'captured_graph': frozen, 'workspace_trial': True, 'max_turns': 10}, 'input': {'input': 'FAIL_MODEL'}}, 30)
         assert failed['error']
@@ -249,3 +265,33 @@ def test_webhook_default_migration_preserves_authored_settings(monkeypatch, tmp_
         if existing:
             assert writes[0]['enabled'] is False
             assert writes[0]['requestHeaders'] == existing['requestHeaders']
+
+
+def test_live_execution_requires_captures_but_history_stays_readable():
+    """Reject historical runs before client access while retaining archive loading."""
+    from evals.langfuse.experiments import run_bundle
+    from unittest.mock import Mock
+    historical = bundle({})
+    historical.pop('execution')
+    assert 'execution' not in validate_bundle(historical)
+    client = Mock()
+    with pytest.raises(ValueError, match='export a fresh bundle'):
+        run_bundle(historical, client)
+    client.get_dataset.assert_not_called()
+    client.run_experiment.assert_not_called()
+
+
+@pytest.mark.parametrize('fault', ['missing_variant', 'tampered', 'outside_graph'])
+def test_variant_capture_preflight_rejects_invalid_execution(fault):
+    """All variants and prompt candidates must belong to verified captured graphs."""
+    from evals.assistant_execution import require_bundle_captures
+    frozen = graph()
+    value = bundle({'version': 1, 'graphs': {'Active': frozen, 'Draft': deepcopy(frozen)}})
+    if fault == 'missing_variant':
+        value['execution']['graphs'].pop('Draft')
+    elif fault == 'tampered':
+        value['execution']['graphs']['Draft']['specs']['fixture']['system_prompt'] = 'tampered'
+    else:
+        value['config']['variants'][0]['prompts'] = {'unknown': {'text': 'Override'}}
+    with pytest.raises(ValueError):
+        require_bundle_captures(value)

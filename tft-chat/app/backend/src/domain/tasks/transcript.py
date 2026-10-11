@@ -5,13 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from agents import Runner
-
-from domain.assistants import (
-    build_assistant_instructions,
-    create_assistant,
-    render_assistant_input,
-)
+from domain.assistants import Assistant
 from domain.assistants.constants import AssistantName
 from domain.assistants.models import (
     CleanTranscriptOutput,
@@ -52,15 +46,17 @@ def _run_agent_sync(
     *,
     output_type: type[Any] | None = None,
 ) -> Any:
-    agent = create_assistant(
-        name,
-        instructions=build_assistant_instructions(name, input_text),
-        output_type=output_type,
-    )
-    return Runner.run_sync(
-        agent,
-        input=render_assistant_input(name, input_text),
-    ).final_output
+    """Execute one transcript stage with dynamic context and structured output.
+
+    Args:
+        name: Transcript assistant for this pipeline stage.
+        input_text: Output from the preceding stage or original transcript.
+        output_type: Optional machine-consumed output contract.
+
+    Returns:
+        The stage's final structured output or text.
+    """
+    return Assistant(name, output_type=output_type, surface="task").run_sync(input_text).final_output
 
 
 def apply_clean_transcript_edits(

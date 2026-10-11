@@ -99,7 +99,7 @@ def _definition_tokens(definitions: list[dict[str, Any]], *, model: str) -> int:
     return count_tokens(serialized, model=model)
 
 
-def _model_name(agent: Agent[Any]) -> str:
+def agent_model_name(agent: Agent[Any]) -> str:
     """Return a stable configured model name for an SDK agent.
 
     Args:
@@ -228,7 +228,7 @@ def log_agent_graph(agent: Agent[Any], *, task_prompt: str) -> None:
         if id(candidate) in seen:
             return
         seen.add(id(candidate))
-        model = _model_name(candidate)
+        model = agent_model_name(candidate)
         dynamic_instructions = callable(candidate.instructions)
         instructions = (
             candidate.instructions if isinstance(candidate.instructions, str) else ""
@@ -283,6 +283,7 @@ def log_agent_graph(agent: Agent[Any], *, task_prompt: str) -> None:
 
 __all__ = [
     "PROMPT_TOKEN_LOG_PATH",
+    "agent_model_name",
     "count_tokens",
     "log_agent_graph",
     "log_instruction_parts",

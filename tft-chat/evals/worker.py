@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from contextlib import redirect_stdout
-import hashlib
 import json
 import os
 import sys
@@ -10,7 +9,7 @@ from typing import Any
 
 from evals.database import eval_database_override, resolve_eval_target
 from evals.trace import extract_trace
-from evals.utils import selector_case, eval_graph_instructions
+from evals.utils import selector_case
 
 
 def run_assistant(prompt: str, config: dict[str, Any], identity: dict[str, Any]) -> dict[str, Any]:
@@ -24,53 +23,33 @@ def run_assistant(prompt: str, config: dict[str, Any], identity: dict[str, Any])
     Returns:
         Final answer and normalized trace/provenance metadata.
     """
-    from agents import ModelSettings, RunConfig, Runner
     from agents.tracing import trace
-    from domain.assistants import create_assistant, render_assistant_input
+    from common.provenance import source_provenance
+    from common.paths import find_repo_root
+    from evals.assistant_execution import require_capture, run_captured
 
-    name = config["assistant"]
-    target = resolve_eval_target(config.get("database"), require_explicit=bool(config.get("captured_graph")))
-    if config.get('captured_graph'):
-        from domain.assistants.execution import run_captured
-        from common.provenance import source_provenance
-        from common.paths import find_repo_root
-        provenance = source_provenance(find_repo_root())
-        with eval_database_override(target):
-            result, metadata = run_captured(prompt, config)
-        metadata['execution_provenance'] = provenance
-        if result is None:
-            return {'error': metadata['execution_error'], 'output': '', 'token_usage': {},
-                    'metadata': {**metadata, 'database': target.database, 'workspace_lineage': config.get('workspace_lineage')}}
-        captured = extract_trace(result)
-        usage = result.context_wrapper.usage
-        return {'output': result.final_output.model_dump(mode='json') if hasattr(result.final_output, 'model_dump') else result.final_output,
-                'token_usage': {'prompt': usage.input_tokens, 'completion': usage.output_tokens,
-                                'total': usage.total_tokens, 'numRequests': usage.requests},
-                'metadata': {**metadata, 'tft_trace': captured.to_dict(), 'trace_summary': captured.summary(),
-                             'database': target.database, 'workspace_lineage': config.get('workspace_lineage')}}
-    with eval_database_override(target), trace("tft-eval-case", metadata={
-        "suite": identity.get("suite", name), "case": identity.get("case", ""), "assistant": name,
+    require_capture(config)
+    target = resolve_eval_target(config.get('database'), require_explicit=True)
+    provenance = source_provenance(find_repo_root())
+    with eval_database_override(target), trace('tft-eval-case', disabled=bool(config.get('workspace_trial')), metadata={
+        'suite': identity.get('suite', config['assistant']), 'case': identity.get('case', ''),
+        'assistant': config['assistant'],
     }) as case_trace:
-        graph_instructions = eval_graph_instructions(name, prompt, config.get("prompt_candidates", {}))
-        instructions = graph_instructions[name]
-        agent = create_assistant(name, model=config.get("model"), instructions=instructions,
-                                 instructions_by_name=graph_instructions)
-        result = Runner.run_sync(agent, input=config.get("messages") or render_assistant_input(name, prompt), max_turns=config.get("max_turns") or 10,
-                                 **({"run_config": RunConfig(model_settings=ModelSettings(**config["model_settings"]))}
-                                    if config.get("model_settings") else {}))
+        result, metadata = run_captured(prompt, config)
+    metadata.update(execution_provenance=provenance, database=target.database,
+                    dataset=config.get('dataset', target.database), workspace_lineage=config.get('workspace_lineage'),
+                    trace_url=f'https://platform.openai.com/traces/trace?trace_id={case_trace.trace_id}')
+    if result is None:
+        return {'error': metadata['execution_error'], 'output': '', 'token_usage': {}, 'metadata': metadata}
     captured = extract_trace(result, trace_id=case_trace.trace_id)
+    metadata.update(tft_trace=captured.to_dict(), trace_summary=captured.summary(),
+                    trace_url=f'https://platform.openai.com/traces/trace?trace_id={case_trace.trace_id}')
+    if config['assistant'] in metadata['instruction_hashes']:
+        metadata['instructions_sha256'] = metadata['instruction_hashes'][config['assistant']]
     usage = result.context_wrapper.usage
-    return {"output": (result.final_output.model_dump(mode="json") if hasattr(result.final_output, "model_dump") else result.final_output), "token_usage": {
-        "prompt": usage.input_tokens, "completion": usage.output_tokens,
-        "total": usage.total_tokens, "numRequests": usage.requests,
-    }, "metadata": {
-        "tft_trace": captured.to_dict(), "trace_summary": captured.summary(),
-        "trace_url": f"https://platform.openai.com/traces/trace?trace_id={case_trace.trace_id}",
-        "model": str(agent.model), "instructions_sha256": hashlib.sha256(instructions.encode()).hexdigest(),
-        "dataset": config.get("dataset", target.database),
-        "database": target.database,
-        "instruction_hashes": {key: hashlib.sha256(value.encode()).hexdigest() for key, value in graph_instructions.items()},
-    }}
+    return {'output': result.final_output.model_dump(mode='json') if hasattr(result.final_output, 'model_dump') else result.final_output,
+            'token_usage': {'prompt': usage.input_tokens, 'completion': usage.output_tokens,
+                            'total': usage.total_tokens, 'numRequests': usage.requests}, 'metadata': metadata}
 
 
 def run_judge(prompt: str, config: dict[str, Any]) -> dict[str, Any]:

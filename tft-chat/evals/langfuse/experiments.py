@@ -105,6 +105,8 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
     """
     from evals.langfuse.content import validate_bundle
     bundle = validate_bundle(bundle)
+    from evals.assistant_execution import require_bundle_captures
+    require_bundle_captures(bundle)
     natural = bundle["schema_version"] in {2, 3}
     unscored = natural and bundle["suite"].get("scoring") == "none"
     started = datetime.now(timezone.utc)

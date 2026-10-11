@@ -6,13 +6,9 @@ import argparse
 from pathlib import Path
 import sys
 
-from agents import Runner
-
 from domain.assistants import (
-    build_assistant_instructions,
-    create_assistant,
+    Assistant,
     list_assistants,
-    render_assistant_input,
 )
 from domain.assistants.constants import AssistantName
 
@@ -42,15 +38,7 @@ def main() -> None:
         input_text = sys.stdin.read()
     else:
         input_text = ""
-    print(
-        Runner.run_sync(
-            create_assistant(
-                args.assistant,
-                instructions=build_assistant_instructions(args.assistant, input_text),
-            ),
-            input=render_assistant_input(args.assistant, input_text),
-        ).final_output
-    )
+    print(Assistant(args.assistant, surface="cli").run_sync(input_text).final_output)
 
 
 if __name__ == "__main__":

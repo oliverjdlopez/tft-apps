@@ -20,6 +20,8 @@ async def prepare_resources(
     skill_provider: SkillProvider,
     set_number: int | None,
     timing: dict[str, Any] | None = None,
+    select_references: bool = True,
+    select_skills: bool = True,
 ) -> PreparedResources:
     """Select references and skills once before starting a logical invocation.
 
@@ -29,6 +31,8 @@ async def prepare_resources(
         skill_provider: Asynchronous selector for supplemental workflows.
         set_number: Explicit TFT set used to scope factual references, if configured.
         timing: Optional request timing record receiving selector durations.
+        select_references: Whether the graph can consume factual references.
+        select_skills: Whether a handoff can consume selected skill bodies.
 
     Returns:
         Immutable selections reused by every model turn and handoff.
@@ -37,7 +41,7 @@ async def prepare_resources(
     stage_started = time.perf_counter()
     references = (
         tuple(await context_provider.aselect(query, set_number=set_number))
-        if query.strip()
+        if select_references and query.strip()
         else ()
     )
     if timing is not None:
@@ -45,7 +49,7 @@ async def prepare_resources(
             (time.perf_counter() - stage_started) * 1000, 3
         )
     stage_started = time.perf_counter()
-    skills = tuple(await skill_provider.aselect(query))
+    skills = tuple(await skill_provider.aselect(query)) if select_skills and query.strip() else ()
     if timing is not None:
         timing["skill_selection_ms"] = round(
             (time.perf_counter() - stage_started) * 1000, 3

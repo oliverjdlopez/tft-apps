@@ -59,8 +59,8 @@ def test_save_does_not_write_source_and_revisions_survive_restart(workspace):
 
 def test_apply_complete_optional_files_and_existing_graph_remains_captured(workspace):
     """Apply changes all editable files, retains unrelated files and old agents."""
-    from domain.assistants import create_assistant
-    old = create_assistant('fixture', registry=workspace.active())
+    from domain.assistants import Assistant
+    old = Assistant('fixture', registry=workspace.active()).build_agent()
     state = save(workspace, **{'system.md': 'New prompt', 'agent.json': '{"handoffs":["target"],"skills":[]}', 'task.md': 'Task wrapper'})
     before = workspace.state('fixture')['active']['hash']
     applied = workspace.apply('fixture', **expected(state))

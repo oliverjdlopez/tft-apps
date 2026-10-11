@@ -25,7 +25,7 @@ retains legacy frontmatter compatibility for older saved drafts and imported
 definitions, but new repository definitions should use these explicit files.
 
 `domain.assistants.registry` discovers and caches immutable specifications.
-`domain.assistants.create_assistant` resolves the declared graph and constructs
+`Assistant.build_agent()` resolves the declared graph and constructs
 fresh SDK `Agent` objects. Tool access is additive across the groups and names
 declared in `agent.json`; registration alone does not grant an assistant access.
 Python callers use `AssistantName` from `domain.assistants.constants` for
@@ -88,7 +88,12 @@ prompts used by normal application runs.
 
 ## Runtime instructions
 
-Chat calls `domain.assistants.prepare_resources` once before execution. It uses
+Chat, direct assistant API, CLI, transcript stages, and captured evaluations use
+`domain.assistants.Assistant` to prepare each invocation. The class calls
+`prepare_resources` once before execution when the graph can consume selected
+resources. Graphs without repository context skip factual selection; graphs
+without skill-eligible handoffs skip skill selection. Root skill bodies remain
+excluded. It uses
 the latest user message for selection, or up to four recent user messages when
 the latest message matches the existing follow-up heuristic. Assistant replies
 remain in SDK conversation history but are not part of the selector query.
@@ -101,7 +106,7 @@ not automatically model-visible; callbacks and tools expose only their intended
 instructions and result fields. The object is not serialized into browser events
 or persisted as cross-turn conversation state.
 
-`domain.assistants.create_assistant` installs each agent's instruction callback
+`Assistant.build_agent()` installs each agent's instruction callback
 as part of normal construction, including every nested handoff. Each callback
 captures its own immutable specification, so a later registry reload does not
 change an existing graph's prompt or resource permissions. There is no separate
@@ -115,16 +120,65 @@ receives the optional caller system prefix and excludes selected skill bodies.
 Its callback is reused by the tool-free fallback under a different agent name.
 Rendering never selects resources or loads runtime configuration.
 
-The standard call is `create_assistant(name, model=model)`, followed by an SDK
-runner call with `context=run_context`. Preparation, invocation state, lifecycle
-hooks, and transport remain caller-owned. Callers without typed context receive
-the specification's durable prompt without retrieval; this supports selectors,
-transcript tasks, and legacy bare-evidence-store runs.
+The consumer entry point is `Assistant(name, model=model)`. Construction captures
+an independent registry snapshot and resolved model defaults. Default context
+and skill providers use that same snapshot, including selector specifications.
+Reusing the instance retains definitions; each `prepare`, `run`, or `run_sync`
+call creates fresh agents, resources, context, evidence, and activity hooks.
+Construct a new instance to pick up subsequently applied definitions.
 
-`domain.assistants.build_assistant_instructions` renders instructions for the
-target assistant. It
-combines the stable assistant prompt with only the request-specific layers that
-target is allowed to receive:
+```python
+from domain.assistants import Assistant
+
+# Ordinary synchronous consumers; use await assistant.run(...) in async code.
+assistant = Assistant("chat")
+result = assistant.run_sync("Which carries are strongest?")
+print(result.final_output)
+```
+
+Advanced consumers own SDK execution and transport after preparation:
+
+```python
+from agents import Runner
+from domain.assistants import Assistant
+
+invocation = await Assistant("chat", model=model, surface="chat").prepare(
+    messages, system=system, request_id=request_id,
+)
+result = Runner.run_streamed(
+    invocation.agent, input=invocation.input,
+    context=invocation.context, hooks=invocation.hooks,
+)
+```
+
+`prepare` accepts user text or user/assistant conversation history. Selectors
+receive original, unwrapped user messages; the SDK receives the root's task
+wrapper applied to the latest user message, preserving previous history and
+caller-owned messages. `run_sync` rejects active event loops with guidance to
+await `run`. Completed or failed ordinary runs finalize unfinished activity;
+streaming consumers retain cancellation and cleanup ownership.
+
+`Assistant.from_capture(graph, name)` verifies a captured graph and retains
+its model defaults independently of active repository definitions. Optional
+`base_instructions_by_name` replaces durable prompt text in the private snapshot
+while preserving task wrappers, models, handoffs, tools, context policy, and
+skill access. It also keeps selector definitions on that same snapshot.
+`prepare(record=True)` retains actual model-facing instructions and model settings
+in the returned `AssistantInvocation`, including evidence from failed execution.
+Chat does not enable instruction recording.
+
+Live assistant evaluations and Playground requests require captured graphs and use
+`Assistant.from_capture(...).prepare(..., record=True)`. Fresh exports capture
+repository definitions for every live assistant dataset format. Historical bundles
+without captures remain readable; execution rejects them before dispatch and asks
+for a fresh export. Selector benchmarks use `Assistant.run_sync` for their model
+calls. Static instruction assembly, the `create_assistant` factory, and the
+`render_assistant_input` wrapper have been removed.
+
+Dynamic callbacks use
+`render_instruction_layers` to combine the stable assistant prompt with only
+request-specific layers the target is allowed to receive. Prepared invocations
+also apply the root policy before rendering:
 
 - the top-level chat assistant receives selected factual references, but not
   selected skill bodies;
@@ -136,11 +190,9 @@ Fresh handoff agents retain the request's model choice, preventing an
 Anthropic-backed chat request from silently switching providers during a
 handoff.
 
-Explicit `instructions` and `instructions_by_name` overrides retain precedence
-over the installed default, including frozen evaluation strings and custom SDK
-callbacks. Root `instructions` wins over its entry in `instructions_by_name`.
-Direct/evaluation callers that already assemble explicit prompts retain that
-behavior. Construction-time token diagnostics
+Prompt candidates use `base_instructions_by_name`, replacing durable text while
+retaining callbacks and access policy. Raw instruction overrides are no longer
+part of graph construction. Construction-time token diagnostics
 mark dynamic instruction counts and their combined static total as unresolved
 (`null`), rather than counting a callback representation. Static counts remain
 unchanged.
@@ -148,12 +200,14 @@ unchanged.
 ## Execution surfaces
 
 Callers execute assistants through `Runner.run`, `Runner.run_sync`, or
-`Runner.run_streamed`. `services/chat_service.py` creates the invocation context,
-prepares resources, constructs agents through the ordinary factory, supplies shared
-`ActivityRunHooks`, and owns tracing and the maximum-turn fallback. The assistant
-layer owns resource selection and prompt policy; tools own evidence operations;
-the streaming adapter preserves the browser protocol. Direct assistant API, CLI, eval, and chat-handoff paths
-all use the same registry and target-specific instruction construction.
+`Runner.run_streamed`. `services/chat_service.py` obtains an `AssistantInvocation` through
+`Assistant.prepare`, then owns tracing, streamed execution, and the maximum-turn
+fallback using the prepared context and hooks. The `Assistant` class owns
+definition snapshots, provider dependencies, resource selection, task input
+wrapping, invocation state, and prompt policy; tools own evidence operations.
+The streaming adapter preserves the browser protocol. Direct assistant API, CLI,
+captured eval, and chat-handoff paths use the same preparation and target-specific
+instruction construction.
 
 ## Registered tasks
 
@@ -168,16 +222,18 @@ exposes the task catalog and response contract over HTTP.
 Structural assistant and chat behavior is covered by:
 
 ```bash
-uv run pytest -q tests/test_assistants.py tests/test_chat_service.py tests/test_agent_workflow_evals.py
-uv run pytest -q tests/test_runtime_instructions.py tests/test_runtime_tools.py tests/test_runtime_streaming.py
+uv run pytest -q tests/test_assistant_runtime.py tests/test_assistants.py tests/test_chat_service.py tests/test_task_service.py
+uv run --extra evals pytest -q tests/test_workspace_trials.py evals/langfuse/tests/test_assistant_workspace.py
 uv run --extra evals chat-tft-evals validate
 ```
 
 Live evals additionally require model credentials and, for data-backed cases,
 an evaluation database. Langfuse owns evaluation datasets, prompt candidates,
-experiment comparisons, and annotations. Its Python service applies frozen
-candidates through `instructions_by_name` and the same target-specific assembly
-used by application execution, preserving dynamic context and skill restrictions.
+experiment comparisons, and annotations. Captured experiments and Specs trials
+execute through `Assistant.from_capture`
+and `prepare(record=True)`, preserving dynamic context and skill restrictions.
+Historical bundles without captured execution remain readable but cannot run;
+export a fresh captured bundle to execute their dataset.
 Candidates never change normal conversations. Suite discovery reads the exported
 local catalog and works when Langfuse is stopped. See
 [Tests and evaluations](../development/testing-and-evals.md).

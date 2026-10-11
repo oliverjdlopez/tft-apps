@@ -221,8 +221,12 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
                 from .contracts import DATASET_NAMES
                 dataset_name = bundle.get('dataset_name') or DATASET_NAMES[suite]
                 bundle = fetch_bundle(client, dataset_name, bundle['config'], SNAPSHOT_ROOT)
+            from evals.assistant_execution import require_bundle_captures
+            require_bundle_captures(bundle)
             bundle = bind_dataset_identity(bundle, client)
         bundle = validate_bundle(bundle)
+        from evals.assistant_execution import require_bundle_captures
+        require_bundle_captures(bundle)
         validate_case_semantics(bundle["suite"], bundle["items"])
         snapshot_id = export_snapshot(bundle, SNAPSHOT_ROOT, expected_revision=revision)
         identity = capture_provenance()

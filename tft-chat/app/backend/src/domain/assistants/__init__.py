@@ -2,16 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import Any
 
-from agents import Agent
 
-from domain.assistants.assistants import (
-    build_assistant as _build_assistant,
-    build_assistant_instructions,
-    render_input as _render_input,
-)
 from domain.assistants.registry import AssistantRegistry, assistant_registry
 from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import (
@@ -20,7 +13,8 @@ from domain.assistants.specs import (
     AssistantSpec,
     load_assistant_spec,
 )
-from domain.assistants.token_logging import log_agent_graph
+from domain.assistants.assistant import Assistant
+from domain.assistants.models import AssistantInvocation
 
 
 _ASSISTANT_REGISTRY = assistant_registry
@@ -138,75 +132,22 @@ def reload_assistant_specs() -> None:
     _ASSISTANT_REGISTRY.reload()
 
 
-def create_assistant(
-    name: str,
-    *,
-    model: object | None = None,
-    instructions: Any | None = None,
-    instructions_by_name: Mapping[str, Any] | None = None,
-    output_type: type[Any] | None = None,
-    registry: AssistantRegistry | None = None,
-    resolved_models: Mapping[str, str] | None = None,
-) -> Agent[Any]:
-    """Construct a fresh SDK graph with specification-owned prompt rendering.
-
-    Args:
-        name: Root registered assistant name.
-        model: Optional model override propagated through the graph.
-        instructions: Optional root instruction override.
-        instructions_by_name: Optional instruction overrides by assistant name.
-        output_type: Optional structured output type for the root agent.
-
-    Returns:
-        A fresh SDK agent and handoffs with built-in instruction callbacks.
-        With AssistantRunContext they render permitted prepared resources;
-        without it they return durable prompts. Explicit overrides take priority.
-    """
-    if registry is None:
-        _configure_tools()
-        registry = _ASSISTANT_REGISTRY.snapshot()
-    agent = _build_assistant(
-        registry,
-        name,
-        model=model,
-        instructions=instructions,
-        instructions_by_name=instructions_by_name,
-        output_type=output_type,
-        resolved_models=resolved_models,
-    )
-    log_agent_graph(agent, task_prompt=registry.get_spec(name).task_prompt)
-    return agent
-
-
-def render_assistant_input(name: str, input_text: str, *, registry: AssistantRegistry | None = None) -> str:
-    """Apply an assistant's optional task wrapper to SDK run input.
-
-    Args:
-        name: Registered assistant name.
-        input_text: Raw SDK run input.
-
-    Returns:
-        Input text with the optional task prompt applied.
-    """
-    return _render_input(registry or _ASSISTANT_REGISTRY, name, input_text)
-
 
 __all__ = [
     "ASSISTANT_SPECS_DIR",
     "SPECS_DIR",
     "AssistantRegistry",
+    "Assistant",
+    "AssistantInvocation",
     "assistant_handoff_names",
     "assistant_reachable_tool_names",
     "assistant_spec",
     "assistant_skill_names",
     "assistant_tool_names",
     "assistant_tools",
-    "build_assistant_instructions",
-    "create_assistant",
     "list_assistants",
     "load_assistant_spec",
     "prepare_resources",
     "reload_assistant_specs",
-    "render_assistant_input",
     "resolve_assistant_tools",
 ]

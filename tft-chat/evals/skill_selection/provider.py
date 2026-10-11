@@ -2,8 +2,7 @@
 from __future__ import annotations
 import time
 from typing import Any
-from agents import Runner
-from domain.assistants import create_assistant
+from domain.assistants import Assistant
 from domain.assistants.constants import AssistantName
 from domain.providers.skills import (
     MAX_SELECTED_SKILLS,
@@ -56,9 +55,8 @@ def select_live(
     model: str | None = None,
 ) -> list[SkillDefinition]:
     """Run one model-backed selector and decode its bounded candidate IDs."""
-    output = Runner.run_sync(
-        create_assistant(AssistantName.SKILL_SELECTOR, model=model, output_type=CandidateIdSelection),
-        input=prompt,
+    output = Assistant(AssistantName.SKILL_SELECTOR, model=model, output_type=CandidateIdSelection, surface="eval").run_sync(
+        prompt,
         max_turns=1,
     ).final_output
     selected_ids = _selected_skill_ids(

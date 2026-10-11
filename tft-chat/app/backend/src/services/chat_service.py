@@ -10,7 +10,6 @@ from contextlib import aclosing
 from typing import Any
 
 from agents import Agent, MaxTurnsExceeded, Runner
-from domain.tools.evidence import EvidenceStore
 from agents.run_internal.items import run_items_to_input_items
 from agents.tracing import trace
 
@@ -20,16 +19,11 @@ from domain.assistants import (
     SPECS_DIR,
     assistant_reachable_tool_names,
     assistant_spec,
-    assistant_tool_names,
-    create_assistant,
+    Assistant,
     list_assistants,
-    prepare_resources,
 )
 from domain.assistants.constants import AssistantName
-from domain.providers.context import DEFAULT_CONTEXT_PROVIDER
-from domain.providers.skills import DEFAULT_SKILL_PROVIDER
-from domain.runtime import AssistantRunContext, RuntimeSettings
-from domain.runtime.activity import ActivityRunHooks, finalize_activity
+from domain.runtime.activity import finalize_activity
 from domain.model_catalog import chat_model_specs
 from domain.tools import list_tool_group_metadata, list_tool_metadata
 from services.streaming import stream_agent_events, stream_event
@@ -78,26 +72,14 @@ async def stream_chat(
     """
     config = load_config()
     request_label = request_id or "unknown"
-    resources = await prepare_resources(
-        messages,
-        context_provider=DEFAULT_CONTEXT_PROVIDER,
-        skill_provider=DEFAULT_SKILL_PROVIDER,
-        set_number=config.chat.set_number,
-        timing=timing,
+    assistant = Assistant(
+        assistant_name, model=model, set_number=config.chat.set_number, surface="chat",
     )
-    run_context = AssistantRunContext(
-        runtime=RuntimeSettings(
-            request_id=request_label,
-            set_number=config.chat.set_number,
-            root_assistant=assistant_name,
-            system=system,
-        ),
-        resources=resources,
-        context_provider=DEFAULT_CONTEXT_PROVIDER,
-        skill_provider=DEFAULT_SKILL_PROVIDER,
-        evidence=EvidenceStore(),
-        timing=timing,
+    invocation = await assistant.prepare(
+        messages, system=system, request_id=request_label, timing=timing,
     )
+    run_context = invocation.context
+    resources = run_context.resources
     references, skills = resources.references, resources.skills
     for reference in references:
         yield stream_event(
@@ -119,7 +101,7 @@ async def stream_chat(
                 "path": skill.path,
             }
         )
-    reachable_tool_names = assistant_reachable_tool_names(assistant_name)
+    reachable_tool_names = assistant.reachable_tool_names
     setup_started = time.perf_counter()
     tools_by_name = {
         tool["name"]: tool for tool in list_tool_metadata(reachable_tool_names)
@@ -133,7 +115,7 @@ async def stream_chat(
             "model": model_name,
             "message_count": str(len(messages)),
             "direct_tool_names": ",".join(
-                assistant_tool_names(assistant_name)
+                assistant.tool_names
             ),
             "tool_names": ",".join(reachable_tool_names),
             "tool_group_names": ",".join(
@@ -149,21 +131,20 @@ async def stream_chat(
         yield stream_event(
             {"type": "trace", "name": chat_trace.name, "trace_id": trace_label}
         )
-        agent = create_assistant(
-            assistant_name,
-            model=model,
-        )
-        hooks = ActivityRunHooks()
+        agent = invocation.agent
+        hooks = invocation.hooks
         result = Runner.run_streamed(
             agent,
-            input=_agent_input(messages),
+            input=invocation.input,
             context=run_context,
             hooks=hooks,
             max_turns=max_tool_rounds + 1,
         )
         if timing is not None:
             timing["agent_setup_ms"] = round(
-                (time.perf_counter() - setup_started) * 1000, 3
+                timing.get("agent_setup_ms", 0)
+                + (time.perf_counter() - setup_started) * 1000,
+                3,
             )
 
         def mark_model_event() -> None:
@@ -220,7 +201,7 @@ async def stream_chat(
                 final_result = Runner.run_streamed(
                     final_agent,
                     input=[
-                        *_agent_input(messages),
+                        *invocation.input,
                         *replay_items,
                         {"role": "user", "content": stop_prompt},
                     ],

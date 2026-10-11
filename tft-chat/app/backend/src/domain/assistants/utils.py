@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from agents import Agent, RunContextWrapper
 
     from domain.assistants.specs import AssistantSpec
+    from domain.assistants.models import AssistantInvocation
     from domain.providers.models import (
         ContextProvider,
         ContextSnippet,
@@ -151,3 +152,97 @@ def instruction_callback(
         return instructions
 
     return render
+
+
+# ---------------------------------------------------------------------------
+# Assistant consumer preparation
+#
+# Conversation copying and provenance recording belong to the prepared run,
+# independent of HTTP transports and evaluation result serialization.
+# ---------------------------------------------------------------------------
+
+
+def invocation_input(
+    input: str | Sequence[Mapping[str, str]], task_prompt: str,
+) -> tuple[list[dict[str, str]], str | list[dict[str, str]]]:
+    """Prepare selector history and SDK input without modifying caller messages.
+
+    Args:
+        input: User text or conversation history.
+        task_prompt: Root task wrapper, applied only to the latest user message.
+
+    Returns:
+        Unwrapped selector messages and wrapped SDK input, respectively.
+    """
+    messages = ([{"role": "user", "content": input}] if isinstance(input, str) else [
+        {"role": message["role"], "content": message["content"]}
+        for message in input if message["role"] in {"user", "assistant"}
+    ])
+    run_messages = [dict(message) for message in messages]
+    if task_prompt.strip():
+        for message in reversed(run_messages):
+            if message["role"] == "user":
+                message["content"] = wrap_task_input(message["content"], task_prompt)
+                break
+    return messages, run_messages[0]["content"] if isinstance(input, str) else run_messages
+
+
+def wrap_task_input(input_text: str, task_prompt: str) -> str:
+    """Apply a task wrapper consistently for prepared and legacy consumers.
+
+    Args:
+        input_text: Original user input.
+        task_prompt: Optional task instructions belonging to the root.
+
+    Returns:
+        Wrapped input, or the original text when the wrapper is empty.
+    """
+    if not task_prompt.strip():
+        return input_text
+    return f"{task_prompt.strip()}\n\n## Input\n\n{input_text}".strip()
+
+
+def record_instructions(invocation: AssistantInvocation) -> None:
+    """Record actual model-facing instructions on one prepared graph.
+
+    Args:
+        invocation: Fresh invocation receiving instruction and model provenance.
+    """
+    from domain.assistants.token_logging import agent_model_name
+
+    seen: set[int] = set()
+
+    def visit(agent: Agent[Any]) -> None:
+        """Wrap each graph object once, retaining its own bound callback.
+
+        Args:
+            agent: Root or handoff whose model calls should be recorded.
+        """
+        if id(agent) in seen:
+            return
+        seen.add(id(agent))
+        invocation.model_settings[agent.name] = {
+            "model": agent_model_name(agent),
+            "settings": agent.model_settings.to_json_dict(),
+        }
+        callback = agent.instructions
+
+        def render(wrapper: RunContextWrapper[Any], target: Agent[Any]) -> str:
+            """Capture text after this target's dynamic rendering policy.
+
+            Args:
+                wrapper: SDK wrapper containing the invocation context.
+                target: Agent requesting model instructions.
+
+            Returns:
+                The original rendered text, unchanged for model execution.
+            """
+            text = callback(wrapper, target) if callable(callback) else callback
+            invocation.instructions[target.name] = text
+            return text
+
+        agent.instructions = render
+        for child in agent.handoffs:
+            visit(child)
+
+    visit(invocation.agent)

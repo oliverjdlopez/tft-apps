@@ -103,7 +103,8 @@ and `text` wrappers), arrays, and null inputs are rejected. In a JSON editor,
 quote the string; the value itself is the user message. The execution adapter
 supplies that text to the existing assistant worker. Normal application chat
 and Playground conversation history are unchanged. Schema-v1/v2 snapshots retain
-their original contracts for historical reading and replay.
+their original contracts for historical reading. Live assistant replay requires
+captured definitions; export a fresh bundle for datasets whose old snapshots lack captures.
 
 Expected output remains reference text or an object containing `requirements`
 and/or `reference`. Metadata carries descriptions, database selection,

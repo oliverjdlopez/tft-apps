@@ -76,9 +76,10 @@ normal trial execution may make paid calls when the operator chooses Try.
 Each run captures active and draft definitions from the same runtime snapshot.
 Only the edited assistant differs. Both captures include the union of reachable
 handoff targets and the context/skill selector definitions. Configuration, task
-wrappers, instructions, and resolved model defaults are frozen. Resource selection,
-request-specific instruction callbacks, typed invocation context, activity hooks,
-and evidence retention follow the application pipeline. Each assistant's configured
+wrappers, instructions, and resolved model defaults are frozen. Captured runs use `Assistant.from_capture(...).prepare(..., record=True)`, the
+same preparation entry point as chat and ordinary assistant consumers. Resource
+selection, request-specific instruction callbacks, typed invocation context,
+activity hooks, and evidence retention follow the application pipeline. Each assistant's configured
 context and skill access applies at rendering. Draft registries never replace the
 global registry during execution.
 
@@ -120,8 +121,9 @@ running, awaiting-scores, completed, failed, or interrupted state and experiment
 links. Earlier results remain tied to their saved revisions. Applying is allowed
 after structural validation regardless of experiments or their outcome.
 
-Fresh native Langfuse assistant experiments also capture current repository
-configuration by default. Explicit historical prompt overrides and replay keep
+Fresh native Langfuse assistant experiments and Playground requests capture current
+repository configuration. Replay requires a captured bundle; older bundles remain
+readable but require a fresh export to run. Explicit prompt overrides keep
 working. The optional `execution.version = 1` snapshot section carries graphs,
 managed prompt references, and lineage; schema-version 1/2/3 bundles without this
 section remain readable. Startup updates only the exact owned legacy webhook
@@ -144,7 +146,7 @@ are `draft`, `validate`, `apply`, `discard`, `restore`, `trials`, `experiments`,
 active identities. `/api/specs/runs/{id}` refreshes saved results without changing
 the editor's files. See the generated FastAPI `/docs` for typed request/response
 schemas. Store ownership is `services/assistant_workspace/`; graph capture and
-execution are `domain/assistants/capture.py` and `execution.py`.
+execution are `domain/assistants/capture.py` and `evals/assistant_execution.py`.
 
 Run focused offline checks from the ChatTFT root:
 

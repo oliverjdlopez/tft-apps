@@ -9,7 +9,7 @@ import pytest
 from evals import execution, worker
 from evals.langfuse.content import load_snapshot
 from evals.langfuse.experiments import run_bundle
-from evals.utils import eval_graph_instructions, render_judge_prompt
+from evals.utils import render_judge_prompt
 
 
 @pytest.fixture
@@ -67,19 +67,11 @@ def test_judge_template_substitution_is_single_pass(fixture_bundle):
     assert "{{rubric}}" in rendered
 
 
-def test_graph_candidates_use_each_targets_instruction_policy(monkeypatch):
-    """Graph overrides retain target-specific dynamic context assembly."""
-    import domain.assistants as assistants
-    seen = []
-    monkeypatch.setattr(assistants, "assistant_handoff_names", lambda name: ["child"] if name == "root" else [])
-    def assemble(name, query, *, base_instructions):
-        """Record policy calls while returning distinguishable context text."""
-        seen.append((name, query, base_instructions))
-        return f"{base_instructions}:{name}-context"
-    monkeypatch.setattr(assistants, "build_assistant_instructions", assemble)
-    result = eval_graph_instructions("root", "request", {"root": {"text": "root-v2"}, "child": {"text": "child-v3"}})
-    assert result == {"root": "root-v2:root-context", "child": "child-v3:child-context"}
-    assert len(seen) == 2
+def test_worker_rejects_uncaptured_execution_before_database_resolution(monkeypatch):
+    """Old bundles cannot silently execute against current definitions."""
+    monkeypatch.setattr(worker, 'resolve_eval_target', lambda *args, **kwargs: pytest.fail('Resolved database before preflight'))
+    with pytest.raises(ValueError, match='export a fresh bundle'):
+        worker.run_assistant('request', {'assistant': 'chat'}, {})
 
 
 def test_neutral_worker_protocol(monkeypatch):
@@ -176,6 +168,10 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
         def flush(self):
             """Provide the SDK flushing contract."""
 
+    from domain.assistants import Assistant
+    from domain.assistants.capture import capture
+    frozen = capture(Assistant("chat")._registry)
+    bundle["execution"] = {"version": 1, "graphs": {"baseline": frozen}}
     report = run_bundle(bundle, Client())
     assert report["passed"] and report.get("state") is None
     item = report["experiments"][0]["items"][0]
@@ -307,7 +303,11 @@ def test_native_generation_links_frozen_prompt_without_fetch(monkeypatch):
 @pytest.mark.parametrize("natural", [False, True])
 def test_case_databases_reach_isolated_workers_without_leaking(monkeypatch, natural):
     """Mixed-set cases keep their own target across attempts and preserve defaults."""
-    suite = {"name": "chat", "family": "assistant", "execution": "live", "database": "suite_db"}
+    from domain.assistants import Assistant
+    from domain.assistants.capture import capture
+    graph = capture(Assistant("chat")._registry)
+    suite = {"name": "chat", "assistant": "chat", "family": "assistant", "execution": "live", "database": "suite_db",
+             "captured_graphs": {"baseline": graph, "candidate": graph}}
     calls = []
 
     def capture(payload, timeout):
@@ -329,7 +329,7 @@ def test_case_databases_reach_isolated_workers_without_leaking(monkeypatch, natu
         "old_set", "old_set", "new_set", "new_set", "suite_db", "suite_db"]
     assert suite["database"] == "suite_db"
     suite.pop("database")
-    execution.execute_attempt(suite, item, {}, {})
+    execution.execute_attempt(suite, item, {"name": "baseline"}, {})
     assert calls[-1]["config"]["database"] is None
 
 
@@ -374,3 +374,16 @@ def test_execution_evidence_includes_current_and_historical_presentations():
     result = {"metadata": {"tft_trace": {"events": events}}}
     evidence = execution_evidence(result)
     assert json.loads(evidence["presentation"]) == events[1:]
+
+
+def test_uncaptured_attempt_never_dispatches_worker(monkeypatch):
+    """Direct attempt execution applies the same capture requirement as submission."""
+    from unittest.mock import Mock
+    dispatch = Mock()
+    monkeypatch.setattr(execution, 'isolated_operation', dispatch)
+    result = execution.execute_attempt(
+        {'family': 'assistant', 'assistant': 'chat', 'execution': 'live'},
+        {'input': {'input': 'Question'}, 'expected_output': {'assertions': []}, 'metadata': {}},
+        {'name': 'baseline'}, {})
+    assert 'export a fresh bundle' in result['error']
+    dispatch.assert_not_called()
