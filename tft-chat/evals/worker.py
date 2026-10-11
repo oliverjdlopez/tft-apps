@@ -29,7 +29,7 @@ def run_assistant(prompt: str, config: dict[str, Any], identity: dict[str, Any])
     from domain.assistants import create_assistant, render_assistant_input
 
     name = config["assistant"]
-    target = resolve_eval_target(config.get("database"), require_explicit=bool(config.get("captured_graph")))
+    target = resolve_eval_target(config.get("database"))
     if config.get('captured_graph'):
         from domain.assistants.execution import run_captured
         from common.provenance import source_provenance

@@ -94,9 +94,14 @@ Stop any older service occupying the configured port before starting this stack.
 
 If **via Webhook** reports HTTP 503, inspect `.runtime/runner.log` and the `experiments` forwarding service logs.
 A healthy `/health` response only confirms the queue consumer is alive; content
-preparation can still fail. After Python source changes, an `ImportError` may
-indicate that the running process has cached an older module. Once no experiment
-is running, reload it with:
+preparation can still fail. After Python source changes, an `ImportError` or a
+`TypeError` about a function's argument count can indicate that the running
+process has cached older modules while lazily importing newer code from disk.
+For example, the captured-graph update added a third argument to
+`validate_frozen_config`; an older runner returned 503 when loading the updated
+snapshot validator even though `/health` remained ready. Restarting the desktop
+alone reuses that healthy runner. Once no experiment is queued, running, or
+awaiting scores, reload it with:
 
 ```bash
 uv run --extra evals chat-tft-evals restart-runner

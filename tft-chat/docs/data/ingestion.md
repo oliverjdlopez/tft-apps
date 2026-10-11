@@ -46,16 +46,16 @@ Replays are idempotent through raw match identity and
 ## Normalized identity and cardinality
 
 Unit, item, and trait names are normalized before storage. Item resolution uses
-the exact match patch and TFT set, retains both canonical API and display
-identity, and atomically upserts the patch/set `item_metadata` classification
-snapshot with the match. Community Dragon structure and tags take precedence,
+the configured Community Dragon catalogue patch and each match's TFT set,
+retains both canonical API and display identity, and atomically upserts the
+stored-patch/set `item_metadata` classification snapshot with the match. Community Dragon structure and tags take precedence,
 then stable API markers; unresolved completed items remain queryable as
 `unknown`. A conflicting display name or family for an existing metadata key
 rejects the ingestion transaction. Components remain excluded from completed-
 item analytics.
 
-Unit shop costs use the exact-patch Community Dragon champion cost when that
-catalogue entry is available. This is the game's one-based 1-5 cost and avoids
+Unit shop costs use the selected Community Dragon catalogue champion cost when
+that catalogue entry is available. This is the game's one-based 1-5 cost and avoids
 confusing Riot's zero-based match `rarity` field with the displayed cost. If a
 static unit entry or cost is unavailable, ingestion falls back to the
 normalized Riot value and logs any disagreement between the two sources.
@@ -78,11 +78,19 @@ excluding database and credential overrides.
 
 `[ingest] patch_override` optionally replaces the normalized patch derived
 from each Riot match's `info.game_version` when ingestion stores the match.
-Leave it blank to use Riot's patch. When set, the override also selects the
-patch-specific Community Dragon resolver and becomes the patch used by scoped
-analytics and any `--patch` ingestion filter; the original Riot `game_version`
-remains stored unchanged. The setting applies to CLI and API-triggered
-ingestion.
+Leave it blank to use Riot's patch. The override becomes the patch used by
+scoped analytics and any `--patch` ingestion filter; the original Riot
+`game_version` remains stored unchanged. The setting applies to CLI and
+API-triggered ingestion.
+
+`[ingest] cdragon_patch_override` selects the Community Dragon catalogue
+independently of the stored patch. Omitted or blank values use `latest`.
+`--cdragon-patch-override` and API `options.cdragon_patch_override` override it
+for one run; an empty override uses `latest`. Resolver caches are keyed by
+catalogue patch and TFT set, and the catalogue must contain the match's set.
+Direct inserts without an explicit resolver also read this setting. Explicit
+maintenance calls to `db.insert.get_patch_resolver` retain their supplied
+catalogue patch.
 
 S3 mirroring is optional. Its credentials come from boto3's standard provider
 chain.

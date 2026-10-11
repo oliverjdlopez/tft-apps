@@ -145,6 +145,11 @@ def build_parser() -> argparse.ArgumentParser:
         help='Patch string to keep, e.g. "14.10". Off-patch matches are skipped after fetch.',
     )
     parser.add_argument(
+        "--cdragon-patch-override",
+        default=argparse.SUPPRESS,
+        help="Community Dragon catalogue patch for normalization; blank uses latest.",
+    )
+    parser.add_argument(
         "--insert-to-db",
         dest="insert_to_db",
         action=argparse.BooleanOptionalAction,

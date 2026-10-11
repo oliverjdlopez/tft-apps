@@ -131,7 +131,8 @@ def test_attempt_passes_captured_variant_to_isolated_worker(monkeypatch):
     assert all(not payload['config']['prompt_candidates'] for payload in payloads)
 
 
-def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(monkeypatch):
+@pytest.mark.parametrize('rds_prefix', ['RDS_EVAL_', 'RDS_'])
+def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(monkeypatch, rds_prefix):
     """Run the actual SDK against a local model with an isolated _test target."""
     import json
     import socket
@@ -177,10 +178,14 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
     server = uvicorn.Server(uvicorn.Config(app, log_level='error', lifespan='off'))
     thread = threading.Thread(target=server.run, kwargs={'sockets': [listener]}, daemon=True)
     thread.start()
-    for key, value in {'OPENAI_API_KEY': 'mock-key', 'OPENAI_BASE_URL': f'http://127.0.0.1:{port}/v1',
-        'RDS_EVAL_HOST': '127.0.0.1', 'RDS_EVAL_PORT': '5432', 'RDS_EVAL_ADMIN': 'mock',
-        'RDS_EVAL_DB': 'assistant_workspace_test', 'RDS_EVAL_PASSWORD': 'mock-password', 'RDS_EVAL_SYNC_LOCAL_IP': 'false'}.items():
+    for key, value in {'OPENAI_API_KEY': 'mock-key', 'OPENAI_BASE_URL': f'http://127.0.0.1:{port}/v1'}.items():
         monkeypatch.setenv(key, value)
+    for name, value in {'HOST': '127.0.0.1', 'PORT': '5432', 'ADMIN': 'mock',
+        'DB': 'assistant_workspace_test', 'PASSWORD': 'mock-password', 'SYNC_LOCAL_IP': 'false'}.items():
+        # Blank process values prevent the child from loading local eval
+        # credentials while exercising application fallback through .env loading.
+        monkeypatch.setenv(f'RDS_EVAL_{name}', '')
+        monkeypatch.setenv(f'{rds_prefix}{name}', value)
     monkeypatch.delenv('LANGFUSE_PUBLIC_KEY', raising=False)
     monkeypatch.delenv('LANGFUSE_SECRET_KEY', raising=False)
     files = {'fixture': {'system.md': 'Captured draft root', 'task.md': 'Frozen task wrapper',

@@ -67,9 +67,11 @@ backend restart stops Linux trial workers through a parent-death signal and
 marks queued/running trials interrupted; Retry question explicitly
 starts another trial. Results belong to their original revision after later edits.
 
-Trials require complete explicit `RDS_EVAL_HOST`, `RDS_EVAL_PORT`, `RDS_EVAL_ADMIN`,
-and `RDS_EVAL_DB` coordinates. Existing eval password/IAM authentication still
-applies. Captured executions cannot borrow application database coordinates.
+Trials and captured Langfuse experiments use the canonical evaluation target:
+each missing or blank `RDS_EVAL_*` value falls back to its corresponding `RDS_*`
+value, including host, port, admin, database, password, and IAM settings. Explicit
+eval values take precedence; the resolved target still requires host, admin,
+and database, with port defaulting to 5432.
 Validation uses deterministic local model mocks and an `_test` target identity;
 normal trial execution may make paid calls when the operator chooses Try.
 

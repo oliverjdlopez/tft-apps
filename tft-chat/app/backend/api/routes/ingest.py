@@ -29,6 +29,7 @@ class IngestionOptions(BaseModel):
     start_time: int | None = None
     end_time: int | None = None
     patch: str | None = None
+    cdragon_patch_override: str | None = None
     insert_to_db: bool | None = None
     commit_every: int | None = Field(default=None, ge=1)
     analysis_every: int | None = Field(default=None, ge=1)
@@ -66,6 +67,7 @@ def _default_args(options: IngestionOptions) -> argparse.Namespace:
         "player_batch_size": ingest.player_batch_size,
         "tiers": ingest.tiers,
         "patch_override": ingest.patch_override,
+        "cdragon_patch_override": ingest.cdragon_patch_override,
         "start_time": None,
         "end_time": None,
         "patch": None,

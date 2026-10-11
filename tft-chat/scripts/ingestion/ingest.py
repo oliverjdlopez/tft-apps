@@ -20,7 +20,7 @@ from db.build_query_tables import (
 from db.insert import insert_match_payload
 from db.models import TABLE_MODELS
 from db.session import open_db
-from db.utils import existing_match_ids_from_table_models, extract_patch
+from db.utils import existing_match_ids_from_table_models
 from sqlalchemy.orm import Session
 from utils.tft import TFTNameResolver
 
@@ -75,7 +75,7 @@ class _DatabaseWriter:
         )
         self.pending: list[_FetchedMatch] = []
         self.pending_analysis: list[_FetchedMatch] = []
-        self.resolvers: dict[tuple[str | None, int | None], TFTNameResolver] = {}
+        self.resolvers: dict[tuple[str, int | None], TFTNameResolver] = {}
         self.stats: defaultdict[str, _PlatformWriteStats] = defaultdict(
             _PlatformWriteStats
         )
@@ -100,21 +100,20 @@ class _DatabaseWriter:
         return stored_match_ids(self.conn)
 
     def _resolver_for(self, payload: dict[str, Any]) -> TFTNameResolver:
-        """Return the name resolver matching the stored patch and TFT set.
+        """Return the name resolver for the configured catalogue patch and TFT set.
 
         Args:
-            payload: Riot match payload whose patch and set select the resolver.
+            payload: Riot match payload whose TFT set selects the resolver.
 
         Returns:
-            A resolver cached for the effective patch and set.
+            A resolver cached for the Community Dragon patch and TFT set.
         """
         info = payload.get("info", {})
         set_number = info.get("tft_set_number")
         if set_number is None:
             set_number = load_config().chat.set_number
-        patch = getattr(self.args, "patch_override", None) or extract_patch(
-            info.get("game_version")
-        )
+        # Stored patch labels can differ from Community Dragon's published versions.
+        patch = (getattr(self.args, "cdragon_patch_override", None) or "").strip() or "latest"
         identity = (patch, set_number)
         resolver = self.resolvers.get(identity)
         if resolver is None:
@@ -123,7 +122,7 @@ class _DatabaseWriter:
             resolver = asyncio.run(
                 TFTNameResolver.from_latest(
                     set_number=set_number,
-                    patch=patch or "latest",
+                    patch=patch,
                 )
             )
             self.resolvers[identity] = resolver

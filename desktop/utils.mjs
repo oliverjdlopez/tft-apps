@@ -449,7 +449,7 @@ export async function electronExecutable(cache) {
  *   Shell directory keyed by its content, leaving running launches untouched.
  */
 export async function stageWindowsShell(source, cache) {
-  const names = ["package.json", "paths.mjs", "main.mjs", "runtime.mjs", "video-runtime.mjs", "utils.mjs", "status.html", "status.js", "status.css", "workspace.mjs", "workspace-preload.cjs", "workspace.html", "workspace.js", "workspace.css", "media.mjs", "media.js"];
+  const names = ["package.json", "paths.mjs", "main.mjs", "runtime.mjs", "video-runtime.mjs", "utils.mjs", "status.html", "status.js", "status.css", "workspace.mjs", "workspace-preload.cjs", "workspace.html", "workspace.js", "workspace.css", "media.mjs", "media.js", "langfuse.mjs"];
   const files = await Promise.all(names.map(async (name) => [name, await readFile(path.join(source, name))]));
   const hash = createHash("sha256");
   for (const [name, content] of files) hash.update(name).update(content);

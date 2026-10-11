@@ -144,6 +144,7 @@ class IngestConfig:
     player_batch_size: int | None = None
     tiers: str = "challenger,grandmaster,master"
     patch_override: str | None = None
+    cdragon_patch_override: str | None = None
     fetch_concurrency: int = 10
     insert_to_db: bool = True
     commit_every: int = 25
@@ -233,7 +234,7 @@ def _read_ini(path: Path | None) -> configparser.ConfigParser:
         },
         "ingest": {
             "platform", "platforms", "queue", "max_new_matches", "matches_per_player", "player_batch_size",
-            "tiers", "patch_override", "fetch_concurrency", "insert_to_db", "commit_every", "analysis_every", "endless", "cycle_delay",
+            "tiers", "patch_override", "cdragon_patch_override", "fetch_concurrency", "insert_to_db", "commit_every", "analysis_every", "endless", "cycle_delay",
             "endless_matches_per_player", "endless_player_batch_size", "log_level",
         },
         "rds-upgrade": {"instance_id"},
@@ -324,6 +325,7 @@ def load_config(path: Path | None = None) -> AppConfig:
             player_batch_size=_ini_optional_int(ini, "ingest", "player_batch_size"),
             tiers=_ini_value(ini, "ingest", "tiers", "challenger,grandmaster,master"),
             patch_override=_ini_value(ini, "ingest", "patch_override") or None,
+            cdragon_patch_override=_ini_value(ini, "ingest", "cdragon_patch_override") or None,
             fetch_concurrency=_ini_int(ini, "ingest", "fetch_concurrency", 10),
             insert_to_db=_ini_bool(ini, "ingest", "insert_to_db", True),
             commit_every=_ini_int(ini, "ingest", "commit_every", 25),

@@ -44,7 +44,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "comp-expert",
-      "snapshot": "634503f6aecceb39453c012241e217266043d99ba7206e4e5e350f35dfcee458"
+      "snapshot": "1364f9a16f2d736d7bf50a97601ce383b7e7e0a4da7c07178c94a67d96898b46"
     },
     {
       "assistant": "compact_transcript",
@@ -146,7 +146,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "trait-expert",
-      "snapshot": "00cd352df55b8d0ba1380f702642f7b9f698ff880ce6b2620bc23808bf501dd4"
+      "snapshot": "deacb77d12f7fadb94b9cc78dcd92c377af153ab53fb9c2376166227b034dea4"
     },
     {
       "assistant": "unit_expert",

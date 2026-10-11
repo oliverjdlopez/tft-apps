@@ -1,27 +1,23 @@
-"""Isolated eval database targeting."""
+"""Evaluation database targeting with per-field application RDS fallback."""
 
 from __future__ import annotations
 
 from dataclasses import replace
-import os
 from urllib.parse import quote
 
 from core.config import DatabaseTarget, resolve_database_target
 from db.session import database_target_override
 
 
-def resolve_eval_target(name_or_dsn: str | None = None, *, require_explicit: bool = False) -> DatabaseTarget:
-    """Resolve the eval RDS target, optionally selecting another database."""
+def resolve_eval_target(name_or_dsn: str | None = None) -> DatabaseTarget:
+    """Resolve eval settings, inheriting missing fields from application RDS.
 
-    if require_explicit:
-        from core.config import load_config
-        load_config()  # Load this checkout's ignored environment before checking.
-        required = ('RDS_EVAL_HOST', 'RDS_EVAL_PORT', 'RDS_EVAL_ADMIN', 'RDS_EVAL_DB')
-        missing = [key for key in required if not os.environ.get(key)]
-        if missing:
-            raise ValueError('Captured executions require a complete RDS_EVAL target; missing: ' + ', '.join(missing))
-        # IAM settings may inherit credentials/region, but coordinates never
-        # inherit the normal application's database for a workspace test.
+    Args:
+        name_or_dsn: Optional database name or maintenance-only explicit DSN.
+
+    Returns:
+        The validated evaluation target with a credential-safe public URL.
+    """
     if name_or_dsn and name_or_dsn.startswith(("postgresql://", "postgres://")):
         return resolve_database_target("eval", name_or_dsn)
 
@@ -29,8 +25,8 @@ def resolve_eval_target(name_or_dsn: str | None = None, *, require_explicit: boo
     if not name_or_dsn or name_or_dsn == target.database:
         return target
 
-    # A named eval database still uses the isolated RDS_EVAL coordinates.  It
-    # is useful for frozen patch databases and never borrows the app target.
+    # A named database changes only the database name after the canonical
+    # loader applies explicit eval settings and per-field application fallback.
     database = name_or_dsn
     username = quote(target.admin)
     database_name = quote(database, safe="")

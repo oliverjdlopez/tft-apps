@@ -29,9 +29,26 @@ environment contracts.
 The optional `[ingest] patch_override` value manually sets the normalized
 patch stored for every ingested Riot match, overriding the patch inferred from
 the API's `game_version`. Leave it blank to retain Riot's value. The original
-`game_version` is preserved, while the override selects the resolver patch and
-the analytics patch scope, and is used when evaluating an ingestion `--patch`
-filter. It applies to both CLI and API-triggered ingestion.
+`game_version` is preserved, while the override selects the analytics patch
+scope and is used when evaluating an ingestion `--patch` filter. It applies to
+both CLI and API-triggered ingestion.
+
+`[ingest] cdragon_patch_override` independently selects the Community Dragon
+catalogue used to normalize names, item metadata, and unit costs. Omitted or
+blank values use `latest`, regardless of the stored patch label. Set it to a
+published catalogue version to pin normalization, or override it for one run
+with `--cdragon-patch-override`. API-triggered ingestion reads the same setting
+and accepts `options.cdragon_patch_override`; an empty string selects `latest`.
+For example:
+
+```ini
+[ingest]
+patch_override = 18.4
+cdragon_patch_override =
+```
+
+This stores matches under `18.4` while fetching Community Dragon's `latest`
+catalogue. The selected catalogue must contain each match's TFT set.
 
 ## Secrets and infrastructure
 
@@ -53,6 +70,11 @@ The database target prefixes are:
 | Application | `RDS_` | None |
 | Evaluation | `RDS_EVAL_` | Corresponding application field |
 | Test | `RDS_TEST_` | None |
+
+Evaluation fallback applies to ordinary runs, captured Langfuse experiments,
+and Specs workspace trials. Missing or blank `RDS_EVAL_*` values inherit the
+corresponding `RDS_*` values; explicit eval values take precedence. The resolved
+evaluation target must still contain a host, admin, and database.
 
 App targets require complete `HOST`, `ADMIN`, and `DB` fields; `PORT` defaults
 to 5432. A password selects password authentication. Without one, every new

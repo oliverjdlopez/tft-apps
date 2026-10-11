@@ -42,6 +42,8 @@ player_batch_size =
 tiers = challenger,grandmaster,master
 # Optional normalized patch to store instead of the patch derived from Riot's game_version.
 patch_override =
+# Community Dragon catalogue version, independent of the stored patch; blank uses latest.
+cdragon_patch_override =
 fetch_concurrency = 10
 insert_to_db = true
 commit_every = 25

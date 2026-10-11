@@ -55,8 +55,17 @@ def get_patch_resolver(patch: str, set_number: int | None) -> TFTNameResolver:
 
 
 def _get_resolver(patch: str, set_number: int | None) -> TFTNameResolver:
-    """Keep the insertion seam used by existing tests and callers."""
-    return get_patch_resolver(patch, set_number)
+    """Resolve direct inserts with the ingestion catalogue setting.
+
+    Args:
+        patch: Stored match patch retained in this compatibility seam.
+        set_number: TFT set represented by the match.
+
+    Returns:
+        The configured Community Dragon resolver, defaulting to ``latest``.
+    """
+    cdragon_patch = load_config().ingest.cdragon_patch_override or "latest"
+    return get_patch_resolver(cdragon_patch, set_number)
 
 
 def _log_unresolved_name(
@@ -101,15 +110,15 @@ def _trait_name(resolver: TFTNameResolver, value: str) -> str:
 
 
 def resolve_unit_cost(resolver: TFTNameResolver, unit: RiotUnit) -> int:
-    """Resolve a unit's game-facing shop cost for the match's patch and set.
+    """Resolve a unit's game-facing shop cost from the selected TFT catalogue.
 
     Community Dragon stores the displayed shop cost directly (1-5), while
-    the Riot match payload exposes a zero-based rarity field. The exact-patch
-    static catalogue is authoritative when it contains the unit; the Riot
-    value remains a fallback for incomplete or unavailable catalogue data.
+    the Riot match payload exposes a zero-based rarity field. The selected
+    catalogue is authoritative when it contains the unit; the Riot value
+    remains a fallback for incomplete or unavailable catalogue data.
 
     Args:
-        resolver: Exact-patch, set-scoped Community Dragon resolver.
+        resolver: Catalogue-patch, set-scoped Community Dragon resolver.
         unit: Riot unit from the final-board payload.
 
     Returns:

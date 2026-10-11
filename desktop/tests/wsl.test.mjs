@@ -58,13 +58,28 @@ test("Windows staging copies shell only and source edits produce a fresh immutab
   assert.equal(await stageWindowsShell(path.join(root, "desktop"), cache), staged);
   assert.match(await readFile(path.join(staged, "workspace.mjs"), "utf8"), /persist:cloudbeaver/);
   assert.match(await readFile(path.join(staged, "main.mjs"), "utf8"), /sandbox: true/);
-  for (const name of ["media.mjs", "media.js"]) {
+  for (const name of ["media.mjs", "media.js", "langfuse.mjs"]) {
     assert.equal(await readFile(path.join(staged, name), "utf8"), await readFile(path.join(root, "desktop", name), "utf8"));
   }
+  // Walk the main-process import graph so new local modules cannot be omitted
+  // from the Windows cache while native checkout tests continue to pass.
+  const pending = ["main.mjs"];
+  const visited = new Set();
+  while (pending.length) {
+    const name = pending.pop();
+    if (visited.has(name)) continue;
+    visited.add(name);
+    const content = await readFile(path.join(staged, name), "utf8");
+    for (const [, specifier] of content.matchAll(/\bfrom\s+["'](\.[^"']+)["']/g)) {
+      pending.push(path.join(path.dirname(name), specifier));
+    }
+  }
   await assert.rejects(readFile(path.join(staged, "backend.py")), { code: "ENOENT" });
-  await writeFile(path.join(staged, "status.css"), "new style");
+  const langfuse = await readFile(path.join(staged, "langfuse.mjs"), "utf8");
+  await writeFile(path.join(staged, "langfuse.mjs"), `${langfuse}\n// Updated sign-in helper.\n`);
   const updated = await stageWindowsShell(staged, cache);
   assert.notEqual(updated, staged);
+  assert.equal(await readFile(path.join(updated, "langfuse.mjs"), "utf8"), `${langfuse}\n// Updated sign-in helper.\n`);
 });
 
 test("identity probes reject an unrelated Windows service even when it returns HTTP 200", async (t) => {
