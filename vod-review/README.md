@@ -58,12 +58,17 @@ Both flags can be supplied together to save full frames and crops.
 ## Transcribe VOD audio
 
 Transcription is opt-in. After downloading a video, choose **Transcribe selected
-video** in the library panel, or select **Audio only, then transcribe** before
-starting a URL download. Install the optional dependency with `uv sync --extra
+video** in the library panel, or enable **Transcription only** beside the URL
+field, paste a URL, and start the download. This downloads the full audio and
+automatically transcribes it; video range, quality, FPS, and checkpoint controls
+are hidden. Sources must offer an audio-only stream; this mode reports a download
+failure if one is unavailable. Install the optional dependency with `uv sync --extra
 transcription`. The default model is `large-v3` on CUDA with float16; configure
 `VOD_WHISPER_MODEL`, `VOD_WHISPER_DEVICE`, and `VOD_WHISPER_COMPUTE_TYPE` to
-choose another faster-whisper model/device/compute type. Raw recognized text and
-detected language appear in the app; no LLM parsing or interpretation is applied.
+choose another faster-whisper model/device/compute type. Once transcription
+finishes, click **View transcript** to open the raw recognized text and detected
+language in a modal. Transcript text stays hidden until requested; no LLM parsing
+or interpretation is applied.
 
 Install the CUDA-enabled PyTorch build appropriate for the host when a CUDA GPU is available. The service automatically reports and uses a CPU fallback when CUDA cannot be initialized.
 

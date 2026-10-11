@@ -145,7 +145,60 @@ describe("VOD download range", () => {
     const request = fetchMock.mock.calls.find(([input]) => String(input).endsWith("/api/videos/from-url"));
     expect(JSON.parse(String(request?.[1]?.body))).toMatchObject({ checkpoint_interval_seconds: 300, quality: "480p" });
     fireEvent.click(screen.getByRole("button", { name: /Dismiss/i }));
-    expect(screen.queryByText("Download paused")).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByText("Download paused")).not.toBeInTheDocument());
+  });
+});
+
+describe("transcription only URL import", () => {
+  it("ignores hidden video settings and opens the automatic transcript only on request", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      const url = String(input);
+      const task = {
+        task_id: "audio-1", media_type: "audio", progress: 100,
+        status: "completed", video: null,
+        transcription: { task_id: "transcript-1", video_id: null, status: "completed", transcript: "Recognized speech from the URL.", language: "en", error: null },
+      };
+      if (url.endsWith("/api/resumable-download")) return { ok: true, json: async () => null } as Response;
+      if (url.endsWith("/api/videos/from-url")) return { ok: true, json: async () => ({ ...task, status: "queued", transcription: null }) } as Response;
+      if (url.endsWith("/api/downloads/audio-1")) return { ok: true, json: async () => task } as Response;
+      return { ok: true, json: async () => [] } as Response;
+    });
+    render(<App />);
+    await screen.findByText("No videos yet");
+    const toggle = screen.getByRole("switch", { name: "Transcription only" });
+    expect(toggle).not.toBeChecked();
+    fireEvent.change(screen.getByLabelText("Download start hours"), { target: { value: "2" } });
+    fireEvent.change(screen.getByLabelText("Download end hours"), { target: { value: "1" } });
+    fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "400" } });
+    fireEvent.change(screen.getByLabelText("Download target FPS"), { target: { value: "15" } });
+    fireEvent.click(toggle);
+    expect(toggle).toBeChecked();
+    expect(screen.queryByLabelText("Download start hours")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Download video quality")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Download target FPS")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Download checkpoint interval in minutes")).not.toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
+    fireEvent.click(screen.getByRole("button", { name: "Download and transcribe audio from link" }));
+    await waitFor(() => expect(toggle).toBeDisabled());
+    expect(screen.queryByRole("button", { name: "Pause" })).not.toBeInTheDocument();
+    const viewTranscript = await screen.findByRole("button", { name: "View transcript" });
+    expect(screen.queryByLabelText("Transcript text")).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Transcript" })).not.toBeInTheDocument();
+    fireEvent.click(viewTranscript);
+    expect(screen.getByRole("dialog", { name: "Transcript" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Transcript text")).toHaveValue("Recognized speech from the URL.");
+    fireEvent.click(screen.getByRole("button", { name: "Close transcript" }));
+    expect(screen.queryByLabelText("Transcript text")).not.toBeInTheDocument();
+    fireEvent.click(viewTranscript);
+    expect(screen.getByLabelText("Transcript text")).toHaveValue("Recognized speech from the URL.");
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Transcript" }), { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Transcript" })).not.toBeInTheDocument());
+    expect(screen.getByText("Transcription complete · en")).toBeInTheDocument();
+    const request = fetchMock.mock.calls.find(([input]) => String(input).endsWith("/api/videos/from-url"));
+    expect(JSON.parse(String(request?.[1]?.body))).toEqual({ url: "https://youtu.be/example", quality: "720p", media_type: "audio", transcribe: true });
+    await waitFor(() => expect(toggle).toBeEnabled());
+    fireEvent.click(toggle);
+    expect(screen.getByLabelText("Download start hours")).toHaveValue(2);
   });
 });
 

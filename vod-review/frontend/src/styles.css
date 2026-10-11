@@ -63,6 +63,7 @@ body { margin: 0; min-width: 320px; background: var(--surface-1); }
 .url-import { margin: 0 5px 14px; padding: 11px; border: 1px solid var(--border); border-radius: 11px; background: var(--card); }
 .url-import > label { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; color: var(--muted-foreground); font-size: 10px; font-weight: 700; }
 .url-import > label svg { color: var(--mint); }
+.url-import > .url-import-transcription { justify-content: space-between; color: var(--foreground); }
 .url-import-row { display: flex; gap: 5px; }
 .url-import-row input { min-width: 0; flex: 1; padding: 8px 9px; color: var(--muted-foreground); border: 1px solid var(--border); border-radius: 7px; outline: none; background: var(--card); font-size: 10px; }
 .url-import-row input::placeholder { color: var(--muted-foreground); }
