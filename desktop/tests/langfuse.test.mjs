@@ -1,7 +1,39 @@
 /** Check credential handling and the session handshake without a live server. */
 import assert from "node:assert/strict";
 import test from "node:test";
-import { DEFAULT_LANGFUSE_URL, localLangfuseUrl, readLangfuseSettings, signInLangfuse } from "../langfuse.mjs";
+import { DEFAULT_LANGFUSE_URL, langfuseRunId, langfuseRunReferences, langfuseRunMenuItems, localLangfuseUrl, readLangfuseSettings, signInLangfuse } from "../langfuse.mjs";
+
+test("v4 results expose baseline and comparison IDs without confusing dataset IDs", () => {
+  const page = "http://localhost:15510/project/tft-apps-evals/experiments/results";
+  const references = langfuseRunReferences(page + "?baseline=run-1&c=run-2,run-3&c=run-1&dataset=unrelated");
+  assert.deepEqual(references, [
+    { id: "run-1", label: "Baseline" }, { id: "run-2", label: "Comparison 1" },
+    { id: "run-3", label: "Comparison 2" },
+  ]);
+  for (const value of [page, page + "?baseline=invalid%2Fid", page.replace("localhost", "example.com") + "?baseline=run-1"])
+    assert.deepEqual(langfuseRunReferences(value), []);
+  let copied;
+  const entries = langfuseRunMenuItems(references, value => { copied = value; });
+  assert.equal(entries[1].label, "Comparison 1: run-2");
+  entries[1].click();
+  assert.equal(copied, "run-2");
+  assert.equal(langfuseRunMenuItems([], () => {})[0].enabled, false);
+});
+
+test("run references exclude dataset lists, comparisons, and other origins", () => {
+  const run = "http://localhost:15510/project/tft-apps-evals/datasets/dataset/runs/00cf156edbe564bd";
+  assert.equal(langfuseRunId(run), "00cf156edbe564bd");
+  assert.equal(langfuseRunId(run + "/?view=scores#item"), "00cf156edbe564bd");
+  assert.equal(langfuseRunId("http://127.0.0.1:9000/project/custom/datasets/case/runs/custom-run_1",
+    "http://127.0.0.1:9000/project/custom"), "custom-run_1");
+  for (const value of [
+    undefined, "invalid", run.replace("localhost", "example.com"),
+    run.replace("15510", "15500"), run.replace("localhost", "user:password@localhost"),
+    run.replace("00cf156edbe564bd", ""),
+    run.replace("00cf156edbe564bd", "encoded%2Fid"), run + "/extra",
+    "http://localhost:15510/project/tft-apps-evals/datasets/dataset/compare",
+  ]) assert.equal(langfuseRunId(value), null);
+});
 
 const settings = { url: "http://localhost:15510/project/tft-apps-evals", email: "fixture@example.test", password: "fixture &+ password" };
 

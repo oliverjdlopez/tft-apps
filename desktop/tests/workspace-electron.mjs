@@ -1,5 +1,5 @@
 /** Opt-in native Electron regression using local HTML fixtures, without services. */
-import { app, BrowserWindow, session, clipboard } from "electron";
+import { app, BrowserWindow, session, clipboard, Menu } from "electron";
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
@@ -10,6 +10,7 @@ import { createServer } from "node:http";
 import { once } from "node:events";
 import { DesktopWorkspace } from "../workspace.mjs";
 import { createMediaReader } from "../media.mjs";
+import { langfuseRunMenuItems } from "../langfuse.mjs";
 
 const profile = mkdtempSync(path.join(os.tmpdir(), "chattft-workspace-test-"));
 app.setPath("userData", profile);
@@ -82,7 +83,14 @@ async function run() {
     preload: fileURLToPath(new URL("../workspace-preload.cjs", import.meta.url)),
   } });
   const workspace = new DesktopWorkspace(window, () => {}, undefined,
-    createMediaReader(() => `http://127.0.0.1:${catalogue.address().port}`));
+    createMediaReader(() => `http://127.0.0.1:${catalogue.address().port}`), {
+      onLangfuseRunsChanged(runs) {
+        Menu.setApplicationMenu(Menu.buildFromTemplate([{ label: "View", submenu: [
+          { id: "copy-run", label: "Copy Langfuse run ID", submenu: langfuseRunMenuItems(runs,
+            id => workspace.copyLangfuseRunId(id)) },
+        ] }]));
+      },
+    });
   try {
     await until(() => window.webContents.executeJavaScript("Boolean(document.getElementById('langfuse') && window.desktopWorkspace)").catch(() => false));
     await workspace.chat.webContents.loadURL("data:text/html,<input id='chat'>");
@@ -154,6 +162,27 @@ async function run() {
     await until(() => workspace.state === "ready");
     assert.equal(workspace.active, "langfuse");
     assert.equal(await workspace.pages.get("langfuse").view.webContents.executeJavaScript("typeof window.desktopWorkspace"), "undefined");
+    const runContents = workspace.pages.get("langfuse").view.webContents;
+    // Exercise Next.js-style routing and native menu actions without a reload.
+    await runContents.executeJavaScript("history.pushState({}, '', '/project/tft-apps-evals/datasets/fixture/runs/00cf156edbe564bd')");
+    await until(() => workspace.currentLangfuseRunReferences()[0]?.id === "00cf156edbe564bd");
+    let entries = Menu.getApplicationMenu().getMenuItemById("copy-run").submenu.items;
+    assert.match(entries[0].label, /00cf156edbe564bd/);
+    entries[0].click();
+    assert.equal(copiedReference, "00cf156edbe564bd");
+    await runContents.executeJavaScript("history.pushState({}, '', '/project/tft-apps-evals/experiments/results?baseline=00cf156edbe564bd&c=second-run')");
+    await until(() => workspace.currentLangfuseRunReferences().length === 2);
+    entries = Menu.getApplicationMenu().getMenuItemById("copy-run").submenu.items;
+    assert.equal(entries[1].label, "Comparison 1: second-run");
+    entries[1].click();
+    assert.equal(copiedReference, "second-run");
+    const stale = entries[1];
+    await runContents.executeJavaScript("history.pushState({}, '', '/project/tft-apps-evals/datasets/fixture/runs')");
+    await until(() => workspace.currentLangfuseRunReferences().length === 0);
+    assert.equal(Menu.getApplicationMenu().getMenuItemById("copy-run").submenu.items[0].enabled, false);
+    stale.click();
+    assert.equal(copiedReference, "second-run");
+    console.log("PASS: native run-ID menu, comparison selection, SPA navigation, and disabled copying on lists");
     await workspace.pages.get("langfuse").view.webContents.executeJavaScript("document.getElementById('state').value = 'keep langfuse'");
     workspace.select("chat");
     assert.equal(await workspace.chat.webContents.executeJavaScript("document.getElementById('chat').value"), "keep chat");

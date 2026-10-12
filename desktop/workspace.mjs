@@ -3,7 +3,7 @@ import { WebContentsView, ipcMain, session, clipboard } from "electron";
 import { MediaError, isMediaReference } from "./media.mjs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { navigationPolicy, permissionAllowed, workspaceCommandAllowed } from "./utils.mjs";
-import { DEFAULT_LANGFUSE_URL } from "./langfuse.mjs";
+import { DEFAULT_LANGFUSE_URL, langfuseRunReferences } from "./langfuse.mjs";
 
 const shellPath = fileURLToPath(new URL("./workspace.html", import.meta.url));
 const externalPages = {
@@ -20,11 +20,13 @@ export class DesktopWorkspace {
    * Args:
    *   window: Owning BrowserWindow; openExternal: validated browser-link handler.
    *   ensureVideo: Shared video readiness; readMedia: owned catalogue reader.
-   *   langfuseOptions: Main-process URL and session preparation.
+   *   langfuseOptions: Main-process URL, session preparation, and menu updates.
    */
-  constructor(window, openExternal, ensureVideo = async () => {}, readMedia = async () => { throw new Error("Media catalogue is unavailable."); }, { langfuseUrl = DEFAULT_LANGFUSE_URL, prepareLangfuse } = {}) {
+  constructor(window, openExternal, ensureVideo = async () => {}, readMedia = async () => { throw new Error("Media catalogue is unavailable."); }, { langfuseUrl = DEFAULT_LANGFUSE_URL, prepareLangfuse, onLangfuseRunsChanged } = {}) {
     this.ensureVideo = ensureVideo;
     this.prepareLangfuse = prepareLangfuse;
+    this.onLangfuseRunsChanged = onLangfuseRunsChanged;
+    this.langfuseRunsSignature = "[]";
     this.window = window;
     this.active = "chat";
     this.compositionsEnabled = false;
@@ -115,6 +117,13 @@ export class DesktopWorkspace {
       return { action: "deny" };
     });
     contents.on("will-attach-webview", (event) => event.preventDefault());
+    if (tab === "langfuse") {
+      contents.on("did-navigate", () => this.layout());
+      // Langfuse changes routes through history.pushState without reloading.
+      contents.on("did-navigate-in-page", (_event, _url, isMainFrame) => {
+        if (isMainFrame) this.layout();
+      });
+    }
     contents.on("did-fail-load", (_event, code, _description, _url, mainFrame) => {
       if (mainFrame && code !== -3) this.fail(tab);
     });
@@ -129,6 +138,20 @@ export class DesktopWorkspace {
 
   /** Return the selected page's loading state for native menu actions. */
   get state() { return this.pages.get(this.active)?.state ?? "ready"; }
+
+  /** Return displayed Langfuse runs, excluding lists and unavailable pages. */
+  currentLangfuseRunReferences() {
+    if (this.closed || this.active !== "langfuse" || this.state !== "ready") return [];
+    const page = this.pages.get("langfuse");
+    return langfuseRunReferences(page.view.webContents.getURL(), page.url);
+  }
+
+  /** Copy a native menu selection only while that run remains on the page. */
+  copyLangfuseRunId(runId) {
+    if (!this.currentLangfuseRunReferences().some(row => row.id === runId)) return false;
+    clipboard.writeText(runId);
+    return true;
+  }
 
   /**
    * Switch visibility without navigating or recreating any application.
@@ -214,6 +237,12 @@ export class DesktopWorkspace {
     for (const [tab, page] of this.pages) {
       page.view.setBounds(bounds);
       page.view.setVisible(this.active === tab && page.state === "ready");
+    }
+    const runs = this.currentLangfuseRunReferences();
+    const signature = JSON.stringify(runs);
+    if (signature !== this.langfuseRunsSignature) {
+      this.langfuseRunsSignature = signature;
+      this.onLangfuseRunsChanged?.(runs);
     }
     this.window.webContents.send("desktop-workspace-state", { active: this.active, state: this.state, compositionsEnabled: this.compositionsEnabled });
   }

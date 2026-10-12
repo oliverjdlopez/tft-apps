@@ -115,6 +115,49 @@ test("Langfuse uses the configured URL after its isolated session is prepared", 
   } finally { workspace.close(); }
 });
 
+test("native run references follow navigation and reject stale menu selections", () => {
+  let references = [];
+  let updates = 0;
+  const workspace = new DesktopWorkspace(windowFixture(), () => {}, undefined, undefined, {
+    onLangfuseRunsChanged(runs) { references = runs; updates++; },
+  });
+  const contents = workspace.pages.get("langfuse").view.webContents;
+  clipboard.value = "previous clipboard";
+  try {
+    workspace.select("langfuse");
+    contents.emit("did-finish-load");
+    assert.equal(workspace.copyLangfuseRunId("unknown"), false);
+    contents.url = "http://localhost:15510/project/tft-apps-evals/datasets/dataset/runs/first-run";
+    contents.emit("did-navigate-in-page", {}, contents.url, true);
+    assert.deepEqual(references, [{ id: "first-run", label: "Run" }]);
+    assert.equal(workspace.copyLangfuseRunId("unknown"), false);
+    assert.equal(clipboard.value, "previous clipboard");
+    assert.equal(workspace.copyLangfuseRunId("first-run"), true);
+    assert.equal(clipboard.value, "first-run");
+    const before = updates;
+    workspace.layout();
+    assert.equal(updates, before, "resizing does not rebuild unchanged menus");
+    contents.url = "http://localhost:15510/project/tft-apps-evals/experiments/results?baseline=first-run&c=second-run";
+    contents.emit("did-navigate", {}, contents.url);
+    assert.deepEqual(references, [
+      { id: "first-run", label: "Baseline" }, { id: "second-run", label: "Comparison 1" },
+    ]);
+    assert.equal(workspace.copyLangfuseRunId("second-run"), true);
+    assert.equal(clipboard.value, "second-run");
+    workspace.select("chat");
+    assert.deepEqual(references, []);
+    assert.equal(workspace.copyLangfuseRunId("second-run"), false);
+    workspace.select("langfuse");
+    contents.url = "http://localhost:15510/project/tft-apps-evals/datasets/dataset/runs";
+    contents.emit("did-navigate-in-page", {}, contents.url, true);
+    assert.deepEqual(references, []);
+    assert.equal(workspace.copyLangfuseRunId("second-run"), false);
+    assert.equal(clipboard.value, "second-run");
+    workspace.fail("langfuse");
+    assert.deepEqual(workspace.currentLangfuseRunReferences(), []);
+  } finally { workspace.close(); }
+});
+
 test("hosted pages lack a preload and unsafe navigation cannot escape the origin", () => {
   const external = [];
   const workspace = new DesktopWorkspace(windowFixture(), (url) => external.push(url));

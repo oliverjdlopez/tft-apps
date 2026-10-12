@@ -156,6 +156,13 @@ Historical Promptfoo results are retained untouched. The
 [compatibility history](native-promptfoo-compatibility.md) describes the retired
 integration, not current commands. The ChatTFT in-app Evals API/editor remain removed.
 
+Recent saved evaluations can be reviewed without model calls using
+`uv run --extra eval-pdfs chat-tft-export-eval-pdfs`. This creates combined and
+per-dataset Markdown/PDF pairs from the latest finished runs. See the
+[export command and options](langfuse-execution.md#export-recent-evaluations-as-markdown-and-pdf).
+Run its offline checks with
+`uv run --extra eval-pdfs pytest -q tests/test_export_eval_pdfs.py`.
+
 The [natural workspace validation record](langfuse-validation.md) documents migration identity checks, browser acceptance, native mock scheduling, timeout evidence, and existing repository test failures.
 
 The 2026-10-02 [retirement of the older checkout](../../../docs/retiring-tft-suite.md)

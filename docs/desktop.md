@@ -78,6 +78,16 @@ The credentials are never passed to the hosted renderer. Set
 `LANGFUSE_DESKTOP_AUTO_LOGIN=false` for manual sign-in; a failed automatic
 sign-in also leaves the normal sign-in page available.
 
+Open a dataset's **Experiments** tab and select a run, then use
+**View → Copy Langfuse run ID** in the native application menu. The submenu shows
+each displayed run's ID; choose **Baseline** or a numbered **Comparison** entry
+when viewing multiple runs. Langfuse v4 redirects older dataset-run links to
+its comparison results page, so both URL formats are supported. Lists and
+unavailable pages show a disabled hint. References follow navigation and tab
+changes and are read by Electron's main process without an address bar or a
+hosted-page desktop bridge. Restart the desktop to load the updated shell,
+including when using Windows/WSL staging.
+
 Use the [ChatTFT backend guide](../tft-chat/docs/architecture/web-runtime.md) or
 [VOD guide](../vod-review/README.md) for standalone troubleshooting commands. Run
 Python suites from each application root and desktop tests with `npm test` from

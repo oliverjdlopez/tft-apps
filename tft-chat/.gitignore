@@ -20,6 +20,7 @@ app/frontend/dist/
 chat_tft.ini
 *.dump
 evals/sample_results/
+dev/exports/
 tmp/eval_results.json
 tmp/benchmarks/
 cuda-keyring_*.deb

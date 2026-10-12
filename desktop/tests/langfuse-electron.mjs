@@ -1,10 +1,10 @@
 /** Opt-in check against local Langfuse using a disposable Electron profile. */
-import { app, BrowserWindow, session } from "electron";
+import { app, BrowserWindow, session, clipboard, Menu } from "electron";
 import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
 import { DesktopWorkspace } from "../workspace.mjs";
-import { readLangfuseSettings, signInLangfuse } from "../langfuse.mjs";
+import { langfuseRunId, langfuseRunMenuItems, readLangfuseSettings, signInLangfuse } from "../langfuse.mjs";
 
 const root = process.env.CHATTFT_LANGFUSE_TEST_ROOT || fileURLToPath(new URL("../../", import.meta.url));
 const wsl = process.env.CHATTFT_LANGFUSE_TEST_DISTRO ? { distro: process.env.CHATTFT_LANGFUSE_TEST_DISTRO } : undefined;
@@ -38,13 +38,19 @@ async function run() {
     submissions++;
     callback({});
   });
-  const window = new BrowserWindow({ show: false, webPreferences: {
+  const window = new BrowserWindow({ show: false, width: 1200, height: 800, webPreferences: {
     sandbox: true, contextIsolation: true, nodeIntegration: false,
     preload: fileURLToPath(new URL("../workspace-preload.cjs", import.meta.url)),
   } });
   stage = "workspace";
   const workspace = new DesktopWorkspace(window, () => {}, undefined, undefined, {
     langfuseUrl: settings.url,
+    onLangfuseRunsChanged(runs) {
+      Menu.setApplicationMenu(Menu.buildFromTemplate([{ label: "View", submenu: [
+        { id: "copy-run", label: "Copy Langfuse run ID", submenu: langfuseRunMenuItems(runs,
+          id => workspace.copyLangfuseRunId(id)) },
+      ] }]));
+    },
     prepareLangfuse: async received => {
       stage = "automatic-login";
       assert.equal(received, partition);
@@ -65,6 +71,28 @@ async function run() {
     assert.equal(await contents.executeJavaScript("Boolean(document.querySelector('input[type=password]'))"), false);
     assert.equal(await contents.executeJavaScript("typeof window.desktopWorkspace"), "undefined");
     assert.equal(submissions, before.user ? 0 : 1);
+    if (process.env.CHATTFT_LANGFUSE_TEST_RUN_URL) {
+      stage = "run-reference";
+      const runUrl = process.env.CHATTFT_LANGFUSE_TEST_RUN_URL;
+      const runId = langfuseRunId(runUrl, settings.url);
+      assert.ok(runId, "The test run must belong to the configured Langfuse origin.");
+      await contents.loadURL(runUrl);
+      // Let the legacy run link redirect into v4's results comparison page.
+      await until(() => new URL(contents.getURL()).pathname.endsWith("/experiments/results"));
+      await delay(500);
+      const entries = Menu.getApplicationMenu().getMenuItemById("copy-run").submenu.items;
+      assert.ok(entries.some(entry => entry.label.endsWith(": " + runId)));
+      const originalWrite = clipboard.writeText;
+      let copied;
+      clipboard.writeText = value => { copied = value; };
+      try {
+        for (const entry of entries) {
+          entry.click();
+          assert.equal(copied, entry.label.split(": ")[1]);
+        }
+      } finally { clipboard.writeText = originalWrite; }
+      console.log("PASS: live Langfuse comparison run IDs appear in the native menu and copy correctly.");
+    }
     workspace.select("chat");
     workspace.select("langfuse");
     assert.equal(workspace.currentContents(), contents);

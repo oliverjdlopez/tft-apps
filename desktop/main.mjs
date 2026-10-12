@@ -10,7 +10,7 @@ import { DesktopWorkspace } from "./workspace.mjs";
 import { createMediaReader } from "./media.mjs";
 import { DesktopRuntime } from "./runtime.mjs";
 import { VideoRuntime } from "./video-runtime.mjs";
-import { readLangfuseSettings, signInLangfuse } from "./langfuse.mjs";
+import { langfuseRunMenuItems, readLangfuseSettings, signInLangfuse } from "./langfuse.mjs";
 import { launchOptions, navigationPolicy, permissionAllowed } from "./utils.mjs";
 
 const wsl = process.env.CHATTFT_DESKTOP_WSL ? JSON.parse(process.env.CHATTFT_DESKTOP_WSL) : undefined;
@@ -51,6 +51,7 @@ function createWindow() {
   workspace = new DesktopWorkspace(window, openExternal, ensureVideoWorkspace, createMediaReader(() => frontendUrl), {
     langfuseUrl: langfuse.url,
     prepareLangfuse: (partition) => signInLangfuse(partition, langfuse),
+    onLangfuseRunsChanged: installMenu,
   });
   for (const view of [workspace.chat, workspace.rolldown, workspace.flowchart, workspace.compositions]) {
     const contents = view.webContents;
@@ -232,7 +233,7 @@ function zoomView(delta) {
 }
 
 /** Install platform editing/navigation controls without changing React content. */
-function installMenu() {
+function installMenu(langfuseRuns = []) {
   Menu.setApplicationMenu(Menu.buildFromTemplate([
     ...(process.platform === "darwin" ? [{ role: "appMenu" }] : []),
     { label: "File", submenu: [{ role: process.platform === "darwin" ? "close" : "quit" }] },
@@ -250,6 +251,8 @@ function installMenu() {
       { label: "Langfuse", accelerator: "CmdOrCtrl+7", click: () => workspace?.select("langfuse") },
       { label: "Database", accelerator: "CmdOrCtrl+8", click: () => workspace?.select("database") },
       { label: "Media", accelerator: "CmdOrCtrl+9", click: () => workspace?.select("media") },
+      { label: "Copy Langfuse run ID", submenu: langfuseRunMenuItems(langfuseRuns,
+        id => workspace?.copyLangfuseRunId(id)) },
       { type: "separator" },
       { label: "Reload", accelerator: "CmdOrCtrl+R", click: () => reloadView(false) },
       { label: "Force Reload", accelerator: "CmdOrCtrl+Shift+R", click: () => reloadView(true) },

@@ -30,6 +30,7 @@ dependencies = [
 # by default.
 [project.optional-dependencies]
 evals = ["langfuse==4.15.2", "openinference-instrumentation-openai-agents==2.4.1"]
+eval-pdfs = ["markdown-it-py>=3.0,<5", "weasyprint>=68.0,<69"]
 explorer = [
     "fastapi>=0.110",
     "uvicorn>=0.29",
@@ -73,6 +74,7 @@ chat-tft-update-tables = "scripts.update_tables.main:main"
 chat-tft-add-analysis-indexes = "scripts.add_analysis_indexes:main"
 chat-tft-migrate-relational-v2 = "scripts.migrate_relational_v2:main"
 chat-tft-evals = "evals.__main__:main"
+chat-tft-export-eval-pdfs = "scripts.export_eval_pdfs.main:main"
 chat-tft-assistants = "domain.assistants.__main__:main"
 chat-tft-specs = "scripts.assistant_specs.main:main"
 chat-tft-docs = "scripts.docs.main:main"

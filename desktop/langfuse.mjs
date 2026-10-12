@@ -16,6 +16,45 @@ export function localLangfuseUrl(value) {
   return url.href;
 }
 
+/** Extract a run reference only from a detail page on the configured origin. */
+export function langfuseRunId(value, baseUrl = DEFAULT_LANGFUSE_URL) {
+  try {
+    const url = new URL(value);
+    if (url.origin !== new URL(localLangfuseUrl(baseUrl)).origin || url.username || url.password) return null;
+    return url.pathname.match(/^\/project\/[^/]+\/datasets\/[^/]+\/runs\/([A-Za-z0-9_-]+)\/?$/)?.[1] ?? null;
+  } catch { return null; }
+}
+
+/** Read every displayed run from detail links or v4 comparison results. */
+export function langfuseRunReferences(value, baseUrl = DEFAULT_LANGFUSE_URL) {
+  const detailId = langfuseRunId(value, baseUrl);
+  if (detailId) return [{ id: detailId, label: "Run" }];
+  try {
+    const url = new URL(value);
+    if (url.origin !== new URL(localLangfuseUrl(baseUrl)).origin || url.username || url.password
+      || !/^\/project\/[^/]+\/experiments\/results\/?$/.test(url.pathname)) return [];
+    const baseline = url.searchParams.get("baseline");
+    const comparisons = url.searchParams.getAll("c").flatMap(value => value.split(","));
+    const rows = [
+      { id: baseline, label: "Baseline" },
+      ...comparisons.map((id, index) => ({ id, label: `Comparison ${index + 1}` })),
+    ];
+    const seen = new Set();
+    return rows.filter(row => {
+      if (!row.id || !/^[A-Za-z0-9_-]+$/.test(row.id) || seen.has(row.id)) return false;
+      seen.add(row.id);
+      return true;
+    });
+  } catch { return []; }
+}
+
+/** Build native copy actions with a readable role and the exact script ID. */
+export function langfuseRunMenuItems(references, copy) {
+  return references.length
+    ? references.map(({ id, label }) => ({ label: `${label}: ${id}`, click: () => copy(id) }))
+    : [{ label: "Open a Langfuse experiment run", enabled: false }];
+}
+
 /** Read the existing ignored env file, including from a Windows shell over WSL. */
 export function readLangfuseSettings(root, {
   wsl, platform = process.platform, read = readFileSync, warn = console.warn,

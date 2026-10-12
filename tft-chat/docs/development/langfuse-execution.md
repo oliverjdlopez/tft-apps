@@ -107,6 +107,57 @@ runs without asynchronous grading use the comparison group ID as the filename.
 Files are replaced atomically and remain ignored runtime artifacts. Older
 saved jobs do not acquire tool arguments retroactively.
 
+## Export recent evaluations as Markdown and PDF
+
+From `tft-chat/`, run:
+
+```bash
+uv run --extra eval-pdfs chat-tft-export-eval-pdfs
+```
+
+The command reads the existing local `jobs.sqlite3` database in read-only mode
+and selects the newest terminal (`completed` or `failed`) run for each dataset,
+using submission time. Pending, interrupted, and export-only jobs are excluded.
+Failed grading still retains the recorded assistant responses. Selected cases
+follow the frozen dataset order, with every variant/repetition included. Each
+case has its own numbered heading and separate Input and Output headings.
+Missing responses and execution errors are explicit; tool traces and grading
+commentary are omitted. Text is preserved, and structured inputs/answers use
+fenced JSON, including legacy execution-wrapper handling.
+
+The output directory contains `latest-evals.md` and `latest-evals.pdf`, plus a
+Markdown/PDF pair for each dataset. Dataset filenames use safe labels with hash
+suffixes to avoid collisions. The default is the ignored `dev/exports/`
+directory under the ChatTFT checkout (`~/tft-apps/tft-chat/dev/exports` in the
+standard suite layout). `LANGFUSE_RUNTIME_DIR` relocates the default source
+database; the export directory is set independently with `--output-dir`.
+For example:
+
+```bash
+uv run --extra eval-pdfs chat-tft-export-eval-pdfs \
+  --dataset unit-expert --dataset item-expert --recent 2 \
+  --output-dir /tmp/chattft-eval-review
+```
+
+`--dataset` accepts either the saved dataset name or local suite name and can
+be repeated. `--recent N` selects N finished runs per dataset (default 1).
+`--database /path/to/jobs.sqlite3` selects an existing runner database. The
+exporter never starts services, reruns assistants, requests grading, or changes
+saved jobs, snapshots, or their automatic artifacts. It fails with a nonzero
+exit status if no matching runs exist or rendering fails. Markdown already
+written remains available after a PDF failure. Rerunning in the same output
+directory atomically replaces matching export filenames.
+
+PDF rendering uses Markdown tables, code blocks, Unicode fonts, and paginated
+A4 layout through MarkdownIt and WeasyPrint. Raw HTML is escaped and images
+appear as alt text, with file/network resource fetching disabled. The optional
+`eval-pdfs` dependencies require system Pango libraries; see
+[WeasyPrint installation](https://doc.courtbouillon.org/weasyprint/v68.0/first_steps.html#installation)
+for platform requirements. The exporter is implemented in
+`scripts/export_eval_pdfs/`; focused offline tests are
+`tests/test_export_eval_pdfs.py`. Tests exercise the real PDF renderer when the
+optional dependencies are installed.
+
 ## Traces
 
 The documented OpenInference OpenAI Agents integration records actual nested

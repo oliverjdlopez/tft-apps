@@ -111,7 +111,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "item-expert",
-      "snapshot": "36177cab140079db9132602100b0a9a280b7d9580df2d0c8e8c59bb086c5ea16"
+      "snapshot": "8b4fc4dd7d225c7c2040fce2f745bb70210817edeeb78b2a1c61867f806f4bcf"
     },
     {
       "assistant": "meta_expert",
@@ -146,7 +146,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "trait-expert",
-      "snapshot": "deacb77d12f7fadb94b9cc78dcd92c377af153ab53fb9c2376166227b034dea4"
+      "snapshot": "8a8adf076e0c6a99c8a25c7d2f1dc4c80d8b44c41cb6d981472c9f1ff932abf1"
     },
     {
       "assistant": "unit_expert",
@@ -158,7 +158,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "unit-expert",
-      "snapshot": "8c64292d00a60b99e684b0f44d2e9560ecdb9f41c9b5477df5c897180dabb10b"
+      "snapshot": "3f909e362dff051925f8640328c7a755d666323cd136ccc4089d9cfb1e6db10a"
     }
   ]
 }
