@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld("desktopWorkspace", {
   },
   /** Invoke fixed media operations without exposing arbitrary URLs or paths. */
   media(action, value) {
-    if (!["list", "read", "copy"].includes(action)) return Promise.resolve({ error: "Unknown media action." });
+    if (!["list", "read", "copy", "distill"].includes(action)) return Promise.resolve({ error: "Unknown media action." });
     return ipcRenderer.invoke("desktop-media", action, value);
   },
   /** Deliver sanitized workspace state without exposing Electron event objects. */

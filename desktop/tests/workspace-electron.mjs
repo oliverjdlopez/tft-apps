@@ -56,11 +56,16 @@ async function run() {
   wav.writeUInt32LE(8000, 24); wav.writeUInt32LE(16000, 28);
   wav.writeUInt16LE(2, 32); wav.writeUInt16LE(16, 34); wav.write("data", 36); wav.writeUInt32LE(1600, 40);
   let transcriptMissing = false;
+  const distillations = [];
   const catalogue = createServer((request, response) => {
     const url = new URL(request.url, "http://fixture");
     const resource = allMedia.find((item) => url.pathname.includes(item.reference));
     response.setHeader("Content-Type", "application/json");
-    if (url.pathname === "/api/shared-media") {
+    if (url.pathname === "/api/assistants/tasks/transcription_pipeline/run" && request.method === "POST") {
+      let body = "";
+      request.on("data", (chunk) => { body += chunk; });
+      request.on("end", () => distillations.push({ input: JSON.parse(body).input, response }));
+    } else if (url.pathname === "/api/shared-media") {
       response.end(JSON.stringify(allMedia));
     } else if (url.pathname.endsWith("/content")) {
       if (transcriptMissing) { response.writeHead(410); response.end(); }
@@ -95,12 +100,51 @@ async function run() {
     await until(() => window.webContents.executeJavaScript("document.getElementById('media-content').textContent.includes('Second transcript')"));
     await delay(250);
     assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-content').textContent.includes('First transcript')"), false);
+    assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distillation').hidden"), false);
+    assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distill').disabled"), false);
+    await window.webContents.executeJavaScript("document.getElementById('media-distill').click(); document.getElementById('media-distill').click()");
+    await until(() => distillations.length === 1);
+    assert.match(distillations[0].input, /Second transcript/);
+    assert(distillations[0].input.includes(second.reference));
+    assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distill').disabled"), true);
+    assert.match(await window.webContents.executeJavaScript("document.getElementById('media-distill-status').textContent"), /Distilling/);
+    await window.webContents.executeJavaScript("document.querySelectorAll('#media-list button')[0].click()");
+    await until(() => window.webContents.executeJavaScript("document.getElementById('media-content').textContent.includes('First transcript')"));
+    const distilled = "# Source reference\n\n## Reference notes\n- Preserve the supplied condition.\n<script>window.unsafeDistillation = true</script>";
+    distillations[0].response.end(JSON.stringify({ ok: true, result: distilled }));
+    await delay(150);
+    assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distill-output').textContent"), "");
+    await window.webContents.executeJavaScript("document.querySelectorAll('#media-list button')[1].click()");
+    await until(() => window.webContents.executeJavaScript("document.getElementById('media-distill-output').textContent.includes('Preserve the supplied condition')"));
+    assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distill-output').textContent"), distilled);
+    assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distill-output').children.length"), 0);
+    assert.equal(await window.webContents.executeJavaScript("Boolean(window.unsafeDistillation)"), false);
+    assert.equal(distillations.length, 1, "duplicate clicks do not create another model run");
+    await until(() => window.webContents.executeJavaScript("!document.getElementById('media-distill').disabled"));
+    await window.webContents.executeJavaScript("document.getElementById('media-distill').click()");
+    await until(() => distillations.length === 2);
+    distillations[1].response.end(JSON.stringify({ ok: false, error: "private backend detail" }));
+    await until(() => window.webContents.executeJavaScript("document.getElementById('media-distill').textContent === 'Retry distillation'"));
+    assert.match(await window.webContents.executeJavaScript("document.getElementById('media-distill-status').textContent"), /Distillation failed/);
+    assert.doesNotMatch(await window.webContents.executeJavaScript("document.getElementById('media-distill-status').textContent"), /private/);
+    assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distill-output').textContent"), distilled);
+    await window.webContents.executeJavaScript("document.getElementById('media-distill').click()");
+    await until(() => distillations.length === 3);
+    distillations[2].response.end(JSON.stringify({ ok: true, result: "# Retried reference\n\n## Source and scope\nFixture transcript.\n\n## Reference notes\n- Preserve the source's condition and uncertainty." }));
+    await until(() => window.webContents.executeJavaScript("document.getElementById('media-distill-output').textContent.includes('Retried reference')"));
     await window.webContents.executeJavaScript("const search = document.getElementById('media-search'); search.value = 'vod:fixture'; search.dispatchEvent(new Event('input'))");
     assert.equal(await window.webContents.executeJavaScript("document.querySelectorAll('#media-list button').length"), 1);
     workspace.select("chat");
     workspace.select("media");
     assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-search').value"), "vod:fixture");
     assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-title').textContent"), "segments.json");
+    assert.match(await window.webContents.executeJavaScript("document.getElementById('media-distill-output').textContent"), /Retried reference/);
+    if (process.env.CHATTFT_TEST_MEDIA_SCREENSHOT) {
+      // Let Chromium paint the retained result after the tab switch before
+      // capturing; DOM assertions can otherwise precede the compositor frame.
+      await delay(250);
+      writeFileSync(process.env.CHATTFT_TEST_MEDIA_SCREENSHOT, (await window.webContents.capturePage()).toPNG());
+    }
     transcriptMissing = true;
     await window.webContents.executeJavaScript("document.querySelector('#media-list button').click()");
     await until(() => window.webContents.executeJavaScript("!document.getElementById('media-retry').hidden"));
@@ -114,6 +158,7 @@ async function run() {
       const index = resource.kind === "data" ? 1 : 0;
       await window.webContents.executeJavaScript(`document.querySelectorAll('#media-list button')[${index}].click()`);
       await until(() => window.webContents.executeJavaScript(`document.getElementById('media-reference').value === ${JSON.stringify(resource.reference)} && document.getElementById('media-status').textContent !== 'Loading preview…'`));
+      assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distillation').hidden"), true);
       await window.webContents.executeJavaScript("document.getElementById('media-copy').click()");
       await until(() => copiedReference === resource.reference);
       if (resource.kind === "image") {
@@ -132,7 +177,7 @@ async function run() {
     await window.webContents.executeJavaScript("document.getElementById('media-kind').value = ''; document.getElementById('media-kind').dispatchEvent(new Event('change'))");
     assert.equal(await window.webContents.executeJavaScript("document.querySelectorAll('#media-list button').length"), 6);
     workspace.select("chat");
-    console.log("PASS: all media kinds, copy references, image/audio previews, filters, safe text, retained state and retry");
+    console.log("PASS: all media kinds, safe distillation output, per-source results, duplicate prevention, retry, retained state and previews");
     assert.equal(await window.webContents.executeJavaScript("document.getElementById('compositions').hidden"), true);
     workspace.select("compositions");
     assert.equal(workspace.active, "chat");

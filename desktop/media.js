@@ -9,6 +9,47 @@
   let loading = false;
   let generation = 0;
   let listMessage = "";
+  let selectedText;
+  const distillations = new Map();
+
+  /** Keep each source's in-flight request and result separate from the preview. */
+  function renderDistillation() {
+    const state = distillations.get(selected?.reference);
+    const hasText = typeof selectedText === "string";
+    element("media-distillation").hidden = !hasText && !state;
+    element("media-distill").disabled = !hasText || !selectedText.trim() || state?.running === true;
+    element("media-distill").textContent = state?.running ? "Distilling…"
+      : state?.error ? "Retry distillation" : state?.output ? "Distill again" : "Distill transcript";
+    element("media-distill-status").textContent = state?.running
+      ? "Distilling this source with ChatTFT… You can browse other media while it runs."
+      : state?.error || (state?.output ? "Distillation complete." : "");
+    element("media-distill-result").hidden = !state?.output;
+    element("media-distill-heading").textContent = state?.running || state?.error
+      ? "Previous distilled reference" : "Distilled reference";
+    // Assistant output is untrusted text, just like the source preview.
+    element("media-distill-output").textContent = state?.output || "";
+    element("media-distillation").setAttribute("aria-busy", String(state?.running === true));
+  }
+
+  /** Run on explicit request, retaining results under the original reference. */
+  async function distillSelected() {
+    const reference = selected?.reference;
+    if (!reference || !selectedText?.trim() || distillations.get(reference)?.running) return;
+    const state = { running: true, output: distillations.get(reference)?.output || "" };
+    distillations.set(reference, state);
+    renderDistillation();
+    try {
+      const result = await bridge.media("distill", reference);
+      if (result.error) throw new Error(result.error);
+      if (typeof result.output !== "string" || !result.output.trim()) throw new Error("No distilled reference was returned. Try again.");
+      state.output = result.output;
+    } catch (error) {
+      state.error = error.message || "Could not distill this source. Try again.";
+    } finally {
+      state.running = false;
+      if (selected?.reference === reference) renderDistillation();
+    }
+  }
 
   /** Render catalogue names as text, never as executable markup. */
   function renderList() {
@@ -76,6 +117,8 @@
   /** Display text or native media while ignoring superseded requests. */
   async function openMedia(resource) {
     selected = resource;
+    selectedText = undefined;
+    renderDistillation();
     const current = ++generation;
     renderList();
     element("media-title").textContent = resource.name;
@@ -93,6 +136,8 @@
       if (current !== generation) return;
       if (result.error) throw new Error(result.error);
       if (typeof result.text === "string") {
+        selectedText = result.text;
+        renderDistillation();
         let text = result.text;
         if (resource.kind === "data") {
           try { text = JSON.stringify(JSON.parse(text), null, 2); } catch { /* Non-JSON text retains its original form. */ }
@@ -127,6 +172,7 @@
   element("media-refresh").addEventListener("click", () => loadList(true));
   element("media-more").addEventListener("click", () => loadList());
   element("media-retry").addEventListener("click", () => openMedia(selected));
+  element("media-distill").addEventListener("click", distillSelected);
   element("media-copy").addEventListener("click", async () => {
     const current = selected.reference;
     try {
