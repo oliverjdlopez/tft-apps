@@ -48,7 +48,8 @@ def main() -> None:
         import asyncio
 
         db.create_transcription_task("exchange-transcript", "/fixture/vod.mp4")
-        with patch.object(app_module, "_transcribe_audio_file", return_value=(operation["text"], "en")):
+        with patch.object(app_module, "_transcribe_audio_file", return_value=app_module.AudioTranscription(
+                transcript=operation["text"], language="en", segments=operation.get("segments", []))):
             asyncio.run(app_module._run_transcription_task("exchange-transcript"))
         result = db.get_transcription_task("exchange-transcript")
     else:

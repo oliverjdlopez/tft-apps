@@ -109,6 +109,19 @@ completes. The desktop **Media** tab lists these under **Text / transcripts**.
 Names match the source VOD when available, and metadata records the task, video
 and detected language. Both backends can read the same portable reference.
 
+New recognition also retains each Whisper segment's `start`, `end`, and `text`
+in the local task and publishes a companion `.json` resource with kind `data`
+and MIME type `application/json`. It uses the same catalogue `source` as the
+text snapshot; its metadata type is `timestamped_transcript` and its
+`text_reference` links to the plain-text resource. The JSON includes
+`schema_version: 1`, task/video identities, detected language, the plain
+`transcript`, `text_reference`, and the ordered `segments` array.
+`time_unit: "seconds"` and `time_origin: "media_start"` describe timing relative
+to the exact input file. For a downloaded clip, zero is the clip's start rather
+than the start of the original VOD. Timing is at the speech-segment level;
+word-level timing is not enabled. Find/read the JSON through either backend's
+shared-media API, `ResourceStore.read_json`, or desktop **Media → Data**.
+
 In VOD Review, select a library video and click **View transcript** to open its
 saved text and detected language in a modal. Completed transcription-only URL
 imports use the same modal. Text stays hidden until requested; shared catalogue
@@ -116,7 +129,10 @@ publication still happens automatically when recognition completes.
 
 Backend startup also shares existing completed transcripts without downloading
 or recognizing them again. Repeated recovery reuses verified matching snapshots;
-missing/corrupt shared files can be restored from local text. If storage is
+missing/corrupt shared files can be restored from locally saved text and timing.
+Older tasks without saved segments remain text-only; timestamps cannot be
+recovered without another recognition run. A new silent result still publishes
+JSON with an empty segment list. If storage is
 unavailable, the local task remains completed, a warning is logged, and sharing
 is retried on the next startup. An empty `TFT_MEDIA_DIR` disables sharing.
 Original review/transcription records remain independent of catalogue snapshots.

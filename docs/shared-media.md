@@ -4,7 +4,8 @@ ChatTFT and VOD Review use the suite's ignored `media/` directory and its
 `catalog.sqlite3`. Both backends can publish, discover, and retrieve immutable
 files by `tft-resource:<id>`. Review IDs, analysis jobs, playback
 derivatives, and original transcript records remain owned by their application.
-VOD publishes immutable snapshots of completed transcript text for sharing.
+VOD publishes immutable snapshots of completed transcript text and available
+segment timestamps for sharing.
 
 ## Configuration and ownership
 
@@ -44,6 +45,7 @@ Completed new downloads also enter the resource index and are discoverable
 through either backend. This index links immutable catalogue-owned media
 rather than storing a second copy. Failed/paused downloads are not published
 as complete. Completed VOD transcripts are published as text resources;
+new recognition also publishes a linked JSON resource containing segment timing.
 ChatTFT CLI transcript outputs still require explicit publication.
 `--overwrite` creates fresh immutable media and references while retaining
 previous versions. Existing catalogue entries created before this integration
@@ -135,10 +137,27 @@ or copy references, through the desktop-owned ChatTFT backend.
 
 VOD automatically publishes completed recognition as UTF-8 `text` resources,
 named after the source video when available, with task/video/language metadata.
+New recognition additionally publishes a `.json` companion as kind `data`,
+with MIME type `application/json` and metadata type `timestamped_transcript`.
+Both resources share the catalogue source `vod-review:transcription:<task_id>`.
+The JSON and its metadata include `text_reference` linking to the text resource.
+Find it through either backend's shared-media API or desktop **Media → Data**.
+
+The JSON contract has `schema_version: 1`, `transcription_task_id`, `video_id`,
+`language`, `text_reference`, `transcript`, `time_unit: "seconds"`,
+`time_origin: "media_start"`, and an ordered `segments` array. Each segment
+contains `start`, `end`, and `text`. These are Whisper speech-segment timestamps
+relative to the transcribed file; for a downloaded clip, zero means the clip's
+start. Word-level timing is not enabled. VOD Review's transcript modal and
+task API retain their existing plain-text payload.
+
 Backend startup also publishes older completed transcripts from its own SQLite
 database, so no download or transcription rerun is needed. Recovery reuses a
 verified snapshot when its contents match and restores missing shared files from
-the local result. Catalogue failures leave the completed local transcript intact
+the local result. New tasks persist timing alongside text before publication,
+allowing a failed JSON publication to retry after restart. Older text-only tasks
+have no timestamps to recover and continue publishing only text; no recognition
+is rerun automatically. Catalogue failures leave the completed local transcript intact
 and log a warning; the next startup retries sharing. An explicitly empty
 `TFT_MEDIA_DIR` disables publication. Refresh the Media library after completion.
 
@@ -193,7 +212,9 @@ From `vod-review/`:
 ```
 
 Transcript tests exercise the real VOD completion path with recognition stubbed,
-then discover and read the exact UTF-8 bytes through the actual ChatTFT API.
+then discover and read the exact UTF-8 bytes and JSON segment timestamps through
+the actual ChatTFT API. They also cover local schema migration, timed-silence
+results, publication failure/recovery, and immutable timing changes.
 
 Cross-backend tests invoke each application's own interpreter and actual HTTP
 routes with temporary state, synthesize a small local video, stub network

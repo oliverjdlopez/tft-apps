@@ -36,14 +36,14 @@ try:
         PROGRESS_WRITE_INTERVAL_SECONDS,
         SAMPLE_INTERVAL_SECONDS,
     )
-    from .models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest, OnlineVideoRequest, VideoModeRequest, OfflineDownloadRequest
+    from .models import AudioTranscription, TranscriptionSegment, BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest, OnlineVideoRequest, VideoModeRequest, OfflineDownloadRequest
     from . import online
 except ImportError:  # Running with `uvicorn app:app` from the backend directory.
     import frame_cache
     import db
     from shared_transcripts import publish_completed_transcripts
     from constants import DEFAULT_BATCH_SIZE, MAX_COLLECTION_PROGRESS_UPDATES, PROGRESS_WRITE_INTERVAL_SECONDS, SAMPLE_INTERVAL_SECONDS
-    from models import BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest, OnlineVideoRequest, VideoModeRequest, OfflineDownloadRequest
+    from models import AudioTranscription, TranscriptionSegment, BoundingBox, DownloadQuality, ReplayDiscoveryRequest, ProcessingRequest, RoundExportClip, RoundExportRequest, VideoUrlRequest, OnlineVideoRequest, VideoModeRequest, OfflineDownloadRequest
     import online
 
 try:
@@ -714,18 +714,26 @@ def download_audio_url(url: str, task_id: str, progress_callback: Callable[[floa
     return path
 
 
-def _transcribe_audio_file(path: str) -> tuple[str, str | None]:
+def _transcribe_audio_file(path: str) -> AudioTranscription:
+    """Recognize audio once, retaining text and media-relative segment timings."""
     try:
         from faster_whisper import WhisperModel
     except ImportError as exc:
         raise HTTPException(status_code=503, detail="Transcription requires the optional faster-whisper dependency. Install it with `uv sync --extra transcription`.") from exc
     model = WhisperModel(os.environ.get("VOD_WHISPER_MODEL", "large-v3"), device=os.environ.get("VOD_WHISPER_DEVICE", "cuda"), compute_type=os.environ.get("VOD_WHISPER_COMPUTE_TYPE", "float16"))
     segments, info = model.transcribe(path, beam_size=5, vad_filter=True)
-    transcript = "".join(segment.text for segment in segments).strip()
-    return transcript, getattr(info, "language", None)
+    timed_segments = [
+        TranscriptionSegment(start=segment.start, end=segment.end, text=segment.text)
+        for segment in segments
+    ]
+    return AudioTranscription(
+        transcript="".join(segment.text for segment in timed_segments).strip(),
+        language=getattr(info, "language", None), segments=timed_segments,
+    )
 
 
 async def _run_transcription_task(task_id: str) -> None:
+    """Persist recognized text/timing, then attempt recoverable shared publication."""
     db.update_transcription_task(task_id, status="running")
     try:
         connection = db.get_db()
@@ -733,8 +741,11 @@ async def _run_transcription_task(task_id: str) -> None:
         connection.close()
         if row is None:
             return
-        transcript, language = await asyncio.to_thread(_transcribe_audio_file, row["media_path"])
-        db.update_transcription_task(task_id, status="completed", transcript=transcript, language=language)
+        result = await asyncio.to_thread(_transcribe_audio_file, row["media_path"])
+        db.update_transcription_task(
+            task_id, status="completed", transcript=result.transcript,
+            language=result.language, segments=[segment.model_dump() for segment in result.segments],
+        )
     except asyncio.CancelledError:
         db.update_transcription_task(task_id, status="failed", error="Transcription was interrupted; retry this transcription.")
         raise

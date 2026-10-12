@@ -75,6 +75,9 @@ or interpretation is applied.
 Completed transcripts also publish as UTF-8 text in the shared media catalogue,
 available in desktop **Media → Text / transcripts** after Refresh. On backend
 startup, older completed transcripts are shared without rerunning recognition.
+New transcripts also publish a companion JSON resource in **Media → Data**,
+retaining each speech segment's start/end seconds and text relative to the
+transcribed media. The VOD transcript modal continues to display plain text.
 Storage failures preserve local results and retry sharing on the next startup;
 an empty `TFT_MEDIA_DIR` disables this. See [transcript sharing](docs/shared-media.md#completed-transcript-sharing).
 

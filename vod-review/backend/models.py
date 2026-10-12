@@ -47,6 +47,22 @@ DownloadQuality = Literal["480p", "720p", "1080p", "best"]
 DownloadMediaType = Literal["video", "audio"]
 
 
+class TranscriptionSegment(BaseModel):
+    """Recognized speech with start/end seconds relative to the input media."""
+
+    start: float
+    end: float
+    text: str
+
+
+class AudioTranscription(BaseModel):
+    """Local recognition result retaining segment timing for shared publication."""
+
+    transcript: str
+    language: str | None = None
+    segments: list[TranscriptionSegment] = Field(default_factory=list)
+
+
 class VideoUrlRequest(BaseModel):
     url: str = Field(min_length=8, max_length=2048)
     start_seconds: float | None = Field(default=None, ge=0)

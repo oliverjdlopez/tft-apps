@@ -137,7 +137,7 @@ def test_audio_url_import_automatically_transcribes_and_persists_result(
         assert Path(path) == audio
         if transcription_fails:
             raise RuntimeError("Recognition unavailable")
-        return "Recognized speech.", "en"
+        return app_module.AudioTranscription(transcript="Recognized speech.", language="en")
 
     def unexpected_video(*args, **kwargs):
         pytest.fail("Audio import must not download or prepare video")

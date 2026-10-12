@@ -454,7 +454,7 @@ def test_scheduled_video_transcription_uses_saved_media_and_publishes_after_retr
         recognized.append(path)
         if len(recognized) == 1:
             raise HTTPException(503, "Speech recognition unavailable")
-        return "Raw speech from the saved VOD", "en"
+        return app_module.AudioTranscription(transcript="Raw speech from the saved VOD", language="en")
 
     async def discover(*args):
         return [replay()], []

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import re
 from urllib.parse import parse_qs, urlparse
@@ -84,6 +85,10 @@ def init_db() -> None:
         """
     )
     _migrate_nullable_video_path(connection)
+    transcription_columns = {row["name"] for row in connection.execute("PRAGMA table_info(transcription_tasks)")}
+    if "segments_json" not in transcription_columns:
+        # NULL distinguishes older text-only results from timed silence ([]).
+        connection.execute("ALTER TABLE transcription_tasks ADD COLUMN segments_json TEXT")
     video_columns = {row["name"] for row in connection.execute("PRAGMA table_info(videos)")}
     if "shared_media" not in video_columns:
         connection.execute("ALTER TABLE videos ADD COLUMN shared_media INTEGER NOT NULL DEFAULT 0")
@@ -491,13 +496,26 @@ def create_transcription_task(task_id: str, media_path: str, video_id: str | Non
     return get_transcription_task(task_id)
 
 
-def update_transcription_task(task_id: str, *, status: str | None = None, transcript: str | None = None, language: str | None = None, error: str | None = None) -> None:
+def update_transcription_task(task_id: str, *, status: str | None = None, transcript: str | None = None, language: str | None = None, error: str | None = None, segments: list[dict[str, Any]] | None = None) -> None:
+    """Persist recognition text and optional timing together before sharing.
+
+    Args:
+        task_id: Local transcription identity.
+        status: New task state, when supplied.
+        transcript: Recognized plain text, when supplied.
+        language: Detected language, when available.
+        error: Failure detail, when supplied.
+        segments: Timed speech segments; None preserves legacy text-only data.
+    """
     assignments = ["updated_at=?"]
     values: list[Any] = [utc_now()]
     for column, value in (("status", status), ("transcript", transcript), ("language", language), ("error", error)):
         if value is not None:
             assignments.append(f"{column}=?")
             values.append(value)
+    if segments is not None:
+        assignments.append("segments_json=?")
+        values.append(json.dumps(segments, ensure_ascii=False, allow_nan=False))
     values.append(task_id)
     connection = get_db()
     connection.execute(f"UPDATE transcription_tasks SET {', '.join(assignments)} WHERE id=?", values)
@@ -505,7 +523,17 @@ def update_transcription_task(task_id: str, *, status: str | None = None, transc
     connection.close()
 
 
-def get_transcription_task(task_id: str, connection: sqlite3.Connection | None = None) -> dict[str, Any]:
+def get_transcription_task(task_id: str, connection: sqlite3.Connection | None = None, *, include_segments: bool = False) -> dict[str, Any]:
+    """Read a task, keeping timing out of the existing UI/API payload by default.
+
+    Args:
+        task_id: Local transcription identity.
+        connection: Existing connection, or None to open one for this read.
+        include_segments: Load persisted timing for shared publication.
+
+    Returns:
+        The task payload, optionally including segments (None for legacy tasks).
+    """
     owns_connection = connection is None
     connection = connection or get_db()
     row = connection.execute("SELECT * FROM transcription_tasks WHERE id=?", (task_id,)).fetchone()
@@ -513,7 +541,10 @@ def get_transcription_task(task_id: str, connection: sqlite3.Connection | None =
         connection.close()
     if row is None:
         raise HTTPException(status_code=404, detail="Transcription task not found")
-    return {"task_id": row["id"], "video_id": row["video_id"], "status": row["status"], "transcript": row["transcript"], "language": row["language"], "error": row["error"]}
+    task = {"task_id": row["id"], "video_id": row["video_id"], "status": row["status"], "transcript": row["transcript"], "language": row["language"], "error": row["error"]}
+    if include_segments:
+        task["segments"] = json.loads(row["segments_json"]) if row["segments_json"] is not None else None
+    return task
 
 
 def find_video_transcription(video_id: str, *, reusable_only: bool = False) -> dict[str, Any] | None:
