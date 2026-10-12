@@ -9,17 +9,19 @@ from domain.assistants.constants import AssistantName
 
 from .utils import check_assertion
 
+# Retired transcript names remain literal archive identities for lossless
+# historical conversion; they are no longer registered AssistantName members.
 DATASET_NAMES = {
     AssistantName.CHAT: 'end-to-end',
     'context_response_smoke': 'context-response',
     'chat_intake': 'chattft/intake/unscored-prompts',
     AssistantName.DATA_ANALYST: 'data-analysis',
-    AssistantName.CLEAN_TRANSCRIPT: 'chattft/transcripts/cleanup',
-    AssistantName.COMPACT_TRANSCRIPT: 'chattft/transcripts/compaction',
+    'clean_transcript': 'chattft/transcripts/cleanup',
+    'compact_transcript': 'chattft/transcripts/compaction',
     'context_selection': 'chattft/selectors/context',
     'skill_selection': 'chattft/selectors/skills',
     AssistantName.DUMMY_ASSISTANT: 'internal/fixtures/deterministic-trace',
-    AssistantName.ANALYZE_TRANSCRIPT: 'archive/analyze-transcript',
+    'analyze_transcript': 'archive/analyze-transcript',
 }
 ACTIVE_WORKFLOW_SUITES = frozenset({AssistantName.CHAT, AssistantName.DATA_ANALYST, 'context_response_smoke'})
 
@@ -34,8 +36,8 @@ QUALITY_PROFILES = {
     'terminology_preservation': 'terminology_preservation', 'signal_retention': 'signal_retention',
 }
 PROFILE_DEFAULTS = {AssistantName.CHAT: 'answer_quality', AssistantName.DATA_ANALYST: 'answer_quality',
-                    AssistantName.CLEAN_TRANSCRIPT: 'terminology_preservation',
-                    AssistantName.COMPACT_TRANSCRIPT: 'signal_retention'}
+                    'clean_transcript': 'terminology_preservation',
+                    'compact_transcript': 'signal_retention'}
 
 
 def dataset_schemas(suite: dict, *, version: int = 2) -> dict:

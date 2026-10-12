@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 from typing import Any
 
-from domain.assistants.constants import AssistantName
 from .native import NativeWorkspace
 
 
@@ -34,7 +33,7 @@ def configure_triggers(client: Any, snapshots: Path, *, base_url: str, email: st
         for entry in load_catalog(snapshots):
             if os.environ.get("LANGFUSE_TEST_DEPLOYMENT") != "1" and entry["name"] not in ACTIVE_WORKFLOW_SUITES and not entry.get("managed_workflow"):
                 continue
-            if entry['name'] == AssistantName.ANALYZE_TRANSCRIPT:
+            if entry['name'] == 'analyze_transcript':
                 continue
             if entry['execution'] == 'fixture' and os.environ.get('LANGFUSE_TEST_DEPLOYMENT') != '1':
                 continue

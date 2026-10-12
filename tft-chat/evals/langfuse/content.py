@@ -8,7 +8,6 @@ from pathlib import Path
 import re
 from typing import Any
 
-from domain.assistants.constants import AssistantName
 from evals.utils import evaluation_database
 
 from .utils import (atomic_write, canonical_json, catalog_revision,
@@ -296,7 +295,7 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
     if dataset_name not in entries:
         raise ValueError(f"Unknown ChatTFT dataset: {dataset_name}")
     baseline = load_snapshot(entries[dataset_name]["snapshot"], root)
-    if baseline["suite"]["name"] == AssistantName.ANALYZE_TRANSCRIPT and config.get("action", "run") != "export":
+    if baseline["suite"]["name"] == 'analyze_transcript' and config.get("action", "run") != "export":
         raise ValueError("Archived analysis dataset has no executable workflow")
     version = utc_version(config.get("dataset_version"))
     dataset = client.get_dataset(dataset_name, version=version)
@@ -351,7 +350,7 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
     value["config"] = {**default_config(), **deepcopy(config), "dataset_version": version.isoformat()}
     prompt_inventory = baseline["prompts"]
     selected_suite = {**value["suite"], "assistant": value["config"].get("assistant") or value["suite"].get("assistant")}
-    if captured_execution is None and natural and selected_suite['family'] == 'assistant' and selected_suite['execution'] == 'live':
+    if captured_execution is None and selected_suite['family'] == 'assistant' and selected_suite['execution'] == 'live':
         from .assistant_workspace import current_execution
         captured_execution = current_execution(selected_suite, value['config']['variants'])
     if natural and not captured_execution:

@@ -7,5 +7,6 @@
     "groups": ["evidence"]
   },
   "context": {"repository": true},
+  "skills": ["tft-statistical-interpretation"],
   "handoffs": []
 }

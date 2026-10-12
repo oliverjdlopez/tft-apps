@@ -241,3 +241,12 @@ def test_natural_fetch_does_not_request_retired_snapshot_prompts(monkeypatch, tm
     assert frozen['prompts']['chat']['text'] == graph['specs']['chat']['system_prompt']
     assert all('/workspace/' in row['name'] for row in frozen['prompts'].values())
     assert client.prompts['chattft/assistants/new'].prompt == 'Current baseline'
+
+
+def test_hyphenated_assistant_supports_spec_lifecycle(specs, tmp_path):
+    """Allow the shipped distiller name through creation and retirement commands."""
+    create_spec(specs, "distill-transcript", prompt="Distill the source.")
+    assert (specs / "distill-transcript/system.md").read_text() == "Distill the source."
+    result = remove_spec(specs, tmp_path, "distill-transcript", apply=True,
+                         backup_dir=tmp_path / "backups")
+    assert (Path(result["backup"]) / "system.md").read_text() == "Distill the source."

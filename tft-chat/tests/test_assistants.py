@@ -13,14 +13,13 @@ from domain.assistants import (
     assistant_reachable_tool_names,
     assistant_spec,
     assistant_tool_names,
-    build_assistant_instructions,
-    create_assistant,
+    Assistant,
     list_assistants,
-    render_assistant_input,
 )
 from domain.assistants.registry import assistant_registry
 from domain.assistants.specs import AssistantSpec, load_assistant_spec
 from domain.assistants import token_logging
+from domain.assistants.utils import render_instruction_layers, wrap_task_input
 from domain.providers.context import (
     DEFAULT_CONTEXT_PROVIDER,
     ContextProvider,
@@ -98,9 +97,10 @@ def test_instruction_rendering_enforces_skill_allowlist(monkeypatch) -> None:
         "domain.assistants.assistant_registry.get_spec", lambda _name: spec
     )
 
-    rendered = build_assistant_instructions(
-        "limited",
-        "Analyze this",
+    rendered = render_instruction_layers(
+        spec,
+        context_provider=DEFAULT_CONTEXT_PROVIDER,
+        skill_provider=DEFAULT_SKILL_PROVIDER,
         skills=[
             SkillDefinition(
                 name="allowed",
@@ -132,12 +132,11 @@ def test_assistant_specs_declare_prompt_context_policy() -> None:
         "unit_expert",
     ):
         assert assistant_spec(name).repository_context is True
-    for name in ("clean_transcript", "compact_transcript", "analyze_transcript"):
-        assert assistant_spec(name).repository_context is False
+    assert assistant_spec("distill-transcript").repository_context is False
 
 
 def test_factory_builds_sdk_agent_with_spec_model_settings() -> None:
-    agent = create_assistant("chat")
+    agent = Assistant("chat").build_agent()
 
     assert isinstance(agent, Agent)
     assert agent.model == load_config().models.openai_model
@@ -145,7 +144,7 @@ def test_factory_builds_sdk_agent_with_spec_model_settings() -> None:
     assert callable(agent.instructions)
 
 
-def test_render_assistant_input_uses_spec_task_prompt(monkeypatch) -> None:
+def test_task_input_uses_spec_task_prompt(monkeypatch) -> None:
     spec = AssistantSpec(
         name="context_test",
         description="Context test",
@@ -159,14 +158,14 @@ def test_render_assistant_input_uses_spec_task_prompt(monkeypatch) -> None:
         lambda _name: spec,
     )
 
-    assert render_assistant_input("context_test", "Tell me about Riven") == (
+    assert wrap_task_input("Tell me about Riven", spec.task_prompt) == (
         "Complete this task.\n\n## Input\n\nTell me about Riven"
     )
 
 
 def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
-    first = create_assistant("chat")
-    second = create_assistant("chat")
+    first = Assistant("chat").build_agent()
+    second = Assistant("chat").build_agent()
     first_handoffs = {agent.name: agent for agent in first.handoffs}
     second_handoffs = {agent.name: agent for agent in second.handoffs}
 
@@ -175,16 +174,16 @@ def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
     assert all(first_handoffs[name] is not second_handoffs[name] for name in first_handoffs)
 
 
-def test_create_agent_applies_target_instructions_during_construction() -> None:
-    agent = create_assistant(
-        "chat",
-        instructions="ROOT INSTRUCTIONS",
-        instructions_by_name={"data_analyst": "ANALYST INSTRUCTIONS"},
-    )
-
-    assert agent.instructions == "ROOT INSTRUCTIONS"
-    handoffs = {handoff.name: handoff for handoff in agent.handoffs}
-    assert handoffs["data_analyst"].instructions == "ANALYST INSTRUCTIONS"
+def test_durable_overrides_retain_dynamic_callbacks() -> None:
+    """Replacing prompts preserves runtime instruction policy on every agent."""
+    agent = Assistant('chat', base_instructions_by_name={
+        'chat': 'ROOT INSTRUCTIONS', 'data_analyst': 'ANALYST INSTRUCTIONS',
+    }).build_agent()
+    from agents import RunContextWrapper
+    assert callable(agent.instructions)
+    assert agent.instructions(RunContextWrapper(None), agent) == 'ROOT INSTRUCTIONS'
+    analyst = next(child for child in agent.handoffs if child.name == 'data_analyst')
+    assert analyst.instructions(RunContextWrapper(None), analyst) == 'ANALYST INSTRUCTIONS'
 
 
 def test_instruction_token_log_records_counts_without_prompt_contents(monkeypatch) -> None:
@@ -217,7 +216,7 @@ def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
     records: list[str] = []
     monkeypatch.setattr(token_logging.prompt_token_logger, "info", records.append)
 
-    create_assistant("chat")
+    Assistant("chat").build_agent()
 
     payload = json.loads(records[0])
     root = payload["agents"][0]
@@ -253,9 +252,9 @@ def test_instructions_render_references_and_skill_in_order(monkeypatch) -> None:
             assert skills[0].name == "comparison"
             return "SKILL: SKILL WORKFLOW"
 
-    rendered = build_assistant_instructions(
-        "comp_expert",
-        "Analyze Riven",
+    rendered = render_instruction_layers(
+        assistant_spec("comp_expert"),
+        references=FakeContextProvider().select("Analyze Riven"),
         context_provider=FakeContextProvider(),
         skill_provider=FakeSkillProvider(),
         base_instructions="BASE INSTRUCTIONS",
@@ -273,30 +272,13 @@ def test_instructions_render_references_and_skill_in_order(monkeypatch) -> None:
     assert rendered.index("RIVEN REFERENCE") < rendered.index("SKILL WORKFLOW")
 
 
-def test_instructions_obey_assistant_context_policy() -> None:
-    calls: list[tuple[str, int | None]] = []
-
-    class FakeContextProvider:
-        def select(self, query, *, set_number=None, **_limits):
-            calls.append((query, set_number))
-            return []
-
-    analyst = build_assistant_instructions(
-        "data_analyst",
-        "Analyze Riven",
-        context_provider=FakeContextProvider(),
-        set_number=17,
-    )
-    transcript = build_assistant_instructions(
-        "clean_transcript",
-        "Riven transcript",
-        context_provider=FakeContextProvider(),
-        set_number=17,
-    )
-
-    assert calls == [("Analyze Riven", 17)]
-    assert "## Agent context pack" not in analyst
-    assert "## Agent context pack" not in transcript
+def test_transcript_rendering_denies_preselected_references() -> None:
+    """Transcript instructions reject references even if another caller selected them."""
+    reference = ContextSnippet(context_file='units', path='units.md', content='PRIVATE REFERENCE', line=1, score=1)
+    text = render_instruction_layers(assistant_spec('distill-transcript'),
+        context_provider=DEFAULT_CONTEXT_PROVIDER, skill_provider=DEFAULT_SKILL_PROVIDER,
+        references=[reference])
+    assert 'PRIVATE REFERENCE' not in text
 
 
 def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
@@ -313,13 +295,11 @@ def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
     )
     assert assistant_handoff_names("data_analyst") == ["final_responder"]
     assert spec.task_prompt == ""
-    assert render_assistant_input("data_analyst", "Which carry is better?") == (
+    assert wrap_task_input("Which carry is better?", spec.task_prompt) == (
         "Which carry is better?"
     )
-    assert "Select the narrowest ranking projection" in spec.system_prompt
-    assert "What are the strongest 4-cost units?" in spec.system_prompt
-    assert "Which Silver traits perform best?" in spec.system_prompt
-    assert "What are the best Radiant items right now?" in spec.system_prompt
+    assert "Choose the narrowest tool" in spec.system_prompt
+    assert "Use a `group_by_*` switch only when" in spec.system_prompt
     for tool_name in (
         "rank_units",
         "rank_items",
@@ -330,8 +310,8 @@ def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
         "get_cohort_trait_deltas",
     ):
         assert f"`{tool_name}`" in spec.system_prompt
-    assert "Delta results are ordered by frequency, not effect size" in spec.system_prompt
-    assert "structured rankings and cohort investigations" in spec.handoff_description
+    assert "Delta rows are ordered by frequency, not effect size" in spec.system_prompt
+    assert "cohort investigations that need more than a direct lookup" in spec.handoff_description
 
 
 def test_item_and_unit_experts_receive_an_unfiltered_data_view() -> None:
@@ -357,8 +337,8 @@ def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> N
     assert "name-only item" in prompt
     assert "`holder`" in prompt
     assert "`holder_star_level`" in prompt
-    assert "Separate unit and item conditions do not imply holder binding" in prompt or (
-        "a separate unit condition does not bind the item" in prompt
+    assert "separate unit and item conditions do not imply holder binding" in prompt.lower() or (
+        "a separate unit condition does not bind the item" in prompt.lower()
     )
     assert "across multiple matching holders" in prompt
     assert "does not identify its holder" not in prompt
@@ -372,11 +352,11 @@ def test_prompt_evidence_guidance_matches_assistant_ownership() -> None:
     responder = assistant_spec("final_responder").system_prompt
     assert "## Evidence displays" not in chat
     assert "no direct match-data tools" not in chat
-    assert "Your direct analytical tools are bounded rankings" in chat
+    assert "A direct lookup or ranking is sufficient when its result answers the actual question" in chat
     assert "Preserve these" not in analyst
     assert "`compare_cohorts`; a mean does not establish a distribution" in analyst
-    assert "handoff to `final_responder`" in analyst
-    assert "Use present_evidence once" in responder
+    assert "hand off to `final_responder`" in analyst
+    assert "Use `present_evidence` once" in responder
 
 
 def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
@@ -405,6 +385,7 @@ def test_final_responder_owns_evidence_presentation() -> None:
 
     assert spec.repository_context is True
     assert "Markdown table" in spec.system_prompt
+    assert spec.skill_names == ("tft-statistical-interpretation",)
     assert spec.tool_group_keys == ("evidence",)
     assert assistant_tool_names("final_responder") == ["present_evidence"]
     assert assistant_handoff_names("final_responder") == []
@@ -414,20 +395,20 @@ def test_final_responder_owns_evidence_presentation() -> None:
 def test_chat_hands_off_to_data_analyst() -> None:
     assert assistant_handoff_names("chat") == ["data_analyst", "final_responder"]
 
-    agents = create_assistant("chat").handoffs
+    agents = Assistant("chat").build_agent().handoffs
     assert [agent.name for agent in agents] == ["data_analyst", "final_responder"]
 
 
 def test_chat_handoff_preserves_request_model_provider() -> None:
     request_model = LitellmModel(model="anthropic/test-model", api_key="test-key")
 
-    analyst = create_assistant("chat", model=request_model).handoffs[0]
+    analyst = Assistant("chat", model=request_model).build_agent().handoffs[0]
 
     assert analyst.model is request_model
     assert [handoff.name for handoff in analyst.handoffs] == ["final_responder"]
     assert analyst.handoffs[0].model is request_model
     assert [tool.name for tool in analyst.tools] == assistant_tool_names("data_analyst")
-    assert create_assistant("data_analyst").model == load_config().models.openai_model
+    assert Assistant("data_analyst").build_agent().model == load_config().models.openai_model
 
 
 def test_specialists_hand_off_to_data_analyst() -> None:
@@ -435,3 +416,14 @@ def test_specialists_hand_off_to_data_analyst() -> None:
     assert assistant_handoff_names("theorizer") == ["data_analyst"]
     # The analyst gathers evidence, then transfers to the terminal synthesizer.
     assert assistant_handoff_names("data_analyst") == ["final_responder"]
+
+
+def test_distillation_replaces_all_legacy_transcript_assistants() -> None:
+    """Discovery exposes one source-only transcript assistant without legacy aliases."""
+    names = set(list_assistants())
+    assert "distill-transcript" in names
+    assert names.isdisjoint({"clean_transcript", "compact_transcript", "analyze_transcript"})
+    spec = assistant_spec("distill-transcript")
+    assert spec.skill_names == ()
+    assert assistant_tool_names(spec.name) == []
+    assert assistant_handoff_names(spec.name) == []

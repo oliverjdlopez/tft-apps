@@ -31,10 +31,13 @@ The **Media** tab (Ctrl/Cmd+9) browses the suite-owned shared media
 catalogue through ChatTFT's owned backend, in both production and development
 modes. Browse video, audio, images, text/transcripts and data; select a resource
 to preview it and copy its portable reference. Refresh
-reloads the catalogue and Load more retrieves further pages. Tab switches retain
-the selection and search. See [media browsing](shared-media.md#desktop-media-browser)
-for supported resources and publication. The browser does not start another
-backend or run transcription.
+reloads the catalogue and Load more retrieves further pages. For text/transcripts
+and recognized textual data, **Distill transcript** runs ChatTFT's
+`distill-transcript` assistant and displays its reference notes above the source.
+Tab switches retain the selection, search, and per-source distillation results.
+See [media browsing](shared-media.md#desktop-media-browser) for supported resources
+and publication. The browser uses the existing owned ChatTFT backend; it does not
+start another backend or run speech recognition.
 
 VOD creator-import schedules run once in the VOD backend, independent of
 whether the VOD tab is visible. The schedule persists in the app-local VOD database;

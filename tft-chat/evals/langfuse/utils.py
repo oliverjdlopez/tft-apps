@@ -400,10 +400,13 @@ def playground_payload(body) -> dict:
     maximum = body.max_completion_tokens or body.max_tokens
     if maximum is not None:
         settings["max_tokens"] = maximum
+    from .assistant_workspace import current_execution
+    execution = current_execution({"assistant": name}, [{"name": "Playground"}])
     return {
         "operation": "evaluate", "identity": {"suite": "playground", "case": name},
         "config": {"family": "assistant", "execution": "live", "assistant": name, "max_turns": 10,
-                   "model_settings": settings,
+                   "model_settings": settings, "surface": "playground",
+                   "captured_graph": execution["graphs"]["Playground"],
                    "prompt_candidates": {name: {"text": "\n\n".join(system), "native_reference": None}} if system else {}},
         "input": {"input": users[-1], "messages": messages},
         "playground_messages": [message.model_dump() for message in body.messages],

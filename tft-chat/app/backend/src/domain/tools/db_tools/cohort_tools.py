@@ -97,7 +97,12 @@ async def compare_cohorts(
 
     A name-only entity condition means board presence with its other attributes
     unconstrained. Item conditions with holder fields bind an item to its exact
-    holder occurrence and can also constrain the holder's star level.
+    holder occurrence and can also constrain the holder's star level. A unit
+    condition's ``required_items`` and ``excluded_items`` instead constrain
+    exact stored equipped items on that same unit occurrence as its star and
+    completed-item count. Repeating a name in ``required_items`` requires that
+    many copies; excluded names must be unique. These item predicates do not
+    make two cohorts disjoint when a board has multiple matching copies.
 
     Args:
         ctx: Agents SDK tool context.

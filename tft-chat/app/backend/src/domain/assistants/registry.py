@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
+from dataclasses import replace
 from typing import Any
 import threading
 
@@ -28,6 +29,7 @@ class AssistantRegistry:
         """Load all assistant specifications into the registry."""
         self._snapshot_lock = threading.RLock()
         self._specs: dict[str, AssistantSpec] = {}
+        self.resolved_models: dict[str, str] = {}
         self._get_tool: Callable[[str], Any] | None = None
         self._get_tool_group: Callable[[str], Any] | None = None
         self._list_tools: Callable[[], list[Any]] | None = None
@@ -38,11 +40,32 @@ class AssistantRegistry:
         if specs is not None:
             self.source_files: dict[str, dict[str, str]] = {}
 
-    def snapshot(self) -> AssistantRegistry:
-        """Capture immutable specs and tool resolvers for one invocation."""
+    def snapshot(
+        self, *, base_instructions_by_name: Mapping[str, str] | None = None
+    ) -> AssistantRegistry:
+        """Capture definitions and optional durable prompt replacements.
+
+        Args:
+            base_instructions_by_name: Prompt text overrides that retain each
+                specification's configuration and dynamic rendering policy.
+
+        Returns:
+            An independent registry retaining tools and captured model defaults.
+
+        Raises:
+            KeyError: If a prompt override names an unregistered assistant.
+        """
+        overrides = dict(base_instructions_by_name or {})
         with self._snapshot_lock:
-            registry = AssistantRegistry(list(self._specs.values()))
+            for name in overrides:
+                self.get_spec(name)
+            registry = AssistantRegistry([
+                replace(spec, system_prompt=overrides[spec.name])
+                if spec.name in overrides else spec
+                for spec in self._specs.values()
+            ])
             registry.source_files = {name: dict(files) for name, files in self.source_files.items()}
+            registry.resolved_models = dict(self.resolved_models)
         registry._get_tool = self._get_tool
         registry._get_tool_group = self._get_tool_group
         registry._list_tools = self._list_tools
@@ -53,6 +76,7 @@ class AssistantRegistry:
         with self._snapshot_lock:
             self._specs = dict(registry._specs)
             self.source_files = {name: dict(files) for name, files in registry.source_files.items()}
+            self.resolved_models = dict(registry.resolved_models)
 
     def configure_tools(
         self,
@@ -236,6 +260,7 @@ class AssistantRegistry:
         with self._snapshot_lock:
             self._specs = specs
             self.source_files = source_files
+            self.resolved_models = {}
 
 
 assistant_registry = AssistantRegistry()

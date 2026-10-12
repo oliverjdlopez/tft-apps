@@ -379,15 +379,16 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         return PreparedResources(query="What is the best comp?", references=(reference,), skills=(skill,))
 
     monkeypatch.setattr(
-        "services.chat_service.prepare_resources", selected_resources
+        "domain.assistants.assistant.prepare_resources", selected_resources
     )
 
-    def fake_create_assistant(name, **kwargs):
-        captured["agent_name"] = name
-        captured["create_kwargs"] = kwargs
-        return SimpleNamespace(name=name)
+    def fake_build_agent(assistant):
+        """Capture class configuration without constructing a model graph."""
+        captured["agent_name"] = assistant.name
+        captured["create_kwargs"] = {"model": assistant.model}
+        return SimpleNamespace(name=assistant.name, handoffs=[])
 
-    monkeypatch.setattr("services.chat_service.create_assistant", fake_create_assistant)
+    monkeypatch.setattr("services.chat_service.Assistant.build_agent", fake_build_agent)
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks):
         assert isinstance(context, AssistantRunContext)
@@ -508,7 +509,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
             )
 
     monkeypatch.setattr("services.chat_service.Agent", FakeAgent)
-    main_agent = SimpleNamespace(name=assistant_name, instructions=object(), model_settings=object())
+    main_agent = SimpleNamespace(name=assistant_name, instructions=object(), model_settings=object(), handoffs=[])
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks):
         captured.setdefault("contexts", []).append(context)
@@ -521,7 +522,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         fake_run_streamed,
     )
     monkeypatch.setattr(
-        "services.chat_service.create_assistant",
+        "services.chat_service.Assistant.build_agent",
         lambda _name, **_kwargs: main_agent,
     )
 
@@ -530,7 +531,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         return PreparedResources(query="Finish the analysis")
 
     monkeypatch.setattr(
-        "services.chat_service.prepare_resources", selected_resources
+        "domain.assistants.assistant.prepare_resources", selected_resources
     )
 
     request = ChatRequest(
@@ -566,7 +567,7 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
     """HTTP consumer closure reaches the active main or fallback stream adapter."""
     contexts = []
     closed = []
-    main_agent = SimpleNamespace(name="chat", instructions="DURABLE ROOT", model_settings=ModelSettings())
+    main_agent = SimpleNamespace(name="chat", instructions="DURABLE ROOT", model_settings=ModelSettings(), handoffs=[])
     main_result, final_result = object(), object()
 
     async def prepared(_messages, **_kwargs):
@@ -589,8 +590,8 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
         finally:
             closed.append(result)
 
-    monkeypatch.setattr("services.chat_service.prepare_resources", prepared)
-    monkeypatch.setattr("services.chat_service.create_assistant", lambda *args, **kwargs: main_agent)
+    monkeypatch.setattr("domain.assistants.assistant.prepare_resources", prepared)
+    monkeypatch.setattr("services.chat_service.Assistant.build_agent", lambda *args, **kwargs: main_agent)
     monkeypatch.setattr("services.chat_service.Runner.run_streamed", run_streamed)
     monkeypatch.setattr("services.chat_service.stream_agent_events", events)
 

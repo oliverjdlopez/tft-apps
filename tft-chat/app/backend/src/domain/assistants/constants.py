@@ -2,13 +2,11 @@ from enum import StrEnum
 
 
 class AssistantName(StrEnum):
-    ANALYZE_TRANSCRIPT = "analyze_transcript"
     CHAT = "chat"
-    CLEAN_TRANSCRIPT = "clean_transcript"
-    COMPACT_TRANSCRIPT = "compact_transcript"
     COMP_EXPERT = "comp_expert"
     CONTEXT_SELECTOR = "context_selector"
     DATA_ANALYST = "data_analyst"
+    DISTILL_TRANSCRIPT = "distill-transcript"
     DUMMY_ASSISTANT = "dummy_assistant"
     FINAL_RESPONDER = "final_responder"
     ITEM_EXPERT = "item_expert"

@@ -94,6 +94,9 @@ class ExperimentService:
         if (bundle.get("dataset_name") or f"chattft/{bundle['suite']['name']}") != trigger.dataset_name:
             raise ValueError("Snapshot belongs to another dataset")
         bundle = validate_bundle(bundle)
+        if config["action"] != "export":
+            from evals.assistant_execution import require_bundle_captures
+            require_bundle_captures(bundle)
         bundle["provenance"] = self.provenance()
         bundle["snapshot_id"] = snapshot_id
         # Native Langfuse abandons the webhook after 20 seconds. Never enqueue

@@ -68,12 +68,13 @@ Langfuse stack; the live workflow remains an explicit dispatch with model and
 typed evaluation-database credentials. See
 [testing and evaluations](../docs/development/testing-and-evals.md).
 
-The catalog contains 84 cases across nine suites, including the 30 context/response smoke cases and the intentionally empty
-`analyze_transcript` suite. The
-scored suites retain 86 deterministic assistant checks and 13 rubrics. The known
-offline context failures remain `numeric_heading`,
-`partial_heading_category`, `semantic_description`, and `semantic_unit_mechanic`.
-Ten obsolete skill cases are archived with repair reasons and preserved original expectations.
+The local catalog contains 165 cases across 13 suites. `distill-transcript`
+replaces the three legacy transcript suites with six synthetic source-fidelity
+cases; their immutable snapshots remain available as historical definitions.
+The new cases cover conditions, corrections, attribution, uncertainty, source
+metadata, embedded instructions, and irrelevant inputs. See the
+[transcription guide](../docs/apps/transcription.md) for the runtime contract.
+No live model quality result is implied by catalog validation.
 
 Historical Promptfoo data in `evals/.promptfoo/` is retained untouched and is not
 imported into Langfuse. The retired in-app Evals editor and `/api/evals` routes

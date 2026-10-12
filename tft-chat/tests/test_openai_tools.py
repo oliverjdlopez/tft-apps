@@ -144,6 +144,14 @@ def test_explorer_tool_catalog_uses_backend_invocation_requirements() -> None:
     assert compare_cohorts["invocation_schema"]["$defs"]["UnitCondition"][
         "required"
     ] == ["name"]
+    unit_condition = compare_cohorts["input_schema"]["$defs"]["UnitCondition"]
+    for field in ("required_items", "excluded_items"):
+        array_schema = unit_condition["properties"][field]["anyOf"][0]
+        assert array_schema["minItems"] == 1
+        assert array_schema["maxItems"] == 3
+        assert field not in compare_cohorts["invocation_schema"]["$defs"][
+            "UnitCondition"
+        ]["required"]
 
 
 def test_model_facing_tools_use_strict_bounded_schemas() -> None:

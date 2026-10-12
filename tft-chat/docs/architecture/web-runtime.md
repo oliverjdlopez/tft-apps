@@ -104,7 +104,15 @@ boundaries.
 Chat Activity trace links open the encoded trace-detail URL rather than the
 dashboard index.
 
-Chat supplies one typed `AssistantRunContext` to the runner and stream adapter.
+Chat obtains a fresh `AssistantInvocation` through `Assistant.prepare`, then
+supplies its typed `AssistantRunContext` and activity hooks to the runner and
+stream adapter. The instance owns a registry snapshot shared with its context
+and skill selectors. Skill selection considers the union of reachable eligible
+recipients' allowlists: chat is excluded, while other assistants can receive
+skills through repository context or an explicit nonempty skill list.
+Instruction rendering filters again per recipient; chat itself never receives
+skill bodies.
+Tracing and stream cleanup remain service-owned.
 `domain.runtime.activity.ActivityRunHooks` records tool-call IDs, owning agent,
 arguments, actual execution timestamps, and handoffs in that context. These
 records remain internal: SDK stream events still determine browser ordering,

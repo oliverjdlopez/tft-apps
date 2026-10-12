@@ -44,6 +44,9 @@ def execute_attempt(suite: dict, item: dict, variant: dict, prompts: dict) -> di
                 # historical overrides replace those bases during execution.
                 config['prompt_candidates'] = variant.get('prompts', {})
                 config['trace_prompts'] = {**prompts, **variant.get('prompts', {})}
+            if suite["family"] == "assistant":
+                from evals.assistant_execution import require_capture
+                require_capture(config)
             payload = {"operation": "evaluate", "config": config, "input": item["input"],
                        "identity": item.get("metadata", {})}
             result = isolated_operation(payload, resolve_eval_operation_timeout(suite.get("operation_timeout")))

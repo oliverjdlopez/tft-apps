@@ -68,6 +68,14 @@
       <p id="media-status" role="status" aria-live="polite"></p>
       <button id="media-retry" hidden>Retry preview</button>
       <div id="media-preview"></div>
+      <section id="media-distillation" hidden aria-label="Transcript distillation">
+        <button id="media-distill" disabled>Distill transcript</button>
+        <p id="media-distill-status" role="status" aria-live="polite"></p>
+        <section id="media-distill-result" hidden aria-labelledby="media-distill-heading">
+          <h3 id="media-distill-heading">Distilled reference</h3>
+          <pre id="media-distill-output" tabindex="0" aria-label="Assistant output"></pre>
+        </section>
+      </section>
       <pre id="media-content" tabindex="0" aria-label="Text content"></pre>
     </section>
   </main>

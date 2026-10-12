@@ -1,4 +1,4 @@
-/** Browse every shared resource through the desktop-owned backend. */
+/** Browse shared resources and distill source text through the owned backend. */
 const pageSize = 100;
 const maxBytes = 10_000_000;
 
@@ -47,7 +47,7 @@ function displayResource({ reference, name, source, size, kind, content_type }) 
  *   getOrigin: Current owned backend/proxy URL, unavailable during restart.
  *   request: HTTP implementation, replaceable by offline fixtures.
  * Returns:
- *   Handler for listing every kind and loading bounded text or media previews.
+ *   Handler for catalogue previews and explicit text distillation requests.
  */
 export function createMediaReader(getOrigin, request = fetch) {
   return async (action, value) => {
@@ -78,7 +78,7 @@ export function createMediaReader(getOrigin, request = fetch) {
         nextOffset: page.length === pageSize ? offset + pageSize : null,
       };
     }
-    if (action === "read") {
+    if (action === "read" || action === "distill") {
       if (!isMediaReference(value)) throw new MediaError("Invalid media reference.");
       const resource = JSON.parse(await get(`/api/shared-media/${value}`));
       const result = { resource: displayResource(resource) };
@@ -90,6 +90,35 @@ export function createMediaReader(getOrigin, request = fetch) {
         // Native elements use verified HTTP content and ranges directly instead
         // of buffering entire videos in the main process or sending them by IPC.
         result.contentUrl = new URL(contentRoute, origin).href;
+      }
+      if (action === "distill") {
+        if (typeof result.text !== "string") throw new MediaError("Select a text or transcript resource to distill.");
+        if (!result.text.trim()) throw new MediaError("This source is empty. Select text with content to distill.");
+        // Resolve immutable source bytes in the main process. The renderer
+        // supplies only a reference, never a model name, prompt, or arbitrary URL.
+        const input = `Source metadata:\n${JSON.stringify(result.resource, null, 2)}\n\nSource text:\n${result.text}`;
+        try {
+          const response = await request(new URL("/api/assistants/tasks/transcription_pipeline/run", origin), {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ input }), redirect: "error",
+            signal: AbortSignal.timeout(600_000),
+          });
+          if (!response.ok) {
+            await response.body?.cancel();
+            throw new MediaError(response.status === 404
+              ? "Distillation is unavailable. Restart ChatTFT to load the transcript assistant."
+              : "Could not run distillation. Check that ChatTFT is ready and try again.");
+          }
+          const payload = JSON.parse(await readBody(response));
+          if (payload.ok !== true || typeof payload.result !== "string" || !payload.result.trim()) {
+            throw new MediaError("Distillation failed. Check ChatTFT's model configuration and source length, then try again.");
+          }
+          return { output: payload.result };
+        } catch (error) {
+          if (error instanceof MediaError) throw error;
+          if (error.name === "TimeoutError") throw new MediaError("Distillation timed out. The assistant may still be running in ChatTFT.");
+          throw new MediaError("Lost the distillation response. Check ChatTFT before retrying; the assistant may still be running.");
+        }
       }
       return result;
     }

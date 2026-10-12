@@ -30,14 +30,31 @@ execution-only suite snapshots remain readable.
 ## Assistant drafts and captured definitions
 
 The [Specs workspace](assistant-workspace.md) owns edit/save/try/compare/apply.
-Fresh native assistant experiments capture current repository definitions rather
-than selecting hosted baseline labels. Workspace experiments use Active and Draft
-variants and exact revision lineage. An optional separately versioned `execution`
-section freezes configuration, instructions, wrappers, resolved models, reachable
-handoffs, selectors, and managed concrete prompt references. Legacy bundles retain
-their prompt-only execution path; explicit historical overrides and replay remain
-available. Draft trials bypass Langfuse and persist locally. Capturing specifications
-does not freeze resource files, tool implementation code, or database contents.
+Fresh assistant experiments capture current repository definitions for every
+dataset schema. Each variant retains prompts, model defaults, handoffs, tool
+access, and resource permissions. Specs comparisons supply their exact Active and
+Draft captures. Execution verifies captures before dispatch and uses
+`Assistant.from_capture(...).prepare(..., record=True)` through
+`evals/assistant_execution.py`; there is no static prompt-only worker path.
+
+Bundles without captures remain readable and exportable as historical artifacts,
+but live execution and replay reject them with an instruction to export a fresh
+bundle. Existing snapshots are never backfilled with current definitions. Fixtures
+and selector benchmarks do not require bundle captures; selector model calls use
+`Assistant.run_sync`.
+
+The `decision_workflows` portable seed follows the same contract: local catalog
+registration validates its cases but does not capture execution definitions or
+choose a database. A live run must freeze a fresh graph for every variant and
+select an explicit evaluation database before worker dispatch.
+
+The worker retains actual instruction text and hashes, configured per-agent model
+settings, separate run-level setting overrides, selected resource hashes, activity,
+and source provenance. Model failures retain this evidence. Preparation and execution
+share an explicit complete `RDS_EVAL_*` target. Surfaces are `eval`, `playground`,
+and `specs` for workspace comparisons/trials. SDK tracing retains suite/case identity;
+local workspace trials disable trace export. Capturing definitions does not freeze
+resource files, tool implementations, database contents, or model behavior.
 
 ## Acceptance
 
@@ -231,3 +248,8 @@ retains its concurrency slot, and exports its trace. Invalid requests fail
 before execution, capacity returns 429, and execution failures expose a private
 trace link without forwarding raw provider/connection errors. The adapter does
 not implement Responses API, custom client tools, images, or structured output.
+
+Playground captures the selected repository graph before worker submission. System
+and developer messages replace only the root's durable prompt; dynamic context and
+skill permissions remain enforced. Generation settings pass through SDK RunConfig,
+and conversation history/task wrapping use the normal Assistant preparation path.

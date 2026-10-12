@@ -1,37 +1,26 @@
 ---
 name: tft-statistical-investigation
-description: Convert a TFT question into an executable analysis plan defining the decision, available context, population, comparison baseline, controls, metrics, likely failure modes, and a validating follow-up query. Use before multi-step database work, ambiguous comparisons, conditional recommendations, or investigations where the correct cohort is not already explicit. Do not use for a single straightforward lookup with an obvious population and metric.
+description: Plan a focused TFT data investigation around the user's decision or question, relevant population, comparison, metric, and material uncertainty. Use for multi-step analysis, ambiguous comparisons, or conditional recommendations when the needed cohort is not already clear. Do not use for a straightforward lookup with an obvious population and metric.
 ---
 
-# Query Planning Framework
+# Focused Investigation Workflow
 
-Before running database queries, write or internally form a plan with these fields:
+Start by identifying the decision or question the user wants answered. Preserve their stated constraints and format. Determine the population and comparison that matter, then choose the result or metric that would resolve the question. Use a narrow default when the request supports one; ask only for missing information that could materially change the population or conclusion.
 
-1. **Decision being analyzed**: What action or judgment is being made?
-2. **Available context**: Patch, rank, stage, level, HP, gold, items, augments, units, traits, lobby state.
-3. **Primary population**: Which games/rounds/boards are relevant?
-4. **Comparison baseline**: What should the result be compared against?
-5. **Controls**: Which variables must be held constant or stratified?
-6. **Metrics**: Average placement, top 4, win rate, play rate, delta, sample size, hit rate, etc.
-8. **Follow-up query**: What would validate or challenge the first result?
+Plan only what the available structured tools can answer:
 
-## Baselines Matter
+1. State the question each planned query will answer.
+2. Define the population and baseline from the user's request and supported tool conditions.
+3. Choose the metric and row grain that match the decision, such as performance versus frequency or an overall versus holder-specific result.
+4. Note the main interpretation risk that could change the conclusion, such as an unmatched population, a suppressed comparator, a small sample, or final-board survivorship.
+5. Add a follow-up only when its possible result could resolve a material ambiguity or change the conclusion.
 
-Every conclusion should have a baseline.
+Do not prescribe controls the tools cannot express, or assume that every useful analysis needs a complex matched cohort. Do not run an automatic validation query or a fixed set of unrelated comparisons. Stop when the question is answered as well as the evidence allows; if it cannot be answered, state the boundary and the most useful partial result.
 
-Weak baseline:
+For exact item comparisons on a unit, place holder, star, completed-item-count, fixed-item, and candidate `required_items` or `excluded_items` constraints together in that unit's `UnitCondition` in each target and baseline. Put only board-level shell conditions and level in `shared`. Different copies can satisfy the two cohort conditions on one board, so inspect the returned overlap and do not call the cohorts disjoint by assumption. If the question is whether a specific item matters within a shell, do not require that item as part of the shared shell; compare its presence and absence explicitly.
 
-* “This item averages 4.05, so it is good.”
+## Baselines and interpretation
 
-Better baseline:
+A statistic needs a relevant population and comparison. Use the whole population, a requested composition shell, an exact holder, or another baseline only when it matches the user's question and is supported by the tool. Keep metrics, populations, and row grains comparable. Describe unresolved confounding rather than implying a control that was not run.
 
-
-Useful baselines:
-
-* Whole population baseline.
-* Same comp family baseline.
-* Same item holder baseline.
-* Same level/stage baseline.
-* Same star-level baseline.
-* Same HP/economy bracket baseline.
-* Same contesting level baseline.
+Aggregate TFT data describes observed boards. It does not reveal the player's earlier decision context, item acquisition order, round-by-round state, or cause. Distinguish an observed final-board association from advice about what to do prospectively.

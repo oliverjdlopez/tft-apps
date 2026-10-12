@@ -29,6 +29,8 @@ def test_translation_keeps_draft_out_of_conversation():
     assert payload['config']['model_settings'] == {'temperature': 0.2, 'max_tokens': 800}
     assert 'database' not in payload['config']
     assert 'model' not in payload['config']
+    assert payload['config']['surface'] == 'playground'
+    assert 'unit_expert' in payload['config']['captured_graph']['specs']
     fresh = playground_payload(PlaygroundRequest(**request_body(messages=[{'role': 'user', 'content': 'Hello'}])))
     assert fresh['config']['prompt_candidates'] == {}
 

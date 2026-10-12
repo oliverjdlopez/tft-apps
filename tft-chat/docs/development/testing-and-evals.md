@@ -36,18 +36,29 @@ changes to evidence ownership or transport. Grader execution evidence recognizes
 `present_evidence` and legacy `present_inline_data` calls from historical traces;
 frozen historical snapshots retain their original prompt and tool names.
 
-Invocation-context regression coverage lives in `tests/test_runtime_instructions.py`,
-`tests/test_runtime_tools.py`, and `tests/test_runtime_streaming.py`. These use
-fake providers, tools, and models to verify selection-once behavior, prompt
-parity, default factory rendering across nested handoffs, specification snapshots,
-explicit override precedence, dependency isolation, evidence precision, lifecycle
-identity, legacy callers, and stream cancellation without paid calls. Run them with the existing
-assistant, chat, context, skill, evidence, and tool suites. The context evaluation
-adapter has a pre-existing retired-symbol import mismatch that also blocks
-`chat-tft-evals validate`; report that limitation separately from runtime results.
+Invocation preparation is covered by `tests/test_assistant_runtime.py`, alongside
+`tests/test_assistants.py`, `tests/test_chat_service.py`, and `tests/test_task_service.py`.
+These use fake providers and runners to verify selection once, dynamic root and
+nested handoff policy, definition snapshots, fresh evidence/activity, task input
+wrappers, synchronous/asynchronous entry points, and failure cleanup without
+paid calls. `evals/langfuse/tests/test_assistant_workspace.py` additionally executes
+a captured graph in a real SDK subprocess against a local mock model server;
+this needs localhost socket access but no PostgreSQL or paid model calls.
+
+The Assistant encapsulation checks passed 194 focused tests, including that
+subprocess acceptance test and the model-default snapshot regression. Seven failures in `tests/test_evaluation_catalog.py` reproduced
+on an untouched export of dev commit `e07f3b6`: stale inventory counts, stale
+preflight expectations, a mock missing the `require_explicit` argument, and four
+cases referencing a removed probability fixture. The offline validator also reaches the same `exact_unit` missing-corpus-gold
+failure on the changed tree and that untouched dev export. No live grading,
+database tools, ingestion, or projection rebuilds were used for this validation.
 
 Current cohort and delta registry coverage is in `tests/test_cohort_facts.py`
-and `tests/test_openai_tools.py`.
+and `tests/test_openai_tools.py`. `tests/test_cohort_loadouts.py` verifies that
+unit stars, item counts, and required/excluded items match the same occurrence,
+including duplicate holders, repeated items, cross-scope isolation, and overlap.
+These checks use anonymous SQLite fixtures and strict tool-schema discovery;
+they do not query the configured application database.
 
 Every test has a 60-second POSIX alarm guardrail spanning fixture setup, the
 test call, and fixture teardown. A stall fails with its node ID and the active
@@ -121,6 +132,13 @@ in `evals/`; platform integration and exported definitions live in
 `evals/langfuse/`. Every run exports its frozen inputs into content-addressed
 snapshots for Git review. Production prompts remain repository-owned.
 
+The [decision workflow suite](decision-workflows.md) adds eight locally
+registered cases for useful player answers, retained comparison constraints,
+and evidence limits. Its authored requirements prescribe no fixed query
+sequence and claim no verified outcome gold. The seed is loadable offline;
+live execution requires a fresh captured graph and an explicit evaluation
+database target through the existing export/run path.
+
 ```bash
 uv sync --locked --extra evals
 uv run --extra evals python -m evals validate
@@ -145,9 +163,9 @@ The offline context cases `numeric_heading`, `partial_heading_category`,
 `semantic_description`, and `semantic_unit_mechanic` still fail. Ten skill cases
 reference removed definitions and are archived with repair metadata and intact expectations.
 CI runs the passing fixture without weakening benchmark expectations.
-Full pytest collection currently fails because `tests/test_assistant_access.py`
-imports `assistant_reachable_names` from the registry module, which no longer
-exports it. Full eval validation also reports that `exact_unit` has required
+The obsolete assistant access test has been replaced with current spec parsing and
+prepared-invocation permission checks; removed APIs are not restored for compatibility.
+Full eval validation also reports that `exact_unit` has required
 gold absent from the current corpus. Both failures reproduce on the `dev`
 baseline used for the display integration; the focused evidence/chat tests and
 offline fixture are independent of these blockers.
@@ -273,3 +291,39 @@ Frontend coverage exercises saved actions, conflicts, imports, and result links.
 Browser smoke verification should use disposable specs and mocked optional services.
 Live hosted grading and database tools are separate checks; report them explicitly
 when unavailable. Never use ingestion or projection rebuilds as validation.
+
+## Captured evaluation execution checks
+
+Live assistant experiments and Playground require captured definitions; historical
+snapshots remain readable. Run focused checks from the ChatTFT root:
+
+```bash
+uv run --extra evals pytest -q tests/test_assistant_runtime.py tests/test_assistant_access.py tests/test_assistants.py tests/test_langfuse_execution.py tests/test_evaluation_assistant.py tests/test_evaluation_selectors.py tests/test_task_service.py tests/test_spec_service.py evals/langfuse/tests
+```
+
+Local HTTP mock
+acceptance needs localhost socket access, but no paid model calls or PostgreSQL.
+Captured configured models and SDK run overrides are recorded separately.
+
+Migration validation passed 284 focused tests, including the real SDK subprocess
+against the deterministic local HTTP model, with seven baseline failures deselected.
+The added direct-attempt missing-capture regression passed separately. All seven
+excluded failures reproduced on the saved untouched baseline: catalog inventory,
+stale preflight expectations, four removed probability-case lookups, and the
+natural-workspace conversion lookup for `comp-expert`. The offline fixture passed;
+full catalog validation still reports missing corpus gold for `exact_unit`.
+Checks used the existing temporary isolated Python environment because this checkout
+has no `.venv`. No paid calls, hosted content edits, ingestion, projection rebuilds,
+or production database tests were used.
+
+Decision workflow integration on top of `2cef657` passed 378 focused tests,
+including the real SDK subprocess against the deterministic local HTTP model.
+The six remaining failures match the migration baseline: stale tool preflight
+expectations, four removed probability-case lookups, and the natural-workspace
+conversion lookup for `comp-expert`. The inventory checks now cover all 14
+historical bundles unchanged plus the eight new decision workflow cases.
+Full catalog validation still reports missing corpus gold for `exact_unit`.
+The combined checks cover runtime and access policies, chat and task services,
+captured evaluations, Specs trials, skill providers, cohort/loadout SQL, tool
+schemas, and evidence. They used the existing main-checkout Python environment;
+no paid model calls or production database queries were made.

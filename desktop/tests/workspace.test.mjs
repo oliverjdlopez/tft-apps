@@ -374,6 +374,11 @@ test("Media uses the shell and restricts catalogue IPC to its main frame", async
     ]) assert.equal((await handler(event, "list", 0)).error, "Media access is unavailable.");
     assert.equal(calls.length, 1);
     const reference = `tft-resource:${"a".repeat(32)}`;
+    await handler(shellEvent, "distill", reference);
+    assert.deepEqual(calls[1], ["distill", reference]);
+    const beforeUnauthorized = calls.length;
+    assert.equal((await handler({ sender: workspace.chat.webContents, senderFrame: workspace.chat.webContents.mainFrame }, "distill", reference)).error, "Media access is unavailable.");
+    assert.equal(calls.length, beforeUnauthorized);
     assert.deepEqual(await handler(shellEvent, "copy", reference), { copied: true });
     assert.equal(clipboard.value, reference);
     assert.match((await handler(shellEvent, "copy", "https://example.com")).error, /Invalid media reference/);

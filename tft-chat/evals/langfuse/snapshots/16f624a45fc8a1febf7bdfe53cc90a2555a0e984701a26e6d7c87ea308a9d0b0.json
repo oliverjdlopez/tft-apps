@@ -1,0 +1,216 @@
+{
+  "config": {
+    "action": "run",
+    "cases": [],
+    "concurrency": 4,
+    "data_snapshot_label": null,
+    "dataset_version": null,
+    "repetitions": 1,
+    "selection_live": false,
+    "snapshot": null,
+    "variants": [
+      {
+        "model": null,
+        "name": "Active",
+        "prompts": {}
+      }
+    ]
+  },
+  "dataset_name": "decision-workflows",
+  "items": [
+    {
+      "expected_output": {
+        "requirements": [
+          "Give the most common item only when scoped evidence identifies it; otherwise state why the answer is unavailable.",
+          "Include the relevant count or rate and denominator when available, without inventing precision.",
+          "Keep this a concise frequency answer and distinguish common usage from a strength recommendation."
+        ]
+      },
+      "id": "decision_workflows/quick_frequency_lookup",
+      "input": "What item is most commonly held by Bard in this scope? Give me the quickest useful answer.",
+      "metadata": {
+        "case": "quick_frequency_lookup",
+        "case_id": "decision_workflows/quick_frequency_lookup",
+        "coverage_area": "frequency_lookup",
+        "description": "A concise frequency lookup should answer the immediate question and stop unless a distinct follow-up is needed.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "requirements": [
+          "Keep Bard, 2-star, and the two named items fixed while comparing the two third-item cohorts.",
+          "Report comparable cohort sizes and outcomes, with returned uncertainty where available; recommend one only if the evidence supports it.",
+          "If an entity or constrained cohort is unavailable or suppressed, say so rather than silently relaxing the comparison; describe any supported difference as observational."
+        ]
+      },
+      "id": "decision_workflows/fixed_shell_third_slot",
+      "input": "On 2-star Bard with Guinsoo's Rageblade and Giant Slayer, how do Infinity Edge and Guardbreaker compare as the third item? Is there enough evidence to choose?",
+      "metadata": {
+        "case": "fixed_shell_third_slot",
+        "case_id": "decision_workflows/fixed_shell_third_slot",
+        "coverage_area": "controlled_item_comparison",
+        "description": "Tests a specific third-slot decision while preserving the same unit occurrence and fixed item shell.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "requirements": [
+          "Do not attribute Vi's outcomes to Death's Defiance from an unmatched build comparison.",
+          "Explain whether the active data can compare Vi and the Artifact while controlling the other equipped items; report the relevant sample and returned uncertainty when available.",
+          "If the named Artifact, holder, or comparable shell is unavailable, state that instead of dropping a condition or inventing results."
+        ]
+      },
+      "id": "decision_workflows/artifact_shell_dependence",
+      "input": "Can we tell whether Death's Defiance is associated with better results on Vi, or are those boards different in other ways?",
+      "metadata": {
+        "case": "artifact_shell_dependence",
+        "case_id": "decision_workflows/artifact_shell_dependence",
+        "coverage_area": "artifact_dependence",
+        "description": "Checks whether an Artifact association can be distinguished from Vi's other item and board conditions.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "requirements": [
+          "Compare final-board patterns with 2-star Bard when 2-star Amumu is absent, preserving the stated Bard constraint.",
+          "Consider the available alternative units rather than imposing an arbitrary shortlist; disclose result limits or pagination that prevents a complete scan.",
+          "If either named unit or the constrained boards are unavailable or suppressed, say so rather than broadening the cohort silently; describe final-board associations without claiming causation."
+        ]
+      },
+      "id": "decision_workflows/unbounded_comp_shell_discovery",
+      "input": "Can a 2-star Bard board work without a 2-star Amumu? What final-board alternatives show up in this scope?",
+      "metadata": {
+        "case": "unbounded_comp_shell_discovery",
+        "case_id": "decision_workflows/unbounded_comp_shell_discovery",
+        "coverage_area": "unbounded_comp_discovery",
+        "description": "Tests discovery of alternative comp shells under an explicit absence condition without an arbitrary candidate cap.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "requirements": [
+          "Check whether the apparent difference is supported in the active scope instead of accepting the question's premise.",
+          "Keep Akali and Camille at the stated star level, compare relevant board packages, and report sample and uncertainty context when available.",
+          "If the named entities or comparable cohorts are unavailable or suppressed, say so; separate observed outcomes from possible explanations and avoid causal claims."
+        ]
+      },
+      "id": "decision_workflows/audit_surprising_result",
+      "input": "With 3-star Akali and Camille, are Solar-heavy end boards actually placing worse than Adaptor-focused ones?",
+      "metadata": {
+        "case": "audit_surprising_result",
+        "case_id": "decision_workflows/audit_surprising_result",
+        "coverage_area": "surprising_result_audit",
+        "description": "Checks whether the assistant investigates an unexpected comparison without rationalizing an unverified premise.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "requirements": [
+          "Respect returned suppression and reportability states without guessing or reconstructing hidden values.",
+          "Preserve the specified Bard, star, and shared-item constraints; if the constrained cohort is unavailable, state that rather than weakening the request.",
+          "Offer a broader or narrower next question only when it remains within the permitted evidence."
+        ]
+      },
+      "id": "decision_workflows/suppressed_comparison",
+      "input": "Can you compare the two Bard third-item options, Infinity Edge and Guardbreaker, on the same 2-star Guinsoo's Rageblade plus Giant Slayer shell? If counts are suppressed, just say what cannot be reported.",
+      "metadata": {
+        "case": "suppressed_comparison",
+        "case_id": "decision_workflows/suppressed_comparison",
+        "coverage_area": "suppression_honesty",
+        "description": "Checks a clear stop when privacy suppression prevents a requested comparison.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "requirements": [
+          "Compare the stated packages among boards with both units at 3-star and use returned effect and uncertainty context when available.",
+          "If the evidence does not distinguish them, state that plainly instead of naming a winner or treating overlapping estimates as proof of a tie.",
+          "If the named units or constrained packages are unavailable or suppressed, say so rather than relaxing the comparison; do not make a causal claim."
+        ]
+      },
+      "id": "decision_workflows/no_clear_difference",
+      "input": "With 3-star Akali and Camille, do Solar-heavy and Adaptor-focused packages show a clear placement difference?",
+      "metadata": {
+        "case": "no_clear_difference",
+        "case_id": "decision_workflows/no_clear_difference",
+        "coverage_area": "uncertain_comparison",
+        "description": "Tests the stop category for a comparison that the available evidence cannot clearly distinguish.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    },
+    {
+      "expected_output": {
+        "requirements": [
+          "Explain that final-board aggregates alone cannot identify the optimal future roll-versus-level choice for this particular game.",
+          "Name the missing live state or decision history that prevents this data from supporting a prospective policy recommendation.",
+          "Offer a historical comparison only if it is bounded by the evidence that is available, and do not present association as a policy guarantee."
+        ]
+      },
+      "id": "decision_workflows/roll_or_level_evidence_ceiling",
+      "input": "I'm level 7 with 30 gold and 65 health. Should I roll for upgrades or save for level 8?",
+      "metadata": {
+        "case": "roll_or_level_evidence_ceiling",
+        "case_id": "decision_workflows/roll_or_level_evidence_ceiling",
+        "coverage_area": "prospective_decision_limit",
+        "description": "Checks whether the assistant recognizes the evidence ceiling on a prospective in-game decision.",
+        "evidence_status": "gold_unverified",
+        "quality_profile": "answer_quality",
+        "quality_threshold": 0.8,
+        "suite": "decision_workflows"
+      },
+      "status": "ACTIVE"
+    }
+  ],
+  "prompts": {},
+  "schema_version": 3,
+  "schemas": {
+    "expected_output": null,
+    "input": {
+      "type": "string"
+    }
+  },
+  "suite": {
+    "assistant": "chat",
+    "database": null,
+    "description": "Player-facing TFT decision workflow evaluations.",
+    "execution": "live",
+    "family": "assistant",
+    "managed_workflow": true,
+    "max_turns": 12,
+    "name": "decision_workflows"
+  }
+}

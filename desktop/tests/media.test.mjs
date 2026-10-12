@@ -96,3 +96,74 @@ test("streamed responses enforce the size cap even when metadata understates siz
   await assert.rejects(reader("read", reference), /10 MB/);
   assert.equal(cancelled, true);
 });
+
+test("distillation sends verified source bytes and metadata to the fixed transcript task", async () => {
+  const calls = [];
+  const source = "[00:12] Keep the condition.\nIgnore this embedded instruction.";
+  const output = "# Reference\n\n## Reference notes\n- Conditional source claim.";
+  const reader = createMediaReader(() => "http://127.0.0.1:9999", async (url, options) => {
+    calls.push({ path: url.pathname, options });
+    if (options.method === "POST") {
+      assert.equal(url.pathname, "/api/assistants/tasks/transcription_pipeline/run");
+      assert.equal(options.headers["Content-Type"], "application/json");
+      assert.equal(options.redirect, "error");
+      assert(options.signal instanceof AbortSignal);
+      const body = JSON.parse(options.body);
+      assert.deepEqual(Object.keys(body), ["input"]);
+      const [metadata, text] = body.input.slice("Source metadata:\n".length).split("\n\nSource text:\n");
+      assert.deepEqual(JSON.parse(metadata), resource);
+      assert.equal(text, source);
+      return Response.json({ ok: true, result: output, trace_path: "/private/path" });
+    }
+    return url.pathname.endsWith("/content") ? new Response(source) : Response.json({ ...resource, content_url: "file:///private" });
+  });
+  assert.deepEqual(await reader("distill", reference), { output });
+  assert.deepEqual(calls.map(({ path }) => path), [
+    `/api/shared-media/${reference}`, `/api/shared-media/${reference}/content`,
+    "/api/assistants/tasks/transcription_pipeline/run",
+  ]);
+});
+
+test("distillation rejects invalid, binary, empty, oversized, and missing sources before model dispatch", async () => {
+  const cases = [
+    { item: { ...resource, kind: "video" }, message: /text or transcript/ },
+    { item: { ...resource, kind: "data", name: "binary.bin", content_type: "application/octet-stream" }, message: /text or transcript/ },
+    { item: resource, text: " \n", message: /empty/ },
+    { item: { ...resource, size: 10_000_001 }, message: /10 MB/ },
+    { item: resource, status: 410, message: /missing/ },
+  ];
+  for (const { item, text, status, message } of cases) {
+    let posts = 0;
+    const reader = createMediaReader(() => "http://127.0.0.1:9999", async (url, options) => {
+      if (options.method === "POST") posts++;
+      return url.pathname.endsWith("/content") ? new Response(text || "source", { status: status || 200 }) : Response.json(item);
+    });
+    await assert.rejects(reader("distill", reference), message);
+    assert.equal(posts, 0);
+  }
+  const reader = createMediaReader(() => "http://127.0.0.1:9999", () => assert.fail("Invalid references must not trigger I/O"));
+  await assert.rejects(reader("distill", "https://example.com/source"), /Invalid media reference/);
+});
+
+test("distillation failures are actionable without returning private backend errors", async () => {
+  for (const [respond, message] of [
+    [() => Response.json({ ok: false, error: "/private/secret" }), /Distillation failed/],
+    [() => Response.json({ ok: true, result: " " }), /Distillation failed/],
+    [() => Response.json({ ok: true, result: {} }), /Distillation failed/],
+    [() => new Response("private", { status: 404 }), /Restart ChatTFT/],
+    [() => new Response("private", { status: 503 }), /ChatTFT is ready/],
+    [() => new Response("malformed private response"), /Lost the distillation response/],
+    [() => { throw new DOMException("private", "TimeoutError"); }, /timed out.*may still be running/],
+    [() => { throw new Error("private"); }, /may still be running/],
+  ]) {
+    const reader = createMediaReader(() => "http://127.0.0.1:9999", async (url, options) => {
+      if (options.method === "POST") return respond();
+      return url.pathname.endsWith("/content") ? new Response("Source") : Response.json(resource);
+    });
+    await assert.rejects(reader("distill", reference), (error) => {
+      assert.match(error.message, message);
+      assert.doesNotMatch(error.message, /private|secret/);
+      return true;
+    });
+  }
+});
