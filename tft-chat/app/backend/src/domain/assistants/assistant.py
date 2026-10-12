@@ -16,7 +16,12 @@ from domain.assistants.registry import AssistantRegistry, assistant_registry
 from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import AssistantSpec
 from domain.assistants.token_logging import log_agent_graph
-from domain.assistants.utils import instruction_callback, invocation_input, record_instructions
+from domain.assistants.utils import (
+    can_receive_skills,
+    instruction_callback,
+    invocation_input,
+    record_instructions,
+)
 from domain.providers.context import RepositoryContextProvider
 from domain.providers.models import ContextProvider, SkillProvider
 from domain.providers.skills import RepositorySkillProvider
@@ -159,8 +164,8 @@ class Assistant:
             timing["agent_setup_ms"] = round(
                 (time.perf_counter() - setup_started) * 1000, 3,
             )
-        # Root skills are deliberately excluded. Do not invoke selectors for
-        # resources that no reachable model step can consume (e.g. transcripts).
+        # Select from the captured graph once, so unreachable skill definitions
+        # cannot consume selector slots or cross a recipient's allowlist.
         specs: list[AssistantSpec] = []
         seen: set[str] = set()
         pending = [agent]
@@ -171,14 +176,27 @@ class Assistant:
             seen.add(current.name)
             specs.append(self._registry.get_spec(current.name))
             pending.extend(current.handoffs)
+        skill_recipients = [
+            spec for spec in specs
+            if can_receive_skills(spec)
+        ]
+        skill_allowlists = [spec.skill_names for spec in skill_recipients]
+        allowed_skill_names = (
+            None
+            if any(names is None for names in skill_allowlists)
+            else tuple(sorted({
+                skill
+                for names in skill_allowlists
+                for skill in names or ()
+            }))
+        )
         resources = await prepare_resources(
             messages, context_provider=self.context_provider,
             skill_provider=self.skill_provider, set_number=self.set_number,
             timing=timing,
             select_references=any(spec.repository_context for spec in specs),
-            select_skills=any(
-                spec.name != self.name and spec.skill_names != () for spec in specs
-            ),
+            select_skills=bool(skill_recipients),
+            allowed_skill_names=allowed_skill_names,
         )
         context = AssistantRunContext(
             runtime=RuntimeSettings(

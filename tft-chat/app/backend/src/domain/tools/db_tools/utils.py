@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from contextvars import copy_context
 import json
@@ -97,7 +98,8 @@ def count_filter_group_predicates(group: Any) -> int:
         group: Filter group to inspect.
 
     Returns:
-        Total bounded predicates, including populated level fields.
+        Total bounded predicates, including nested unit item names and
+        populated level fields.
     """
     count = sum(
         len(getattr(group, name) or [])
@@ -110,6 +112,13 @@ def count_filter_group_predicates(group: Any) -> int:
     count += sum(
         getattr(group, name, None) is not None
         for name in ("level", "min_level", "max_level")
+    )
+    # Nested item names each add a correlated SQL predicate to their parent
+    # unit condition, so charge them against the same global compilation cap.
+    count += sum(
+        len(getattr(condition, field, None) or [])
+        for condition in (getattr(group, "unit_conditions", None) or [])
+        for field in ("required_items", "excluded_items")
     )
     return count
 
@@ -147,7 +156,8 @@ def describe_entity_condition(condition: Any) -> str:
 
     Default values are included because they affect cohort membership: unit
     and item conditions require at least one copy, while trait conditions
-    require an active trait unless explicitly configured otherwise.
+    require an active trait unless explicitly configured otherwise. Unit item
+    constraints refer to exact stored equipped-item names on that occurrence.
 
     Args:
         condition: Validated unit, item, or trait condition.
@@ -217,6 +227,38 @@ def unit_condition_clauses(conditions: list[Any], board: Any) -> list[Any]:
                 condition.max_completed_items,
             )
         )
+        # Keep item identity and unit attributes correlated to this exact
+        # occurrence. A separate ItemCondition is board-level and could match
+        # another copy of the same champion.
+        def occurrence_item_count(item_name: str) -> Any:
+            """Count one exact stored item on the current unit occurrence.
+
+            Args:
+                item_name: Exact stored item name to count.
+
+            Returns:
+                A correlated scalar count for this unit occurrence.
+            """
+            item = aliased(AnalysisBoardItem)
+            return (
+                select(func.count())
+                .select_from(item)
+                .where(
+                    item.scope_id == unit.scope_id,
+                    item.board_key == unit.board_key,
+                    item.unit_idx == unit.unit_idx,
+                    item.item_name == item_name,
+                )
+                .correlate(unit)
+                .scalar_subquery()
+            )
+
+        for item_name, required_count in Counter(
+            condition.required_items or ()
+        ).items():
+            predicates.append(occurrence_item_count(item_name) >= required_count)
+        for item_name in condition.excluded_items or ():
+            predicates.append(occurrence_item_count(item_name) == 0)
         # Counting matching rows enforces copy bounds without widening the
         # outer board-grain query or exposing individual unit occurrences.
         copies = (

@@ -7,6 +7,7 @@ import time
 from collections.abc import Callable, Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
+from domain.assistants.constants import AssistantName
 from domain.runtime.models import AssistantRunContext
 
 if TYPE_CHECKING:
@@ -97,6 +98,24 @@ def render_instruction_layers(
     return "\n\n".join(part for part in parts if part).strip()
 
 
+def can_receive_skills(spec: AssistantSpec) -> bool:
+    """Apply graph-level eligibility before an assistant's skill allowlist.
+
+    Args:
+        spec: Assistant whose instructions are being rendered.
+
+    Returns:
+        Whether the assistant may receive selected skills in this graph.
+    """
+    # `None` means unrestricted; an empty tuple explicitly denies skill access.
+    # Chat remains a router even when its spec declares a broader allowlist.
+    return (
+        spec.name != AssistantName.CHAT
+        and spec.skill_names != ()
+        and (spec.repository_context or bool(spec.skill_names))
+    )
+
+
 def instruction_callback(
     spec: AssistantSpec, *, root: bool
 ) -> Callable[[RunContextWrapper[Any], Agent[Any]], str]:
@@ -104,7 +123,7 @@ def instruction_callback(
 
     Args:
         spec: Specification snapshot belonging to this constructed agent.
-        root: Whether to apply root-only caller instructions and exclude skills.
+        root: Whether to apply the root-only caller system prefix.
 
     Returns:
         A synchronous SDK callback that renders only preselected resources.
@@ -135,7 +154,11 @@ def instruction_callback(
             spec,
             context_provider=context.context_provider,
             skill_provider=context.skill_provider,
-            skills=() if root else context.resources.skills,
+            skills=(
+                context.resources.skills
+                if can_receive_skills(spec)
+                else ()
+            ),
             base_instructions=base_instructions,
             references=(
                 context.resources.references if context.resources.query.strip() else ()

@@ -54,7 +54,11 @@ failure on the changed tree and that untouched dev export. No live grading,
 database tools, ingestion, or projection rebuilds were used for this validation.
 
 Current cohort and delta registry coverage is in `tests/test_cohort_facts.py`
-and `tests/test_openai_tools.py`.
+and `tests/test_openai_tools.py`. `tests/test_cohort_loadouts.py` verifies that
+unit stars, item counts, and required/excluded items match the same occurrence,
+including duplicate holders, repeated items, cross-scope isolation, and overlap.
+These checks use anonymous SQLite fixtures and strict tool-schema discovery;
+they do not query the configured application database.
 
 Every test has a 60-second POSIX alarm guardrail spanning fixture setup, the
 test call, and fixture teardown. A stall fails with its node ID and the active
@@ -127,6 +131,13 @@ and database logic lives
 in `evals/`; platform integration and exported definitions live in
 `evals/langfuse/`. Every run exports its frozen inputs into content-addressed
 snapshots for Git review. Production prompts remain repository-owned.
+
+The [decision workflow suite](decision-workflows.md) adds eight locally
+registered cases for useful player answers, retained comparison constraints,
+and evidence limits. Its authored requirements prescribe no fixed query
+sequence and claim no verified outcome gold. The seed is loadable offline;
+live execution requires a fresh captured graph and an explicit evaluation
+database target through the existing export/run path.
 
 ```bash
 uv sync --locked --extra evals
@@ -297,3 +308,15 @@ full catalog validation still reports missing corpus gold for `exact_unit`.
 Checks used the existing temporary isolated Python environment because this checkout
 has no `.venv`. No paid calls, hosted content edits, ingestion, projection rebuilds,
 or production database tests were used.
+
+Decision workflow integration on top of `2cef657` passed 378 focused tests,
+including the real SDK subprocess against the deterministic local HTTP model.
+The six remaining failures match the migration baseline: stale tool preflight
+expectations, four removed probability-case lookups, and the natural-workspace
+conversion lookup for `comp-expert`. The inventory checks now cover all 14
+historical bundles unchanged plus the eight new decision workflow cases.
+Full catalog validation still reports missing corpus gold for `exact_unit`.
+The combined checks cover runtime and access policies, chat and task services,
+captured evaluations, Specs trials, skill providers, cohort/loadout SQL, tool
+schemas, and evidence. They used the existing main-checkout Python environment;
+no paid model calls or production database queries were made.

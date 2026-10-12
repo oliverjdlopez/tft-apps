@@ -27,14 +27,33 @@ def suite_bundle(name: str) -> dict:
 def test_all_cases_and_original_assertions_are_migrated() -> None:
     """Protect the complete inventory, including the intentionally empty suite."""
     suites = load_eval_suites()
-    assert {s.name: len(s.tests) for s in suites} == {
-        "analyze_transcript": 0, "chat": 28, "clean_transcript": 1,
-        "compact_transcript": 1, "data_analyst": 7, "dummy_assistant": 1,
-        "context_selection": 11, "skill_selection": 12,
+    sizes = {s.name: len(s.tests) for s in suites}
+    decision_workflows = next(suite for suite in suites if suite.name == "decision_workflows")
+    assert sizes.pop("decision_workflows") == 8
+    assert sizes == {
+        "analyze_transcript": 0, "chat": 21, "clean_transcript": 1,
+        "comp-expert": 18, "compact_transcript": 1, "context_response_smoke": 30,
+        "context_selection": 11, "data_analyst": 7, "dummy_assistant": 1,
+        "item-expert": 17, "meta-expert": 0, "skill_selection": 12,
+        "trait-expert": 17, "unit-expert": 17,
     }
-    assertions = [a for s in suites for t in s.tests if t.get("metadata", {}).get("scoring") != "none" for a in t.get("metadata", {}).get("legacy_definition", t)["expected_output"]["assertions"]]
-    assert sum(a["kind"] == "rubric" for a in assertions) == 15
-    assert sum(a["kind"] == "trace" for a in assertions) == 64
+    assert all(
+        isinstance(item["input"], str)
+        and item["expected_output"]["requirements"]
+        for item in decision_workflows.tests
+    )
+    historical_suites = [suite for suite in suites if suite.name != "decision_workflows"]
+    assertions = []
+    for suite in historical_suites:
+        for test in suite.tests:
+            if test.get("metadata", {}).get("scoring") == "none":
+                continue
+            definition = test.get("metadata", {}).get("legacy_definition", test)
+            expected = definition.get("expected_output") if isinstance(definition, dict) else None
+            if isinstance(expected, dict):
+                assertions.extend(expected.get("assertions", []))
+    assert sum(a["kind"] == "rubric" for a in assertions) == 13
+    assert sum(a["kind"] == "trace" for a in assertions) == 56
 
 
 def test_preflight_rejects_invalid_suite_routing() -> None:

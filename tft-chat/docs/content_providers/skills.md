@@ -1,7 +1,11 @@
 # Skill Provider
 
-The repository skill provider discovers portable Agent Skills, selects the
-smallest useful set for a request, and injects each selected workflow in full.
+The repository skill provider discovers portable Agent Skills, selects only the
+focused workflows that materially help answer a request, and injects each
+selected workflow in full. Investigation guidance is for questions that need
+query planning; a straightforward lookup should not acquire extra workflow
+steps. Follow-up queries are conditional on resolving a material uncertainty or
+changing the conclusion.
 `domain.providers.skills` owns provider operations and deterministic selection,
 `domain.providers.models` defines the shared data and protocol contracts, and
 `domain.providers.utils` contains loading, discovery, selector, and rendering
@@ -50,20 +54,33 @@ A skill is selected and rendered as one complete workflow. Its headings or
 steps are never shortlisted independently because partial procedural injection
 could omit required constraints or sequencing.
 
-The `tft-unit-itemization` workflow distinguishes tank, fighter, and ranged
-damage itemization archetypes so holder analysis can account for each role's
-different balance of durability, offense, and resource generation.
+The `tft-unit-itemization` workflow supports unit-specific frequency,
+performance, holder, and loadout questions. Role concepts can organize a
+requested comparison when the user or supplied game reference establishes the
+role; item statistics alone do not establish a unit's job, ability scaling, or
+an item's mechanics.
 
-Selected skills are injected only into contextualized handoffs. They are not
-added to the top-level chat prompt or exposed through frontend configuration.
-Names are unique, and repository discovery examines direct child directories
-containing `SKILL.md`.
+Selected skills are injected only where the target assistant's instruction
+policy allows them. They are not added to the named `chat` assistant's prompt
+or exposed through frontend configuration. Names are unique, and repository
+discovery examines direct child directories containing `SKILL.md`.
+
+During graph preparation, a non-chat assistant is skill-eligible when repository
+context is enabled or its spec has a nonempty skill allowlist. An omitted
+allowlist remains unrestricted for eligible assistants; an explicit empty
+allowlist denies skills. Context-disabled transcript assistants with no
+allowlist are skipped. The selector's candidate pool respects eligible
+assistants' allowlists; if any eligible assistant is unrestricted, the full
+discovered pool remains available. Each assistant's own policy then filters the
+selected skills before rendering.
 
 Each assistant can restrict the workflows it may read with a `skills` name
 allowlist in its `agent.json`. Omission allows every discovered skill, while an
 empty list allows none. The instruction builder filters preselected workflows
 before rendering, preserving the boundary when callers share one selection
-across a handoff graph.
+across an invocation graph. The final responder permits only statistical
+interpretation; the analyst can receive the investigation and itemization
+workflows that support its query tools.
 
 Provider behavior is covered by the Python tests and the frozen offline
 Langfuse snapshot. Edit evaluation cases in the Langfuse dataset and export

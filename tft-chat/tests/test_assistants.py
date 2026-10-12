@@ -299,10 +299,8 @@ def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
     assert wrap_task_input("Which carry is better?", spec.task_prompt) == (
         "Which carry is better?"
     )
-    assert "Select the narrowest ranking projection" in spec.system_prompt
-    assert "What are the strongest 4-cost units?" in spec.system_prompt
-    assert "Which Silver traits perform best?" in spec.system_prompt
-    assert "What are the best Radiant items right now?" in spec.system_prompt
+    assert "Choose the narrowest tool" in spec.system_prompt
+    assert "Use a `group_by_*` switch only when" in spec.system_prompt
     for tool_name in (
         "rank_units",
         "rank_items",
@@ -313,8 +311,8 @@ def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
         "get_cohort_trait_deltas",
     ):
         assert f"`{tool_name}`" in spec.system_prompt
-    assert "Delta results are ordered by frequency, not effect size" in spec.system_prompt
-    assert "structured rankings and cohort investigations" in spec.handoff_description
+    assert "Delta rows are ordered by frequency, not effect size" in spec.system_prompt
+    assert "cohort investigations that need more than a direct lookup" in spec.handoff_description
 
 
 def test_item_and_unit_experts_receive_an_unfiltered_data_view() -> None:
@@ -340,8 +338,8 @@ def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> N
     assert "name-only item" in prompt
     assert "`holder`" in prompt
     assert "`holder_star_level`" in prompt
-    assert "Separate unit and item conditions do not imply holder binding" in prompt or (
-        "a separate unit condition does not bind the item" in prompt
+    assert "separate unit and item conditions do not imply holder binding" in prompt.lower() or (
+        "a separate unit condition does not bind the item" in prompt.lower()
     )
     assert "across multiple matching holders" in prompt
     assert "does not identify its holder" not in prompt
@@ -355,11 +353,11 @@ def test_prompt_evidence_guidance_matches_assistant_ownership() -> None:
     responder = assistant_spec("final_responder").system_prompt
     assert "## Evidence displays" not in chat
     assert "no direct match-data tools" not in chat
-    assert "Your direct analytical tools are bounded rankings" in chat
+    assert "A direct lookup or ranking is sufficient when its result answers the actual question" in chat
     assert "Preserve these" not in analyst
     assert "`compare_cohorts`; a mean does not establish a distribution" in analyst
-    assert "handoff to `final_responder`" in analyst
-    assert "Use present_evidence once" in responder
+    assert "hand off to `final_responder`" in analyst
+    assert "Use `present_evidence` once" in responder
 
 
 def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
@@ -388,6 +386,7 @@ def test_final_responder_owns_evidence_presentation() -> None:
 
     assert spec.repository_context is True
     assert "Markdown table" in spec.system_prompt
+    assert spec.skill_names == ("tft-statistical-interpretation",)
     assert spec.tool_group_keys == ("evidence",)
     assert assistant_tool_names("final_responder") == ["present_evidence"]
     assert assistant_handoff_names("final_responder") == []

@@ -6,7 +6,7 @@ All data available to you has already been pre-filtered by the stated constraint
 
 1. Treat structured tool populations as complete for their fixed scope; do not add patch/set predicates.
 2. Resolve every user-language unit, item, and trait name used in a filter with one `resolve_tft_names` call. Use exact stored identifiers afterward.
-3. Use `rank_items` for item-overall or exact-holder rankings and `rank_unit_loadouts` for exact one- or two-item builds after batched name resolution. Use `query_cohort` for richer holder/loadout groupings and `compare_cohorts` for board-presence outcome reports. If the structured tools cannot express a requested build relationship, state that boundary explicitly.
+3. Use `rank_items` for item-overall or exact-holder rankings and `rank_unit_loadouts` for exact loadouts after batched name resolution. For a third-slot comparison, set `item_1` and `item_2` to the fixed items and `item_count=3` to compare candidates while retaining both. Use `query_cohort` for richer holder/loadout groupings and `compare_cohorts` for board-presence outcome reports. If the structured tools cannot express a requested build relationship, state that boundary explicitly.
 4. Inspect `kind`, `context`, `page`, and structured `warnings` before interpreting rows. For comparisons, align claims to the target-minus-baseline metric objects in `effects`.
 5. Analyze itemization at the comp level before naming individual best items. Distinguish frequency from outcome association and holder concentration from a true exact build requirement.
 

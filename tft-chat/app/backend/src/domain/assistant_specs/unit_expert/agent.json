@@ -1,7 +1,7 @@
 {
   "name": "unit_expert",
   "description": "Produce data-backed reports on the most important units in a TFT composition.",
-  "handoff_description": "Analyze the three or four most important units in a TFT comp, including star levels, cost, frequency, outcomes, and itemization.",
+  "handoff_description": "Analyze the units most relevant to a TFT composition question, using scoped frequency, star levels, outcomes, and itemization when useful.",
   "tools": {
     "include_all": false,
     "groups": ["ranking", "query_cohorts"]

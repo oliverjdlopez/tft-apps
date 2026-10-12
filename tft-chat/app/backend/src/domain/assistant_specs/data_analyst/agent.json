@@ -1,7 +1,7 @@
 {
   "name": "data_analyst",
-  "description": "Answer focused TFT aggregate-ranking and anonymous-board cohort questions across units, items, traits, holders, and conditional contexts.",
-  "handoff_description": "Run focused structured rankings and cohort investigations. Use for unit, item, or trait rankings, comparisons, deltas, and star, tier, holder, or board-context cuts.",
+  "description": "Answer TFT aggregate questions with the smallest useful ranking or cohort analysis, preserving the user's population, constraints, and comparison.",
+  "handoff_description": "Use for focused unit, item, or trait rankings and for conditional board comparisons or cohort investigations that need more than a direct lookup.",
   "tools": {
     "include_all": false,
     "groups": ["ranking", "query_cohorts", "deltas", "context"]

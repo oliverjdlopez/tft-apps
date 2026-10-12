@@ -70,9 +70,15 @@ def test_committed_inventory_preserves_authored_checks():
     """Keep all authored cases, grading weights, and the empty suite visible."""
     entries = load_catalog(ROOT)
     bundles = [load_snapshot(e["snapshot"], ROOT) for e in entries]
-    assert len(entries) == 14
-    assert sum(len(b["items"]) for b in bundles) == 153
-    experts = {b["suite"]["name"]: b for b in bundles if "expert" in b["suite"]["name"]}
+    decision = next(b for b in bundles if b["suite"]["name"] == "decision_workflows")
+    historical = [b for b in bundles if b is not decision]
+    assert len(entries) == 15
+    assert len(historical) == 14
+    assert sum(len(b["items"]) for b in bundles) == 161
+    assert sum(len(b["items"]) for b in historical) == 153
+    assert len(decision["items"]) == 8
+    assert all(item["expected_output"]["requirements"] for item in decision["items"])
+    experts = {b["suite"]["name"]: b for b in historical if "expert" in b["suite"]["name"]}
     assert {name: len(bundle["items"]) for name, bundle in experts.items()} == {
         "comp-expert": 18, "item-expert": 17, "meta-expert": 0,
         "trait-expert": 17, "unit-expert": 17,
@@ -81,7 +87,7 @@ def test_committed_inventory_preserves_authored_checks():
                for bundle in experts.values() for item in bundle["items"]) == 162
     assertions = [
         assertion
-        for bundle in bundles
+        for bundle in historical
         if bundle["suite"].get("scoring") != "none"
         for item in bundle["items"]
         if item.get("metadata", {}).get("scoring") != "none"
@@ -93,7 +99,7 @@ def test_committed_inventory_preserves_authored_checks():
     ]
     assert sum(a["kind"] == "trace" for a in assertions) == 248
     assert sum(a["kind"] == "rubric" for a in assertions) == 13
-    assert next(b for b in bundles if b["suite"]["name"] == "analyze_transcript")["items"] == []
+    assert next(b for b in historical if b["suite"]["name"] == "analyze_transcript")["items"] == []
     assert all("file://" not in json.dumps(b) for b in bundles)
     assert next(a for a in assertions if a.get("selector") == "payload_reduction")["threshold"] == .75
 

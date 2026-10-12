@@ -44,8 +44,9 @@ Compares placement outcomes between two board cohorts in the active analysis
 scope. Entity membership is expressed only through `unit_conditions`,
 `item_conditions`, and `trait_conditions`; there are no parallel `units`,
 `items`, or `traits` shorthand fields. Conditions support exact unit stars,
-completed-item-count bounds, item-to-holder binding, holder stars, trait tiers,
-and exact or ranged player levels. It supports:
+completed-item-count bounds, same-occurrence unit item constraints,
+item-to-holder binding, holder stars, trait tiers, and exact or ranged player
+levels. It supports:
 
 - a required `target` cohort and optional explicit `baseline`
 - complement mode by omitting `baseline`; the baseline then becomes the
@@ -72,6 +73,58 @@ optional attributes are unconstrained. For example:
 }
 ```
 
+`UnitCondition.required_items` and `excluded_items` match exact stored equipped
+item names on the same unit occurrence as that condition's `star_level` and
+completed-item-count bounds. Up to three names may be supplied in either list;
+repeating a name in `required_items` requires that many copies, while names in
+`excluded_items` must be unique. These constraints describe item presence or
+absence; they do not imply an exact full loadout. Unmentioned equipped items
+remain allowed unless the separate `min_completed_items` or
+`max_completed_items` bounds rule them out. For example, compare copies of a
+carry with item A versus item B as follows:
+
+```json
+{
+  "target": {
+    "unit_conditions": [{
+      "name": "TFT17_Carry",
+      "star_level": 2,
+      "min_completed_items": 1,
+      "max_completed_items": 1,
+      "required_items": ["TFT_Item_A"],
+      "excluded_items": ["TFT_Item_B"]
+    }]
+  },
+  "baseline": {
+    "unit_conditions": [{
+      "name": "TFT17_Carry",
+      "star_level": 2,
+      "min_completed_items": 1,
+      "max_completed_items": 1,
+      "required_items": ["TFT_Item_B"],
+      "excluded_items": ["TFT_Item_A"]
+    }]
+  },
+  "shared": {
+    "trait_conditions": [{"name": "TFT17_Sniper"}],
+    "min_level": 8
+  }
+}
+```
+
+Repeat every holder, star, item-count, and fixed-item requirement inside each
+cohort's matching `UnitCondition` when those constraints must describe the same
+unit occurrence as its candidate item. `shared` conditions constrain the board
+and do not bind a particular unit occurrence across cohorts. If a board has
+multiple matching copies, one copy can satisfy the target and another the
+baseline; both cohorts can then include that board. Keep the returned overlap
+state in the interpretation and do not describe an item exclusion on one copy
+as making the comparison disjoint. `min_copies: 0` with `max_copies: 0` means
+there are no unit occurrences matching that condition's full set of unit and
+item predicates; it does not require the named unit to be absent from the board.
+Each nested required or excluded item name counts toward the 64-predicate
+FilterGroup compilation bound.
+
 Nested `any_of` and `none_of` branches and caller-defined cohort labels are not
 supported. Comparison labels are derived from the populated conditions and
 include effective defaults such as `min_copies=1` or `active=true`. Results use
@@ -90,7 +143,8 @@ For frequency-first entity breakouts within a cohort, use the separate
   is no raw-table fallback.
 - Name-only conditions are the board-presence form; add condition fields only
   for attributes that should further restrict membership.
-- Item conditions with holder fields bind an item to its exact unit copy.
+- Item conditions with holder fields bind each matching item row to the unit
+  occurrence carrying it, but do not bind it to a separate `UnitCondition`.
 - Separate unit and item conditions require same-board co-occurrence, not
   item-to-unit binding. Set the item condition's `holder` and optionally
   `holder_star_level` for that binding. Item copy bounds count matching item

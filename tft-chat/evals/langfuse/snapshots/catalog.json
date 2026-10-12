@@ -91,6 +91,18 @@
       "snapshot": "a5e3f8486711884369fb4902c81994673f0f1770e0438c05834d155e7e0cdba6"
     },
     {
+      "assistant": "chat",
+      "case_count": 8,
+      "database": null,
+      "description": "Player-facing TFT decision workflow evaluations.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 12,
+      "name": "decision_workflows",
+      "snapshot": "16f624a45fc8a1febf7bdfe53cc90a2555a0e984701a26e6d7c87ea308a9d0b0"
+    },
+    {
       "assistant": "dummy_assistant",
       "case_count": 1,
       "database": null,

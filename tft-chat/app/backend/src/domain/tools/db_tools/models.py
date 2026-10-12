@@ -204,9 +204,11 @@ class UnitCondition(StrictToolModel):
     """Require a named unit and optionally constrain its board occurrences.
 
     ``FilterGroup`` uses this model in ``compare_cohorts`` and
-    ``query_cohort``. A condition with only ``name`` populated means the unit
-    must appear at least once; its star level, item count, and additional
-    copies remain unconstrained.
+    ``query_cohort``. Star, completed-item count, and required or excluded
+    equipped items all constrain the same unit occurrence. A condition with
+    only ``name`` populated means the unit must appear at least once; its star
+    level, item count, equipped items, and additional copies remain
+    unconstrained.
     """
 
     name: StoredName = Field(
@@ -220,6 +222,32 @@ class UnitCondition(StrictToolModel):
     max_copies: Optional[Annotated[int, Field(ge=0, le=16)]] = None
     min_completed_items: Optional[Annotated[int, Field(ge=0, le=3)]] = None
     max_completed_items: Optional[Annotated[int, Field(ge=0, le=3)]] = None
+    required_items: Optional[
+        Annotated[
+            List[StoredName],
+            Field(
+                min_length=1,
+                max_length=3,
+                description=(
+                    "Exact stored equipped item names that must occur on this "
+                    "same unit occurrence. Repeated names require that many copies."
+                ),
+            ),
+        ]
+    ] = None
+    excluded_items: Optional[
+        Annotated[
+            List[StoredName],
+            Field(
+                min_length=1,
+                max_length=3,
+                description=(
+                    "Exact stored equipped item names that must be absent from "
+                    "this same unit occurrence."
+                ),
+            ),
+        ]
+    ] = None
 
     @model_validator(mode="after")
     def validate_ranges(self) -> "UnitCondition":
@@ -234,6 +262,12 @@ class UnitCondition(StrictToolModel):
             self.max_completed_items,
             "unit completed items",
         )
+        if self.excluded_items is not None and len(self.excluded_items) != len(
+            set(self.excluded_items)
+        ):
+            raise ValueError("excluded_items must not contain duplicate names")
+        if set(self.required_items or ()) & set(self.excluded_items or ()):
+            raise ValueError("required_items and excluded_items must not overlap")
         return self
 
 

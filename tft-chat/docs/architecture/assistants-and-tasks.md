@@ -63,9 +63,11 @@ separate from the `deltas` group for frequency-first entity breakouts, and the
 responder is the terminal user-facing synthesizer. Delta guidance keeps the
 cohort as the contextual shell, distinguishes within-cohort `delta` from
 same-entity-outside-cohort `relative_delta`, and treats missing comparators as
-unavailable evidence.
+unavailable evidence. The [decision workflow design](decision-workflows.md)
+explains the prompt boundaries, alternatives, and same-copy item constraints.
 
-`final_responder` owns only the `evidence` tool group and has no handoffs. Its
+`final_responder` owns only the `evidence` tool group, permits only the
+`tft-statistical-interpretation` skill, and has no handoffs. Its
 `present_evidence` tool selects one initial static table, interactive table, or
 placement distribution by reference. Analytical tools retain their usual
 results and additionally register evidence when an invocation supplies an
@@ -91,9 +93,14 @@ prompts used by normal application runs.
 Chat, direct assistant API, CLI, transcript stages, and captured evaluations use
 `domain.assistants.Assistant` to prepare each invocation. The class calls
 `prepare_resources` once before execution when the graph can consume selected
-resources. Graphs without repository context skip factual selection; graphs
-without skill-eligible handoffs skip skill selection. Root skill bodies remain
-excluded. It uses
+resources. Graphs without repository context skip factual selection. Skill
+selection skips graphs without an eligible recipient: chat is never eligible;
+otherwise an assistant may receive skills when it can use repository context
+or explicitly names one or more skills. Skills are selected once from the
+union of reachable recipients' allowlists (or the full catalog if any recipient
+is unrestricted), then filtered again at each agent's instruction boundary.
+This lets a directly invoked contextualized analyst receive its permitted
+skills, and a no-facts assistant explicitly opt in to named skills. It uses
 the latest user message for selection, or up to four recent user messages when
 the latest message matches the existing follow-up heuristic. Assistant replies
 remain in SDK conversation history but are not part of the selector query.
@@ -116,8 +123,10 @@ With `AssistantRunContext`, the callbacks render prepared resources on every
 model step according to that agent's repository-context and skill policies.
 All handoff depths follow the same per-agent rules; contextualization no longer
 depends on whether a target is directly reachable from the root. Only the root
-receives the optional caller system prefix and excludes selected skill bodies.
-Its callback is reused by the tool-free fallback under a different agent name.
+receives the optional caller system prefix. Chat is excluded from skill
+injection; other root assistants follow the same context and explicit-skill
+eligibility rules as handoff targets. Chat's callback is reused by the tool-free
+fallback under a different agent name.
 Rendering never selects resources or loads runtime configuration.
 
 The consumer entry point is `Assistant(name, model=model)`. Construction captures
@@ -182,8 +191,9 @@ also apply the root policy before rendering:
 
 - the top-level chat assistant receives selected factual references, but not
   selected skill bodies;
-- contextualized handoff assistants receive the factual references and focused
-  workflow material permitted by their spec; and
+- contextualized, skill-eligible assistants receive factual references and
+  focused workflow material permitted by their spec, including a directly
+  invoked analytical root; and
 - transcript assistants receive no product context.
 
 Fresh handoff agents retain the request's model choice, preventing an

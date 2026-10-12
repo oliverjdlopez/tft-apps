@@ -43,6 +43,11 @@ bundle. Existing snapshots are never backfilled with current definitions. Fixtur
 and selector benchmarks do not require bundle captures; selector model calls use
 `Assistant.run_sync`.
 
+The `decision_workflows` portable seed follows the same contract: local catalog
+registration validates its cases but does not capture execution definitions or
+choose a database. A live run must freeze a fresh graph for every variant and
+select an explicit evaluation database before worker dispatch.
+
 The worker retains actual instruction text and hashes, configured per-agent model
 settings, separate run-level setting overrides, selected resource hashes, activity,
 and source provenance. Model failures retain this evidence. Preparation and execution
