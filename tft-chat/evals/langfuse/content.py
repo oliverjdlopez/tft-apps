@@ -8,7 +8,6 @@ from pathlib import Path
 import re
 from typing import Any
 
-from domain.assistants.constants import AssistantName
 from evals.utils import evaluation_database
 
 from .utils import (atomic_write, canonical_json, catalog_revision,
@@ -296,7 +295,7 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
     if dataset_name not in entries:
         raise ValueError(f"Unknown ChatTFT dataset: {dataset_name}")
     baseline = load_snapshot(entries[dataset_name]["snapshot"], root)
-    if baseline["suite"]["name"] == AssistantName.ANALYZE_TRANSCRIPT and config.get("action", "run") != "export":
+    if baseline["suite"]["name"] == 'analyze_transcript' and config.get("action", "run") != "export":
         raise ValueError("Archived analysis dataset has no executable workflow")
     version = utc_version(config.get("dataset_version"))
     dataset = client.get_dataset(dataset_name, version=version)

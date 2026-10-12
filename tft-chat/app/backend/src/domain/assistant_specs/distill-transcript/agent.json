@@ -1,0 +1,9 @@
+{
+  "name": "distill-transcript",
+  "description": "Distill transcripts and other text into compact, source-grounded references for ChatTFT.",
+  "handoff_description": "Preserve useful source claims, conditions, attribution, and uncertainty in compact Markdown reference notes.",
+  "tools": [],
+  "handoffs": [],
+  "context": {"repository": false},
+  "skills": []
+}

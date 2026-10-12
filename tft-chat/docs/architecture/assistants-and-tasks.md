@@ -18,9 +18,9 @@ Each assistant lives under `app/backend/src/domain/assistant_specs/<name>/`:
   overrides, tool groups, individual tools, skill access, and handoffs.
 - `task.md` optionally wraps task-style input. Most assistants do not need one.
 
-All current assistant definitions use this same layout. The transcript assistants
-keep their existing input instructions in `task.md`; their system instructions,
-names, and descriptions no longer live in `system.md` frontmatter. The loader
+All current assistant definitions use this same layout. The `distill-transcript`
+assistant keeps its source-input wrapper in `task.md` and its distillation policy
+in `system.md`; names, descriptions, and access policy live in `agent.json`. The loader
 retains legacy frontmatter compatibility for older saved drafts and imported
 definitions, but new repository definitions should use these explicit files.
 
@@ -90,7 +90,7 @@ prompts used by normal application runs.
 
 ## Runtime instructions
 
-Chat, direct assistant API, CLI, transcript stages, and captured evaluations use
+Chat, direct assistant API, CLI, transcript distillation, and captured evaluations use
 `domain.assistants.Assistant` to prepare each invocation. The class calls
 `prepare_resources` once before execution when the graph can consume selected
 resources. Graphs without repository context skip factual selection. Skill
@@ -194,7 +194,8 @@ also apply the root policy before rendering:
 - contextualized, skill-eligible assistants receive factual references and
   focused workflow material permitted by their spec, including a directly
   invoked analytical root; and
-- transcript assistants receive no product context.
+- `distill-transcript` receives no repository context or skills and has no tools
+  or handoffs.
 
 Fresh handoff agents retain the request's model choice, preventing an
 Anthropic-backed chat request from silently switching providers during a
@@ -221,11 +222,13 @@ instruction construction.
 
 ## Registered tasks
 
-`domain.tasks` contains synchronous, multi-step application workflows. The
-transcript pipeline runs clean, applies structured edits, compacts the cleaned
-text, and analyzes the result. Invalid clean-edit JSON degrades to the original
-transcript rather than failing the entire pipeline. `services/task_service.py`
-exposes the task catalog and response contract over HTTP.
+`domain.tasks` contains synchronous application workflows. The existing
+`transcription_pipeline` task invokes only `distill-transcript`, passing the
+original transcript or other source text and returning compact Markdown reference
+notes. It performs no JSON edit application or follow-up analysis.
+`services/task_service.py` preserves the task catalog and success/error envelope
+over HTTP. The [transcription guide](../apps/transcription.md) documents the
+source contract, CLI, and retired assistant identities.
 
 ## Validation surfaces
 

@@ -14,11 +14,12 @@ from domain.assistants.constants import AssistantName
 
 
 def main() -> None:
+    """Run a selected assistant on inline, file, or standard-input text."""
     parser = argparse.ArgumentParser(description="Run ChatTFT assistants.")
     parser.add_argument(
         "assistant",
         nargs="?",
-        default=AssistantName.CLEAN_TRANSCRIPT,
+        default=AssistantName.DISTILL_TRANSCRIPT,
         choices=list_assistants(),
         help="Assistant to run.",
     )

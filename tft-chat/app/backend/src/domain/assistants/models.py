@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Annotated, Any, TYPE_CHECKING, Union
+from typing import Any, TYPE_CHECKING
 
-from pydantic import BaseModel, ConfigDict, Field, RootModel
+from pydantic import BaseModel, ConfigDict
 
 if TYPE_CHECKING:
     from agents import Agent
@@ -54,45 +54,9 @@ class CandidateIdSelection(BaseModel):
     selected_ids: list[int]
 
 
-class CompactTranscriptOutput(RootModel[str]):
-    """A compact transcript represented as one continuous text block."""
-
-
-class _StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-
-class TranscriptReplacement(_StrictModel):
-    id: int
-    text: str
-
-
-class TranscriptMerge(_StrictModel):
-    merge: list[int] = Field(min_length=1)
-    text: str
-
-
-class TranscriptDeletion(_StrictModel):
-    delete: list[int] = Field(min_length=1)
-
-
-TranscriptEdit = Annotated[
-    Union[TranscriptReplacement, TranscriptMerge, TranscriptDeletion],
-    Field(union_mode="smart"),
-]
-
-
-class CleanTranscriptOutput(_StrictModel):
-    """Edits to apply to the source transcript."""
-
-    edits: list[TranscriptEdit]
-
-
 __all__ = [
     "AssistantInvocation",
     "CandidateIdSelection",
-    "CleanTranscriptOutput",
-    "CompactTranscriptOutput",
     "ContextSelection",
     "ContextSelectionNeed",
 ]

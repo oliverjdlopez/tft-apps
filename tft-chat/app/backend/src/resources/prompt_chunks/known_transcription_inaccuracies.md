@@ -5,3 +5,5 @@ Kennen -> "cannon"
 Maokai -> "Malco"
 High roll -> "Hyrule"
 Amumu -> "Moomoo"
+Nashors -> Gnashers
+HoJ (Hand of Justice) -> Hodge

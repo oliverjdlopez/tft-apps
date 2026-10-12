@@ -2,17 +2,6 @@
   "schema_version": 1,
   "suites": [
     {
-      "assistant": "analyze_transcript",
-      "case_count": 0,
-      "database": null,
-      "description": "Actionability evals for transcript analysis.",
-      "execution": "live",
-      "family": "assistant",
-      "max_turns": null,
-      "name": "analyze_transcript",
-      "snapshot": "00225693788e8709c2256b7ac8016ee2d68f0b8a1b49c9ba16c9d88f027cecfb"
-    },
-    {
       "assistant": "chat",
       "case_count": 21,
       "database": null,
@@ -22,17 +11,6 @@
       "max_turns": 7,
       "name": "chat",
       "snapshot": "ad8e512e0c863cd51acdacdf5d992830b2a96fb15765ca4a87c50f60ed2b6961"
-    },
-    {
-      "assistant": "clean_transcript",
-      "case_count": 1,
-      "database": null,
-      "description": "Terminology-preservation evals for transcript cleanup.",
-      "execution": "live",
-      "family": "assistant",
-      "max_turns": null,
-      "name": "clean_transcript",
-      "snapshot": "d66bce1bd31a94ab79f85542753e555e5f04a62de7810356b3f1a781d3e36e4e"
     },
     {
       "assistant": "comp_expert",
@@ -45,17 +23,6 @@
       "max_turns": 40,
       "name": "comp-expert",
       "snapshot": "634503f6aecceb39453c012241e217266043d99ba7206e4e5e350f35dfcee458"
-    },
-    {
-      "assistant": "compact_transcript",
-      "case_count": 1,
-      "database": null,
-      "description": "Signal-retention evals for transcript compaction.",
-      "execution": "live",
-      "family": "assistant",
-      "max_turns": null,
-      "name": "compact_transcript",
-      "snapshot": "97f938265d7b47c66882e793a8c2a8a32ec02fa0505074368a549e01e8dd8dd2"
     },
     {
       "assistant": "chat",
@@ -101,6 +68,18 @@
       "max_turns": 12,
       "name": "decision_workflows",
       "snapshot": "16f624a45fc8a1febf7bdfe53cc90a2555a0e984701a26e6d7c87ea308a9d0b0"
+    },
+    {
+      "assistant": "distill-transcript",
+      "case_count": 6,
+      "database": null,
+      "description": "Source-grounded distillation of transcripts and other text into compact ChatTFT references.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 2,
+      "name": "distill-transcript",
+      "snapshot": "58774fb9b284e6d86df589b456d18e3bfb7576fcedb6a70da8e3caa1c14b011c"
     },
     {
       "assistant": "dummy_assistant",

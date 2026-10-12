@@ -71,11 +71,13 @@ def test_committed_inventory_preserves_authored_checks():
     entries = load_catalog(ROOT)
     bundles = [load_snapshot(e["snapshot"], ROOT) for e in entries]
     decision = next(b for b in bundles if b["suite"]["name"] == "decision_workflows")
-    historical = [b for b in bundles if b is not decision]
-    assert len(entries) == 15
-    assert len(historical) == 14
-    assert sum(len(b["items"]) for b in bundles) == 161
-    assert sum(len(b["items"]) for b in historical) == 153
+    distillation = next(b for b in bundles if b["suite"]["name"] == "distill-transcript")
+    historical = [b for b in bundles if b is not decision and b is not distillation]
+    assert len(entries) == 13
+    assert len(historical) == 11
+    assert sum(len(b["items"]) for b in bundles) == 165
+    assert sum(len(b["items"]) for b in historical) == 151
+    assert len(distillation["items"]) == 6
     assert len(decision["items"]) == 8
     assert all(item["expected_output"]["requirements"] for item in decision["items"])
     experts = {b["suite"]["name"]: b for b in historical if "expert" in b["suite"]["name"]}
@@ -98,8 +100,9 @@ def test_committed_inventory_preserves_authored_checks():
                           else item["expected_output"]["assertions"])
     ]
     assert sum(a["kind"] == "trace" for a in assertions) == 248
-    assert sum(a["kind"] == "rubric" for a in assertions) == 13
-    assert next(b for b in historical if b["suite"]["name"] == "analyze_transcript")["items"] == []
+    assert sum(a["kind"] == "rubric" for a in assertions) == 11
+    assert {b["suite"]["name"] for b in bundles}.isdisjoint(
+        {"clean_transcript", "compact_transcript", "analyze_transcript"})
     assert all("file://" not in json.dumps(b) for b in bundles)
     assert next(a for a in assertions if a.get("selector") == "payload_reduction")["threshold"] == .75
 

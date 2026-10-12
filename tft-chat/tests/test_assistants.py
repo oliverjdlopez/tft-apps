@@ -132,8 +132,7 @@ def test_assistant_specs_declare_prompt_context_policy() -> None:
         "unit_expert",
     ):
         assert assistant_spec(name).repository_context is True
-    for name in ("clean_transcript", "compact_transcript", "analyze_transcript"):
-        assert assistant_spec(name).repository_context is False
+    assert assistant_spec("distill-transcript").repository_context is False
 
 
 def test_factory_builds_sdk_agent_with_spec_model_settings() -> None:
@@ -276,7 +275,7 @@ def test_instructions_render_references_and_skill_in_order(monkeypatch) -> None:
 def test_transcript_rendering_denies_preselected_references() -> None:
     """Transcript instructions reject references even if another caller selected them."""
     reference = ContextSnippet(context_file='units', path='units.md', content='PRIVATE REFERENCE', line=1, score=1)
-    text = render_instruction_layers(assistant_spec('clean_transcript'),
+    text = render_instruction_layers(assistant_spec('distill-transcript'),
         context_provider=DEFAULT_CONTEXT_PROVIDER, skill_provider=DEFAULT_SKILL_PROVIDER,
         references=[reference])
     assert 'PRIVATE REFERENCE' not in text
@@ -417,3 +416,14 @@ def test_specialists_hand_off_to_data_analyst() -> None:
     assert assistant_handoff_names("theorizer") == ["data_analyst"]
     # The analyst gathers evidence, then transfers to the terminal synthesizer.
     assert assistant_handoff_names("data_analyst") == ["final_responder"]
+
+
+def test_distillation_replaces_all_legacy_transcript_assistants() -> None:
+    """Discovery exposes one source-only transcript assistant without legacy aliases."""
+    names = set(list_assistants())
+    assert "distill-transcript" in names
+    assert names.isdisjoint({"clean_transcript", "compact_transcript", "analyze_transcript"})
+    spec = assistant_spec("distill-transcript")
+    assert spec.skill_names == ()
+    assert assistant_tool_names(spec.name) == []
+    assert assistant_handoff_names(spec.name) == []

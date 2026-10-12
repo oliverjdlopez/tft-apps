@@ -9,7 +9,7 @@ Save draft never changes application behavior; Apply validates and installs it.
 
 Repository assistant instructions belong in plain `system.md` without frontmatter.
 Put names, descriptions, model settings, tools, and handoffs in `agent.json`;
-put an actual input wrapper in `task.md`. The three transcript assistants use
+put an actual input wrapper in `task.md`. The `distill-transcript` assistant uses
 this same format. Legacy frontmatter loading remains available for older saved
 drafts; skill and context formats are independent of assistant specifications.
 
@@ -27,7 +27,7 @@ Choose one creation command. You can combine `--copy-from` and `--prompt-file`
 to retain the source configuration while replacing its instructions. Creation
 never overwrites an existing directory or registered name. It validates the new
 spec's tool references and handoffs before publishing the complete directory.
-New names use lowercase letters, digits, and underscores and start with a letter.
+New names use lowercase letters, digits, underscores, and hyphens and start with a letter.
 
 A fresh spec starts with no tools, skills, handoffs, or repository context.
 Copies retain the source's access and optional task wrapper. Review copied

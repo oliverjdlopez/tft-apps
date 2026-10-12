@@ -133,6 +133,30 @@ storage, missing files and integrity failures have recoverable status messages.
 The local shell is the only renderer permitted to request catalogue operations
 or copy references, through the desktop-owned ChatTFT backend.
 
+For a loaded, nonempty text/transcript or recognized textual data resource,
+**Distill transcript** runs the `distill-transcript` assistant. Its output appears
+in **Distilled reference** above the original source, preserving the returned
+Markdown as selectable text. Loading and error messages accompany the action;
+**Retry distillation** retries a failed request, and **Distill again** explicitly
+requests a fresh result. A failed rerun keeps the previous successful output.
+Binary resources and empty or unreadable text cannot start distillation.
+
+The desktop main process accepts only a portable resource reference. It rereads
+verified source bytes and display metadata from the owned catalogue, then posts
+them to `/api/assistants/tasks/transcription_pipeline/run`. That task invokes only
+`distill-transcript`, using ChatTFT's configured model and credentials. The normal
+10 MB text-read cap applies; model context limits may be lower. Responses have a
+ten-minute client timeout; losing the connection does not cancel a model run
+already executing in the backend. Model calls occur only after an explicit click.
+
+Running requests and results stay associated with their source reference when
+the user selects other resources or switches tabs. A pending request disables
+another run for the same source. Results remain in the current desktop window
+until its shell reloads or closes; they are not published to the shared catalogue
+or automatically ingested into ChatTFT context. Both source and assistant text
+are displayed without executing embedded HTML. Hosted pages cannot invoke the
+distillation IPC action. VOD Review's frontend and backend are unchanged.
+
 VOD automatically publishes completed recognition as UTF-8 `text` resources,
 named after the source video when available, with task/video/language metadata.
 Backend startup also publishes older completed transcripts from its own SQLite
@@ -152,7 +176,8 @@ completed file without remote I/O, from `tft-chat/`:
 
 VOD uses `backend.media_store.resource_cli` with the same arguments. Publishing
 preserves the original and creates an immutable catalogue snapshot. The desktop
-browser is read-only and does not run downloads or transcription.
+browser leaves catalogue content unchanged and does not run downloads or speech
+recognition; text distillation returns a separate result in the reader.
 
 ## Python and CLI access
 
@@ -177,10 +202,13 @@ VOD uses `backend.media_store.resource_cli` with the same arguments.
 From `desktop/`, run `npm test`. The media reader and shell IPC have
 offline Node coverage; `tests/workspace-electron.mjs` also exercises real
 media selection, references, filtering, retained state and failure/retry using a local
-HTTP catalogue fixture. From `tft-chat/`:
+HTTP catalogue fixture. It also covers explicit distillation, safe output display,
+duplicate prevention, per-source result isolation and retry with a fixture task
+endpoint. The ChatTFT task HTTP test reaches the real assistant preparation path
+with the model call stubbed. From `tft-chat/`:
 
 ```bash
-.venv/bin/python -m pytest tests/test_shared_resources.py tests/test_shared_transcription.py \
+.venv/bin/python -m pytest tests/test_task_service.py tests/test_shared_resources.py tests/test_shared_transcription.py \
   tests/test_transcription_download_vod.py ../desktop/tests/test_shared_media_exchange.py -q
 ```
 

@@ -15,8 +15,10 @@ ROOT = Path(__file__).parents[1] / 'snapshots'
 
 def bundles():
     """Read the committed corpus without live services or model credentials."""
+    # Managed workflows are native contracts, not historical definitions to
+    # convert back into the retired assertion schema.
     result = [load_snapshot(entry['snapshot'], ROOT) for entry in load_catalog(ROOT)
-              if entry.get('scoring') != 'none']
+              if entry.get('scoring') != 'none' and not entry.get('managed_workflow')]
     for bundle in result:
         if bundle['schema_version'] in {2, 3}:
             bundle['schema_version'] = 1
@@ -39,8 +41,7 @@ def test_every_assertion_and_threshold_survives_conversion():
                 if 'evaluator' in row:
                     profiles[row['evaluator']] = profiles.get(row['evaluator'], 0) + 1
                     assert after['expected_output']['requirements'][row['requirement_index']] == row['assertion']['rubric']
-    assert profiles == {'answer_quality': 9, 'scope_honesty': 1, 'rolldown_quality': 1,
-                        'terminology_preservation': 1, 'signal_retention': 1}
+    assert profiles == {'answer_quality': 9, 'scope_honesty': 1, 'rolldown_quality': 1}
 
 
 def test_fixture_deterministic_parity_and_natural_output():

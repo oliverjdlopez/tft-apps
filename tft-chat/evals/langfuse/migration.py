@@ -5,7 +5,6 @@ from copy import deepcopy
 import json
 from pathlib import Path
 from urllib.parse import quote
-from domain.assistants.constants import AssistantName
 
 from .contracts import DATASET_NAMES, dataset_schemas, migrate_item, validate_natural_item
 from .utils import atomic_write, canonical_json, content_hash
@@ -96,7 +95,7 @@ def apply_migration(workspace, native, plan: dict, journal_path: Path) -> dict:
             'metadata': {**(current.get('metadata') or {}), 'suite': dataset['suite'], 'contract_version': 2},
             'inputSchema': dataset['schemas']['input'], 'expectedOutputSchema': dataset['schemas']['expected_output']})
         trigger = native.call('getRemoteExperiment', identity, read=True)
-        if trigger and dataset['suite']['name'] != AssistantName.ANALYZE_TRANSCRIPT:
+        if trigger and dataset['suite']['name'] != 'analyze_transcript':
             from .models import RunConfig
             try:
                 old_default = json.loads(trigger.get('defaultPayload') or '{}')
@@ -106,7 +105,7 @@ def apply_migration(workspace, native, plan: dict, journal_path: Path) -> dict:
                 native.call('upsertRemoteExperiment', {**identity, 'url': trigger['url'],
                     'enabled': trigger.get('enabled', True),
                     'defaultPayload': json.dumps({'variants': [{'name': 'baseline'}]})})
-        if dataset['suite']['name'] == AssistantName.ANALYZE_TRANSCRIPT:
+        if dataset['suite']['name'] == 'analyze_transcript':
             trigger = native.call('getRemoteExperiment', identity, read=True)
             if trigger:
                 native.call('deleteRemoteExperiment', identity)

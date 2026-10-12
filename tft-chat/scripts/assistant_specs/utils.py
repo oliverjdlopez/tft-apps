@@ -17,8 +17,8 @@ import re
 
 def validate_name(name: str) -> str:
     """Validate a single directory name supplied to the management CLI."""
-    if not re.fullmatch(r"[a-z][a-z0-9_]*", name) or name in {"readme", "agents", "judge"}:
-        raise ValueError("Use a lowercase assistant name with letters, digits, and underscores.")
+    if not re.fullmatch(r"[a-z][a-z0-9_-]*", name) or name in {"readme", "agents", "judge"}:
+        raise ValueError("Use a lowercase assistant name with letters, digits, underscores, and hyphens.")
     return name
 
 
