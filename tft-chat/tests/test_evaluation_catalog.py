@@ -70,7 +70,7 @@ def test_preflight_rejects_stale_tool_and_malformed_regex() -> None:
     for check, message in [({"type": "tool_called", "value": "removed_tool"}, "unavailable tool"),
                            ({"type": "regex", "value": "["}, "invalid regex")]:
         bundle = suite_bundle("chat")
-        item = next(item for item in bundle["items"] if item.get("metadata", {}).get("scoring") != "none")
+        item = next(item for item in bundle["items"] if item.get("metadata", {}).get("scoring") != "none" and item.get("status", "ACTIVE") == "ACTIVE")
         if bundle['schema_version'] in {2, 3}:
             item['metadata']['deterministic_checks'] = [{"kind": "trace", "name": "check", "check": check}]
         else:
@@ -166,7 +166,9 @@ def test_assistant_execution_uses_real_assembly_and_scoped_target(monkeypatch) -
 @pytest.mark.parametrize("output", ["5%", "five percent", "1 in 20", "0.05"])
 def test_probability_case_keeps_python_regex_contract(output) -> None:
     """Equivalent probability forms retain their existing case semantics."""
-    case = next(t for t in suite_bundle("chat")["items"] if t["metadata"]["case"] == "context_six_anima_thiefs_gloves_odds")
+    # This retired case remains an immutable regex regression fixture.
+    historical = load_snapshot("3058c4d6ba657b496b3f52e4113a61c787f160f4355449e3a19c9e24e6502c3b", ROOT)
+    case = next(t for t in historical["items"] if t["metadata"]["case"] == "context_six_anima_thiefs_gloves_odds")
     assertion = next(a for a in legacy_execution_item(case)["expected_output"]["assertions"] if a.get("check", {}).get("type") == "regex")
     assert evaluate_trace_check(assertion["check"], None, output).passed
     assert not evaluate_trace_check(assertion["check"], None, "0.5% and 15%").passed

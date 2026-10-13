@@ -15,20 +15,10 @@ from domain.assistants.specs import (
 )
 from domain.assistants.assistant import Assistant
 from domain.assistants.models import AssistantInvocation
+from domain.assistants.utils import configure_tools
 
 
 _ASSISTANT_REGISTRY = assistant_registry
-
-
-def _configure_tools() -> None:
-    """Connect the assistant registry to the public tool registry API."""
-    from domain.tools import get_tool, get_tool_group, list_tools
-
-    _ASSISTANT_REGISTRY.configure_tools(
-        get_tool=get_tool,
-        get_tool_group=get_tool_group,
-        list_tools=list_tools,
-    )
 
 
 def assistant_spec(name: str) -> AssistantSpec:
@@ -64,7 +54,7 @@ def resolve_assistant_tools(spec: AssistantSpec) -> list[Any]:
     Returns:
         Deduplicated SDK tools in declared group and name order.
     """
-    _configure_tools()
+    configure_tools(_ASSISTANT_REGISTRY)
     return _ASSISTANT_REGISTRY.resolve_tools(spec)
 
 
@@ -77,7 +67,7 @@ def assistant_tools(name: str) -> list[Any]:
     Returns:
         SDK tools resolved from the assistant specification.
     """
-    _configure_tools()
+    configure_tools(_ASSISTANT_REGISTRY)
     return _ASSISTANT_REGISTRY.get_tools(name)
 
 
@@ -90,7 +80,7 @@ def assistant_tool_names(name: str) -> list[str]:
     Returns:
         Registered tool names in resolution order.
     """
-    _configure_tools()
+    configure_tools(_ASSISTANT_REGISTRY)
     return _ASSISTANT_REGISTRY.list_tool_names(name)
 
 
@@ -103,7 +93,7 @@ def assistant_reachable_tool_names(name: str) -> list[str]:
     Returns:
         Deduplicated tool names in handoff traversal order.
     """
-    _configure_tools()
+    configure_tools(_ASSISTANT_REGISTRY)
     return _ASSISTANT_REGISTRY.list_reachable_tool_names(name)
 
 
@@ -130,7 +120,6 @@ def assistant_skill_names(name: str) -> list[str]:
 def reload_assistant_specs() -> None:
     """Reload assistant specifications from their source files."""
     _ASSISTANT_REGISTRY.reload()
-
 
 
 __all__ = [

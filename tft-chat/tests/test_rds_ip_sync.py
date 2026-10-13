@@ -3,8 +3,17 @@ from __future__ import annotations
 from pathlib import Path
 
 from botocore.exceptions import ClientError
+import pytest
 
 from aws.rds import rds_ip_sync_enabled, sync_rds_security_group_ip
+
+
+@pytest.fixture(autouse=True)
+def isolated_rds_sync_settings(monkeypatch):
+    """Keep fake EC2 checks independent of local dotenv and sync preferences."""
+    monkeypatch.setattr("core.config.load_dotenv", lambda *_args, **_kwargs: None)
+    monkeypatch.setenv("RDS_SYNC_LOCAL_IP", "true")
+    monkeypatch.setenv("RDS_PORT", "5432")
 
 
 class FakeEc2Client:

@@ -10,7 +10,8 @@ from datetime import datetime, timezone
 from langfuse import Langfuse
 
 from evals.langfuse.grading import freeze_grading, reconcile_report
-from evals.langfuse.utils import configured_workspace, load_grading_registry, atomic_write, canonical_json
+from evals.langfuse.utils import load_grading_registry, atomic_write, canonical_json
+from evals.langfuse.workspace import configured_workspace
 
 
 def output_task(*, item, client, profile, failing, **kwargs):

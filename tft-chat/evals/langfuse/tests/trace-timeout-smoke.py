@@ -8,7 +8,8 @@ from langfuse import Langfuse
 
 from evals.langfuse.content import load_catalog, load_snapshot
 from evals.langfuse.experiments import run_item_task
-from evals.langfuse.utils import configured_workspace, atomic_write, canonical_json
+from evals.langfuse.utils import atomic_write, canonical_json
+from evals.langfuse.workspace import configured_workspace
 
 
 def main():

@@ -7,16 +7,8 @@ from pathlib import Path
 import tempfile
 from urllib.parse import quote
 
-from .utils import atomic_write, canonical_json, configured_workspace
-
-
-def repository_prompts() -> dict[str, dict]:
-    """Return current spec instructions for seeding and live experiment discovery."""
-    from domain.assistants.specs import ASSISTANT_SPECS_DIR
-    from scripts.assistant_specs.utils import spec_inventory
-
-    return {name: {"name": f"chattft/assistants/{name}", "text": spec.system_prompt}
-            for name, (_, spec) in spec_inventory(ASSISTANT_SPECS_DIR).items()}
+from .utils import atomic_write, canonical_json, repository_prompts
+from .workspace import configured_workspace
 
 
 def experiment_prompts(suite: dict) -> dict[str, dict]:
@@ -140,3 +132,36 @@ def sync_prompts(*, remove: list[str], apply: bool = False,
     finally:
         if owned_workspace:
             workspace.close()
+
+
+def publish_graph_prompts(client, graph: dict) -> dict:
+    """Publish captured instruction copies with configuration-bound identities.
+
+    Args:
+        client: Langfuse client used to resolve or create managed prompt copies.
+        graph: Captured assistant definitions and their configured instructions.
+
+    Returns:
+        Prompt text and exact remote version for every captured assistant.
+    """
+    from domain.assistants.capture import digest
+    from .utils import is_not_found, resolved_prompt
+
+    result = {}
+    for assistant, definition in graph['specs'].items():
+        # Configuration is part of version identity even when instructions match.
+        specification_hash = digest(definition)
+        name = f'chattft/workspace/{assistant}/{specification_hash}'
+        try:
+            prompt = resolved_prompt(client, {'name': name, 'label': 'latest'})
+            if prompt['text'] != definition['system_prompt']:
+                raise ValueError('Managed prompt identity has different instruction bytes')
+        except Exception as exc:
+            if not is_not_found(exc):
+                raise
+            created = client.create_prompt(name=name, type='text', prompt=definition['system_prompt'],
+                config={'assistant': assistant, 'specification_hash': specification_hash, 'specification': definition}, labels=[])
+            prompt = ({'name': created.name, 'version': created.version, 'text': definition['system_prompt']}
+                      if created is not None else resolved_prompt(client, {'name': name, 'label': 'latest'}))
+        result[assistant] = prompt
+    return result

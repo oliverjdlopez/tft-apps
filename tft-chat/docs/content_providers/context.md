@@ -7,6 +7,10 @@ protocol contracts, and `domain.providers.utils` contains parsing, candidate,
 selection, and serialization helpers. Sources live under
 `app/backend/src/resources/context`.
 
+Context rendering lives in `domain.providers.utils.render_context_files`, shared
+by reference injection and budget calculation. `domain.providers.context`
+re-exports it for existing consumers; utilities do not import the provider.
+
 ## Completeness-first retrieval
 
 The selector sees a catalogue of **every source eligible for the configured

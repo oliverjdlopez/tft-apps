@@ -2,6 +2,12 @@ from __future__ import annotations
 
 import ast
 import importlib.util
+import os
+import subprocess
+import sys
+from collections.abc import Iterator
+
+import pytest
 from pathlib import Path
 
 from core.config import load_config
@@ -67,12 +73,42 @@ def _module_name(path: Path) -> str:
     return ".".join(parts)
 
 
+def _runtime_import_nodes(tree: ast.AST) -> Iterator[ast.AST]:
+    """Yield runtime imports, including deferred imports but excluding type guards.
+
+    Args:
+        tree: Parsed module or statement to inspect.
+
+    Yields:
+        Imports that can execute, including runtime branches of type guards.
+    """
+    if isinstance(tree, ast.If):
+        condition = tree.test
+        negated = isinstance(condition, ast.UnaryOp) and isinstance(condition.op, ast.Not)
+        guard = condition.operand if negated else condition
+        type_checking = (
+            isinstance(guard, ast.Name) and guard.id == "TYPE_CHECKING"
+            or isinstance(guard, ast.Attribute)
+            and isinstance(guard.value, ast.Name)
+            and guard.value.id == "typing" and guard.attr == "TYPE_CHECKING"
+        )
+        if type_checking:
+            for statement in tree.body if negated else tree.orelse:
+                yield from _runtime_import_nodes(statement)
+            return
+    if isinstance(tree, (ast.Import, ast.ImportFrom)):
+        yield tree
+    for child in ast.iter_child_nodes(tree):
+        yield from _runtime_import_nodes(child)
+
+
 def _runtime_import_graph() -> dict[str, set[str]]:
+    """Resolve runtime import edges to their repository module owners."""
     modules = {_module_name(path): path for path in _runtime_files()}
     graph = {name: set() for name in modules}
     for name, path in modules.items():
         package = name if path.name == "__init__.py" else name.rpartition(".")[0]
-        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+        for node in _runtime_import_nodes(ast.parse(path.read_text(encoding="utf-8"))):
             targets: list[str] = []
             if isinstance(node, ast.Import):
                 targets = [alias.name for alias in node.names]
@@ -106,23 +142,109 @@ def _runtime_import_graph() -> dict[str, set[str]]:
     return graph
 
 
-def test_runtime_module_dependencies_are_acyclic() -> None:
-    graph = _runtime_import_graph()
-    visiting: list[str] = []
-    visited: set[str] = set()
+def _cyclic_components(graph: dict[str, set[str]]) -> list[tuple[str, ...]]:
+    """Find every strongly connected import group in deterministic order.
+
+    Args:
+        graph: Module names mapped to their imported repository dependencies.
+
+    Returns:
+        Sorted groups containing cycles, with each module reported once.
+    """
+    indices: dict[str, int] = {}
+    lowlinks: dict[str, int] = {}
+    stack: list[str] = []
+    active: set[str] = set()
+    groups: list[tuple[str, ...]] = []
 
     def visit(module: str) -> None:
-        if module in visiting:
-            start = visiting.index(module)
-            cycle = [*visiting[start:], module]
-            raise AssertionError("runtime import cycle: " + " -> ".join(cycle))
-        if module in visited:
+        """Complete one Tarjan traversal, retaining unresolved components."""
+        indices[module] = lowlinks[module] = len(indices)
+        stack.append(module)
+        active.add(module)
+        for dependency in sorted(graph[module]):
+            if dependency not in indices:
+                visit(dependency)
+                lowlinks[module] = min(lowlinks[module], lowlinks[dependency])
+            elif dependency in active:
+                lowlinks[module] = min(lowlinks[module], indices[dependency])
+        if lowlinks[module] != indices[module]:
             return
-        visiting.append(module)
-        for dependency in graph[module]:
-            visit(dependency)
-        visiting.pop()
-        visited.add(module)
+        component = []
+        while True:
+            member = stack.pop()
+            active.remove(member)
+            component.append(member)
+            if member == module:
+                break
+        if len(component) > 1 or module in graph[module]:
+            groups.append(tuple(sorted(component)))
 
-    for module in graph:
-        visit(module)
+    for module in sorted(graph):
+        if module not in indices:
+            visit(module)
+    return sorted(groups)
+
+
+def test_runtime_module_dependencies_are_acyclic() -> None:
+    """Report every dependency cycle, including imports deferred inside functions."""
+    groups = _cyclic_components(_runtime_import_graph())
+    assert not groups, "Runtime import dependency cycles:\n" + "\n".join(
+        "  " + ", ".join(group) for group in groups
+    )
+
+
+def test_import_guard_keeps_deferred_and_runtime_else_imports() -> None:
+    """Type-only cycles are excluded without hiding deferred execution edges."""
+    tree = ast.parse("""
+from typing import TYPE_CHECKING
+import typing
+if TYPE_CHECKING:
+    import type_only
+else:
+    import runtime_else
+if typing.TYPE_CHECKING:
+    import qualified_type_only
+if not TYPE_CHECKING:
+    import runtime_body
+else:
+    import negated_type_only
+def load():
+    import deferred
+""")
+    imports = {
+        alias.name
+        for node in _runtime_import_nodes(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    }
+    assert imports == {"typing", "runtime_else", "runtime_body", "deferred"}
+
+
+def test_import_guard_reports_all_disjoint_cycles() -> None:
+    """Independent cycles are diagnosed together, without including their callers."""
+    graph = {"a": {"b"}, "b": {"a"}, "c": {"d"}, "d": {"c"},
+             "caller": {"a", "c"}, "leaf": set(), "self": {"self"}}
+    assert _cyclic_components(graph) == [("a", "b"), ("c", "d"), ("self",)]
+
+
+@pytest.mark.parametrize("module", [
+    "domain.providers.context", "domain.providers.utils",
+    "domain.assistants", "domain.assistants.assistant",
+    "domain.compositions.acceleration", "domain.compositions.reference",
+    "services.compositions.persistence", "services.compositions.utils",
+    "scripts.transcription.download_vod", "scripts.transcription.shared_download",
+    "evals.langfuse.utils", "evals.langfuse.content",
+    "evals.langfuse.assistant_workspace", "evals.langfuse.workspace",
+    "evals.langfuse.prompts", "evals.langfuse.seed",
+])
+def test_runtime_entry_imports_in_fresh_process(module: str, tmp_path: Path) -> None:
+    """Import each boundary first so pytest's module cache cannot conceal cycles."""
+    environment = {**os.environ, "PYTHONPATH": os.pathsep.join(str(path) for path in (
+        ROOT, ROOT / "app/backend", ROOT / "app/backend/src",
+    ))}
+    result = subprocess.run(
+        [sys.executable, "-c", "import importlib, sys; importlib.import_module(sys.argv[1])", module],
+        cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=20,
+    )
+    assert result.returncode == 0, result.stderr

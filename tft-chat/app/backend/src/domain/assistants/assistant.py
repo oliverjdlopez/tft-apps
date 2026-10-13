@@ -67,9 +67,9 @@ class Assistant:
         """
         if registry is None:
             # Tool imports remain deferred until an execution consumer needs them.
-            from domain.assistants import _configure_tools
+            from domain.assistants.utils import configure_tools
 
-            _configure_tools()
+            configure_tools(assistant_registry)
             registry = assistant_registry
         self._registry = registry.snapshot(
             base_instructions_by_name=base_instructions_by_name

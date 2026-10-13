@@ -14,7 +14,8 @@ from openai import AsyncOpenAI
 
 from common.langfuse_tracing import initialize_tracing
 from services import chat_service
-from evals.langfuse.utils import atomic_write, canonical_json, configured_workspace
+from evals.langfuse.utils import atomic_write, canonical_json
+from evals.langfuse.workspace import configured_workspace
 
 
 async def main():

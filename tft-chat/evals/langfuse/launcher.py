@@ -239,7 +239,7 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
         if result.get('state') == 'awaiting_scores':
             from .jobs import JobStore
             from .grading import reconcile_report
-            from .utils import configured_workspace
+            from .workspace import configured_workspace
             import time
             store = JobStore(Path(os.environ.get('LANGFUSE_RUNTIME_DIR', str(PLATFORM_ROOT / '.runtime'))))
             job_id = store.submit(bundle, snapshot_id, awaiting_result=result)

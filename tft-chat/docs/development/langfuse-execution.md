@@ -37,6 +37,18 @@ Draft captures. Execution verifies captures before dispatch and uses
 `Assistant.from_capture(...).prepare(..., record=True)` through
 `evals/assistant_execution.py`; there is no static prompt-only worker path.
 
+`evals.assistant_execution.current_execution` freezes repository graphs for
+experiments and Playground. Publishing captured prompt copies belongs to
+`langfuse.prompts.publish_graph_prompts`; workspace HTTP routes consume these
+operations. Content export does not import workspace routes. The old workspace
+module re-exports both operations for existing consumers.
+
+Pure case adaptation and repository prompt inventory live in `langfuse.utils`,
+with compatibility exports from `contracts` and `prompts`. Authenticated client
+construction is `langfuse.workspace.configured_workspace`. Diagnostic score
+configuration seeding lives in `langfuse.seed`, which coordinates catalog reads
+and grading writes without making grading depend on content export.
+
 Bundles without captures remain readable and exportable as historical artifacts,
 but live execution and replay reject them with an instruction to export a fresh
 bundle. Existing snapshots are never backfilled with current definitions. Fixtures
@@ -46,12 +58,15 @@ and selector benchmarks do not require bundle captures; selector model calls use
 The `decision_workflows` portable seed follows the same contract: local catalog
 registration validates its cases but does not capture execution definitions or
 choose a database. A live run must freeze a fresh graph for every variant and
-select an explicit evaluation database before worker dispatch.
+resolve its evaluation database before worker dispatch.
 
 The worker retains actual instruction text and hashes, configured per-agent model
 settings, separate run-level setting overrides, selected resource hashes, activity,
 and source provenance. Model failures retain this evidence. Preparation and execution
-share an explicit complete `RDS_EVAL_*` target. Surfaces are `eval`, `playground`,
+use the canonical evaluation target resolver: explicit `RDS_EVAL_*` fields win,
+and missing or blank fields inherit their corresponding `RDS_*` values. A
+configured database name overrides only the resolved database name. Captured
+workers use the same resolver as ordinary evaluations. Surfaces are `eval`, `playground`,
 and `specs` for workspace comparisons/trials. SDK tracing retains suite/case identity;
 local workspace trials disable trace export. Capturing definitions does not freeze
 resource files, tool implementations, database contents, or model behavior.

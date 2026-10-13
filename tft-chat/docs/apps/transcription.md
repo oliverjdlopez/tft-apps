@@ -14,6 +14,13 @@ state, and unique temporary paths so concurrent runs do not share intermediate
 output. It prefers a system ffmpeg executable and falls back to
 `imageio-ffmpeg`.
 
+Download configuration and results live in `scripts/transcription/models.py`
+and remain importable from `download_vod.py`. URL validation and atomic
+checkpoint writes are shared through `utils.py`. The public `download_vod`
+operation passes its local downloader into `shared_download.download_shared`;
+the shared adapter calls it only on a cache miss and never imports the routing
+entry point. Existing local-download patch points and CLI signatures are retained.
+
 Downloads now use the suite-owned shared media catalogue by default and reuse
 compatible VOD files with audio before transferring anything. Shared mode
 requires system `ffmpeg` and `ffprobe`; an explicitly empty `TFT_MEDIA_DIR`

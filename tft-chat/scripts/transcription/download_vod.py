@@ -4,80 +4,20 @@ from __future__ import annotations
 
 import importlib
 import importlib.util
-import json
 import re
 import shutil
-import tempfile
-from dataclasses import asdict, dataclass
+from dataclasses import asdict
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 from urllib.parse import parse_qs, urlparse
 
-TWITCH_HOST_RE = re.compile(r"(^|\.)twitch\.tv$", re.IGNORECASE)
-YOUTUBE_HOST_RE = re.compile(r"(^|\.)youtube\.com$|(^|\.)youtu\.be$", re.IGNORECASE)
+from .models import (
+    AUDIO_FORMAT_SELECTOR, VIDEO_FORMAT_SELECTOR, DEFAULT_DATA_DIR,
+    DownloadConfig, DownloadResult, DownloadMediaType, DownloadSource, FfmpegLocation,
+)
+from .utils import atomic_write_json as _atomic_write_json, detect_download_source
+
 FFMPEG_SEGFAULT_CODE = -11
-AUDIO_FORMAT_SELECTOR = "bestaudio/best"
-VIDEO_FORMAT_SELECTOR = "bestvideo+bestaudio/best"
-DownloadMediaType = Literal["audio", "video"]
-DownloadSource = Literal["twitch", "youtube"]
-DEFAULT_DATA_DIR = Path("data")
-
-
-@dataclass(frozen=True)
-class DownloadConfig:
-    """Configuration for downloading supported media."""
-
-    url: str
-    output_dir: Path = DEFAULT_DATA_DIR
-    filename_template: str = "%(extractor_key)s-%(id)s.%(ext)s"
-    format_selector: str = AUDIO_FORMAT_SELECTOR
-    media_type: DownloadMediaType = "audio"
-    merge_output_format: str | None = None
-    retries: int = 10
-    fragment_retries: int = 10
-    concurrent_fragments: int = 4
-    max_time: float | None = None
-    ffmpeg_location: str | None = None
-    overwrite: bool = False
-
-
-@dataclass(frozen=True)
-class DownloadResult:
-    """The downloaded media path and associated checkpoint artifacts."""
-
-    media_path: Path
-    info_json_path: Path
-    progress_path: Path
-    archive_path: Path
-    source: DownloadSource
-
-    @property
-    def video_path(self) -> Path:
-        """Backward-compatible alias for callers that predate audio-only downloads."""
-
-        return self.media_path
-
-
-@dataclass(frozen=True)
-class FfmpegLocation:
-    """Resolved ffmpeg executable passed to yt-dlp."""
-
-    path: str
-    source: str
-
-
-def detect_download_source(url: str) -> DownloadSource:
-    """Return the supported media source for a URL."""
-
-    parsed = urlparse(url)
-    if parsed.scheme not in {"http", "https"}:
-        raise ValueError(f"Expected an http(s) Twitch or YouTube URL, got: {url}")
-    host = parsed.netloc.split("@")[-1].split(":")[0]
-    if TWITCH_HOST_RE.search(host):
-        return "twitch"
-    if YOUTUBE_HOST_RE.search(host):
-        return "youtube"
-    raise ValueError(f"Expected an http(s) Twitch or YouTube URL, got: {url}")
 
 
 def validate_twitch_url(url: str) -> None:
@@ -112,24 +52,6 @@ def _media_id_from_url(url: str, source: DownloadSource) -> str | None:
     return None
 
 
-def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            "w",
-            encoding="utf-8",
-            dir=path.parent,
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            delete=False,
-        ) as tmp_file:
-            json.dump(payload, tmp_file, indent=2, sort_keys=True)
-            tmp_path = Path(tmp_file.name)
-        tmp_path.replace(path)
-    finally:
-        if tmp_path is not None and tmp_path.exists():
-            tmp_path.unlink(missing_ok=True)
 
 
 def _serializable_progress(progress: dict[str, Any]) -> dict[str, Any]:
@@ -404,4 +326,4 @@ def download_vod(config: DownloadConfig) -> DownloadResult:
     store = configured_media_store()
     if store is None:
         return download_vod_local(config)
-    return download_shared(config, store)
+    return download_shared(config, store, download_local=download_vod_local)

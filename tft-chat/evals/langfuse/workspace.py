@@ -96,3 +96,17 @@ class Workspace:
     def close(self) -> None:
         """Release the maintenance transport without affecting platform services."""
         self.http.close()
+
+
+def configured_workspace():
+    """Construct a maintenance transport from local or process credentials.
+
+    Returns:
+        Authenticated workspace transport; credentials stay outside snapshots.
+    """
+    from dotenv import dotenv_values
+    import os
+    local = dotenv_values(Path(__file__).parent / '.env')
+    return Workspace(os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
+                     os.environ.get('LANGFUSE_PUBLIC_KEY') or local['LANGFUSE_PUBLIC_KEY'],
+                     os.environ.get('LANGFUSE_SECRET_KEY') or local['LANGFUSE_SECRET_KEY'])

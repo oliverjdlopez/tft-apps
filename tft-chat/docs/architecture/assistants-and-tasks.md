@@ -5,6 +5,12 @@ fresh OpenAI Agents SDK graphs for each logical invocation. Assistant behavior,
 tool access, handoffs, request-specific context, and synchronous task pipelines
 remain separate concerns.
 
+The public `domain.assistants` package re-exports the invocation API. Invocation
+construction imports its implementation dependencies directly, without importing
+that facade. `domain.assistants.utils.configure_tools(registry)` wires the supplied
+registry to the tool catalogue; the facade and `Assistant` use that same helper.
+Isolated captured registries retain their existing tool configuration.
+
 ## Assistant specifications
 
 Use the [assistant spec management commands](../development/assistant-specs.md)

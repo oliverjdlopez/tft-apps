@@ -254,29 +254,3 @@ def verify_grading(workspace, grading: dict) -> None:
             raise ValueError(f'Evaluation rule changed before execution: {profile}')
         if not current.get('enabled') or current.get('sampling') != 1:
             raise ValueError(f'Native rule must evaluate every item: {profile}')
-
-
-def seed_diagnostic_configs(workspace, registry_path: Path, snapshots: Path) -> dict:
-    """Create native configurations for every deterministic diagnostic in the corpus."""
-    from .content import load_catalog, load_snapshot
-    from .contracts import legacy_execution_item
-    from .utils import deterministic_score_type, native_score_name
-    registry = json.loads(registry_path.read_text())
-    configurations = workspace.list('score-configs')
-    for entry in load_catalog(snapshots):
-        bundle = load_snapshot(entry['snapshot'], snapshots)
-        for item in bundle['items']:
-            for check in legacy_execution_item(item)['expected_output']['assertions']:
-                if check['kind'] == 'rubric':
-                    continue
-                original = check['name']
-                name = native_score_name(original)
-                data_type = deterministic_score_type(check)
-                config = ensure_resource(workspace, configurations, 'score-configs', name,
-                    registry['score_configs'].get(original), {'name': name, 'dataType': data_type,
-                    'description': f"Deterministic diagnostic: {original}. Each result records its required threshold and full explanation.",
-                    **({'minValue': 0, 'maxValue': 1} if data_type == 'NUMERIC' else {})})
-                registry['score_configs'][original] = config['id']
-                registry.setdefault('score_names', {})[original] = name
-                atomic_write(registry_path, canonical_json(registry))
-    return registry

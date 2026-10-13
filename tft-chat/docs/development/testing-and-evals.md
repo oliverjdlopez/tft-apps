@@ -1,5 +1,22 @@
 # Tests and Evaluations
 
+The [2026-10-12 merge validation](../../../docs/merge-validation-2026-10-12.md)
+records the current cross-application results, repaired worker/test regressions,
+and unresolved evaluation-content and import-policy decisions. It supersedes
+the older failure counts recorded below.
+
+`tests/test_repository_consistency.py` enforces acyclic runtime imports, including
+imports deferred inside functions. It reports all strongly connected groups in
+one failure. Imports guarded by `TYPE_CHECKING` or `typing.TYPE_CHECKING` are
+excluded, while their runtime branches remain checked. Sixteen isolated process
+checks import the affected provider, assistant, composition, transcription, and
+Langfuse entry modules first, so pytest's already-loaded modules cannot conceal
+initialization-order failures. Run these checks from the ChatTFT root:
+
+```bash
+.venv/bin/python -m pytest -q tests/test_repository_consistency.py
+```
+
 ## Pytest and CI
 
 The Python CI gate is:

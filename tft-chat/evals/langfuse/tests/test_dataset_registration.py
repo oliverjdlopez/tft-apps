@@ -148,7 +148,7 @@ def test_registered_dataset_reaches_frozen_experiment_bundle(monkeypatch, tmp_pa
             """Close the fake grading transport."""
 
     monkeypatch.setattr(utils, "configured_native_workspace", Native)
-    monkeypatch.setattr(utils, "configured_workspace", Workspace)
+    monkeypatch.setattr("evals.langfuse.workspace.configured_workspace", Workspace)
     monkeypatch.setattr(utils, "load_grading_registry", lambda: {})
     monkeypatch.setattr(grading, "freeze_grading", lambda workspace, registry: {})
     selected = []

@@ -235,8 +235,8 @@ def test_update_tables_resolves_default_function_and_dsn(monkeypatch, session) -
     session.add(_match("m1", "p1", "16.10"))
     session.commit()
 
-    monkeypatch.setattr(update_cli, "open_db", lambda: session)
-    monkeypatch.setattr(update_cli, "database_label", lambda: "sqlite:///:memory:")
+    monkeypatch.setattr(update_cli, "open_db", lambda dsn=None: session)
+    monkeypatch.setattr(update_cli, "database_label", lambda dsn=None: "sqlite:///:memory:")
 
     args = argparse.Namespace(
         tables=["all_matches"],
@@ -254,7 +254,7 @@ def test_update_tables_resolves_default_function_and_dsn(monkeypatch, session) -
 
 
 def test_update_tables_unknown_function_raises(monkeypatch, session) -> None:
-    monkeypatch.setattr(update_cli, "open_db", lambda: session)
+    monkeypatch.setattr(update_cli, "open_db", lambda dsn=None: session)
     args = argparse.Namespace(
         tables=["all_matches"],
         function="does_not_exist",

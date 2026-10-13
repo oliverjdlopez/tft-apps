@@ -117,8 +117,8 @@ def compare_experiments(left_id, right_id, population_kind):
         # boards; only distinct snapshots need their frozen boards compared.
         and (
             left.snapshot_id == right.snapshot_id
-            or population_boards(left.snapshot_id, lids)
-            == population_boards(right.snapshot_id, rids)
+            or population_boards(frozen_boards(left.snapshot_id), lids)
+            == population_boards(frozen_boards(right.snapshot_id), rids)
         )
     )
     overlap, ari = None, None

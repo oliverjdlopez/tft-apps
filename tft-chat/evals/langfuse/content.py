@@ -351,13 +351,13 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
     prompt_inventory = baseline["prompts"]
     selected_suite = {**value["suite"], "assistant": value["config"].get("assistant") or value["suite"].get("assistant")}
     if captured_execution is None and selected_suite['family'] == 'assistant' and selected_suite['execution'] == 'live':
-        from .assistant_workspace import current_execution
+        from evals.assistant_execution import current_execution
         captured_execution = current_execution(selected_suite, value['config']['variants'])
     if natural and not captured_execution:
         from .prompts import experiment_prompts
         prompt_inventory = experiment_prompts(selected_suite)
     if captured_execution:
-        from .assistant_workspace import publish_graph_prompts
+        from .prompts import publish_graph_prompts
         value['execution'] = deepcopy(captured_execution)
         graph_prompts = {variant: publish_graph_prompts(client, graph) for variant, graph in captured_execution['graphs'].items()}
         value['prompts'] = graph_prompts[value['config']['variants'][0]['name']]
@@ -383,7 +383,8 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
             value.pop('grading', None)
         else:
             from .grading import freeze_grading
-            from .utils import configured_workspace, load_grading_registry
+            from .utils import load_grading_registry
+            from .workspace import configured_workspace
             workspace = configured_workspace()
             try:
                 value['grading'] = freeze_grading(workspace, load_grading_registry())

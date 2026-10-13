@@ -178,7 +178,7 @@ def test_api_starts_offline_worker_without_application_database(monkeypatch, off
     )))
     monkeypatch.setattr(api_app, "_warm_database_at_startup", lambda: {"available": False})
     monkeypatch.setattr(api_app, "_install_local_trace_recorder", lambda: None)
-    monkeypatch.setattr(worker, "CompositionWorker", Supervisor)
+    monkeypatch.setattr("services.composition_service.CompositionWorker", Supervisor)
 
     async def lifespan():
         """Enter and leave the real API lifespan with an unavailable app target."""

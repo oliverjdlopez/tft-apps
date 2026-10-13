@@ -149,6 +149,11 @@ board index are cached per backend process (`persistence.saved_result` and
 is needed). Online capture reads only the database; the frozen JSON source is used
 solely when `composition_offline` is enabled.
 
+The display layer loads frozen boards through persistence and passes that index
+to `utils.population_boards`. This helper filters in snapshot order without
+opening a database or importing persistence; the existing cache remains owned
+by `persistence.frozen_boards`.
+
 Rerun appends a new record using identical saved inputs/settings. Duplicate and edit
 loads the saved input reference and settings into the form; changing HDBSCAN
 matching policy yields a new result. Changing sampling seed/size requires **Refresh

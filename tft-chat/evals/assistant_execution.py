@@ -113,3 +113,25 @@ def require_bundle_captures(bundle: dict[str, Any]) -> None:
         require_capture({'assistant': config.get('assistant') or suite['assistant'],
                          'captured_graph': graphs[variant['name']],
                          'prompt_candidates': variant.get('prompts', {})})
+
+
+def current_execution(suite: dict, variants: list[dict]) -> dict:
+    """Freeze repository configuration for evaluation variants and Playground.
+
+    Args:
+        suite: Workflow metadata identifying the root assistant.
+        variants: Named variants that each receive an independent graph copy.
+
+    Returns:
+        Versioned execution graphs and repository lineage metadata.
+    """
+    from copy import deepcopy
+    from domain.assistants.capture import capture, reachable, registry_from_files
+    from domain.assistants.specs import ASSISTANT_SPECS_DIR, ROOT_DIR
+    from services.assistant_workspace.workspace import Workspace
+    workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)
+    registry = registry_from_files(workspace.source_files())
+    names = sorted(set(reachable(registry, suite['assistant'])) | {target for target in ('context_selector', 'skill_selector') if target in registry.list_assistants()})
+    graph = capture(registry, names)
+    return {'version': 1, 'graphs': {variant['name']: deepcopy(graph) for variant in variants},
+            'lineage': {'origin': 'repository', 'active_graph_hash': graph['hash']}}

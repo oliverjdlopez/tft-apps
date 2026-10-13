@@ -7,7 +7,7 @@ from typing import Any
 from jsonschema import validate
 from domain.assistants.constants import AssistantName
 
-from .utils import check_assertion
+from .utils import check_assertion, legacy_execution_item
 
 # Retired transcript names remain literal archive identities for lossless
 # historical conversion; they are no longer registered AssistantName members.
@@ -196,22 +196,3 @@ def reference_is_optional(suite: dict, item: dict, *, version: int) -> bool:
             and isinstance(metadata, dict)
             and isinstance(checks, list) and bool(checks)
             and metadata.get('quality_profile') is None)
-
-
-def legacy_execution_item(item: dict) -> dict:
-    """Adapt natural cases at the Python boundary for existing deterministic checks."""
-    if isinstance(item['input'], dict) and 'input' in item['input']:
-        return deepcopy(item)
-    result = deepcopy(item)
-    metadata = result.get('metadata', {})
-    source = item['input']
-    messages = source.get('messages') if isinstance(source, dict) else None
-    text = source if isinstance(source, str) else (
-        '\n'.join(m['content'] for m in messages) if messages else source['text'])
-    result['input'] = {'input': text, 'expected': deepcopy(item['expected_output'])}
-    if messages:
-        result['input']['messages'] = deepcopy(messages)
-    if metadata.get('fixture'):
-        result['input']['fixture'] = metadata['fixture']
-    result['expected_output'] = {'assertions': deepcopy(metadata.get('deterministic_checks', []))}
-    return result

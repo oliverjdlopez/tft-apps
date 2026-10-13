@@ -59,11 +59,16 @@ review copied distance thresholds because old numerical settings are not convert
 Shared helpers in `utils.py`: `family_from_boards(family_id, boards,
 representative=None)` describes a family by its representative board (units with copy
 counts and item state, plus active trait tiers), not marginal frequencies. The
-pattern is descriptive: other members never contribute and membership never reads it. `reference_assignments(boards, families, references,
+pattern is descriptive: other members never contribute and membership never reads it.
+`reference.reference_assignments(boards, families, references,
 rejection_distance, ambiguity_margin)` uses nearest frozen reference per family,
 rejects distances above threshold, and marks ties within the margin ambiguous.
 Algorithms may implement their own matching policy. Serialize every effective
 matching threshold. Repeated champion/item identities remain distinct occurrences.
+Reference classification coordinates scalar or accelerated distances in
+`reference.py`. Numerical encoding, CPU/CUDA kernels, and score-to-assignment
+helpers remain in `utils.py`; `acceleration.py` uses these without utilities
+importing the classification or acceleration operations.
 `validate_references` validates experiment-local cross references; full-population
 classification must not replace discovery representatives with new definitions.
 

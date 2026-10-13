@@ -6,7 +6,8 @@ from time import perf_counter
 import logging
 
 from ...models import BoardAssignment, BoardObservation, FitResult, FrozenModel
-from ...utils import model_distance_metric, reference_assignments
+from ...utils import model_distance_metric
+from ...reference import reference_assignments
 from .models import Parameters, State
 from .utils import (
     diagnostic_panels,

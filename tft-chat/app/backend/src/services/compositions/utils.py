@@ -428,11 +428,18 @@ def board_example(boards, observation_id, assignment, is_representative):
     )
 
 
-def population_boards(snapshot_id, observation_ids):
-    """List a population's serialized boards in frozen snapshot order for comparison."""
-    from .persistence import frozen_boards
+def population_boards(boards, observation_ids):
+    """Filter loaded boards in frozen snapshot order for population comparison.
+
+    Args:
+        boards: Frozen board index loaded by the caller through persistence.
+        observation_ids: Population members to retain.
+
+    Returns:
+        Serialized boards in their original snapshot order.
+    """
 
     return [
-        board for observation_id, (board, _) in frozen_boards(snapshot_id).items()
+        board for observation_id, (board, _) in boards.items()
         if observation_id in observation_ids
     ]

@@ -12,7 +12,7 @@ from domain.compositions.distance import board_distance
 from domain.compositions.fixtures import fixture_boards
 from domain.compositions.models import EntityRef
 from domain.compositions.registry import get_adapter
-from domain.compositions.utils import reference_assignments
+from domain.compositions.reference import reference_assignments
 
 
 def test_grouped_cpu_matches_scalar_and_preserves_empty_and_unseen_features():

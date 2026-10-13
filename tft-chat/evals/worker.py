@@ -29,7 +29,7 @@ def run_assistant(prompt: str, config: dict[str, Any], identity: dict[str, Any])
     from evals.assistant_execution import require_capture, run_captured
 
     require_capture(config)
-    target = resolve_eval_target(config.get('database'), require_explicit=True)
+    target = resolve_eval_target(config.get('database'))
     provenance = source_provenance(find_repo_root())
     with eval_database_override(target), trace('tft-eval-case', disabled=bool(config.get('workspace_trial')), metadata={
         'suite': identity.get('suite', config['assistant']), 'case': identity.get('case', ''),

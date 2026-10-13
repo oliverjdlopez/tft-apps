@@ -32,7 +32,8 @@ def app_rds(monkeypatch):
 @pytest.mark.parametrize("mode", ["missing", "blank", "partial", "explicit", "iam"])
 def test_captured_worker_uses_resolved_eval_fallback(app_rds, mode):
     """Captured executions inherit missing fields and preserve explicit values."""
-    import domain.assistants.execution as captured_execution
+    import evals.assistant_execution as captured_execution
+    from domain.assistants.capture import capture, registry_from_files
 
     if mode == "blank":
         for name in ("HOST", "PORT", "ADMIN", "DB", "PASSWORD", "INSTANCE_ID"):
@@ -60,13 +61,16 @@ def test_captured_worker_uses_resolved_eval_fallback(app_rds, mode):
                 input_tokens=0, output_tokens=0, total_tokens=0, requests=0,
             )),
         )
-        return result, {}
+        return result, {"instruction_hashes": {}}
 
     app_rds.setattr(captured_execution, "run_captured", run_captured)
-    app_rds.setattr(worker, "extract_trace", lambda _: SimpleNamespace(
+    app_rds.setattr(worker, "extract_trace", lambda _, **kwargs: SimpleNamespace(
         to_dict=lambda: {}, summary=lambda: "",
     ))
-    result = worker.run_assistant("question", {"assistant": "fixture", "captured_graph": {"fixture": True}}, {})
+    frozen = capture(registry_from_files({"fixture": {"system.md": "Fixture"}}))
+    result = worker.run_assistant("question", {
+        "assistant": "fixture", "captured_graph": frozen, "workspace_trial": True,
+    }, {})
 
     target, = targets
     assert result["output"] == "answer"

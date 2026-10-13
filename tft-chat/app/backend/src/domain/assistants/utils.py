@@ -269,3 +269,26 @@ def record_instructions(invocation: AssistantInvocation) -> None:
             visit(child)
 
     visit(invocation.agent)
+
+
+# ---------------------------------------------------------------------------
+# Assistant registry tool wiring
+#
+# Callers provide the registry so invocation construction never imports its
+# public package facade, which re-exports the Assistant class.
+# ---------------------------------------------------------------------------
+
+
+def configure_tools(registry) -> None:
+    """Connect an assistant registry to the public tool registry API.
+
+    Args:
+        registry: Registry receiving the tool lookup operations.
+    """
+    from domain.tools import get_tool, get_tool_group, list_tools
+
+    registry.configure_tools(
+        get_tool=get_tool,
+        get_tool_group=get_tool_group,
+        list_tools=list_tools,
+    )

@@ -1,8 +1,6 @@
 """Captured assistant comparisons on the existing durable Langfuse runner."""
 from __future__ import annotations
 
-from copy import deepcopy
-import json
 import re
 from typing import Any
 
@@ -10,9 +8,11 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from common.assistant_workspace import checkout_lock
-from domain.assistants.capture import capture, digest, from_capture, reachable, registry_from_files
+from domain.assistants.capture import digest, from_capture, reachable
+from evals.assistant_execution import current_execution
+from .prompts import publish_graph_prompts
 from .content import fetch_bundle, load_catalog, load_snapshot, validate_bundle
-from .utils import atomic_write, canonical_json, content_hash, is_not_found, resolved_prompt
+from .utils import atomic_write, canonical_json, content_hash, resolved_prompt
 
 router = APIRouter(prefix='/workspace')
 
@@ -56,40 +56,6 @@ def registered_datasets(service, *, live: bool = True) -> list[dict]:
                              'input': item.input} for item in dataset.items
                             if str(item.status).upper().split('.')[-1] == 'ACTIVE']
         result.append(row)
-    return result
-
-
-def current_execution(suite: dict, variants: list[dict]) -> dict:
-    """Freeze current repository configuration for fresh native assistant runs."""
-    from domain.assistants.specs import ASSISTANT_SPECS_DIR, ROOT_DIR
-    from services.assistant_workspace.workspace import Workspace
-    workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)
-    registry = registry_from_files(workspace.source_files())
-    names = sorted(set(reachable(registry, suite['assistant'])) | {target for target in ('context_selector', 'skill_selector') if target in registry.list_assistants()})
-    graph = capture(registry, names)
-    return {'version': 1, 'graphs': {variant['name']: deepcopy(graph) for variant in variants},
-            'lineage': {'origin': 'repository', 'active_graph_hash': graph['hash']}}
-
-
-def publish_graph_prompts(client, graph: dict) -> dict:
-    """Publish instruction copies with captured configuration; pin exact versions."""
-    result = {}
-    for assistant, definition in graph['specs'].items():
-        # Configuration is part of version identity even when instructions match.
-        specification_hash = digest(definition)
-        name = f'chattft/workspace/{assistant}/{specification_hash}'
-        try:
-            prompt = resolved_prompt(client, {'name': name, 'label': 'latest'})
-            if prompt['text'] != definition['system_prompt']:
-                raise ValueError('Managed prompt identity has different instruction bytes')
-        except Exception as exc:
-            if not is_not_found(exc):
-                raise
-            created = client.create_prompt(name=name, type='text', prompt=definition['system_prompt'],
-                config={'assistant': assistant, 'specification_hash': specification_hash, 'specification': definition}, labels=[])
-            prompt = ({'name': created.name, 'version': created.version, 'text': definition['system_prompt']}
-                      if created is not None else resolved_prompt(client, {'name': name, 'label': 'latest'}))
-        result[assistant] = prompt
     return result
 
 
@@ -171,7 +137,7 @@ def experiment(request: Request, body: ComparisonRequest) -> dict:
 @router.get('/prompts/{assistant}')
 def prompts(request: Request, assistant: str) -> dict:
     """List only owned assistant prompts and their concrete versions."""
-    from .utils import configured_workspace
+    from .workspace import configured_workspace
     if not re.fullmatch(r'[A-Za-z0-9_-]+', assistant):
         raise HTTPException(400, 'Invalid assistant identity')
     workspace = configured_workspace()

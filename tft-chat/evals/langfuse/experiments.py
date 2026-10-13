@@ -119,7 +119,7 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
         bundle = bind_dataset_identity(bundle, client)
         if natural and bundle.get('grading'):
             from .grading import verify_grading
-            from .utils import configured_workspace
+            from .workspace import configured_workspace
             workspace = configured_workspace()
             try:
                 verify_grading(workspace, bundle['grading'])
@@ -272,7 +272,8 @@ def bind_dataset_identity(bundle: dict, client: Any) -> dict:
         frozen["source_dataset"] = {key: frozen.get(key) for key in ("dataset_id", "dataset_name", "dataset_version")}
         if frozen.get('grading'):
             from .grading import rebind_grading
-            from .utils import configured_workspace, load_grading_registry
+            from .utils import load_grading_registry
+            from .workspace import configured_workspace
             workspace = configured_workspace()
             try:
                 frozen['source_grading'] = frozen['grading']

@@ -9,7 +9,8 @@ from urllib.parse import quote
 from .content import load_catalog, load_snapshot
 from .migration import apply_migration, plan_migration
 from .native import NativeWorkspace
-from .utils import atomic_write, canonical_json, configured_workspace
+from .utils import atomic_write, canonical_json
+from .workspace import configured_workspace
 
 
 def migrate_workspace(destination: Path, *, apply: bool = False) -> dict:

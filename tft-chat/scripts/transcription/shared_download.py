@@ -7,22 +7,31 @@ import json
 import uuid
 from dataclasses import replace
 from pathlib import Path
-from typing import TYPE_CHECKING
+from collections.abc import Callable
 
 from .media_store import MediaStore
 from .media_store.models import MediaRequest
 
-if TYPE_CHECKING:
-    from .download_vod import DownloadConfig, DownloadResult
+from .models import AUDIO_FORMAT_SELECTOR, VIDEO_FORMAT_SELECTOR, DownloadConfig, DownloadResult
+from .utils import atomic_write_json as _atomic_write_json, detect_download_source
 
 
-def download_shared(config: DownloadConfig, store: MediaStore) -> DownloadResult:
-    """Use shared assets and isolate legacy archives by source, range, and format."""
-    from .download_vod import (
-        AUDIO_FORMAT_SELECTOR, VIDEO_FORMAT_SELECTOR, DownloadResult,
-        _atomic_write_json, detect_download_source, download_vod_local,
-    )
+def download_shared(
+    config: DownloadConfig,
+    store: MediaStore,
+    *,
+    download_local: Callable[[DownloadConfig], DownloadResult],
+) -> DownloadResult:
+    """Reuse shared assets, calling the supplied local downloader on a cache miss.
 
+    Args:
+        config: Requested representation and download options.
+        store: Owned media catalogue used to coordinate concurrent downloads.
+        download_local: Local execution supplied by the download entry point.
+
+    Returns:
+        Download artifacts referencing the catalogue-owned media file.
+    """
     profile = {AUDIO_FORMAT_SELECTOR: "audio", VIDEO_FORMAT_SELECTOR: "video:best"}.get(
         config.format_selector, "selector:" + config.format_selector
     )
@@ -43,7 +52,7 @@ def download_shared(config: DownloadConfig, store: MediaStore) -> DownloadResult
         # must not suppress recovery when its former media file has disappeared.
         archive = work / "checkpoints" / ("download-audio-archive.txt" if config.media_type == "audio" else "download-archive.txt")
         archive.unlink(missing_ok=True)
-        result = download_vod_local(replace(config, output_dir=work))
+        result = download_local(replace(config, output_dir=work))
         downloaded.append(result)
         return result.media_path
 

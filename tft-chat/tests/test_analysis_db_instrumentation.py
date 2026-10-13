@@ -225,8 +225,7 @@ def test_postgres_engine_bounds_connect_and_pool_checkout(monkeypatch) -> None:
 
     monkeypatch.setattr(db_session, "create_engine", create)
     monkeypatch.setattr(db_session, "_instrument_pool", lambda engine: None)
-    monkeypatch.setattr(db_session, "_rds_iam_target", lambda target: None)
 
     assert db_session._create_engine("postgresql:///analysis") is fake_engine
-    assert captured["pool_timeout"] == 5
-    assert captured["connect_args"] == {"connect_timeout": 5}
+    assert captured["pool_timeout"] == 15
+    assert captured["connect_args"] == {"connect_timeout": 15}

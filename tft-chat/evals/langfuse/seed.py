@@ -74,7 +74,7 @@ def main() -> None:
         seeded = seed_content(client, root, natural=True,
                               include_fixtures=os.environ.get('LANGFUSE_TEST_DEPLOYMENT') == '1')
         from .grading import seed_grading
-        from .utils import configured_workspace
+        from .workspace import configured_workspace
         from core.config import load_config
         workspace = configured_workspace()
         try:
@@ -90,7 +90,6 @@ def main() -> None:
                          api_key='mock-key' if os.environ.get('LANGFUSE_TEST_DEPLOYMENT') == '1' else settings.secrets.openai_api_key,
                          base_url='http://mock-model:8000/v1' if os.environ.get('LANGFUSE_TEST_DEPLOYMENT') == '1' else None,
                          managed_names=managed_names)
-            from .grading import seed_diagnostic_configs
             seed_diagnostic_configs(workspace,
                 Path(os.environ.get('LANGFUSE_RUNTIME_DIR', str(Path(__file__).parent / '.runtime'))) / 'grading-resources.json', root)
         finally:
@@ -103,6 +102,32 @@ def main() -> None:
         print(json.dumps({"content": seeded, "configured_triggers": configured}))
     finally:
         client.flush()
+
+
+def seed_diagnostic_configs(workspace, registry_path: Path, snapshots: Path) -> dict:
+    """Create native configurations for every deterministic diagnostic in the corpus."""
+    from .content import load_catalog, load_snapshot
+    from .contracts import legacy_execution_item
+    from .utils import atomic_write, canonical_json, ensure_resource, deterministic_score_type, native_score_name
+    registry = json.loads(registry_path.read_text())
+    configurations = workspace.list('score-configs')
+    for entry in load_catalog(snapshots):
+        bundle = load_snapshot(entry['snapshot'], snapshots)
+        for item in bundle['items']:
+            for check in legacy_execution_item(item)['expected_output']['assertions']:
+                if check['kind'] == 'rubric':
+                    continue
+                original = check['name']
+                name = native_score_name(original)
+                data_type = deterministic_score_type(check)
+                config = ensure_resource(workspace, configurations, 'score-configs', name,
+                    registry['score_configs'].get(original), {'name': name, 'dataType': data_type,
+                    'description': f"Deterministic diagnostic: {original}. Each result records its required threshold and full explanation.",
+                    **({'minValue': 0, 'maxValue': 1} if data_type == 'NUMERIC' else {})})
+                registry['score_configs'][original] = config['id']
+                registry.setdefault('score_names', {})[original] = name
+                atomic_write(registry_path, canonical_json(registry))
+    return registry
 
 
 if __name__ == "__main__":

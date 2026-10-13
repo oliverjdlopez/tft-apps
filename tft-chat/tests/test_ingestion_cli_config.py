@@ -119,24 +119,20 @@ def test_player_batch_size_cli_overrides_config(tmp_path: Path) -> None:
     assert args.player_batch_size == 3
 
 
-def test_project_config_overrides_user_config(
+def test_project_config_overrides_ingest_defaults(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    user_config = tmp_path / "user.ini"
-    project_config = tmp_path / "project.ini"
-    user_config.write_text("[ingest]\nmax_new_matches = 10\nplatform = kr\n", encoding="utf-8")
-    project_config.write_text("[ingest]\nmax_new_matches = 25\n", encoding="utf-8")
-    monkeypatch.setattr(
-        ingestion_cli,
-        "DEFAULT_CONFIG_PATHS",
-        (user_config, project_config),
-    )
+    """The canonical project INI supplies defaults to the public CLI parser."""
+    project_config = tmp_path / "chat_tft.ini"
+    project_config.write_text("[ingest]\nmax_new_matches = 25\nplatform = kr\n", encoding="utf-8")
+    monkeypatch.setattr("core.config.find_repo_root", lambda: tmp_path)
 
-    config = ingestion_cli.load_ingest_config()
+    args = ingestion_cli.parse_args([])
 
-    assert config["platform"] == "kr"
-    assert config["max_new_matches"] == 25
+    assert args.platform == "kr"
+    assert args.max_new_matches == 25
+    assert args.matches_per_player == 10
 
 
 def test_legacy_max_matches_config_is_rejected(tmp_path: Path) -> None:
@@ -161,8 +157,8 @@ def test_no_insert_to_db_flag_parses() -> None:
     assert args.insert_to_db is False
 
 
-def test_endless_defaults_off_and_flag_enables(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(ingestion_cli, "DEFAULT_CONFIG_PATHS", ())
+def test_endless_defaults_off_and_flag_enables(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setattr("core.config.find_repo_root", lambda: tmp_path)
 
     default = ingestion_cli.parse_args([])
     assert default.endless is False
@@ -195,8 +191,9 @@ def test_endless_config_rejects_garbage_boolean(tmp_path: Path) -> None:
 
 def test_endless_cycle_args_walk_all_players_with_five_games(
     monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
-    monkeypatch.setattr(ingestion_cli, "DEFAULT_CONFIG_PATHS", ())
+    monkeypatch.setattr("core.config.find_repo_root", lambda: tmp_path)
 
     args = ingestion_cli.parse_args(["--endless"])
 
@@ -205,8 +202,8 @@ def test_endless_cycle_args_walk_all_players_with_five_games(
     # No per-cycle cap, every player's five most recent games, batched for
     # incremental progress.
     assert cycle.max_new_matches is None
-    assert cycle.matches_per_player == ingestion_cli.ENDLESS_MATCHES_PER_PLAYER == 5
-    assert cycle.player_batch_size == ingestion_cli.ENDLESS_PLAYER_BATCH_SIZE
+    assert cycle.matches_per_player == args.endless_matches_per_player == 5
+    assert cycle.player_batch_size == args.endless_player_batch_size == 50
 
 
 def test_endless_cycle_args_respect_explicit_player_batch_size() -> None:

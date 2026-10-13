@@ -163,7 +163,6 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captur
     if config.get("assistant") is not None:
         if suite["family"] != "assistant" or suite["execution"] != "live":
             raise ValueError("Assistant selection requires a live assistant suite")
-        from .prompts import repository_prompts
         if config["assistant"] not in (captured_names if captured_names is not None else repository_prompts()):
             raise ValueError(f"Unknown assistant: {config['assistant']}")
     candidates = {target for variant in config.get("variants", []) for target in variant.get("prompts", {})}
@@ -190,7 +189,6 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captur
 
 def validate_case_semantics(suite: dict[str, Any], items: list[dict[str, Any]]) -> None:
     """Retain registry and selector corpus preflight against the migrated content."""
-    from .contracts import legacy_execution_item
     import domain.assistants
     items = [legacy_execution_item(item) for item in items if item.get("status", "ACTIVE") == "ACTIVE"]
     if suite["family"] == "assistant" and suite["execution"] == "live":
@@ -257,16 +255,6 @@ def semantic_grading_rule(rule: dict, grading: dict) -> dict:
     return {'enabled': rule['enabled'], 'sampling': rule['sampling'],
             'filter': sorted(filters, key=canonical_json),
             'evaluatorAssignments': sorted(assignments, key=canonical_json)}
-
-
-def configured_workspace():
-    """Resolve maintenance credentials without copying them into frozen content."""
-    from dotenv import dotenv_values
-    from .workspace import Workspace
-    local = dotenv_values(Path(__file__).parent / '.env')
-    return Workspace(os.environ.get('LANGFUSE_BASE_URL', 'http://localhost:15510'),
-                     os.environ.get('LANGFUSE_PUBLIC_KEY') or local['LANGFUSE_PUBLIC_KEY'],
-                     os.environ.get('LANGFUSE_SECRET_KEY') or local['LANGFUSE_SECRET_KEY'])
 
 
 def load_grading_registry() -> dict:
@@ -400,7 +388,7 @@ def playground_payload(body) -> dict:
     maximum = body.max_completion_tokens or body.max_tokens
     if maximum is not None:
         settings["max_tokens"] = maximum
-    from .assistant_workspace import current_execution
+    from evals.assistant_execution import current_execution
     execution = current_execution({"assistant": name}, [{"name": "Playground"}])
     return {
         "operation": "evaluate", "identity": {"suite": "playground", "case": name},
@@ -494,3 +482,39 @@ def markdown_arguments(value: Any, depth: int = 0) -> list[str]:
 def markdown_content(value: Any) -> str:
     """Keep text byte-for-byte and render structured prompts or outputs as lists."""
     return value if isinstance(value, str) else "\n".join(markdown_arguments(value))
+
+
+# ===========================================================================
+# Portable case adaptation and repository prompt inventory
+#
+# Contracts and validation consume these helpers; they do not depend on
+# HTTP workspace handlers or prompt publication operations.
+# ===========================================================================
+
+
+def legacy_execution_item(item: dict) -> dict:
+    """Adapt natural cases at the Python boundary for existing deterministic checks."""
+    if isinstance(item['input'], dict) and 'input' in item['input']:
+        return deepcopy(item)
+    result = deepcopy(item)
+    metadata = result.get('metadata', {})
+    source = item['input']
+    messages = source.get('messages') if isinstance(source, dict) else None
+    text = source if isinstance(source, str) else (
+        '\n'.join(m['content'] for m in messages) if messages else source['text'])
+    result['input'] = {'input': text, 'expected': deepcopy(item['expected_output'])}
+    if messages:
+        result['input']['messages'] = deepcopy(messages)
+    if metadata.get('fixture'):
+        result['input']['fixture'] = metadata['fixture']
+    result['expected_output'] = {'assertions': deepcopy(metadata.get('deterministic_checks', []))}
+    return result
+
+
+def repository_prompts() -> dict[str, dict]:
+    """Return current spec instructions for seeding and live experiment discovery."""
+    from domain.assistants.specs import ASSISTANT_SPECS_DIR
+    from scripts.assistant_specs.utils import spec_inventory
+
+    return {name: {"name": f"chattft/assistants/{name}", "text": spec.system_prompt}
+            for name, (_, spec) in spec_inventory(ASSISTANT_SPECS_DIR).items()}
