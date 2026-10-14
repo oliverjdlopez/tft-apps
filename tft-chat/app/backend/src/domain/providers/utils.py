@@ -1,4 +1,4 @@
-"""Parsing, selection, and serialization helpers for prompt resource providers."""
+"""Resource parsing, collection construction, and historical evaluation helpers."""
 
 from __future__ import annotations
 
@@ -10,7 +10,6 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
-from agents import Agent
 from common.discoverers import discover_unique
 from common.parsers import parse_frontmatter
 from common.paths import display_path
@@ -35,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Context provider helpers
-# Source parsing, complete collection preparation, and selector serialization.
+# Source parsing, complete collection preparation, and offline fixture support.
 # Complete source units are preserved throughout retrieval and fallback.
 # ---------------------------------------------------------------------------
 
@@ -133,27 +132,6 @@ def render_json_value(value: Any) -> str:
     if isinstance(value, str):
         return value
     return json.dumps(value, ensure_ascii=False)
-
-
-def context_selector_agent(*, registry=None) -> Agent[None]:
-    """Build the context selector after provider modules finish loading.
-
-    Returns:
-        Selector agent configured from the canonical assistant registry.
-    """
-    from domain.assistants.constants import AssistantName
-    from domain.assistants.models import ContextSelection
-    from domain.assistants.registry import assistant_registry
-
-    registry = registry or assistant_registry
-    spec = registry.get_spec(AssistantName.CONTEXT_SELECTOR)
-    return Agent(
-        name=spec.name,
-        instructions=spec.system_prompt,
-        model=getattr(registry, 'resolved_models', {}).get(spec.name, spec.resolved_model()),
-        model_settings=spec.model_settings(),
-        output_type=ContextSelection,
-    )
 
 
 _BOLD_RE = re.compile(r"\*\*(.+?)\*\*")
@@ -283,6 +261,8 @@ def inherit_collection_descriptions(sources: Sequence[ContextFile]) -> list[Cont
 _WISP_CATEGORY_STEMS = frozenset({
     "wisps-champion", "wisps-combat", "wisps-goldxp", "wisps-item",
     "wisps-misc", "wisps-risky", "wisps-shop",
+    "offers-champion", "offers-combat", "offers-goldxp", "offers-item",
+    "offers-misc", "offers-risky", "offers-shop",
 })
 _WISP_WINDOW = re.compile(r"(\d+)-(\d+)\s*[–—-]\s*(\d+)-(\d+)")
 
@@ -700,27 +680,6 @@ _SKILL_STOPWORDS = frozenset(
 )
 
 
-def skill_selector_agent(*, registry=None) -> Agent[None]:
-    """Build the skill selector after provider modules finish loading.
-
-    Returns:
-        Selector agent configured from the canonical assistant registry.
-    """
-    from domain.assistants.constants import AssistantName
-    from domain.assistants.models import CandidateIdSelection
-    from domain.assistants.registry import assistant_registry
-
-    registry = registry or assistant_registry
-    spec = registry.get_spec(AssistantName.SKILL_SELECTOR)
-    return Agent(
-        name=spec.name,
-        instructions=spec.system_prompt,
-        model=getattr(registry, 'resolved_models', {}).get(spec.name, spec.resolved_model()),
-        model_settings=spec.model_settings(),
-        output_type=CandidateIdSelection,
-    )
-
-
 def load_skill(path: Path, *, relative_to: Path | None = None) -> SkillDefinition:
     """Load and validate one repository-local ``SKILL.md`` file.
 
@@ -948,7 +907,6 @@ def selected_skill_ids(
 
 # Legacy helper names remain importable for evaluation adapters that patch or
 # inspect the selector pipeline; their implementations are defined above.
-_selector_agent = context_selector_agent
 _all_context_candidates = all_context_candidates
 _rank_context_candidates = rank_context_candidates
 _bound_context_snippets = bound_context_snippets

@@ -2,100 +2,49 @@
 
 from __future__ import annotations
 
-import re
 import time
 from collections.abc import Callable, Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
 from domain.assistants.constants import AssistantName
-from domain.runtime.models import AssistantRunContext
+from domain.runtime.models import AssistantRunContext, PreparedResources
 
 if TYPE_CHECKING:
     from agents import Agent, RunContextWrapper
 
     from domain.assistants.specs import AssistantSpec
     from domain.assistants.models import AssistantInvocation
-    from domain.providers.models import (
-        ContextProvider,
-        ContextSnippet,
-        SkillDefinition,
-        SkillProvider,
-    )
 
 
 # ---------------------------------------------------------------------------
 # Runtime resource preparation and instruction rendering
 #
-# Selection happens before execution; these helpers keep rendering independent
-# of selectors and invocation activity.
+# Descriptions support discovery; complete bodies remain in read tool results.
+# Instruction rendering never selects or injects resource contents.
 # ---------------------------------------------------------------------------
-
-FOLLOW_UP_RE = re.compile(
-    r"\b(?:it|its|they|them|their|this|that|these|those|same|one|ones|above|"
-    r"previous)\b"
-    r"|\b(?:what|how)\s+about\b"
-    r"|\b(?:and|also)\s+(?:for|with|about|then)\b",
-    re.IGNORECASE,
-)
-
-
-def resource_query(messages: Sequence[Mapping[str, str]]) -> str:
-    """Retain recent user history only when the latest prompt is a follow-up.
-
-    Args:
-        messages: Conversation history containing user and assistant messages.
-
-    Returns:
-        The latest nonempty user prompt, or the last four for a follow-up.
-    """
-    prompts = [
-        message["content"].strip()
-        for message in messages
-        if message["role"] == "user"
-    ]
-    prompts = [prompt for prompt in prompts if prompt]
-    if not prompts:
-        return ""
-    latest = prompts[-1]
-    if len(prompts) == 1 or not FOLLOW_UP_RE.search(latest):
-        return latest
-    return " ".join(prompts[-4:])
-
 
 def render_instruction_layers(
     spec: AssistantSpec,
     *,
-    context_provider: ContextProvider,
-    skill_provider: SkillProvider,
-    references: Sequence[ContextSnippet] = (),
-    skills: Sequence[SkillDefinition] = (),
+    resources: PreparedResources | None = None,
     base_instructions: str | None = None,
 ) -> str:
-    """Render already selected resources under one specification's access policy.
+    """Append only resource descriptions; full bodies require a read tool call.
 
     Args:
-        spec: Agent specification whose eligibility rules apply.
-        context_provider: Renderer for permitted factual references.
-        skill_provider: Renderer for permitted workflow material.
-        references: Complete references selected for this invocation.
-        skills: Skills selected for this invocation.
-        base_instructions: Optional replacement for the durable prompt.
+        spec: Target specification whose frozen resource access applies.
+        resources: Invocation-local resource catalogue and permissions.
+        base_instructions: Optional durable prompt replacement.
 
     Returns:
-        Durable instructions followed by permitted resource layers.
+        Durable instructions followed by the permitted resource catalogue.
     """
-    # Enforce access at the rendering boundary even when resources were selected
-    # by another caller or shared by agents with different permissions.
-    allowed_skills = tuple(
-        skill for skill in skills
-        if spec.skill_names is None or skill.name in spec.skill_names
-    )
-    parts = [(base_instructions or spec.system_prompt).strip()]
-    if spec.repository_context and references:
-        parts.append(context_provider.render(references))
-    if allowed_skills:
-        parts.append(skill_provider.render(allowed_skills))
-    return "\n\n".join(part for part in parts if part).strip()
+    from domain.resources.catalogue import render_catalogue
+
+    parts = [spec.system_prompt if base_instructions is None else base_instructions]
+    if resources is not None:
+        parts.append(render_catalogue(resources, spec.name))
+    return "\n\n".join(part.strip() for part in parts if part.strip())
 
 
 def can_receive_skills(spec: AssistantSpec) -> bool:
@@ -126,7 +75,7 @@ def instruction_callback(
         root: Whether to apply the root-only caller system prefix.
 
     Returns:
-        A synchronous SDK callback that renders only preselected resources.
+        A synchronous SDK callback that renders only resource metadata.
         Legacy callers without typed context receive the durable prompt.
     """
     def render(
@@ -151,22 +100,11 @@ def instruction_callback(
         if root and context.runtime.system:
             base_instructions = f"{context.runtime.system}\n\n{base_instructions}"
         instructions = render_instruction_layers(
-            spec,
-            context_provider=context.context_provider,
-            skill_provider=context.skill_provider,
-            skills=(
-                context.resources.skills
-                if can_receive_skills(spec)
-                else ()
-            ),
-            base_instructions=base_instructions,
-            references=(
-                context.resources.references if context.resources.query.strip() else ()
-            ),
+            spec, resources=context.resources, base_instructions=base_instructions,
         )
         if context.timing is not None:
             # SDK callbacks can run on every model step, so this metric includes
-            # each render while selection timings remain once per invocation.
+            # each render while catalogue loading happens once per invocation.
             context.timing["instruction_assembly_ms"] = round(
                 context.timing.get("instruction_assembly_ms", 0.0)
                 + (time.perf_counter() - started) * 1000,
@@ -188,14 +126,14 @@ def instruction_callback(
 def invocation_input(
     input: str | Sequence[Mapping[str, str]], task_prompt: str,
 ) -> tuple[list[dict[str, str]], str | list[dict[str, str]]]:
-    """Prepare selector history and SDK input without modifying caller messages.
+    """Copy conversation history and prepare SDK input without modifying caller messages.
 
     Args:
         input: User text or conversation history.
         task_prompt: Root task wrapper, applied only to the latest user message.
 
     Returns:
-        Unwrapped selector messages and wrapped SDK input, respectively.
+        Original copied messages and wrapped SDK input, respectively.
     """
     messages = ([{"role": "user", "content": input}] if isinstance(input, str) else [
         {"role": message["role"], "content": message["content"]}

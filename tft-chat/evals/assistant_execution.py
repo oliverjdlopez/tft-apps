@@ -41,10 +41,8 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
     agent = invocation.agent
     instructions = invocation.instructions
     model_settings = invocation.model_settings
-    references = [{'path': reference.path, 'sha256': hashlib.sha256(reference.content.encode()).hexdigest()} for reference in resources.references]
-    skills = [{'name': skill.name, 'path': skill.path, 'sha256': hashlib.sha256(skill.body.encode()).hexdigest()} for skill in resources.skills]
     metadata = {'assembled_instructions': instructions, 'captured_graph_hash': graph['hash'],
-        'model_settings': model_settings, 'resources': {'references': references, 'skills': skills},
+        'model_settings': model_settings, 'resources': {},
         'runtime': {'set_number': context.runtime.set_number, 'root_assistant': assistant.name, 'surface': surface},
         'model': str(agent.model), 'run_model_settings': config.get('model_settings', {})}
     result = None
@@ -59,6 +57,11 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
     finally:
         finalize_activity(context, cancelled=bool(asyncio.current_task() and asyncio.current_task().cancelling()))
     from dataclasses import asdict
+    metadata['resources'] = {
+        'reads': [{'id': read.id, 'path': read.path, 'kind': read.kind, 'sha256': read.sha256,
+                   'content_sha256': hashlib.sha256(read.content.encode()).hexdigest(),
+                   'record_ids': list(read.record_ids)} for read in resources.reads.values()],
+    }
     metadata['instruction_hashes'] = {key: hashlib.sha256(value.encode()).hexdigest() for key, value in instructions.items()}
     metadata['activity'] = asdict(context.activity)
     return result, metadata
@@ -87,7 +90,6 @@ def require_capture(config: dict[str, Any]) -> AssistantRegistry:
         raise ValueError('Live assistant execution requires a captured graph; export a fresh bundle before running it.')
     registry = from_capture(config['captured_graph'])
     names = set(reachable(registry, config['assistant']))
-    names.update(name for name in ('context_selector', 'skill_selector') if name in registry.list_assistants())
     if set(config.get('prompt_candidates', {})) - names:
         raise ValueError('Prompt candidates target assistants outside the captured execution graph')
     return registry
@@ -131,7 +133,7 @@ def current_execution(suite: dict, variants: list[dict]) -> dict:
     from services.assistant_workspace.workspace import Workspace
     workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)
     registry = registry_from_files(workspace.source_files())
-    names = sorted(set(reachable(registry, suite['assistant'])) | {target for target in ('context_selector', 'skill_selector') if target in registry.list_assistants()})
+    names = reachable(registry, suite['assistant'])
     graph = capture(registry, names)
     return {'version': 1, 'graphs': {variant['name']: deepcopy(graph) for variant in variants},
             'lineage': {'origin': 'repository', 'active_graph_hash': graph['hash']}}

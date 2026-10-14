@@ -4,7 +4,7 @@
   "handoff_description": "Produce the final concise response from supplied TFT context.",
   "tools": {
     "include_all": false,
-    "groups": ["evidence"]
+    "groups": ["evidence", "context"]
   },
   "context": {"repository": true},
   "skills": ["tft-statistical-interpretation"],

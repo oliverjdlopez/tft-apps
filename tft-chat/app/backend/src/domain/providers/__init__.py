@@ -1,30 +1,6 @@
-"""Assistant-facing providers for repository-maintained prompt content."""
+"""Repository resource loading; no runtime selection providers."""
 
-from domain.providers.context import (
-    DEFAULT_CONTEXT_PROVIDER,
-    RepositoryContextProvider,
-)
-from domain.providers.skills import (
-    DEFAULT_SKILL_PROVIDER,
-    RepositorySkillProvider,
-)
-from domain.providers.models import (
-    ContextFile,
-    ContextProvider,
-    ContextSnippet,
-    SkillDefinition,
-    SkillProvider,
-)
+from domain.providers.context import discover_context_files
+from domain.providers.utils import discover_skills
 
-
-__all__ = [
-    "DEFAULT_CONTEXT_PROVIDER",
-    "DEFAULT_SKILL_PROVIDER",
-    "ContextFile",
-    "ContextProvider",
-    "ContextSnippet",
-    "RepositoryContextProvider",
-    "RepositorySkillProvider",
-    "SkillDefinition",
-    "SkillProvider",
-]
+__all__ = ["discover_context_files", "discover_skills"]

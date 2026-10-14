@@ -1,0 +1,1629 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "wisps-misc/fb1cc5d4afb3",
+      "name": "Blast Potion (base)",
+      "text": "temporary offensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/84a758d1960c",
+      "name": "Blast Potion (upgraded)",
+      "text": "temporary offensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/6df617cac5f4",
+      "name": "Blood Ritual (base)",
+      "text": "pays player Health for a Champion Duplicator; 6 gold; tier 3; offer windows 4-2–4-7; re-offer cooldown 200 Wisp shops. Conditions: More than 10 player health remaining. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "More than 10 player health remaining.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/760a7ef2fee8",
+      "name": "Blood Ritual (upgraded)",
+      "text": "pays player Health for a Champion Duplicator; 6 gold; tier 3; offer windows 4-2–4-7; re-offer cooldown 200 Wisp shops. Conditions: More than 8 player health remaining. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "More than 8 player health remaining.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/155ad148fecb",
+      "name": "Doodad Bag (base)",
+      "text": "multiple permanent defensive-stat consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/41f672561ffc",
+      "name": "Doodad Bag (upgraded)",
+      "text": "multiple permanent defensive-stat consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/282ffea4a148",
+      "name": "Doodad Jar (base)",
+      "text": "permanent defensive-stat consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/a45a5d992c66",
+      "name": "Doodad Jar (upgraded)",
+      "text": "permanent defensive-stat consumable; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/eba5fdec3b06",
+      "name": "Doodad Sack (base)",
+      "text": "multiple permanent defensive-stat consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/a6fdeeb840be",
+      "name": "Doodad Sack (upgraded)",
+      "text": "multiple permanent defensive-stat consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/8c8ea3f05b57",
+      "name": "Early Fix (base)",
+      "text": "item Reforger; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/26f1c3c9fa31",
+      "name": "Early Fix (upgraded)",
+      "text": "item Reforger; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/b935a386ec59",
+      "name": "Forest Mage (base)",
+      "text": "Wisp-only shop with one purchase allowed; 1 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: During the shop phase, only in the first 8 seconds. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "During the shop phase, only in the first 8 seconds.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/adc5a51012dd",
+      "name": "Forest Mage (upgraded)",
+      "text": "Wisp-only shop with one purchase allowed; 1 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: During the shop phase, only in the first 8 seconds. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "During the shop phase, only in the first 8 seconds.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/d232e08897e8",
+      "name": "Greater Chaos (base)",
+      "text": "triggers multiple randomly selected Wisps; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/6b075c5f0ec6",
+      "name": "Greater Chaos (upgraded)",
+      "text": "triggers multiple randomly selected Wisps; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/4e60054df4ef",
+      "name": "Healing Pool (base)",
+      "text": "restores player Health; 2 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 10 Wisp shops. Conditions: At least 10 player health missing. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "At least 10 player health missing.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/aea26e51aea5",
+      "name": "Healing Pool (upgraded)",
+      "text": "restores player Health; 2 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 10 Wisp shops. Conditions: At least 10 player health missing. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "At least 10 player health missing.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/6f8001fc4d4b",
+      "name": "Health Potion (base)",
+      "text": "temporary defensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/de231e688689",
+      "name": "Health Potion (upgraded)",
+      "text": "temporary defensive potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/8f0f96041efd",
+      "name": "Knick-Knack Bag (base)",
+      "text": "multiple permanent AD or AS consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/9861866f7ed8",
+      "name": "Knick-Knack Bag (upgraded)",
+      "text": "multiple permanent AD or AS consumables; 2 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/d65334285dfa",
+      "name": "Knick-Knack Jar (base)",
+      "text": "permanent AD or AS consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/b2d8fbd1790b",
+      "name": "Knick-Knack Jar (upgraded)",
+      "text": "permanent AD or AS consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/65ca90109abb",
+      "name": "Knick-Knack Sack (base)",
+      "text": "multiple permanent AD or AS consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/ab1f6399e29d",
+      "name": "Knick-Knack Sack (upgraded)",
+      "text": "multiple permanent AD or AS consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Attack damage category and a role of Assassin, Caster, Marksman, Fighter or Specialist.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/e70fcdf61cc2",
+      "name": "Lesser Chaos (base)",
+      "text": "triggers a randomly selected Wisp; 1 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/59e717ac1428",
+      "name": "Lesser Chaos (upgraded)",
+      "text": "triggers a randomly selected Wisp; 1 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/dc1120d7f205",
+      "name": "Mana Potion (base)",
+      "text": "temporary Mana potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/b20a3294c73e",
+      "name": "Mana Potion (upgraded)",
+      "text": "temporary Mana potion equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/b8d928114cd7",
+      "name": "Minor Blood Ritual (base)",
+      "text": "pays player Health for a Lesser Duplicator; 3 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 3 player health remaining. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "More than 3 player health remaining.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/5ed6502dd27c",
+      "name": "Minor Blood Ritual (upgraded)",
+      "text": "pays player Health for a Lesser Duplicator; 3 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 1 player health remaining. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "More than 1 player health remaining.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/752c82bb817b",
+      "name": "Potioncraft (base)",
+      "text": "temporary potion equipment bundle; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/90141ccdf867",
+      "name": "Potioncraft (upgraded)",
+      "text": "temporary potion equipment bundle; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/f98616186e4f",
+      "name": "Salvager (base)",
+      "text": "benching units removes and disassembles equipment; 0 gold; tier 1; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Excluded by: Salvage Bin, Salvage Bin+, Crafted Crafting, NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Salvage Bin, Salvage Bin+, Crafted Crafting, NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-misc/4882b36c7848",
+      "name": "Salvager (upgraded)",
+      "text": "benching units removes and disassembles equipment; 0 gold; tier 1; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Excluded by: Salvage Bin, Salvage Bin+, Crafted Crafting, NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Salvage Bin, Salvage Bin+, Crafted Crafting, NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-misc/58d0064d50c0",
+      "name": "Sinister Deal (base)",
+      "text": "pays player Health for gold; 0 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 4 player health remaining. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "More than 4 player health remaining.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/058283884812",
+      "name": "Sinister Deal (upgraded)",
+      "text": "pays player Health for gold; 0 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: More than 3 player health remaining. Modes: Standard.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard"
+      ],
+      "conditions": "More than 3 player health remaining.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/4e94bab72802",
+      "name": "Terraforming (base)",
+      "text": "additional Greenfather seeds at combat start; 2 gold; tier 1; offer windows 4-2–4-7, 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Greenfather active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Greenfather active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/b9251f58f8d4",
+      "name": "Terraforming (upgraded)",
+      "text": "additional Greenfather seeds at combat start; 2 gold; tier 1; offer windows 4-2–4-7, 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Greenfather active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Greenfather active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/0f11ee508e81",
+      "name": "Thingamajig Bag (base)",
+      "text": "multiple permanent AP or Mana Regen consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/d0fca2675b19",
+      "name": "Thingamajig Bag (upgraded)",
+      "text": "multiple permanent AP or Mana Regen consumables; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/29671acf85c7",
+      "name": "Thingamajig Jar (base)",
+      "text": "permanent AP or Mana Regen consumable; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/8a7f871f5388",
+      "name": "Thingamajig Jar (upgraded)",
+      "text": "permanent AP or Mana Regen consumable; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/62f60ac13aeb",
+      "name": "Thingamajig Sack (base)",
+      "text": "multiple permanent AP or Mana Regen consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-misc/11d86e2f6189",
+      "name": "Thingamajig Sack (upgraded)",
+      "text": "multiple permanent AP or Mana Regen consumables; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Magic damage category and a role of Caster, Fighter, Marksman or Assassin.",
+      "augment_exclusions": null
+    }
+  ]
+}

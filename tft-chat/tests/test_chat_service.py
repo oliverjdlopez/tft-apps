@@ -125,82 +125,8 @@ def test_builds_agents_sdk_tools_not_metadata_dicts() -> None:
     assert getattr(tool, "name", "") == "resolve_tft_names"
 
 
-def test_prepare_resources_retains_recent_entity_for_follow_up() -> None:
-    context_file = ContextFile(
-        name="set-17-units",
-        description="Set 17 units",
-        body="# Units\n\n- **Riven** — adaptive bruiser",
-        path="domain/resources/context/units.md",
-        sets=("17",),
-    )
-
-    class FakeSkillProvider:
-        async def aselect(self, query):
-            assert query == "Tell me about Riven What about her items?"
-            return []
-
-    class FakeContextProvider:
-        async def aselect(self, query, *, set_number=None, **_limits):
-            return select_context_snippets(
-                [context_file],
-                query,
-                set_number=set_number,
-            )
-
-        def render(self, references):
-            return "\n".join(snippet.content for snippet in references)
-
-    request = ChatRequest(
-        model=OpenAIModels.LUNA.value,
-        messages=[
-            ChatMessage(role="user", content="Tell me about Riven"),
-            ChatMessage(role="assistant", content="Riven is a bruiser."),
-            ChatMessage(role="user", content="What about her items?"),
-        ],
-    )
-
-    resources = asyncio.run(
-        prepare_resources(
-            [message.model_dump() for message in request.messages],
-            set_number=17,
-            context_provider=FakeContextProvider(),
-            skill_provider=FakeSkillProvider(),
-        )
-    )
-
-    assert [snippet.content for snippet in resources.references] == [
-        "# Units\n\n- **Riven** — adaptive bruiser"
-    ]
 
 
-def test_prepare_resources_drops_history_for_unrelated_turn() -> None:
-    queries: list[str] = []
-
-    class FakeContextProvider:
-        async def aselect(self, query, *, set_number=None, **_limits):
-            queries.append(query)
-            return []
-
-    class FakeSkillProvider:
-        async def aselect(self, query):
-            assert query == "Hello, thanks!"
-            return []
-
-    messages = [
-        ChatMessage(role="user", content="Tell me about Riven"),
-        ChatMessage(role="assistant", content="Riven is a bruiser."),
-        ChatMessage(role="user", content="Hello, thanks!"),
-    ]
-    asyncio.run(
-        prepare_resources(
-            [message.model_dump() for message in messages],
-            set_number=17,
-            context_provider=FakeContextProvider(),
-            skill_provider=FakeSkillProvider(),
-        )
-    )
-
-    assert queries == ["Hello, thanks!"]
 
 
 def test_stream_event_round_trips_json_payload() -> None:
@@ -359,24 +285,9 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
 
     monkeypatch.setattr("services.chat_service.trace", fake_trace)
 
-    reference = ContextSnippet(
-        context_file="units",
-        path="domain/resources/context/units.md",
-        heading="Riven",
-        content="Riven is a bruiser.",
-        line=42,
-        score=9,
-    )
-    skill = SkillDefinition(
-        name="compare-boards",
-        description="Compare two board states.",
-        body="Compare the boards.",
-        path="domain/resources/skills/compare-boards/SKILL.md",
-    )
-
-    async def selected_resources(_messages, **kwargs):
-        """Provide selections without invoking a model-backed selector."""
-        return PreparedResources(query="What is the best comp?", references=(reference,), skills=(skill,))
+    async def selected_resources(**kwargs):
+        """Provide an empty catalogue without model calls."""
+        return PreparedResources()
 
     monkeypatch.setattr(
         "domain.assistants.assistant.prepare_resources", selected_resources
@@ -423,35 +334,9 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
     chunks = asyncio.run(collect())
     assert captured["agent_name"] == "meta_expert"
     assert captured["run_agent"].name == "meta_expert"
-    assert len(chunks) == 3
-    decoded_events = []
-    for chunk in chunks:
-        payload = chunk.strip()
-        payload = payload.removeprefix(STREAM_EVENT_PREFIX).removesuffix(
-            STREAM_EVENT_SUFFIX
-        )
-        decoded_events.append(json.loads(base64.b64decode(payload).decode("utf-8")))
-    assert decoded_events == [
-        {
-            "type": "context",
-            "name": "Riven",
-            "description": "Context chunk selected for this response.",
-            "path": "domain/resources/context/units.md",
-            "line": 42,
-            "content": "Riven is a bruiser.",
-        },
-        {
-            "type": "skill",
-            "name": "compare-boards",
-            "description": "Compare two board states.",
-            "path": "domain/resources/skills/compare-boards/SKILL.md",
-        },
-        {
-            "type": "trace",
-            "name": "chat_tft",
-            "trace_id": "trace_0123456789abcdef0123456789abcdef",
-        },
-    ]
+    assert len(chunks) == 1
+    payload = chunks[0].strip().removeprefix(STREAM_EVENT_PREFIX).removesuffix(STREAM_EVENT_SUFFIX)
+    assert json.loads(base64.b64decode(payload))['type'] == 'trace'
     assert captured["workflow_name"] == "chat_tft"
     assert captured["entered"] is True
     assert captured["exited"] is True
@@ -463,11 +348,11 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
     assert metadata["direct_tool_names"] == ",".join(
         assistant_tool_names("meta_expert")
     )
-    assert metadata["context_sources"] == "domain/resources/context/units.md"
+    assert metadata["context_sources"] == ""
     create_kwargs = captured["create_kwargs"]
     assert create_kwargs == {"model": "gpt-5"}
     assert captured["context"].runtime.root_assistant == "meta_expert"
-    assert captured["context"].resources.references == (reference,)
+    assert captured["context"].resources.reads == {}
     assert captured["stream_input"] == [
         {"role": "user", "content": "What is the best comp?"}
     ]
@@ -526,9 +411,9 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         lambda _name, **_kwargs: main_agent,
     )
 
-    async def selected_resources(_messages, **_kwargs):
+    async def selected_resources(**_kwargs):
         """Provide prepared resources without invoking resource selectors."""
-        return PreparedResources(query="Finish the analysis")
+        return PreparedResources()
 
     monkeypatch.setattr(
         "domain.assistants.assistant.prepare_resources", selected_resources
@@ -570,9 +455,9 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
     main_agent = SimpleNamespace(name="chat", instructions="DURABLE ROOT", model_settings=ModelSettings(), handoffs=[])
     main_result, final_result = object(), object()
 
-    async def prepared(_messages, **_kwargs):
+    async def prepared(**_kwargs):
         """Provide resources without invoking a selector or external model."""
-        return PreparedResources(query="Finish the analysis")
+        return PreparedResources()
 
     def run_streamed(agent, *, context, **_kwargs):
         """Capture the shared context for both runner entry points."""
@@ -614,3 +499,31 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
     assert len(contexts) == (2 if fallback else 1)
     assert all(context is contexts[0] for context in contexts)
     assert contexts[0].activity.calls["pending"].status == "cancelled"
+
+
+@pytest.mark.parametrize('kind', ['reference', 'skill'])
+def test_resource_source_events_follow_successful_reads(kind):
+    """Source Activity events reflect actual reads instead of prompt selections."""
+    resource = {'found': True, 'kind': kind, 'name': 'units', 'heading': 'Stage 2',
+                'path': 'set18/units.md', 'content': 'Full resource', 'complete': True}
+
+    class Result:
+        """Supply one SDK tool-output event with serialized resource content."""
+        async def stream_events(self):
+            """Emit the event produced after the registered read tool completes."""
+            yield SimpleNamespace(type='run_item_stream_event', name='tool_output',
+                                  item=SimpleNamespace(tool_name='read_resource', call_id='read',
+                                                       output=json.dumps(resource)))
+
+    async def collect():
+        """Collect the production streaming adapter's browser messages."""
+        return [chunk async for chunk in stream_agent_events(
+            Result(), tools_by_name={}, request_id='read-request', trace_id='read-trace')]
+
+    chunks = asyncio.run(collect())
+    events = [json.loads(base64.b64decode(chunk.strip().removeprefix(STREAM_EVENT_PREFIX)
+                                        .removesuffix(STREAM_EVENT_SUFFIX))) for chunk in chunks]
+    assert events[0]['type'] == ('context' if kind == 'reference' else 'skill')
+    assert events[0]['path'] == resource['path']
+    assert ('content' in events[0]) == (kind == 'reference')
+    assert events[1]['type'] == 'tool' and events[1]['name'] == 'read_resource'

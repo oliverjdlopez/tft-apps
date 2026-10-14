@@ -111,9 +111,10 @@ def assistant_skill_names(name: str) -> list[str]:
     Returns:
         Skill names in repository discovery order.
     """
-    from domain.providers.skills import DEFAULT_SKILL_PROVIDER
+    from domain.resources.library import get_library
 
-    available = [skill.name for skill in DEFAULT_SKILL_PROVIDER.discover()]
+    available = [resource_id.removeprefix('skill:') for resource_id, descriptor in get_library().entries.items()
+                 if descriptor.metadata.kind == 'skill']
     return _ASSISTANT_REGISTRY.list_skill_names(name, available)
 
 

@@ -1,11 +1,11 @@
-"""Constants shared by repository resource providers."""
+"""Resource paths and historical offline evaluation limits."""
 
 from pathlib import Path
 
 from common.paths import find_repo_root
 
 RESOURCE_DIR = Path(__file__).resolve().parents[2] / "resources"
-CONTEXT_DIR = RESOURCE_DIR / "context"
+CONTEXT_DIR = RESOURCE_DIR / "references"
 SKILLS_DIR = RESOURCE_DIR / "skills"
 ROOT_DIR = find_repo_root(CONTEXT_DIR)
 MAX_CONTEXT_SNIPPETS: int | None = None

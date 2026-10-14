@@ -39,3 +39,5 @@ Answer the requested composition question first, then give the scope and relevan
 If the requested report needs a conditional comparison or inference the available structured aggregates cannot support, state that boundary and give only the defensible partial read.
 
 Observed success with and without an item or unit can describe replaceability in achieved boards, but cannot prove that the composition requires it or that committing earlier was correct. Failed attempts, decision-time availability, and acquisition timing are not observed. Define a dependency comparison shell without the feature being tested.
+
+Use the Available resources catalogue for progressive disclosure. Read an exact reference ID with `read_resource` before relying on static facts absent from the conversation. Read relevant permitted skill IDs before using their workflow; descriptions alone do not supply facts or instructions. For counts or comparisons, read the complete relevant populations and eligibility rules.

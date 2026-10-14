@@ -1,73 +1,52 @@
-"""Prepare invocation resources and render context-backed SDK instructions."""
+"""Prepare resource discovery without selecting prompt material or calling models."""
 
 from __future__ import annotations
 
+import asyncio
 import time
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any
+from collections.abc import Mapping
+from typing import Any
 
-from domain.assistants.utils import resource_query
-from domain.runtime.models import PreparedResources
-
-if TYPE_CHECKING:
-    from domain.providers.models import ContextProvider, SkillProvider
+from domain.assistants.specs import AssistantSpec
+from domain.assistants.utils import can_receive_skills
+from domain.resources.library import get_library
+from domain.runtime.models import PreparedResources, ResourceAccess
 
 
 async def prepare_resources(
-    messages: Sequence[Mapping[str, str]],
-    *,
-    context_provider: ContextProvider,
-    skill_provider: SkillProvider,
-    set_number: int | None,
+    *, specs: Mapping[str, AssistantSpec], set_number: int | None,
     timing: dict[str, Any] | None = None,
-    select_references: bool = True,
-    select_skills: bool = True,
-    allowed_skill_names: Sequence[str] | None = None,
 ) -> PreparedResources:
-    """Select references and skills once before starting a logical invocation.
+    """Load a local catalogue; each assistant decides what to read during its run.
 
     Args:
-        messages: Conversation history used to derive the selector query.
-        context_provider: Asynchronous selector for factual references.
-        skill_provider: Asynchronous selector for supplemental workflows.
-        set_number: Explicit TFT set used to scope factual references, if configured.
-        timing: Optional request timing record receiving selector durations.
-        select_references: Whether the graph can consume factual references.
-        select_skills: Whether any eligible assistant can consume skill bodies.
-        allowed_skill_names: Union of reachable skill allowlists. ``None`` means
-            at least one eligible recipient has unrestricted skill access.
+        specs: Frozen specifications for this invocation graph.
+        set_number: TFT set used to restrict reference availability.
+        timing: Optional request record receiving catalogue loading duration.
 
     Returns:
-        Immutable selections reused by every model turn and handoff.
+        Available resources and per-assistant permissions, with no initial reads.
     """
-    query = resource_query(messages)
-    stage_started = time.perf_counter()
-    references = (
-        tuple(await context_provider.aselect(query, set_number=set_number))
-        if select_references and query.strip()
-        else ()
-    )
+    started = time.perf_counter()
+    # Filesystem discovery belongs off the event loop; it never makes model calls.
+    eligible = any(spec.repository_context or can_receive_skills(spec) for spec in specs.values())
+    library = await asyncio.to_thread(get_library) if eligible else None
+    skills = tuple(resource_id.removeprefix('skill:') for resource_id, descriptor in library.entries.items()
+                   if descriptor.metadata.kind == 'skill') if library else ()
+    access = {}
+    for name, spec in specs.items():
+        # Tool access and resource policy must both permit reads. A resource flag
+        # alone must not grant a new model-facing capability to a saved graph.
+        can_read = spec.include_all_tools or 'context' in spec.tool_group_keys or 'read_resource' in spec.tool_names
+        access[name] = ResourceAccess(
+            references=can_read and spec.repository_context,
+            skills=tuple(skill for skill in skills if can_read and can_receive_skills(spec)
+                         and (spec.skill_names is None or skill in spec.skill_names)),
+        )
     if timing is not None:
-        timing["context_selection_ms"] = round(
-            (time.perf_counter() - stage_started) * 1000, 3
-        )
-    stage_started = time.perf_counter()
-    if select_skills and allowed_skill_names != () and query.strip():
-        selected_skills = (
-            await skill_provider.aselect(query)
-            if allowed_skill_names is None
-            else await skill_provider.aselect(
-                query, allowed_names=allowed_skill_names,
-            )
-        )
-        skills = tuple(selected_skills)
-    else:
-        skills = ()
-    if timing is not None:
-        timing["skill_selection_ms"] = round(
-            (time.perf_counter() - stage_started) * 1000, 3
-        )
-    return PreparedResources(query=query, references=references, skills=skills)
+        timing['resource_catalogue_ms'] = round((time.perf_counter() - started) * 1000, 3)
+    return PreparedResources(library=library, set_number=set_number, access=access)
 
 
-__all__ = ["prepare_resources"]
+
+__all__ = ['prepare_resources']

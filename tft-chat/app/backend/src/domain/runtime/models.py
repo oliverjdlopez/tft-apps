@@ -6,12 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
-    from domain.providers.models import (
-        ContextProvider,
-        ContextSnippet,
-        SkillDefinition,
-        SkillProvider,
-    )
+    from domain.resources.models import ResourceLibrary, ResourceRead
     from domain.tools.evidence.models import EvidenceStore
 
 
@@ -26,13 +21,22 @@ class RuntimeSettings:
     system: str | None = None
 
 
-@dataclass(frozen=True)
+@dataclass
 class PreparedResources:
-    """Hold the selector query and resources selected once for an invocation."""
+    """Retain available resources, frozen access, and actual read provenance."""
 
-    query: str = ""
-    references: tuple[ContextSnippet, ...] = ()
-    skills: tuple[SkillDefinition, ...] = ()
+    library: ResourceLibrary | None = None
+    set_number: int | None = None
+    access: dict[str, ResourceAccess] = field(default_factory=dict)
+    reads: dict[str, ResourceRead] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class ResourceAccess:
+    """Freeze one assistant's reference and workflow permissions."""
+
+    references: bool = False
+    skills: tuple[str, ...] = ()
 
 
 @dataclass
@@ -67,8 +71,6 @@ class AssistantRunContext:
 
     runtime: RuntimeSettings
     resources: PreparedResources
-    context_provider: ContextProvider
-    skill_provider: SkillProvider
     evidence: EvidenceStore | None
     activity: ActivityState = field(default_factory=ActivityState)
     timing: dict[str, Any] | None = None

@@ -17,14 +17,10 @@ from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import AssistantSpec
 from domain.assistants.token_logging import log_agent_graph
 from domain.assistants.utils import (
-    can_receive_skills,
     instruction_callback,
     invocation_input,
     record_instructions,
 )
-from domain.providers.context import RepositoryContextProvider
-from domain.providers.models import ContextProvider, SkillProvider
-from domain.providers.skills import RepositorySkillProvider
 from domain.runtime.activity import ActivityRunHooks, finalize_activity
 from domain.runtime.models import AssistantRunContext, RuntimeSettings
 from domain.tools.evidence.models import EvidenceStore
@@ -47,11 +43,9 @@ class Assistant:
         output_type: type[Any] | None = None,
         base_instructions_by_name: Mapping[str, str] | None = None,
         set_number: int | None = None,
-        context_provider: ContextProvider | None = None,
-        skill_provider: SkillProvider | None = None,
         surface: str = "assistant",
     ) -> None:
-        """Capture the graph's policy, model defaults, and provider dependencies.
+        """Capture the graph's policy, model defaults, and resource permissions.
 
         Args:
             name: Registered root assistant name.
@@ -61,8 +55,6 @@ class Assistant:
             base_instructions_by_name: Durable prompt replacements; callbacks,
                 access rules, task wrappers, and model settings remain active.
             set_number: TFT set override; omission uses application configuration.
-            context_provider: Optional factual provider for this instance.
-            skill_provider: Optional workflow provider for this instance.
             surface: Execution surface recorded in the invocation context.
         """
         if registry is None:
@@ -87,16 +79,6 @@ class Assistant:
             for key in self._registry.list_assistants()
         }
         self._registry.resolved_models = dict(self._resolved_models)
-        # Selectors must use the same snapshot as handoffs, especially for drafts.
-        self.context_provider = (
-            context_provider if context_provider is not None
-            else RepositoryContextProvider(registry=self._registry)
-        )
-        self.skill_provider = (
-            skill_provider if skill_provider is not None
-            else RepositorySkillProvider(registry=self._registry)
-        )
-
     @classmethod
     def from_capture(cls, graph: dict[str, Any], name: str, **kwargs: Any) -> Assistant:
         """Restore a verified graph for draft trials or frozen experiments.
@@ -145,7 +127,7 @@ class Assistant:
         timing: dict[str, Any] | None = None,
         record: bool = False,
     ) -> AssistantInvocation:
-        """Select resources once and create an independent SDK invocation.
+        """Load the resource catalogue and create an independent SDK invocation.
 
         Args:
             input: User text or conversation history with user/assistant roles.
@@ -157,54 +139,31 @@ class Assistant:
         Returns:
             Agent, wrapped input, typed context, hooks, and optional provenance.
         """
-        messages, run_input = invocation_input(input, self.spec.task_prompt)
+        _, run_input = invocation_input(input, self.spec.task_prompt)
         setup_started = time.perf_counter()
         agent = self.build_agent()
         if timing is not None:
             timing["agent_setup_ms"] = round(
                 (time.perf_counter() - setup_started) * 1000, 3,
             )
-        # Select from the captured graph once, so unreachable skill definitions
-        # cannot consume selector slots or cross a recipient's allowlist.
-        specs: list[AssistantSpec] = []
-        seen: set[str] = set()
-        pending = [agent]
+        names = set()
+        pending = [self.name]
         while pending:
-            current = pending.pop()
-            if current.name in seen:
+            name = pending.pop()
+            if name in names:
                 continue
-            seen.add(current.name)
-            specs.append(self._registry.get_spec(current.name))
-            pending.extend(current.handoffs)
-        skill_recipients = [
-            spec for spec in specs
-            if can_receive_skills(spec)
-        ]
-        skill_allowlists = [spec.skill_names for spec in skill_recipients]
-        allowed_skill_names = (
-            None
-            if any(names is None for names in skill_allowlists)
-            else tuple(sorted({
-                skill
-                for names in skill_allowlists
-                for skill in names or ()
-            }))
-        )
+            names.add(name)
+            pending.extend(self._registry.get_handoff_names(name))
+        specs = {name: self._registry.get_spec(name) for name in names}
         resources = await prepare_resources(
-            messages, context_provider=self.context_provider,
-            skill_provider=self.skill_provider, set_number=self.set_number,
-            timing=timing,
-            select_references=any(spec.repository_context for spec in specs),
-            select_skills=bool(skill_recipients),
-            allowed_skill_names=allowed_skill_names,
+            specs=specs, set_number=self.set_number, timing=timing,
         )
         context = AssistantRunContext(
             runtime=RuntimeSettings(
                 request_id=request_id or uuid4().hex, set_number=self.set_number,
                 root_assistant=self.name, surface=self.surface, system=system,
             ),
-            resources=resources, context_provider=self.context_provider,
-            skill_provider=self.skill_provider, evidence=EvidenceStore(), timing=timing,
+            resources=resources, evidence=EvidenceStore(), timing=timing,
         )
         invocation = AssistantInvocation(agent, run_input, context, ActivityRunHooks())
         if record:

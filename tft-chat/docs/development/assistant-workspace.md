@@ -77,12 +77,12 @@ normal trial execution may make paid calls when the operator chooses Try.
 
 Each run captures active and draft definitions from the same runtime snapshot.
 Only the edited assistant differs. Both captures include the union of reachable
-handoff targets and the context/skill selector definitions. Configuration, task
+handoff targets. Resource permissions come from those captured specifications. Configuration, task
 wrappers, instructions, and resolved model defaults are frozen. Captured runs use `Assistant.from_capture(...).prepare(..., record=True)`, the
 same preparation entry point as chat and ordinary assistant consumers. Resource
-selection, request-specific instruction callbacks, typed invocation context,
+discovery and exact reads, request-specific instruction callbacks, typed invocation context,
 activity hooks, and evidence retention follow the application pipeline. Each assistant's configured
-context and skill access applies at rendering. Draft registries never replace the
+context and skill access applies to both catalogue metadata and exact reads. Draft registries never replace the
 global registry during execution.
 
 Trials bypass Langfuse instrumentation and tracing setup and work without its

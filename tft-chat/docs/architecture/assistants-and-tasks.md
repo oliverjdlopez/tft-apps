@@ -72,7 +72,7 @@ same-entity-outside-cohort `relative_delta`, and treats missing comparators as
 unavailable evidence. The [decision workflow design](decision-workflows.md)
 explains the prompt boundaries, alternatives, and same-copy item constraints.
 
-`final_responder` owns only the `evidence` tool group, permits only the
+`final_responder` owns the `evidence` and `context` tool groups, permits only the
 `tft-statistical-interpretation` skill, and has no handoffs. Its
 `present_evidence` tool selects one initial static table, interactive table, or
 placement distribution by reference. Analytical tools retain their usual
@@ -96,51 +96,27 @@ prompts used by normal application runs.
 
 ## Runtime instructions
 
-Chat, direct assistant API, CLI, transcript distillation, and captured evaluations use
-`domain.assistants.Assistant` to prepare each invocation. The class calls
-`prepare_resources` once before execution when the graph can consume selected
-resources. Graphs without repository context skip factual selection. Skill
-selection skips graphs without an eligible recipient: chat is never eligible;
-otherwise an assistant may receive skills when it can use repository context
-or explicitly names one or more skills. Skills are selected once from the
-union of reachable recipients' allowlists (or the full catalog if any recipient
-is unrestricted), then filtered again at each agent's instruction boundary.
-This lets a directly invoked contextualized analyst receive its permitted
-skills, and a no-facts assistant explicitly opt in to named skills. It uses
-the latest user message for selection, or up to four recent user messages when
-the latest message matches the existing follow-up heuristic. Assistant replies
-remain in SDK conversation history but are not part of the selector query.
-The selected references and skills are retained in `PreparedResources`.
+Chat, direct assistant API, CLI, transcript distillation, and captured evaluations
+use `domain.assistants.Assistant` to prepare each invocation. Preparation loads a
+cached, validated resource metadata without selecting prompt material or calling
+models. Bodies are loaded only by reads.
+Each target initially receives only root reference and permitted skill
+descriptions. Index reads reveal children; exact reads enforce permissions at
+every level. Bodies arrive through `read_resource`
+tool results. See [reference resources](../content_providers/context.md) and
+[skill resources](../content_providers/skills.md).
 
-`domain.runtime.models.AssistantRunContext` holds explicit runtime settings,
-prepared resources, provider dependencies, evidence, activity, and optional
-request timing. Each chat invocation receives fresh state. SDK local context is
-not automatically model-visible; callbacks and tools expose only their intended
-instructions and result fields. The object is not serialized into browser events
-or persisted as cross-turn conversation state.
+`AssistantRunContext` holds explicit settings, resource library and frozen
+permissions, actual-read ID and hash provenance, evidence, activity, and optional timing.
+Each invocation receives fresh state shared across its handoffs. The SDK context
+is internal; instruction callbacks and tools expose only intended fields.
 
-`Assistant.build_agent()` installs each agent's instruction callback
-as part of normal construction, including every nested handoff. Each callback
-captures its own immutable specification, so a later registry reload does not
-change an existing graph's prompt or resource permissions. There is no separate
-callback map for the chat service to build or attach.
-
-With `AssistantRunContext`, the callbacks render prepared resources on every
-model step according to that agent's repository-context and skill policies.
-All handoff depths follow the same per-agent rules; contextualization no longer
-depends on whether a target is directly reachable from the root. Only the root
-receives the optional caller system prefix. Chat is excluded from skill
-injection; other root assistants follow the same context and explicit-skill
-eligibility rules as handoff targets. Chat's callback is reused by the tool-free
-fallback under a different agent name.
-Rendering never selects resources or loads runtime configuration.
-
-The consumer entry point is `Assistant(name, model=model)`. Construction captures
-an independent registry snapshot and resolved model defaults. Default context
-and skill providers use that same snapshot, including selector specifications.
-Reusing the instance retains definitions; each `prepare`, `run`, or `run_sync`
-call creates fresh agents, resources, context, evidence, and activity hooks.
-Construct a new instance to pick up subsequently applied definitions.
+`Assistant.build_agent()` installs callbacks bound to each target specification.
+Callbacks render durable policy and permitted metadata on every model step;
+only the root receives the caller's system prefix. Chat cannot read skills.
+Read results never become instruction layers. Later registry reloads cannot
+change permissions or models in an existing graph. Reusing an `Assistant`
+retains definitions while creating fresh run-local state for each execution.
 
 ```python
 from domain.assistants import Assistant
@@ -166,8 +142,8 @@ result = Runner.run_streamed(
 )
 ```
 
-`prepare` accepts user text or user/assistant conversation history. Selectors
-receive original, unwrapped user messages; the SDK receives the root's task
+`prepare` accepts user text or user/assistant conversation history. The SDK
+receives the root's task
 wrapper applied to the latest user message, preserving previous history and
 caller-owned messages. `run_sync` rejects active event loops with guidance to
 await `run`. Completed or failed ordinary runs finalize unfinished activity;
@@ -177,7 +153,7 @@ streaming consumers retain cancellation and cleanup ownership.
 its model defaults independently of active repository definitions. Optional
 `base_instructions_by_name` replaces durable prompt text in the private snapshot
 while preserving task wrappers, models, handoffs, tools, context policy, and
-skill access. It also keeps selector definitions on that same snapshot.
+skill access. Resource access uses that same snapshot.
 `prepare(record=True)` retains actual model-facing instructions and model settings
 in the returned `AssistantInvocation`, including evidence from failed execution.
 Chat does not enable instruction recording.
@@ -186,22 +162,15 @@ Live assistant evaluations and Playground requests require captured graphs and u
 `Assistant.from_capture(...).prepare(..., record=True)`. Fresh exports capture
 repository definitions for every live assistant dataset format. Historical bundles
 without captures remain readable; execution rejects them before dispatch and asks
-for a fresh export. Selector benchmarks use `Assistant.run_sync` for their model
-calls. Static instruction assembly, the `create_assistant` factory, and the
+for a fresh export. Historical selector benchmarks remain available offline; their live model
+execution is retired. Static instruction assembly, the `create_assistant` factory, and the
 `render_assistant_input` wrapper have been removed.
 
-Dynamic callbacks use
-`render_instruction_layers` to combine the stable assistant prompt with only
-request-specific layers the target is allowed to receive. Prepared invocations
-also apply the root policy before rendering:
-
-- the top-level chat assistant receives selected factual references, but not
-  selected skill bodies;
-- contextualized, skill-eligible assistants receive factual references and
-  focused workflow material permitted by their spec, including a directly
-  invoked analytical root; and
-- `distill-transcript` receives no repository context or skills and has no tools
-  or handoffs.
+Dynamic callbacks use `render_instruction_layers` to combine the stable prompt
+with the target's permitted discovery catalogue. Chat sees reference metadata;
+eligible specialists see permitted reference and skill metadata. Transcript
+assistants see neither. Exact reads enforce the same permissions independently
+of the instructions, and return bodies only as tool results.
 
 Fresh handoff agents retain the request's model choice, preventing an
 Anthropic-backed chat request from silently switching providers during a
@@ -220,7 +189,7 @@ Callers execute assistants through `Runner.run`, `Runner.run_sync`, or
 `Runner.run_streamed`. `services/chat_service.py` obtains an `AssistantInvocation` through
 `Assistant.prepare`, then owns tracing, streamed execution, and the maximum-turn
 fallback using the prepared context and hooks. The `Assistant` class owns
-definition snapshots, provider dependencies, resource selection, task input
+definition snapshots, resource catalogues and read permissions, task input
 wrapping, invocation state, and prompt policy; tools own evidence operations.
 The streaming adapter preserves the browser protocol. Direct assistant API, CLI,
 captured eval, and chat-handoff paths use the same preparation and target-specific
@@ -264,6 +233,6 @@ drafts from active repository behavior. `AssistantRegistry` can be constructed f
 immutable specs, captured per invocation, and installed as a complete snapshot.
 `domain/assistants/capture.py` validates full graphs and freezes model defaults.
 Captured worker execution threads this isolated registry through graph building,
-task wrapping, resource selectors, and instruction callbacks. Typed invocation
+task wrapping, resource discovery and reads, and instruction callbacks. Typed invocation
 context, per-assistant access policy, activity, and evidence handling use the normal
 application pipeline. Draft execution never substitutes the global registry.

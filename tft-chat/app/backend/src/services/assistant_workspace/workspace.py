@@ -140,7 +140,6 @@ class Workspace:
         names = sorted(set(reachable(active, entry)) | set(reachable(draft, entry)))
         if name not in names:
             raise ValueError('The edited assistant is not reachable from this workflow')
-        names = sorted(set(names) | {target for target in ('context_selector', 'skill_selector') if target in active.list_assistants()})
         return capture(active, names), capture(draft, names), head
 
     def apply(self, name: str, **expected) -> dict:

@@ -60,7 +60,7 @@ def test_captured_execution_preserves_controls_and_failed_run_evidence(monkeypat
     assert metadata['assembled_instructions'] == {'root': 'Root candidate', 'child': 'Child candidate'}
     assert set(metadata['instruction_hashes']) == {'root', 'child'}
     assert metadata['captured_graph_hash'] == graph['hash']
-    assert metadata['resources'] == {'references': [], 'skills': []}
+    assert metadata['resources'] == {'reads': []}
     assert metadata['run_model_settings'] == {'temperature': 0.2, 'max_tokens': 800}
     assert observed[0].activity.calls['pending'].status == 'failed'
     if fail:

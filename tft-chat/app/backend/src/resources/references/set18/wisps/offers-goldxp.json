@@ -1,0 +1,1026 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "wisps-goldxp/32e363999f21",
+      "name": "Barter (base)",
+      "text": "increases the next unit's sale proceeds this round; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/b1b308d8c8c7",
+      "name": "Barter (upgraded)",
+      "text": "increases the next unit's sale proceeds this round; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/5962ed7e3216",
+      "name": "Beggar's Wisp (base)",
+      "text": "gold fallback when no Wisp can be found; 0 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4, 5-1–5-7, 3-5–4-1, 4-2–4-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/3c42125d7178",
+      "name": "Beggar's Wisp (upgraded)",
+      "text": "gold fallback when no Wisp can be found; 0 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4, 5-1–5-7, 3-5–4-1, 4-2–4-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/0497e35ea380",
+      "name": "Blood Money (base)",
+      "text": "gold from champion kills; 2 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/53c9dd7f8a05",
+      "name": "Blood Money (upgraded)",
+      "text": "gold from champion kills; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/f10e4a9a4026",
+      "name": "Bronze Spoon (base)",
+      "text": "immediate XP; 3 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/a6383531be3f",
+      "name": "Bronze Spoon (upgraded)",
+      "text": "immediate XP; 2 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/8afcd0988a24",
+      "name": "Coin Flip (base)",
+      "text": "gold conditional on a coin toss; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/d8c2ccb55677",
+      "name": "Coin Flip (upgraded)",
+      "text": "gold conditional on a coin toss; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/57f1d278eb03",
+      "name": "Die Roll (base)",
+      "text": "gold determined by a six-sided die; 2 gold; tier 1; offer windows 3-5–4-1, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/129062ea0389",
+      "name": "Die Roll (upgraded)",
+      "text": "gold determined by a six-sided die; 3 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/9ef677ca4eb6",
+      "name": "Experienced (base)",
+      "text": "immediate XP; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/a6556f8352b7",
+      "name": "Experienced (upgraded)",
+      "text": "immediate XP; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/c818a0294265",
+      "name": "Golden Goose (base)",
+      "text": "gold tied to the leading damage dealer's output; 1 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/f0978f577404",
+      "name": "Golden Goose (upgraded)",
+      "text": "gold tied to the leading damage dealer's output; 1 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/6ffcf63fa1f4",
+      "name": "Grow Up (base)",
+      "text": "immediate XP; 7 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/749b6d2c194a",
+      "name": "Grow Up (upgraded)",
+      "text": "immediate XP; 7 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/ca30678ed384",
+      "name": "Life Debt (base)",
+      "text": "gold scaled to missing player Health; 0 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 70 player health missing. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 70 player health missing.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/21c1c6884c3b",
+      "name": "Life Debt (upgraded)",
+      "text": "gold scaled to missing player Health; 0 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 70 player health missing. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 70 player health missing.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/084a23b91dc6",
+      "name": "Pocket Change (base)",
+      "text": "gold from one-star allied deaths; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: At least 2 1-star champions. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 1-star champions.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/f804ce1507c7",
+      "name": "Pocket Change (upgraded)",
+      "text": "gold from one-star allied deaths; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: At least 2 1-star champions. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 1-star champions.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/227586db861f",
+      "name": "Slow Study (base)",
+      "text": "XP from allies alive at a timed checkpoint; 4 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/95eda0828567",
+      "name": "Slow Study (upgraded)",
+      "text": "XP from allies alive at a timed checkpoint; 4 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/9fc4fa13fe72",
+      "name": "Truce (base)",
+      "text": "gold for both players; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/0b7182e016ae",
+      "name": "Truce (prismatic)",
+      "text": "gold for both players; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-goldxp/94698270cf3f",
+      "name": "Truce (upgraded)",
+      "text": "gold for both players; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    }
+  ]
+}

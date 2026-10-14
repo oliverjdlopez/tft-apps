@@ -7,8 +7,6 @@ from types import SimpleNamespace
 from domain.providers.context import (
     CONTEXT_DIR,
     ContextFile,
-    DEFAULT_CONTEXT_PROVIDER,
-    RepositoryContextProvider,
     discover_context_files,
     load_context_file,
     render_context_files,
@@ -16,13 +14,6 @@ from domain.providers.context import (
 )
 
 
-@pytest.fixture(autouse=True)
-def offline_context_selection(monkeypatch):
-    """Keep provider tests deterministic unless a test supplies its own runner."""
-    monkeypatch.setattr(
-        "domain.providers.context.load_config",
-        lambda: SimpleNamespace(secrets=SimpleNamespace(openai_api_key="")),
-    )
 
 
 def test_context_resources_support_markdown_and_json_files() -> None:
@@ -73,14 +64,6 @@ def test_selects_only_task_relevant_context_excerpts() -> None:
     assert "score" not in rendered.casefold()
 
 
-def test_context_selection_recognizes_common_compound_name_aliases(tmp_path: Path) -> None:
-    """Exercise compound aliases independently of the current champion roster."""
-    (tmp_path / "units.md").write_text(
-        "# Units\n\n- **Aurelion Sol** — AP caster\n", encoding="utf-8"
-    )
-    snippets = RepositoryContextProvider(tmp_path).select("Asol")
-
-    assert any("**Aurelion Sol**" in snippet.content for snippet in snippets)
 
 
 def test_context_selection_routes_artifacts_to_the_catalogue() -> None:
@@ -109,81 +92,12 @@ def test_context_selection_returns_nothing_for_unrelated_task_or_set() -> None:
     )
 
 
-def test_provider_selects_from_one_normalized_query() -> None:
-    snippets = select_context_snippets(
-        discover_context_files(),
-        "What role does Karma play?",
-        set_number=18,
-    )
-
-    assert any("Karma" in snippet.content for snippet in snippets)
-    assert DEFAULT_CONTEXT_PROVIDER.select("Hello, how are you?", set_number=18) == []
 
 
-def test_provider_selects_and_renders_multiple_context_files(tmp_path: Path) -> None:
-    (tmp_path / "units.md").write_text(
-        "# Units\n\n- **Riven** — adaptive bruiser\n",
-        encoding="utf-8",
-    )
-    (tmp_path / "traits.md").write_text(
-        "# Traits\n\n- **Space Groove** — a ramp trait\n",
-        encoding="utf-8",
-    )
-    provider = RepositoryContextProvider(tmp_path)
-
-    selected = provider.select("Riven Space Groove")
-
-    assert len(selected) == 2
-    rendered = provider.render(selected)
-    assert "Riven" in rendered
-    assert "Space Groove" in rendered
-    assert provider.select_and_render("Riven Space Groove") == rendered
 
 
-def test_context_provider_async_selection_uses_async_selector(
-    tmp_path: Path, monkeypatch
-) -> None:
-    (tmp_path / "units.md").write_text(
-        "# Units\n\n- **Riven** — adaptive bruiser\n",
-        encoding="utf-8",
-    )
-    provider = RepositoryContextProvider(tmp_path)
-
-    monkeypatch.setattr(
-        "domain.providers.context.load_config",
-        lambda: SimpleNamespace(
-            secrets=SimpleNamespace(openai_api_key="configured")
-        ),
-    )
-    monkeypatch.setattr(
-        "domain.providers.context._selector_agent",
-        lambda: SimpleNamespace(name="context_selector"),
-    )
-
-    async def fake_run(agent, prompt, *, max_turns):
-        assert agent.name == "context_selector"
-        assert '"query": "What role does Riven play?"' in prompt
-        assert max_turns == 1
-        return SimpleNamespace(final_output='{"selected_ids": [0]}')
-
-    monkeypatch.setattr("domain.providers.context.Runner.run", fake_run)
-
-    selected = asyncio.run(provider.aselect("What role does Riven play?"))
-
-    assert [snippet.content for snippet in selected] == [
-        "# Units\n\n- **Riven** — adaptive bruiser\n"
-    ]
 
 
-def test_context_provider_exposes_common_provider_lifecycle(tmp_path: Path) -> None:
-    path = tmp_path / "facts.md"
-    path.write_text("# Facts\n\nA fact about Riven.\n", encoding="utf-8")
-    provider = RepositoryContextProvider(tmp_path)
-
-    loaded = provider.load(path)
-
-    assert loaded == provider.discover()[0]
-    assert provider.select_and_render("Riven")
 
 
 def test_context_file_is_the_canonical_context_model_name(tmp_path: Path) -> None:
@@ -251,29 +165,6 @@ def test_set18_wisp_selection_preserves_offer_conditions_without_citations() -> 
     assert all("[Source]" not in snippet.content for snippet in snippets)
 
 
-def test_json_collection_is_returned_in_full(tmp_path: Path) -> None:
-    """Retrieve every JSON key, including entries with no lexical query overlap."""
-    path = tmp_path / "set18" / "facts.json"
-    path.parent.mkdir()
-    path.write_text(
-        json.dumps(
-            {
-                "string": "  exact string  ",
-                "nested": {"items": [1, True]},
-                "empty": "",
-            }
-        ),
-        encoding="utf-8",
-    )
-
-    provider = RepositoryContextProvider(tmp_path)
-    selected = provider.select("string nested empty", set_number=18)
-
-    assert len(selected) == 1
-    assert json.loads(selected[0].content) == {
-        "string": "  exact string  ", "nested": {"items": [1, True]}, "empty": "",
-    }
-    assert provider.select("string", set_number=17) == []
 
 
 def test_json_sources_reject_duplicate_keys_and_non_objects(tmp_path: Path) -> None:
@@ -289,49 +180,6 @@ def test_json_sources_reject_duplicate_keys_and_non_objects(tmp_path: Path) -> N
     assert files[0].json_values == ()
 
 
-def test_selector_receives_only_complete_file_and_key_options(tmp_path: Path, monkeypatch) -> None:
-    """Keep both selector entry points on indivisible source units."""
-    body = '# Alpha\n\nFirst paragraph.\n\n## Beta\n\n- second\n- third'
-    (tmp_path / 'reference.md').write_text(
-        '---\nname: reference\ndescription: Alpha Beta facts\n---\n' + body,
-        encoding='utf-8',
-    )
-    values = {'Alpha': {'nested': ['first', {'deep': 'second'}]}, 'Beta': [1, 2, 3]}
-    (tmp_path / 'facts.json').write_text(json.dumps(values), encoding='utf-8')
-    provider = RepositoryContextProvider(tmp_path)
-    monkeypatch.setattr(
-        'domain.providers.context.load_config',
-        lambda: SimpleNamespace(secrets=SimpleNamespace(openai_api_key='configured')),
-    )
-    monkeypatch.setattr('domain.providers.context._selector_agent', lambda: None)
-
-    def select_all(agent, prompt, *, max_turns):
-        """Inspect the real selector payload before selecting all complete units."""
-        from evals.context_selection.utils import validate_payload
-
-        payload = json.loads(prompt)
-        validate_payload(prompt, candidate_count=2)
-        parts = payload['parts']
-        assert len(parts) == 2
-        assert {part['type'] for part in parts} == {'markdown_file', 'json_collection'}
-        assert next(part['catalogue']['entries'] for part in parts if part['type'] == 'json_collection') == list(values)
-        for part in parts:
-            assert not {'summary', 'entities', 'aliases', 'topics', 'key_terms'} & part.keys()
-            assert 'content' not in part
-        return SimpleNamespace(final_output=json.dumps({
-            'selections': [{'need': 'Both facts', 'part_ids': [part['id'] for part in parts]}],
-        }))
-
-    async def async_select_all(agent, prompt, *, max_turns):
-        """Exercise identical options through the async SDK boundary."""
-        return select_all(agent, prompt, max_turns=max_turns)
-
-    monkeypatch.setattr('domain.providers.context.Runner.run_sync', select_all)
-    monkeypatch.setattr('domain.providers.context.Runner.run', async_select_all)
-    selected = provider.select('Alpha Beta')
-    assert len(selected) == 2
-    assert asyncio.run(provider.aselect('Alpha Beta')) == selected
-    assert 'description: Alpha Beta facts' not in provider.render(selected)
 
 
 def test_explicit_limits_reject_incomplete_context(tmp_path: Path) -> None:
@@ -368,56 +216,10 @@ def test_every_source_reaches_selector_without_lexical_gate(query: str) -> None:
     assert {candidate.snippet.path for candidate in candidates} == {
         source.path for source in files if source.format != "json" or source.json_values
     }
-    assert any(candidate.snippet.path.endswith("wisps-goldxp.md") for candidate in candidates)
+    assert any(candidate.snippet.path.endswith("offers-goldxp.md") for candidate in candidates)
     assert _shortlist_context_candidates(files, query, set_number=16, max_selected=None) == []
 
 
-def test_complete_wisp_pool_survives_selection_sync_and_async(monkeypatch) -> None:
-    """Keep all Wisp collections and every variant beyond the former budgets."""
-    monkeypatch.setattr(
-        "domain.providers.context.load_config",
-        lambda: SimpleNamespace(secrets=SimpleNamespace(openai_api_key="configured")),
-    )
-    monkeypatch.setattr("domain.providers.context._selector_agent", lambda: None)
-
-    def select_wisps(agent, prompt, *, max_turns):
-        """Select the entire population, as needed for a probability denominator."""
-        payload = json.loads(prompt)
-        assert payload["max_selected"] is None
-        ids = [part["id"] for part in payload["parts"] if "wisps" in part["source_id"]]
-        assert len(ids) > 12
-        return SimpleNamespace(final_output={"selections": [{"need": "Complete eligible pool", "part_ids": ids}]})
-
-    # Use the actual structured output type returned by the SDK.
-    from domain.assistants.models import ContextSelection
-
-    def run_sync(agent, prompt, *, max_turns):
-        """Return a validated source selection without making network calls."""
-        result = select_wisps(agent, prompt, max_turns=max_turns)
-        result.final_output = ContextSelection.model_validate(result.final_output)
-        return result
-
-    async def run_async(agent, prompt, *, max_turns):
-        """Mirror the same selection through the tool's asynchronous entry point."""
-        return run_sync(agent, prompt, max_turns=max_turns)
-
-    monkeypatch.setattr("domain.providers.context.Runner.run_sync", run_sync)
-    monkeypatch.setattr("domain.providers.context.Runner.run", run_async)
-    provider = RepositoryContextProvider()
-    selected = provider.select("Econ charm stage2 uniform odds", set_number=18)
-    assert asyncio.run(provider.aselect("Econ charm stage2 uniform odds", set_number=18)) == selected
-    assert len(provider.render(selected)) > 6000
-    sources = {source.path: source for source in provider.discover()}
-    for path, source in sources.items():
-        if "wisps" in path and source.format == "json":
-            recovered = {}
-            for snippet in selected:
-                if snippet.path == path:
-                    recovered.update(json.loads(snippet.content))
-            assert recovered == dict(source.json_values)
-    gold = next(snippet for snippet in selected if snippet.path.endswith("wisps-goldxp.json") and snippet.key == "stage-2")
-    assert "Coin Flip (base)" in json.loads(gold.content)
-    assert "Barter (base)" not in json.loads(gold.content)
 
 
 def test_large_documents_cannot_evict_collection_catalogue(tmp_path: Path) -> None:
@@ -454,7 +256,7 @@ def test_context_evaluation_measures_coverage_instead_of_compression() -> None:
 
     result = evaluate({
         "name": "complete_goldxp", "query": "GoldXP Wisp reference",
-        "required": [{"path": "wisps-goldxp.json", "content": ["Coin Flip", "Truce"]}],
+        "required": [{"path": "offers-goldxp.md", "content": ["Coin Flip", "Truce"]}],
     })
     assert result["offline_passed"]
     assert result["candidate_count"] == result["full_candidate_count"]
@@ -463,21 +265,6 @@ def test_context_evaluation_measures_coverage_instead_of_compression() -> None:
     assert unrelated["selected_count"] == 0
 
 
-def test_selector_cannot_silently_exceed_explicit_collection_limit(tmp_path: Path, monkeypatch) -> None:
-    """An over-limit model result must raise instead of dropping selected sources."""
-    (tmp_path / "one.md").write_text("# One\nRelevant alpha")
-    (tmp_path / "two.md").write_text("# Two\nRelevant beta")
-    monkeypatch.setattr(
-        "domain.providers.context.load_config",
-        lambda: SimpleNamespace(secrets=SimpleNamespace(openai_api_key="configured")),
-    )
-    monkeypatch.setattr("domain.providers.context._selector_agent", lambda: None)
-    monkeypatch.setattr(
-        "domain.providers.context.Runner.run_sync",
-        lambda *args, **kwargs: SimpleNamespace(final_output='{"selected_ids": [0, 1]}'),
-    )
-    with pytest.raises(ValueError, match="explicit context limit"):
-        RepositoryContextProvider(tmp_path).select("compare alpha beta", max_snippets=1)
 
 
 @pytest.mark.parametrize("window, expected", [
@@ -496,26 +283,6 @@ def test_wisp_stage_windows_preserve_overlap_and_unknowns(window, expected) -> N
     assert wisp_entry_stages(f"effect; offer windows {window}; Conditions: four units.") == expected
 
 
-def test_wisp_stage2_chunks_include_every_matching_variant_and_conditions() -> None:
-    """Check corpus-wide stage membership, including cross-stage and all-band entries."""
-    from domain.providers.utils import _all_context_candidates
-
-    files = discover_context_files()
-    candidates = _all_context_candidates(files, set_number=18)
-    for source in files:
-        if source.format != "json" or "/wisps-" not in source.path:
-            continue
-        chunks = [c for c in candidates if c.snippet.path == source.path]
-        assert chunks and all(c.snippet.key for c in chunks)
-        stage2 = next(c for c in chunks if c.snippet.key == "stage-2")
-        expected = {k: v for k, v in source.json_values if "2-1–2-7" in v}
-        assert json.loads(stage2.snippet.content) == expected
-        for chunk in chunks:
-            assert all(dict(source.json_values)[k] == v for k, v in json.loads(chunk.snippet.content).items())
-    gold_all = next(c for c in candidates if c.snippet.path.endswith("wisps-goldxp.json") and c.snippet.key == "stage-all")
-    assert list(json.loads(gold_all.snippet.content)) == ["Truce (prismatic)"]
-    general = [c for c in candidates if c.snippet.path.endswith("/wisps.json")]
-    assert len(general) == 1 and general[0].snippet.key is None
 
 
 def test_unrecognized_wisp_window_preserves_original_collection(tmp_path: Path) -> None:

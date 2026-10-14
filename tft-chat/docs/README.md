@@ -35,12 +35,14 @@ Docs are grouped by the part of the system they describe.
 
 - [Evidence displays](tool_groups/evidence.md): backend-owned evidence, reference-only display selection, and local controls.
 
-## Content providers
+## Resources
 
-- [Context provider](content_providers/context.md): context metadata, chunking,
-  local shortlisting, model reranking, prompt budgets, and evaluation.
-- [Skill provider](content_providers/skills.md): protocol-compatible skill
-  descriptions, selection, fallback ranking, and whole-workflow injection.
+- [Reference resources](content_providers/context.md): hierarchical discovery,
+  complete reads, structured record views, and source provenance.
+- [Resource layout](content_providers/resource-layout.md): stable IDs, strict YAML
+  metadata, authoring conventions, and offline validation.
+- [Skill resources](content_providers/skills.md): portable workflows and supporting
+  references, read under each assistant's permissions.
 
 ## Reference
 

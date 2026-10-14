@@ -19,6 +19,8 @@ in `domain/tools/__init__.py`, the same way group constants are added to
 
 The registered groups are:
 
+- [Resource reading](../content_providers/context.md): exact permitted reference and skill reads for progressive disclosure.
+
 - [Evidence displays](../tool_groups/evidence.md): reference-only initial display selection.
 - [Ranking](../tool_groups/ranking.md): name resolution and bounded, Pythonic
   rankings across units, items, and traits.
@@ -112,6 +114,6 @@ hand-written catalog differs from runtime membership.
 ## Focused validation
 
 ```bash
-uv run pytest -q tests/test_openai_tools.py tests/test_ranking_tools.py tests/test_cohort_tools.py tests/test_cohort_facts.py tests/test_rolldown_tool.py
+uv run pytest -q tests/test_openai_tools.py tests/test_ranking_tools.py tests/test_cohort_facts.py tests/test_rolldown_tool.py
 uv run pytest -q tests/test_assistants.py tests/test_chat_service.py
 ```

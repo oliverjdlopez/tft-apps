@@ -1,12 +1,11 @@
 # Set 18 context coverage and sources
 
 The Set 18 factual corpus lives in
-`app/backend/src/resources/context/set18/`. It uses the existing
-frontmatter fields (`name`, `description`, `kind`, `sets`), cost/rarity sections,
-bold entity entries and concise mechanical descriptions. Every document is
-restricted to `sets: 18` and has a unique `set-18-` name. This is the only
-retained runtime context corpus. Provider behavior and configured application
-set are unchanged.
+`app/backend/src/resources/references/set18/`. It now uses stable IDs, strict typed YAML metadata, hierarchical topic indexes,
+and complete read bodies. Seven typed Wisp JSON populations supply lossless stage
+views; ten prose JSON companions were consolidated into Markdown. See
+[resource layout](resource-layout.md) and the [migration receipt](resource-migration.json).
+Patch 18.1 baseline and patch 18.2 supplements retain their source disagreements.
 
 The original baseline reference date is **2026-09-06**, targeting **patch 18.1**, including
 Riot's August 31 balance and September 1 bug-fix notes. The patch-notes index
@@ -25,17 +24,17 @@ all paths, provenance, table repair and validation boundaries.
 
 | Resource under `context/set18/` | Coverage |
 | --- | --- |
-| `unit_context.md` | 65 champions, grouped by cost; traits and combat/scaling roles; Lux's nine origin variants and Adaptor form dependence |
+| `units/roster.md` | 65 champions, grouped by cost; traits and combat/scaling roles; Lux's nine origin variants and Adaptor form dependence |
 | `traits/major.md` | 11 shared origins plus the combined Eclipse mechanic |
 | `traits/horizontal.md` | 12 combat classes |
 | `traits/unique.md` | 12 exclusive or small traits with their owners |
 | `items/catalogue.md` | 104 completed, Radiant and Artifact entries; explicit removed-Artifact note |
 | `items/special.md` | 20 emblem families, bonus effects, special variants and component families |
 | `items/mechanic-items.md` | Temporary potions, permanent stat consumables and trait selectors |
-| `augment_context.md` | 246 distinct displayed augment names across the three rarities, including an explicitly disabled entry |
-| `mechanics/wisps.md` | Shop cadence, purchase restrictions, Blossom exceptions, stage bands, cooldown meaning and eligibility dimensions |
-| `mechanics/wisps-*.md` | 174 named Wisps across seven categories; 365 non-conflicting variant records with prices, tiers, windows, cooldowns, requirements, modes and augment exclusions |
-| `system_context.md` | Live Carousel, targeting, PvE-loot and encounter changes |
+| `augments/catalogue.md` | 246 distinct displayed augment names across the three rarities, including an explicitly disabled entry |
+| `wisps/rules.md` | Shop cadence, purchase restrictions, Blossom exceptions, stage bands, cooldown meaning and eligibility dimensions |
+| `wisps/offers-*.md` | 174 named Wisps across seven categories; 365 non-conflicting variant records with prices, tiers, windows, cooldowns, requirements, modes and augment exclusions |
+| `systems/overview.md` | Live Carousel, targeting, PvE-loot and encounter changes |
 
 The original baseline contains 17 Markdown context documents. Wisp effect descriptions, like the existing
 item and unit references, summarize mechanical identity instead of reproducing

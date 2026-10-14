@@ -20,16 +20,6 @@ from domain.assistants.registry import assistant_registry
 from domain.assistants.specs import AssistantSpec, load_assistant_spec
 from domain.assistants import token_logging
 from domain.assistants.utils import render_instruction_layers, wrap_task_input
-from domain.providers.context import (
-    DEFAULT_CONTEXT_PROVIDER,
-    ContextProvider,
-    ContextSnippet,
-)
-from domain.providers.skills import (
-    DEFAULT_SKILL_PROVIDER,
-    SkillDefinition,
-    SkillProvider,
-)
 from domain.constants import OpenAIModels, ReasoningEfforts
 from domain.tools.db_tools.cohort_tools import COHORT_TOOL_GROUP
 from domain.tools.db_tools.deltas import DELTA_TOOL_GROUP
@@ -82,43 +72,6 @@ def test_skill_allowlist_defaults_to_all_and_loads_named_entries(tmp_path: Path)
     )
 
 
-def test_instruction_rendering_enforces_skill_allowlist(monkeypatch) -> None:
-    """Instruction assembly drops preselected skills not granted by the spec."""
-    spec = AssistantSpec(
-        name="limited",
-        description="Limited",
-        handoff_description="Limited",
-        system_prompt="BASE",
-        task_prompt="",
-        path="limited/system.md",
-        skill_names=("allowed",),
-    )
-    monkeypatch.setattr(
-        "domain.assistants.assistant_registry.get_spec", lambda _name: spec
-    )
-
-    rendered = render_instruction_layers(
-        spec,
-        context_provider=DEFAULT_CONTEXT_PROVIDER,
-        skill_provider=DEFAULT_SKILL_PROVIDER,
-        skills=[
-            SkillDefinition(
-                name="allowed",
-                description="Allowed",
-                body="ALLOWED BODY",
-                path="allowed/SKILL.md",
-            ),
-            SkillDefinition(
-                name="denied",
-                description="Denied",
-                body="DENIED BODY",
-                path="denied/SKILL.md",
-            ),
-        ],
-    )
-
-    assert "ALLOWED BODY" in rendered
-    assert "DENIED BODY" not in rendered
 
 
 def test_assistant_specs_declare_prompt_context_policy() -> None:
@@ -230,55 +183,8 @@ def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
     assert root["tokens"]["instructions"] is None
 
 
-def test_instructions_render_references_and_skill_in_order(monkeypatch) -> None:
-    class FakeContextProvider:
-        def select(self, query, *, set_number=None, **_limits):
-            return [
-                ContextSnippet(
-                    context_file="units",
-                    path="units.md",
-                    content="RIVEN REFERENCE",
-                    line=1,
-                    score=100,
-                )
-            ]
-
-        def render(self, references):
-            assert references[0].content == "RIVEN REFERENCE"
-            return "CONTEXT: RIVEN REFERENCE"
-
-    class FakeSkillProvider:
-        def render(self, skills):
-            assert skills[0].name == "comparison"
-            return "SKILL: SKILL WORKFLOW"
-
-    rendered = render_instruction_layers(
-        assistant_spec("comp_expert"),
-        references=FakeContextProvider().select("Analyze Riven"),
-        context_provider=FakeContextProvider(),
-        skill_provider=FakeSkillProvider(),
-        base_instructions="BASE INSTRUCTIONS",
-        skills=[
-            SkillDefinition(
-                name="comparison",
-                description="Compare cohorts.",
-                body="SKILL WORKFLOW",
-                path="comparison/SKILL.md",
-            )
-        ],
-    )
-
-    assert rendered.index("BASE INSTRUCTIONS") < rendered.index("RIVEN REFERENCE")
-    assert rendered.index("RIVEN REFERENCE") < rendered.index("SKILL WORKFLOW")
 
 
-def test_transcript_rendering_denies_preselected_references() -> None:
-    """Transcript instructions reject references even if another caller selected them."""
-    reference = ContextSnippet(context_file='units', path='units.md', content='PRIVATE REFERENCE', line=1, score=1)
-    text = render_instruction_layers(assistant_spec('distill-transcript'),
-        context_provider=DEFAULT_CONTEXT_PROVIDER, skill_provider=DEFAULT_SKILL_PROVIDER,
-        references=[reference])
-    assert 'PRIVATE REFERENCE' not in text
 
 
 def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
@@ -386,10 +292,10 @@ def test_final_responder_owns_evidence_presentation() -> None:
     assert spec.repository_context is True
     assert "Markdown table" in spec.system_prompt
     assert spec.skill_names == ("tft-statistical-interpretation",)
-    assert spec.tool_group_keys == ("evidence",)
-    assert assistant_tool_names("final_responder") == ["present_evidence"]
+    assert spec.tool_group_keys == ("evidence", "context")
+    assert assistant_tool_names("final_responder") == ["present_evidence", "read_resource"]
     assert assistant_handoff_names("final_responder") == []
-    assert assistant_reachable_tool_names("final_responder") == ["present_evidence"]
+    assert assistant_reachable_tool_names("final_responder") == ["present_evidence", "read_resource"]
 
 
 def test_chat_hands_off_to_data_analyst() -> None:

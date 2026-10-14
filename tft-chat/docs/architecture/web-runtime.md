@@ -106,12 +106,12 @@ dashboard index.
 
 Chat obtains a fresh `AssistantInvocation` through `Assistant.prepare`, then
 supplies its typed `AssistantRunContext` and activity hooks to the runner and
-stream adapter. The instance owns a registry snapshot shared with its context
-and skill selectors. Skill selection considers the union of reachable eligible
-recipients' allowlists: chat is excluded, while other assistants can receive
-skills through repository context or an explicit nonempty skill list.
-Instruction rendering filters again per recipient; chat itself never receives
-skill bodies.
+stream adapter. The instance owns a registry snapshot and invocation-local
+resource library. Instructions expose only permitted root descriptions; index reads reveal
+children.
+`read_resource` returns exact complete reference or skill bodies on demand.
+Metadata and reads enforce set scope and each assistant's permissions. Chat
+cannot read skills. Source Activity events occur after successful read calls.
 Tracing and stream cleanup remain service-owned.
 `domain.runtime.activity.ActivityRunHooks` records tool-call IDs, owning agent,
 arguments, actual execution timestamps, and handoffs in that context. These

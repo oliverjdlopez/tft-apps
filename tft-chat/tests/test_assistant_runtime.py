@@ -1,362 +1,242 @@
-"""Verify consumer preparation, dynamic policy, and captured-run isolation."""
-
+"""Verify progressive reads, dynamic policy, and captured-run isolation."""
 from __future__ import annotations
 
 import asyncio
+import json
 from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
 from agents import RunContextWrapper
+from agents.tool_context import ToolContext
 
 from domain.assistants import Assistant, AssistantRegistry
 from domain.assistants.capture import capture
 from domain.assistants.specs import AssistantSpec
-from domain.providers.models import ContextSnippet, SkillDefinition
+from domain.resources.catalogue import resource_entries
+from domain.resources.library import build_library
 from domain.runtime.models import ToolActivity
+from domain.tools import get_tool
 
 
-class Providers:
-    """Supply deterministic selections and retain their unwrapped queries."""
+@pytest.fixture(autouse=True)
+def resources(monkeypatch, tmp_path):
+    """Supply a real metadata hierarchy and prevent model calls in preparation."""
+    import yaml
+    references, skills = tmp_path / 'references', tmp_path / 'skills'
+    references.mkdir()
+    skills.mkdir()
+    for resource_id, kind, parent, body in [
+        ('set18', 'index', None, 'Directory'),
+        ('set18/units', 'index', 'set18', 'Unit directory'),
+        ('set18/units/roster', 'reference', 'set18/units', 'PRIVATE REFERENCE'),
+        ('set17', 'index', None, 'OTHER SET SECRET'),
+    ]:
+        path = references / (resource_id.replace('/', '-') + '.md')
+        scope = resource_id.split('/')[0].removeprefix('set')
+        metadata = {'id': resource_id, 'title': resource_id, 'description': 'Discover resources',
+                    'kind': kind, 'parent': parent, 'sets': [scope]}
+        path.write_text('---\n' + yaml.safe_dump(metadata) + '---\n' + body)
+    for name in ('allowed', 'other'):
+        package = skills / name
+        package.mkdir()
+        (package / 'SKILL.md').write_text(f'---\nname: {name}\ndescription: {name} workflow\n---\nPRIVATE {name.upper()}')
+    monkeypatch.setattr('domain.assistants.runtime.get_library', lambda: build_library(references, skills))
 
-    def __init__(self):
-        """Initialize selections independent of repository files and services."""
-        self.queries = []
-        self.reference = ContextSnippet(
-            context_file="units", path="units.md", content="REFERENCE", line=1, score=1,
-        )
-        self.skill = SkillDefinition(
-            name="allowed", description="A workflow", body="SKILL", path="skill.md",
-        )
-        self.other_skill = SkillDefinition(
-            name="other", description="Another workflow", body="OTHER", path="other.md",
-        )
+    async def forbidden(*args, **kwargs):
+        """Fail if preparation or a resource read invokes another model."""
+        pytest.fail('Resource preparation/read made a model call')
 
-    async def aselect(self, query, **kwargs):
-        """Return factual or workflow selections according to the provider call."""
-        self.queries.append((query, kwargs))
-        return [self.reference] if "set_number" in kwargs else [self.skill, self.other_skill]
-
-    def render(self, resources):
-        """Render deterministic text for instruction-policy assertions."""
-        return "\n".join(
-            resource.content if isinstance(resource, ContextSnippet) else resource.body
-            for resource in resources
-        )
+    monkeypatch.setattr('domain.assistants.assistant.Runner.run', forbidden)
+    return references, skills
 
 
-def registry(*, resources=True, root_name="root", root_skill_names=()):
-    """Build an isolated graph with a nested handoff and restricted skills."""
-    root = AssistantSpec(
-        name=root_name, description="Root", handoff_description="Root",
-        system_prompt="ROOT", task_prompt="TASK", path="root/system.md",
-        model="gpt-6-luna", repository_context=resources,
-        handoff_names=("child",) if resources else (), skill_names=root_skill_names,
-    )
-    child = replace(
-        root, name="child", system_prompt="CHILD", task_prompt="",
-        handoff_names=("leaf",), skill_names=("allowed",),
-    )
-    leaf = replace(child, name="leaf", system_prompt="LEAF", handoff_names=(), skill_names=("other",))
+def registry(*, resources=True, root_name='root', root_skill_names=()):
+    """Build an isolated graph with nested handoffs and distinct permissions."""
+    root = AssistantSpec(name=root_name, description='Root', handoff_description='Root',
+                         system_prompt='ROOT', task_prompt='TASK', path='root/system.md',
+                         model='gpt-6-luna', repository_context=resources,
+                         tool_group_keys=('context',) if resources else (),
+                         handoff_names=('child',) if resources else (), skill_names=root_skill_names)
+    child = replace(root, name='child', system_prompt='CHILD', task_prompt='',
+                    handoff_names=('leaf',), skill_names=('allowed',))
+    leaf = replace(child, name='leaf', system_prompt='LEAF', handoff_names=(), skill_names=('other',))
     result = AssistantRegistry([root, child, leaf])
-    result.configure_tools(get_tool=lambda name: None, get_tool_group=lambda name: None,
-                           list_tools=lambda: [])
+    from domain.assistants.utils import configure_tools
+    configure_tools(result)
     return result
 
 
-def assistant(source=None, *, name="root", **kwargs):
-    """Create an instance with fake selectors and an explicit set scope."""
-    providers = Providers()
-    return Assistant(
-        name, registry=source or registry(), set_number=18,
-        context_provider=providers, skill_provider=providers, **kwargs,
-    ), providers
-
-
 def instructions(agent, invocation):
-    """Invoke the SDK instruction boundary without making a model call."""
+    """Exercise the same dynamic instruction callback used by the SDK."""
     return agent.instructions(RunContextWrapper(invocation.context), agent)
 
 
-def test_preparation_selects_once_and_renders_policy_at_every_depth():
-    """A shared run retains resources while respecting root and skill boundaries."""
-    instance, providers = assistant()
-    messages = [{"role": "user", "content": "Tell me about Riven"},
-                {"role": "assistant", "content": "A bruiser"},
-                {"role": "user", "content": "What about her items?"}]
-    invocation = asyncio.run(instance.prepare(messages, system="PREFIX", record=True))
-    assert len(providers.queries) == 2
-    assert all(query == "Tell me about Riven What about her items?" for query, _ in providers.queries)
-    assert providers.queries[0][1] == {"set_number": 18}
-    assert providers.queries[1][1] == {"allowed_names": ("allowed", "other")}
-    assert messages[-1]["content"] == "What about her items?"
-    assert invocation.input[-1]["content"] == "TASK\n\n## Input\n\nWhat about her items?"
+def read(invocation, agent, resource_id):
+    """Invoke the registered SDK tool with real typed context and agent identity."""
+    payload = json.dumps({'resource_id': resource_id})
+    ctx = ToolContext(context=invocation.context, agent=agent, tool_name='read_resource',
+                      tool_call_id='read', tool_arguments=payload)
+    return asyncio.run(get_tool('read_resource').on_invoke_tool(ctx, payload))
+
+
+def test_preparation_exposes_metadata_without_bodies_or_selection():
+    """Every handoff sees a permitted catalogue without any initial injection."""
+    messages = [{'role': 'user', 'content': 'Tell me about Riven'},
+                {'role': 'assistant', 'content': 'A bruiser'},
+                {'role': 'user', 'content': 'What about her items?'}]
+    timing = {}
+    invocation = asyncio.run(Assistant('root', registry=registry(), set_number=18).prepare(
+        messages, system='PREFIX', record=True, timing=timing))
+    assert invocation.input[-1]['content'] == 'TASK\n\n## Input\n\nWhat about her items?'
+    assert messages[-1]['content'] == 'What about her items?'
     root, child = invocation.agent, invocation.agent.handoffs[0]
     leaf = child.handoffs[0]
-    assert instructions(root, invocation) == "PREFIX\n\nROOT\n\nREFERENCE"
-    assert instructions(child, invocation) == "CHILD\n\nREFERENCE\n\nSKILL"
-    assert instructions(leaf, invocation) == "LEAF\n\nREFERENCE\n\nOTHER"
-    assert "OTHER" not in instructions(child, invocation)
-    assert instructions(root, invocation) == invocation.instructions["root"]
-    assert len(providers.queries) == 2
-    assert invocation.model_settings["child"]["model"] == "gpt-6-luna"
+    for agent in (root, child, leaf):
+        text = instructions(agent, invocation)
+        assert '"id": "set18"' in text
+        assert 'set18/units/roster' not in text
+        assert 'PRIVATE' not in text and 'set17' not in text
+    assert instructions(root, invocation).startswith('PREFIX\n\nROOT')
+    assert not instructions(child, invocation).startswith('PREFIX')
+    assert 'skill:allowed' in instructions(child, invocation)
+    assert 'skill:other' not in instructions(child, invocation)
+    assert 'skill:other' in instructions(leaf, invocation)
+    assert not invocation.context.resources.reads
+    assert 'resource_catalogue_ms' in timing
+    assert 'context_selection_ms' not in timing and 'skill_selection_ms' not in timing
+    assert invocation.instructions['root'] == instructions(root, invocation)
 
 
-def test_reused_instance_retains_definitions_but_never_run_state():
-    """Registry refreshes and another run cannot modify a prepared invocation."""
+def test_reads_return_complete_contents_and_track_only_actual_reads():
+    """A read produces tool output without adding resource bodies to instructions."""
+    invocation = asyncio.run(Assistant('root', registry=registry(), set_number=18).prepare('Question'))
+    child = invocation.agent.handoffs[0]
+    before = instructions(child, invocation)
+    reference = read(invocation, child, 'set18/units/roster')
+    skill = read(invocation, child, 'skill:allowed')
+    assert reference['complete'] and 'PRIVATE REFERENCE' in reference['content']
+    assert skill['content'] == 'PRIVATE ALLOWED' and skill['kind'] == 'skill'
+    assert instructions(child, invocation) == before
+    read(invocation, child, 'skill:allowed')
+    assert len(invocation.context.resources.reads) == 2
+    assert set(invocation.context.resources.reads) == {'set18/units/roster', 'skill:allowed'}
+
+
+@pytest.mark.parametrize('resource_id', ['skill:other', 'set17',
+                                         '../private.ini', 'reference:/etc/passwd', 'missing'])
+def test_read_denies_unknown_paths_sets_and_disallowed_skills(resource_id):
+    """Exact catalogue membership enforces references and skills alike."""
+    invocation = asyncio.run(Assistant('root', registry=registry(), set_number=18).prepare('Question'))
+    result = read(invocation, invocation.agent.handoffs[0], resource_id)
+    assert result['found'] is False and 'content' not in result
+    assert not invocation.context.resources.reads
+
+
+def test_chat_and_transcript_boundaries():
+    """Chat cannot read skills and transcript-only invocations have no resources."""
+    invocation = asyncio.run(Assistant('chat', registry=registry(root_name='chat', root_skill_names=('allowed',)),
+                                       set_number=18).prepare('Question'))
+    assert 'skill:allowed' not in instructions(invocation.agent, invocation)
+    assert read(invocation, invocation.agent, 'skill:allowed')['found'] is False
+    transcript = asyncio.run(Assistant('root', registry=registry(resources=False), set_number=18).prepare('Transcript'))
+    assert instructions(transcript.agent, transcript) == 'ROOT'
+    assert resource_entries(transcript.context.resources, 'root') == []
+
+
+def test_context_disabled_and_empty_allowlists_deny_reads():
+    """Explicit workflow permission can stand alone; empty access stays closed."""
     source = registry()
-    instance, providers = assistant(source)
     source.install(AssistantRegistry([
-        replace(source.get_spec(name), system_prompt="CHANGED")
-        for name in source.list_assistants()
+        replace(source.get_spec('root'), repository_context=False, skill_names=('allowed',)),
+        replace(source.get_spec('child'), repository_context=False, skill_names=()),
+        source.get_spec('leaf'),
     ]))
-    first = asyncio.run(instance.prepare("Question"))
-    second = asyncio.run(instance.prepare("Another question"))
-    assert instructions(first.agent, first).startswith("ROOT")
-    assert instructions(second.agent, second).startswith("ROOT")
-    assert first.agent is not second.agent
-    assert first.agent.handoffs[0] is not second.agent.handoffs[0]
-    assert first.context.evidence is not second.context.evidence
-    assert first.context.activity is not second.context.activity
-    assert first.hooks is not second.hooks
-    assert first.context.runtime.request_id != second.context.runtime.request_id
-    assert len(providers.queries) == 4
+    invocation = asyncio.run(Assistant('root', registry=source, set_number=18).prepare('Question'))
+    assert read(invocation, invocation.agent, 'skill:allowed')['found']
+    assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
+    assert resource_entries(invocation.context.resources, 'child') == []
 
 
-def test_captured_prompt_overrides_retain_policy_models_and_global_isolation():
-    """Frozen candidates replace bases without replacing dynamic callbacks."""
+def test_capture_and_run_state_are_isolated():
+    """Registry reloads and subsequent reads cannot mutate existing policy or state."""
     source = registry()
     graph = capture(source)
-    providers = Providers()
-    instance = Assistant.from_capture(
-        graph, "root", base_instructions_by_name={"child": "CANDIDATE"},
-        context_provider=providers, skill_provider=providers, set_number=18,
-    )
-    invocation = asyncio.run(instance.prepare("Question", record=True))
-    child = invocation.agent.handoffs[0]
-    assert instructions(child, invocation) == "CANDIDATE\n\nREFERENCE\n\nSKILL"
-    assert child.model == graph["specs"]["child"]["resolved_model"]
-    assert source.get_spec("child").system_prompt == "CHILD"
-    assert graph["specs"]["child"]["system_prompt"] == "CHILD"
-    assert invocation.input.startswith("TASK\n\n## Input")
+    instance = Assistant.from_capture(graph, 'root', set_number=18,
+                                      base_instructions_by_name={'child': 'CANDIDATE'})
+    first = asyncio.run(instance.prepare('Question'))
+    source.install(AssistantRegistry([replace(source.get_spec(name), system_prompt='CHANGED', skill_names=())
+                                      for name in source.list_assistants()]))
+    second = asyncio.run(instance.prepare('Another question'))
+    child = first.agent.handoffs[0]
+    assert instructions(child, first).startswith('CANDIDATE')
+    assert read(first, child, 'skill:allowed')['found']
+    assert not second.context.resources.reads
+    assert first.agent is not second.agent
+    assert first.context.evidence is not second.context.evidence
+    assert first.context.activity is not second.context.activity
+    assert child.model == graph['specs']['child']['resolved_model']
 
 
-def test_captured_empty_prompt_candidate_keeps_dynamic_resources():
-    """An explicit empty frozen prompt replaces the captured base, not policy."""
-    graph = capture(registry())
-    providers = Providers()
-    instance = Assistant.from_capture(
-        graph, "root", base_instructions_by_name={"child": ""},
-        context_provider=providers, skill_provider=providers, set_number=18,
-    )
-    invocation = asyncio.run(instance.prepare("Question"))
-    child = invocation.agent.handoffs[0]
-    assert graph["specs"]["child"]["system_prompt"] == "CHILD"
-    assert instructions(child, invocation) == "REFERENCE\n\nSKILL"
+def test_explicit_empty_captured_prompt_keeps_only_metadata():
+    """An empty prompt replacement must not restore the captured durable prompt."""
+    invocation = asyncio.run(Assistant.from_capture(capture(registry()), 'root', set_number=18,
+                        base_instructions_by_name={'child': ''}).prepare('Question'))
+    text = instructions(invocation.agent.handoffs[0], invocation)
+    assert text.startswith('## Available resources') and 'CHILD' not in text and 'PRIVATE' not in text
 
 
-def test_unused_resources_skip_selectors():
-    """Transcript-like roots do not perform irrelevant resource model calls."""
-    instance, providers = assistant(registry(resources=False))
-    invocation = asyncio.run(instance.prepare("Transcript"))
-    assert providers.queries == []
-    assert instructions(invocation.agent, invocation) == "ROOT"
-
-
-def test_chat_never_receives_skills_even_when_its_spec_allows_them():
-    """The chat root is excluded while eligible specialist handoffs still qualify."""
-    instance, providers = assistant(
-        registry(root_name="chat", root_skill_names=("allowed",)), name="chat",
-    )
-    invocation = asyncio.run(instance.prepare("Question"))
-    assert providers.queries[1][1] == {"allowed_names": ("allowed", "other")}
-    assert instructions(invocation.agent, invocation).endswith("REFERENCE")
-    assert instructions(invocation.agent.handoffs[0], invocation).endswith("REFERENCE\n\nSKILL")
-
-
-def test_contextualized_analytical_root_receives_its_allowed_skill():
-    """A directly invoked analyst is a valid skill recipient and selector source."""
-    source = AssistantRegistry([
-        replace(
-            registry(resources=False).get_spec("root"),
-            name="data_analyst", repository_context=True,
-            handoff_names=(), skill_names=("allowed",),
-        ),
-    ])
-    source.configure_tools(get_tool=lambda name: None, get_tool_group=lambda name: None,
-                           list_tools=lambda: [])
-    instance, providers = assistant(source, name="data_analyst")
-    invocation = asyncio.run(instance.prepare("Question"))
-    assert providers.queries[1][1] == {"allowed_names": ("allowed",)}
-    assert instructions(invocation.agent, invocation).endswith("REFERENCE\n\nSKILL")
-
-
-def test_non_contextual_root_can_explicitly_opt_into_skills():
-    """A named skill permission independently makes a no-facts root eligible."""
-    source = AssistantRegistry([
-        replace(
-            registry(resources=False).get_spec("root"),
-            name="custom_workflow", repository_context=False,
-            handoff_names=(), skill_names=("allowed",),
-        ),
-    ])
-    source.configure_tools(get_tool=lambda name: None, get_tool_group=lambda name: None,
-                           list_tools=lambda: [])
-    instance, providers = assistant(source, name="custom_workflow")
-    invocation = asyncio.run(instance.prepare("Question"))
-    assert providers.queries == [("Question", {"allowed_names": ("allowed",)})]
-    assert instructions(invocation.agent, invocation) == "ROOT\n\nSKILL"
-
-
-def test_unrestricted_recipient_opens_selector_pool_but_rendering_stays_scoped():
-    """Unrestricted access selects from all skills, while explicit recipients filter."""
+def test_tool_access_is_required_in_addition_to_resource_flags():
+    """A saved graph with no read tool does not gain resource access implicitly."""
     source = registry()
-    source.install(AssistantRegistry([
-        replace(source.get_spec("root"), skill_names=()),
-        replace(source.get_spec("child"), skill_names=None),
-        replace(source.get_spec("leaf"), skill_names=("allowed",)),
-    ]))
-    instance, providers = assistant(source)
-    invocation = asyncio.run(instance.prepare("Question"))
-    assert providers.queries[1][1] == {}
-    assert instructions(invocation.agent.handoffs[0], invocation).endswith("REFERENCE\n\nSKILL\nOTHER")
-    assert instructions(invocation.agent.handoffs[0].handoffs[0], invocation).endswith("REFERENCE\n\nSKILL")
+    source.install(AssistantRegistry([replace(source.get_spec(name), tool_group_keys=())
+                                      for name in source.list_assistants()]))
+    invocation = asyncio.run(Assistant('root', registry=source, set_number=18).prepare('Question'))
+    assert instructions(invocation.agent, invocation) == 'ROOT'
+    assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
 
 
-def test_non_contextual_handoff_is_not_a_skill_recipient():
-    """A skill allowlist alone cannot make a non-contextual assistant eligible."""
-    source = registry()
-    source.install(AssistantRegistry([
-        replace(source.get_spec("root"), name="chat", skill_names=None),
-        replace(source.get_spec("child"), repository_context=False, skill_names=None),
-        replace(source.get_spec("leaf"), skill_names=()),
-    ]))
-    instance, providers = assistant(source, name="chat")
-    invocation = asyncio.run(instance.prepare("Question"))
-    assert len(providers.queries) == 1
-    assert providers.queries[0][1] == {"set_number": 18}
-    assert "SKILL" not in instructions(invocation.agent.handoffs[0], invocation)
-
-
-def test_shipped_graph_routes_three_skills_to_analyst_and_one_to_responder():
-    """The production graph applies selection and allowlists at real recipients."""
-    skill_names = (
-        "tft-statistical-investigation",
-        "tft-statistical-interpretation",
-        "tft-unit-itemization",
-    )
-
-    class ShippedProviders(Providers):
-        """Avoid live selectors while exercising shipped assistant specs."""
-
-        async def aselect(self, query, **kwargs):
-            """Return all three named skills for the runtime's candidate union."""
-            self.queries.append((query, kwargs))
-            if "set_number" in kwargs:
-                return [self.reference]
-            return [
-                SkillDefinition(
-                    name=name, description=name, body=f"MARKER:{name}",
-                    path=f"{name}/SKILL.md",
-                )
-                for name in skill_names
-            ]
-
-        def render(self, resources):
-            """Render unique markers so access boundaries are easy to inspect."""
-            return "\n".join(
-                resource.content if isinstance(resource, ContextSnippet)
-                else resource.body
-                for resource in resources
-            )
-
-    def find_agent(agent, name):
-        """Find a named node in the freshly built production handoff graph."""
-        if agent.name == name:
-            return agent
-        for child in agent.handoffs:
-            found = find_agent(child, name)
-            if found is not None:
-                return found
-        return None
-
-    providers = ShippedProviders()
-    invocation = asyncio.run(Assistant(
-        "chat", set_number=18,
-        context_provider=providers, skill_provider=providers,
-    ).prepare("Compare item builds"))
-    analyst = find_agent(invocation.agent, "data_analyst")
-    responder = find_agent(invocation.agent, "final_responder")
-    assert analyst is not None and responder is not None
-    assert providers.queries[1][1] == {}
-    chat_text = instructions(invocation.agent, invocation)
-    analyst_text = instructions(analyst, invocation)
-    responder_text = instructions(responder, invocation)
-    assert all(f"MARKER:{name}" not in chat_text for name in skill_names)
-    assert all(f"MARKER:{name}" in analyst_text for name in skill_names)
-    assert "MARKER:tft-statistical-interpretation" in responder_text
-    assert "MARKER:tft-statistical-investigation" not in responder_text
-    assert "MARKER:tft-unit-itemization" not in responder_text
-
-
-def test_default_models_are_frozen_for_graph_and_selector_dependencies(monkeypatch):
-    """Operator configuration changes cannot split a captured invocation's models."""
-    source = registry()
-    source.install(AssistantRegistry([
-        replace(source.get_spec(name), model=None) for name in source.list_assistants()
-    ]))
-    settings = SimpleNamespace(models=SimpleNamespace(openai_model="initial-model"))
-    monkeypatch.setattr("core.config.load_config", lambda: settings)
-    instance = Assistant("root", registry=source, set_number=18)
-    settings.models.openai_model = "changed-model"
-    assert instance.build_agent().model == "initial-model"
-    assert instance.context_provider.registry.resolved_models["root"] == "initial-model"
-    assert instance.skill_provider.registry is instance.context_provider.registry
-
-
-def test_sync_and_async_entry_points_supply_the_same_run_contract(monkeypatch):
-    """Both execution APIs supply typed context, task wrappers, and fresh state."""
-    instance, _ = assistant(registry(resources=False))
+def test_sync_and_async_entry_points_supply_same_contract(monkeypatch):
+    """Both APIs retain typed state and original task wrapping."""
+    instance = Assistant('root', registry=registry(resources=False), set_number=18)
     contexts = []
 
     async def run(agent, *, input, context, hooks, **kwargs):
-        """Inspect invocation dependencies without an external runner."""
+        """Inspect execution without external generation."""
         contexts.append(context)
-        assert input == "TASK\n\n## Input\n\nQuestion"
-        assert callable(agent.instructions)
-        assert context.runtime.root_assistant == "root"
-        return SimpleNamespace(final_output="Answer")
+        assert input == 'TASK\n\n## Input\n\nQuestion' and callable(agent.instructions)
+        return SimpleNamespace(final_output='Answer')
 
-    monkeypatch.setattr("domain.assistants.assistant.Runner.run", run)
-    assert instance.run_sync("Question").final_output == "Answer"
-    assert asyncio.run(instance.run("Question")).final_output == "Answer"
+    monkeypatch.setattr('domain.assistants.assistant.Runner.run', run)
+    assert instance.run_sync('Question').final_output == 'Answer'
+    assert asyncio.run(instance.run('Question')).final_output == 'Answer'
     assert contexts[0] is not contexts[1]
 
 
-def test_run_sync_inside_event_loop_fails_without_creating_coroutine():
-    """An async consumer receives clear guidance without a leaked coroutine."""
-    instance, _ = assistant(registry(resources=False))
+def test_run_sync_inside_event_loop_fails_cleanly():
+    """Async consumers get clear guidance without leaking a coroutine."""
+    instance = Assistant('root', registry=registry(resources=False), set_number=18)
 
     async def run():
-        """Exercise a synchronous entry point in an already running loop."""
-        with pytest.raises(RuntimeError, match="await run"):
-            instance.run_sync("Question")
+        """Exercise the synchronous boundary inside a running loop."""
+        with pytest.raises(RuntimeError, match='await run'):
+            instance.run_sync('Question')
 
     asyncio.run(run())
 
 
 def test_failed_execution_finalizes_pending_activity(monkeypatch):
-    """A failed model run retains terminal states for unfinished tool calls."""
-    instance, _ = assistant(registry(resources=False))
+    """Failed model runs still finalize unfinished tool calls."""
+    instance = Assistant('root', registry=registry(resources=False), set_number=18)
     contexts = []
 
     async def fail(agent, *, context, **kwargs):
-        """Simulate failure after a tool has started."""
+        """Simulate failure after a tool starts."""
         contexts.append(context)
-        context.activity.calls["pending"] = ToolActivity("pending", "lookup")
-        raise ValueError("Mock failure")
+        context.activity.calls['pending'] = ToolActivity('pending', 'lookup')
+        raise ValueError('Mock failure')
 
-    monkeypatch.setattr("domain.assistants.assistant.Runner.run", fail)
-    with pytest.raises(ValueError, match="Mock failure"):
-        instance.run_sync("Question")
-    assert contexts[0].activity.calls["pending"].status == "failed"
+    monkeypatch.setattr('domain.assistants.assistant.Runner.run', fail)
+    with pytest.raises(ValueError, match='Mock failure'):
+        instance.run_sync('Question')
+    assert contexts[0].activity.calls['pending'].status == 'failed'

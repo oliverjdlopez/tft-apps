@@ -1,0 +1,2561 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "old_path": "context/set18/augment_context.md",
+      "id": "set18/augments/catalogue",
+      "new_path": "references/set18/augments/catalogue.md",
+      "sha256_before": "982ab31c9a38c6c181a8124c6b44c7904e889db4e5043d4837cb9ab40229004b"
+    },
+    {
+      "old_path": "context/set18/augments/blossoms-call.md",
+      "id": "set18/augments/blossoms-call",
+      "new_path": "references/set18/augments/blossoms-call.md",
+      "sha256_before": "9420b67eec7e66a0319a8fcb130e9659399370ef9adf0f36b375666142eecb78"
+    },
+    {
+      "old_path": "context/set18/augments/bonus-gift-sources-augment.md",
+      "id": "set18/augments/bonus-gift-sources-augment",
+      "new_path": "references/set18/augments/bonus-gift-sources-augment.md",
+      "sha256_before": "9b0c5ca3845fb0823f6e43a6099408ca3e807fc003b956a29f88960017de529b"
+    },
+    {
+      "old_path": "context/set18/augments/bonus-gift-sources-champion.md",
+      "id": "set18/augments/bonus-gift-sources-champion",
+      "new_path": "references/set18/augments/bonus-gift-sources-champion.md",
+      "sha256_before": "dfbcbf83aaff5c22c0c768d1742b231b07a4855e5eaabcfd4a9a47c4ffcf1243"
+    },
+    {
+      "old_path": "context/set18/augments/bonus-gift-sources-trait.md",
+      "id": "set18/augments/bonus-gift-sources-trait",
+      "new_path": "references/set18/augments/bonus-gift-sources-trait.md",
+      "sha256_before": "32ef5508c941d8d6bc08ffa814bf6bc0376b6b630bb2154f40567a70e7fa6f9e"
+    },
+    {
+      "old_path": "context/set18/augments/bonus-gift-sources-wisp.md",
+      "id": "set18/augments/bonus-gift-sources-wisp",
+      "new_path": "references/set18/augments/bonus-gift-sources-wisp.md",
+      "sha256_before": "4fdd2ea5bef476159b4abaa798b0f5f85f4e1693fdc0a1fdf4249bb58d7f491d"
+    },
+    {
+      "old_path": "context/set18/augments/bonus-gift.md",
+      "id": "set18/augments/bonus-gift",
+      "new_path": "references/set18/augments/bonus-gift.md",
+      "sha256_before": "c163d3065dce5723006bfaf3a05acbd55f230e5e5659997b5b1f87142fc5ff5f"
+    },
+    {
+      "old_path": "context/set18/augments/booster-pack.md",
+      "id": "set18/augments/booster-pack",
+      "new_path": "references/set18/augments/booster-pack.md",
+      "sha256_before": "4fd54172148371236d00b2b3c4d2f6faf71607dd688d83288fb1dbeee901591d"
+    },
+    {
+      "old_path": "context/set18/augments/call-to-chaos.md",
+      "id": "set18/augments/call-to-chaos",
+      "new_path": "references/set18/augments/call-to-chaos.md",
+      "sha256_before": "74ca9e6c4f6fb713dcfc4e8af8a260affd374ab4cb130c61407b0ee92ec4bd0e"
+    },
+    {
+      "old_path": "context/set18/augments/dark-ritual.md",
+      "id": "set18/augments/dark-ritual",
+      "new_path": "references/set18/augments/dark-ritual.md",
+      "sha256_before": "8e0a161bc91dabd6947178d5a62c52d531dd314ab2343a4af4a02970cab7391d"
+    },
+    {
+      "old_path": "context/set18/augments/expected-unexpectedness.md",
+      "id": "set18/augments/expected-unexpectedness",
+      "new_path": "references/set18/augments/expected-unexpectedness.md",
+      "sha256_before": "b06b23a4c41378cc85cdceace3d8eb99ddc675d334a72210dc66c4aa022ab7b7"
+    },
+    {
+      "old_path": "context/set18/augments/expedition.md",
+      "id": "set18/augments/expedition",
+      "new_path": "references/set18/augments/expedition.md",
+      "sha256_before": "4b970370bf3778c4c99524b92506a5ea3a46cf057b082216d84f1420d31362c9"
+    },
+    {
+      "old_path": "context/set18/augments/frontline-backline.md",
+      "id": "set18/augments/frontline-backline",
+      "new_path": "references/set18/augments/frontline-backline.md",
+      "sha256_before": "f8fdb663591c0e0dc9a839dee1cad8f2b3403d08026473ae2b67933e20de5d43"
+    },
+    {
+      "old_path": "context/set18/augments/golden-egg.md",
+      "id": "set18/augments/golden-egg",
+      "new_path": "references/set18/augments/golden-egg.md",
+      "sha256_before": "ff00a23dcb6e8184364bf1b7c3a354b8e96c9a454e9152fea86baa94ed1d5488"
+    },
+    {
+      "old_path": "context/set18/augments/hard-commit.md",
+      "id": "set18/augments/hard-commit",
+      "new_path": "references/set18/augments/hard-commit.md",
+      "sha256_before": "ed882ef89f599162654d87f56b8d9420d8ebee295bbe076b16f90c5742b574c2"
+    },
+    {
+      "old_path": "context/set18/augments/loaded-dice.md",
+      "id": "set18/augments/loaded-dice",
+      "new_path": "references/set18/augments/loaded-dice.md",
+      "sha256_before": "8d4d7d7cba533c81988a9f9e2d18a8b938201aa3b64ed1f765c0895fda29d10b"
+    },
+    {
+      "old_path": "context/set18/augments/magic-roll.md",
+      "id": "set18/augments/magic-roll",
+      "new_path": "references/set18/augments/magic-roll.md",
+      "sha256_before": "92e0efffc4bdb97eabd112bd6caa11872a12f600f1aa06800af422a7ed0c1020"
+    },
+    {
+      "old_path": "context/set18/augments/missed-connections-slice-of-life.md",
+      "id": "set18/augments/missed-connections-slice-of-life",
+      "new_path": "references/set18/augments/missed-connections-slice-of-life.md",
+      "sha256_before": "82109a40942ea43f755a994176eeefe22c6a97b13403adf854651ff6ebfa7e4e"
+    },
+    {
+      "old_path": "context/set18/augments/offer-restrictions.md",
+      "id": "set18/augments/offer-restrictions",
+      "new_path": "references/set18/augments/offer-restrictions.md",
+      "sha256_before": "0046d20da29458e280386eb6a12aefdb046b44eeb3ae601731916a900240b5d6"
+    },
+    {
+      "old_path": "context/set18/augments/offers-encounter.md",
+      "id": "set18/augments/offers-encounter",
+      "new_path": "references/set18/augments/offers-encounter.md",
+      "sha256_before": "77d17f0cf70a0bdbc06d64af1ea5d45891aeed38cee1b7df8d75b73e418cc05b"
+    },
+    {
+      "old_path": "context/set18/augments/offers-gold.md",
+      "id": "set18/augments/offers-gold",
+      "new_path": "references/set18/augments/offers-gold.md",
+      "sha256_before": "b046fd4c98ec7a0a0c673a1efda21931255161da4a7cb51fc0a02df154792412"
+    },
+    {
+      "old_path": "context/set18/augments/offers-prismatic.md",
+      "id": "set18/augments/offers-prismatic",
+      "new_path": "references/set18/augments/offers-prismatic.md",
+      "sha256_before": "8613003839a5fbaa93398097913a36bc2d2e90fbfb0e827fad2167287fb9af4b"
+    },
+    {
+      "old_path": "context/set18/augments/offers-silver.md",
+      "id": "set18/augments/offers-silver",
+      "new_path": "references/set18/augments/offers-silver.md",
+      "sha256_before": "f7c02838c12375140311a1b041d26692b88e1bf60023f68ab8c321fc31e94429"
+    },
+    {
+      "old_path": "context/set18/augments/other-rules.md",
+      "id": "set18/augments/other-rules",
+      "new_path": "references/set18/augments/other-rules.md",
+      "sha256_before": "73e8aa7f01cc9fd9b6d22d14ca75b2af347618ee20acffe045bce42b3cbf0853"
+    },
+    {
+      "old_path": "context/set18/augments/slightly-magic-roll.md",
+      "id": "set18/augments/slightly-magic-roll",
+      "new_path": "references/set18/augments/slightly-magic-roll.md",
+      "sha256_before": "725efa53995073c323ad69ba6887e5a3a69cb9dd81447c8126b5abb04aef404f"
+    },
+    {
+      "old_path": "context/set18/augments/solo-leveling.md",
+      "id": "set18/augments/solo-leveling",
+      "new_path": "references/set18/augments/solo-leveling.md",
+      "sha256_before": "91f815d0790e6df157557317ab0cccb641f5a0dc798abd15877bb7b4577c56b0"
+    },
+    {
+      "old_path": "context/set18/augments/trait-ladder.md",
+      "id": "set18/augments/trait-ladder",
+      "new_path": "references/set18/augments/trait-ladder.md",
+      "sha256_before": "7a65757d6cd1b8b0354c5f6372f06a31d06a0bcd688fa46eeb24c008023a1c53"
+    },
+    {
+      "old_path": "context/set18/augments/warpath.md",
+      "id": "set18/augments/warpath",
+      "new_path": "references/set18/augments/warpath.md",
+      "sha256_before": "f971dbcad66eb556a36f1433c58bb7be9d379133001c6831e2590967b541a9d7"
+    },
+    {
+      "old_path": "context/set18/items/catalogue.md",
+      "id": "set18/items/catalogue",
+      "new_path": "references/set18/items/catalogue.md",
+      "sha256_before": "65e57e36a6badefa32863d0ce4c3517985983d4f14ad1cebd148b5b4f8819484"
+    },
+    {
+      "old_path": "context/set18/items/emblem-recipes.md",
+      "id": "set18/items/emblem-recipes",
+      "new_path": "references/set18/items/emblem-recipes.md",
+      "sha256_before": "2dd9db50bf7218e265d0b34f83bd086576251ccdb93943f4efe2c01fc946c091"
+    },
+    {
+      "old_path": "context/set18/items/mechanic-items.md",
+      "id": "set18/items/mechanic-items",
+      "new_path": "references/set18/items/mechanic-items.md",
+      "sha256_before": "00710b1aed01b1c30b2c4e4119ba22a1fa15565d2f55a8c791cf45413d62c652"
+    },
+    {
+      "old_path": "context/set18/items/selected-effect-tables.md",
+      "id": "set18/items/selected-effect-tables",
+      "new_path": "references/set18/items/selected-effect-tables.md",
+      "sha256_before": "f1467e205dc4cf27a299ab7cc6dd03f7f4cb108fb2df5e876d1f51dde61aa783"
+    },
+    {
+      "old_path": "context/set18/items/special.md",
+      "id": "set18/items/special",
+      "new_path": "references/set18/items/special.md",
+      "sha256_before": "ad6e9dee7ae5a7056b36d70eea7ac5dd755d174e34ca07e3a6b43598fd5403b1"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-heroic-sacrifice-hand-of-baron.md",
+      "id": "set18/wisps/wisp-heroic-sacrifice-hand-of-baron",
+      "new_path": "references/set18/wisps/wisp-heroic-sacrifice-hand-of-baron.md",
+      "sha256_before": "5f853b767403558d85293d22ef13e6be71cc96b325f05a8bd08b5b0cb22a60d6"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offer-rules.md",
+      "id": "set18/wisps/wisp-offer-rules",
+      "new_path": "references/set18/wisps/wisp-offer-rules.md",
+      "sha256_before": "d6d7fd8d9a7b9ba3e938ed682ff241485ab78b9c887f8f96942c698c7db0bf0e"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offers-tier-1-base.md",
+      "id": "set18/wisps/wisp-offers-tier-1-base",
+      "new_path": "references/set18/wisps/wisp-offers-tier-1-base.md",
+      "sha256_before": "c8a270e90b306bfc8b203449e2f490c19b538b695e772d26dd9593826ca19b46"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offers-tier-1-blossom.md",
+      "id": "set18/wisps/wisp-offers-tier-1-blossom",
+      "new_path": "references/set18/wisps/wisp-offers-tier-1-blossom.md",
+      "sha256_before": "16ddf28a3b64ae7cde5056d0c87daf18d42ffd1b3d960e6cff05e81f2ff6d650"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offers-tier-2-base.md",
+      "id": "set18/wisps/wisp-offers-tier-2-base",
+      "new_path": "references/set18/wisps/wisp-offers-tier-2-base.md",
+      "sha256_before": "e6591bfb6d67646711edb1080bdeb7836b72e60b03ef793ab296f18416488fc7"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offers-tier-2-blossom.md",
+      "id": "set18/wisps/wisp-offers-tier-2-blossom",
+      "new_path": "references/set18/wisps/wisp-offers-tier-2-blossom.md",
+      "sha256_before": "4bb5f3e54b2efa5d88b6a58737facd8744e89265b8382effe1711f21bfb98a11"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offers-tier-3-base.md",
+      "id": "set18/wisps/wisp-offers-tier-3-base",
+      "new_path": "references/set18/wisps/wisp-offers-tier-3-base.md",
+      "sha256_before": "8f3578fbded072c8e18ca930119f6d6493965b212831cc5adbb46c90165f66a8"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offers-tier-3-blossom.md",
+      "id": "set18/wisps/wisp-offers-tier-3-blossom",
+      "new_path": "references/set18/wisps/wisp-offers-tier-3-blossom.md",
+      "sha256_before": "2ca66cc3c6dc6ae23a37ae1bab889d4f125ea31f6ba35ed40cc0f4ff2f3a5ebf"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-offers-tier-3-prismatic.md",
+      "id": "set18/wisps/wisp-offers-tier-3-prismatic",
+      "new_path": "references/set18/wisps/wisp-offers-tier-3-prismatic.md",
+      "sha256_before": "801fd9b309a8285cabe40a1fe169dccc7ca5526c9f9880350ee1cf2da53fa47e"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-potions-potioncraft.md",
+      "id": "set18/wisps/wisp-potions-potioncraft",
+      "new_path": "references/set18/wisps/wisp-potions-potioncraft.md",
+      "sha256_before": "c2a8797e35b32173a40e2f178b4562f14b5f3b649e0c3e0326c18afb89e23903"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-preppers.md",
+      "id": "set18/wisps/wisp-preppers",
+      "new_path": "references/set18/wisps/wisp-preppers.md",
+      "sha256_before": "32319921adb5a6a692a3df911e6512c8c58a8b5b35b6d2c81482c13612e24712"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisp-prismatic-blossom.md",
+      "id": "set18/wisps/wisp-prismatic-blossom",
+      "new_path": "references/set18/wisps/wisp-prismatic-blossom.md",
+      "sha256_before": "78b732e9a533b034ef1c9688a7a3a794419c4a4b671e3db9f67a6be3947a8403"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps-champion.md",
+      "id": "set18/wisps/offers-champion",
+      "new_path": "references/set18/wisps/offers-champion.md",
+      "sha256_before": "fc92464385afc6e2b605e034472fdcfdf0fe5152d2d617f8b41ff124f6e4f58a"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps-combat.md",
+      "id": "set18/wisps/offers-combat",
+      "new_path": "references/set18/wisps/offers-combat.md",
+      "sha256_before": "0df76d0a851535087cb1928888e217d44dd91e196473c153c7a23f11121270f0"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps-goldxp.md",
+      "id": "set18/wisps/offers-goldxp",
+      "new_path": "references/set18/wisps/offers-goldxp.md",
+      "sha256_before": "c671d976575a405bc931f839e0efa908591122a547802423b6755c27e2799f84"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps-item.md",
+      "id": "set18/wisps/offers-item",
+      "new_path": "references/set18/wisps/offers-item.md",
+      "sha256_before": "bf6154d6856395d355597be4c3980d20bfa3024d61cd2b99a101d8f246871966"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps-misc.md",
+      "id": "set18/wisps/offers-misc",
+      "new_path": "references/set18/wisps/offers-misc.md",
+      "sha256_before": "39cf69669b47c52a80ac0d84dcc15b063751ea20af0d216bda56b0c0bbf0bf91"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps-risky.md",
+      "id": "set18/wisps/offers-risky",
+      "new_path": "references/set18/wisps/offers-risky.md",
+      "sha256_before": "0f1e6723ec101dcd6284be540f79b5d090e11c7c8b7b2b5db5d7a79858ba7964"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps-shop.md",
+      "id": "set18/wisps/offers-shop",
+      "new_path": "references/set18/wisps/offers-shop.md",
+      "sha256_before": "ab157defe42c1358c2117f1f7c2e2da7aa2aee5fd84293d6d2768166a3127260"
+    },
+    {
+      "old_path": "context/set18/mechanics/wisps.md",
+      "id": "set18/wisps/rules",
+      "new_path": "references/set18/wisps/rules.md",
+      "sha256_before": "bfe900c9910db0783c9ee994437fb35356c025b83f9941b2a0dbe7ecdf3e9b83"
+    },
+    {
+      "old_path": "context/set18/system_context.md",
+      "id": "set18/systems/overview",
+      "new_path": "references/set18/systems/overview.md",
+      "sha256_before": "535f3ade754b6ed2f0a7c90c9213317a68b098137b8ee759587d7e784cba5f9c"
+    },
+    {
+      "old_path": "context/set18/systems/augment-tier-odds.md",
+      "id": "set18/systems/augment-tier-odds",
+      "new_path": "references/set18/systems/augment-tier-odds.md",
+      "sha256_before": "60bc957a5d04fd847c5f1d199e98895e3de758253a74e238c18ac2cb467bad7a"
+    },
+    {
+      "old_path": "context/set18/systems/encounters.md",
+      "id": "set18/systems/encounters",
+      "new_path": "references/set18/systems/encounters.md",
+      "sha256_before": "3c9028315b3839bbd929e9dac6b581505aa6ee688f97d44cfaf90209873781f8"
+    },
+    {
+      "old_path": "context/set18/systems/loot-orbs.md",
+      "id": "set18/systems/loot-orbs",
+      "new_path": "references/set18/systems/loot-orbs.md",
+      "sha256_before": "0aa49aaaf207603a2a82db585972fecb8124bb00e4f095646fbff7e8b65e7ecd"
+    },
+    {
+      "old_path": "context/set18/systems/player-damage.md",
+      "id": "set18/systems/player-damage",
+      "new_path": "references/set18/systems/player-damage.md",
+      "sha256_before": "aa90de34b6ecf62dc863d22601d9e1561249eedbb40444a8cbed439f96ae9f1d"
+    },
+    {
+      "old_path": "context/set18/systems/reference-conflicts.md",
+      "id": "set18/systems/reference-conflicts",
+      "new_path": "references/set18/systems/reference-conflicts.md",
+      "sha256_before": "9b0a9ea39aee6ee040a3729d30c7b1136ba9eaafc716de83d7cba0badb8b4936"
+    },
+    {
+      "old_path": "context/set18/systems/shops-pools-leveling.md",
+      "id": "set18/systems/shops-pools-leveling",
+      "new_path": "references/set18/systems/shops-pools-leveling.md",
+      "sha256_before": "a62a950b517caf6b8b3dd69621febb2b6eb89d07f20554b93a5524f0a2945c59"
+    },
+    {
+      "old_path": "context/set18/systems/solo-stage-one.md",
+      "id": "set18/systems/solo-stage-one",
+      "new_path": "references/set18/systems/solo-stage-one.md",
+      "sha256_before": "3bd27ac11207a466856ee88b7a52257c821859ab3aa0e88ab07595279bd583d4"
+    },
+    {
+      "old_path": "context/set18/traits/blackthorn-tables.md",
+      "id": "set18/traits/blackthorn-tables",
+      "new_path": "references/set18/traits/blackthorn-tables.md",
+      "sha256_before": "bf47480cfa600ab94c5777e9953740db28259f8f4ec1715d0b428070f25f148e"
+    },
+    {
+      "old_path": "context/set18/traits/blossom-tables.md",
+      "id": "set18/traits/blossom-tables",
+      "new_path": "references/set18/traits/blossom-tables.md",
+      "sha256_before": "d0c931a717eac14c74f470b39e0cf371938f90cfdc87ac87b635a6cc131e2748"
+    },
+    {
+      "old_path": "context/set18/traits/coven-tables.md",
+      "id": "set18/traits/coven-tables",
+      "new_path": "references/set18/traits/coven-tables.md",
+      "sha256_before": "7358e3a657a88024cbe33f74159294ec8346ee23e29908d88d9cbc3e7d2e6562"
+    },
+    {
+      "old_path": "context/set18/traits/elderwood-tables.md",
+      "id": "set18/traits/elderwood-tables",
+      "new_path": "references/set18/traits/elderwood-tables.md",
+      "sha256_before": "59ddad169691389d747183e76f883a12931e0c49137972a4eb54c84f3275143f"
+    },
+    {
+      "old_path": "context/set18/traits/fae-tables.md",
+      "id": "set18/traits/fae-tables",
+      "new_path": "references/set18/traits/fae-tables.md",
+      "sha256_before": "f922c78bfb09c2fa6ea2fb891a8023d0b8efb9fba873ab940287a95e41e9bef6"
+    },
+    {
+      "old_path": "context/set18/traits/horizontal.md",
+      "id": "set18/traits/horizontal",
+      "new_path": "references/set18/traits/horizontal.md",
+      "sha256_before": "e2023866a3c6e82ed53cc6226fde5381b62aa039f4adeaa831d7bc2aac6119e9"
+    },
+    {
+      "old_path": "context/set18/traits/lux-avatar-tables.md",
+      "id": "set18/traits/lux-avatar-tables",
+      "new_path": "references/set18/traits/lux-avatar-tables.md",
+      "sha256_before": "944de540d4fc1f00bf8d894d238163767458fc4fba2ba31b09cc423e7577322b"
+    },
+    {
+      "old_path": "context/set18/traits/major.md",
+      "id": "set18/traits/major",
+      "new_path": "references/set18/traits/major.md",
+      "sha256_before": "c84ba805a5ade00ba6be7cb02fb98d51149dcc9703572d1f7215e5c381b7e062"
+    },
+    {
+      "old_path": "context/set18/traits/primal-tables.md",
+      "id": "set18/traits/primal-tables",
+      "new_path": "references/set18/traits/primal-tables.md",
+      "sha256_before": "ce3e3ed4660b9eb2911fbb2bbdecc3fd214c1ac7cb0a8f7147bd337b5be6985e"
+    },
+    {
+      "old_path": "context/set18/traits/riftbeast-tables.md",
+      "id": "set18/traits/riftbeast-tables",
+      "new_path": "references/set18/traits/riftbeast-tables.md",
+      "sha256_before": "da6b35f830a07b55dbd8c5f0f29ae0a705df50ae64ed43eb59bc743d2840b160"
+    },
+    {
+      "old_path": "context/set18/traits/solar-lunar-eclipse-tables.md",
+      "id": "set18/traits/solar-lunar-eclipse-tables",
+      "new_path": "references/set18/traits/solar-lunar-eclipse-tables.md",
+      "sha256_before": "f7e527e7112f6652043f033b8bb5aaff30942857f4f5d9e7c1d684c5743ec8a5"
+    },
+    {
+      "old_path": "context/set18/traits/sprykin-tables.md",
+      "id": "set18/traits/sprykin-tables",
+      "new_path": "references/set18/traits/sprykin-tables.md",
+      "sha256_before": "741113b951e3cd9056287d867f871c57413cdc95efb0d5bcf789d56c9a9c9594"
+    },
+    {
+      "old_path": "context/set18/traits/unique.md",
+      "id": "set18/traits/unique",
+      "new_path": "references/set18/traits/unique.md",
+      "sha256_before": "d960c9924d90b8a9cc802879c104701fd6dc091c592b77c2e10a22a288a99a02"
+    },
+    {
+      "old_path": "context/set18/unit_context.md",
+      "id": "set18/units/roster",
+      "new_path": "references/set18/units/roster.md",
+      "sha256_before": "2c1455fdd222defaae6dfed6cd54f41e741ca24fc987e4075dad32ca953172ef"
+    }
+  ],
+  "removed_json_companions": [
+    {
+      "path": "context/set18/augment_context.json",
+      "sha256": "dd92c4bdd8fc185e7a241c3bf356e415ed76903fe15ce62a91c36928d6ca1091",
+      "target": "set18/augments/catalogue",
+      "entries": [
+        {
+          "name": "Augmented Power",
+          "appended": false
+        },
+        {
+          "name": "Backup Bows",
+          "appended": false
+        },
+        {
+          "name": "Band of Thieves",
+          "appended": false
+        },
+        {
+          "name": "Boxing Lessons",
+          "appended": false
+        },
+        {
+          "name": "Branching Out",
+          "appended": false
+        },
+        {
+          "name": "Branching Out+",
+          "appended": false
+        },
+        {
+          "name": "Called Shot",
+          "appended": false
+        },
+        {
+          "name": "Capital Gains I",
+          "appended": false
+        },
+        {
+          "name": "Caretaker's Ally",
+          "appended": false
+        },
+        {
+          "name": "Carve a Path",
+          "appended": false
+        },
+        {
+          "name": "Celestial Blessing I",
+          "appended": false
+        },
+        {
+          "name": "Champ Delivery",
+          "appended": false
+        },
+        {
+          "name": "Champ Delivery+",
+          "appended": false
+        },
+        {
+          "name": "Champ Delivery++",
+          "appended": false
+        },
+        {
+          "name": "Cognitive Tax",
+          "appended": false
+        },
+        {
+          "name": "Cognitive Tax+",
+          "appended": false
+        },
+        {
+          "name": "Component Buffet",
+          "appended": false
+        },
+        {
+          "name": "Corrosion",
+          "appended": false
+        },
+        {
+          "name": "Crafted Crafting",
+          "appended": false
+        },
+        {
+          "name": "Dummify",
+          "appended": false
+        },
+        {
+          "name": "Electrocharge I",
+          "appended": false
+        },
+        {
+          "name": "Expedition",
+          "appended": false
+        },
+        {
+          "name": "Extra Buckles",
+          "appended": false
+        },
+        {
+          "name": "Feeling Lucky",
+          "appended": false
+        },
+        {
+          "name": "Find Your Center",
+          "appended": false
+        },
+        {
+          "name": "Flowing Tears",
+          "appended": false
+        },
+        {
+          "name": "Focused Fire",
+          "appended": false
+        },
+        {
+          "name": "Forge A Friend",
+          "appended": false
+        },
+        {
+          "name": "Future Focused",
+          "appended": false
+        },
+        {
+          "name": "Glass Cannon I",
+          "appended": false
+        },
+        {
+          "name": "Good For Something I",
+          "appended": false
+        },
+        {
+          "name": "Group Hug I",
+          "appended": false
+        },
+        {
+          "name": "Healing Orbs I",
+          "appended": false
+        },
+        {
+          "name": "Iron Assets",
+          "appended": false
+        },
+        {
+          "name": "Item Grab Bag I",
+          "appended": false
+        },
+        {
+          "name": "Kick Start",
+          "appended": false
+        },
+        {
+          "name": "Kingslayer",
+          "appended": false
+        },
+        {
+          "name": "Late Game Specialist",
+          "appended": false
+        },
+        {
+          "name": "Latent Forge",
+          "appended": false
+        },
+        {
+          "name": "Loaded Dice",
+          "appended": false
+        },
+        {
+          "name": "Makeshift Armor I",
+          "appended": false
+        },
+        {
+          "name": "Missed Connections",
+          "appended": false
+        },
+        {
+          "name": "One, Two, Five!",
+          "appended": false
+        },
+        {
+          "name": "Ones Two Three",
+          "appended": false
+        },
+        {
+          "name": "Pandora's Bench",
+          "appended": false
+        },
+        {
+          "name": "Pandora's Items I",
+          "appended": false
+        },
+        {
+          "name": "Partial Ascension",
+          "appended": false
+        },
+        {
+          "name": "Patience Is A Virtue",
+          "appended": false
+        },
+        {
+          "name": "Quick Streaks",
+          "appended": false
+        },
+        {
+          "name": "Recombobulator",
+          "appended": false
+        },
+        {
+          "name": "Residual Magic",
+          "appended": false
+        },
+        {
+          "name": "Residual Magic +",
+          "appended": false
+        },
+        {
+          "name": "Residual Magic ++",
+          "appended": false
+        },
+        {
+          "name": "Rolling For Days",
+          "appended": false
+        },
+        {
+          "name": "Silver Destiny",
+          "appended": false
+        },
+        {
+          "name": "Silver Destiny+",
+          "appended": false
+        },
+        {
+          "name": "Silver Destiny++",
+          "appended": false
+        },
+        {
+          "name": "Silver Spoon",
+          "appended": false
+        },
+        {
+          "name": "Slice of Life",
+          "appended": false
+        },
+        {
+          "name": "Slightly Magic Roll",
+          "appended": false
+        },
+        {
+          "name": "Small Grab Bag",
+          "appended": false
+        },
+        {
+          "name": "Stand United",
+          "appended": false
+        },
+        {
+          "name": "Team Building",
+          "appended": false
+        },
+        {
+          "name": "The Tower",
+          "appended": false
+        },
+        {
+          "name": "Twin Guardians",
+          "appended": false
+        },
+        {
+          "name": "Verticality I",
+          "appended": false
+        },
+        {
+          "name": "Wisp Rebate",
+          "appended": false
+        },
+        {
+          "name": "Wisp Rebate+",
+          "appended": false
+        },
+        {
+          "name": "Young and Wild and Free",
+          "appended": false
+        },
+        {
+          "name": "Advanced Loan",
+          "appended": false
+        },
+        {
+          "name": "Advanced Loan+",
+          "appended": false
+        },
+        {
+          "name": "Arcane Viktor-y",
+          "appended": false
+        },
+        {
+          "name": "Ascension",
+          "appended": false
+        },
+        {
+          "name": "Backline Blueprint",
+          "appended": false
+        },
+        {
+          "name": "Beast Within",
+          "appended": false
+        },
+        {
+          "name": "Beast Within+",
+          "appended": false
+        },
+        {
+          "name": "Big Grab Bag",
+          "appended": false
+        },
+        {
+          "name": "Birthday Reunion",
+          "appended": false
+        },
+        {
+          "name": "Blossom's Call",
+          "appended": false
+        },
+        {
+          "name": "Bodyguard Training",
+          "appended": false
+        },
+        {
+          "name": "Bonus Gift",
+          "appended": false
+        },
+        {
+          "name": "Bonus Gift+",
+          "appended": false
+        },
+        {
+          "name": "Booster Pack",
+          "appended": false
+        },
+        {
+          "name": "Booster Pack+",
+          "appended": false
+        },
+        {
+          "name": "Booster Pack++",
+          "appended": false
+        },
+        {
+          "name": "Bronze For Life I",
+          "appended": false
+        },
+        {
+          "name": "Capital Gains II",
+          "appended": false
+        },
+        {
+          "name": "Caretaker's Favor",
+          "appended": false
+        },
+        {
+          "name": "Celestial Blessing II",
+          "appended": false
+        },
+        {
+          "name": "Challenger's Grace",
+          "appended": false
+        },
+        {
+          "name": "Chosen of the Sun",
+          "appended": false
+        },
+        {
+          "name": "Clear Mind",
+          "appended": false
+        },
+        {
+          "name": "Clockwork Accelerator",
+          "appended": false
+        },
+        {
+          "name": "Cluttered Mind",
+          "appended": false
+        },
+        {
+          "name": "Cognitive Overload",
+          "appended": false
+        },
+        {
+          "name": "Consuming Flora",
+          "appended": false
+        },
+        {
+          "name": "Cooking Pot",
+          "appended": false
+        },
+        {
+          "name": "Coven Acolyte",
+          "appended": false
+        },
+        {
+          "name": "Cry Me A River",
+          "appended": false
+        },
+        {
+          "name": "Cybernetic Implants",
+          "appended": false
+        },
+        {
+          "name": "Cybernetic Uplink",
+          "appended": false
+        },
+        {
+          "name": "Dark Ritual",
+          "appended": false
+        },
+        {
+          "name": "Duo Queue",
+          "appended": false
+        },
+        {
+          "name": "Early Learnings",
+          "appended": false
+        },
+        {
+          "name": "Electrocharge II",
+          "appended": false
+        },
+        {
+          "name": "Embiggen",
+          "appended": false
+        },
+        {
+          "name": "Epic Rolldown",
+          "appended": false
+        },
+        {
+          "name": "Epoch",
+          "appended": false
+        },
+        {
+          "name": "Epoch+",
+          "appended": false
+        },
+        {
+          "name": "Exclusive Customization",
+          "appended": false
+        },
+        {
+          "name": "Explosive Growth",
+          "appended": false
+        },
+        {
+          "name": "Explosive Growth+",
+          "appended": false
+        },
+        {
+          "name": "FOURcing",
+          "appended": false
+        },
+        {
+          "name": "Frontline Foundation",
+          "appended": false
+        },
+        {
+          "name": "Gain 21 Gold",
+          "appended": false
+        },
+        {
+          "name": "Gilded Steel",
+          "appended": false
+        },
+        {
+          "name": "Glass Cannon II",
+          "appended": false
+        },
+        {
+          "name": "Gold Destiny",
+          "appended": false
+        },
+        {
+          "name": "Gold Destiny+",
+          "appended": false
+        },
+        {
+          "name": "Group Hug II",
+          "appended": false
+        },
+        {
+          "name": "Hard Bargain",
+          "appended": false
+        },
+        {
+          "name": "Healing Orbs II",
+          "appended": false
+        },
+        {
+          "name": "Heart of Steel",
+          "appended": false
+        },
+        {
+          "name": "Heroic Grab Bag",
+          "appended": false
+        },
+        {
+          "name": "Heroic Grab Bag+",
+          "appended": false
+        },
+        {
+          "name": "Heroic Grab Bag++",
+          "appended": false
+        },
+        {
+          "name": "Hustler",
+          "appended": false
+        },
+        {
+          "name": "Infinity Protection",
+          "appended": false
+        },
+        {
+          "name": "Investment Strategy I",
+          "appended": false
+        },
+        {
+          "name": "It's Me, Baby",
+          "appended": false
+        },
+        {
+          "name": "Item Extraction",
+          "appended": false
+        },
+        {
+          "name": "Jeweled Lotus I",
+          "appended": false
+        },
+        {
+          "name": "Late Game Scaling",
+          "appended": false
+        },
+        {
+          "name": "Legion Of Threes",
+          "appended": false
+        },
+        {
+          "name": "Magic Roll",
+          "appended": false
+        },
+        {
+          "name": "Makeshift Armor II",
+          "appended": false
+        },
+        {
+          "name": "Malicious Monetization",
+          "appended": false
+        },
+        {
+          "name": "Max Build",
+          "appended": false
+        },
+        {
+          "name": "Money Hungry",
+          "appended": false
+        },
+        {
+          "name": "Money Hungry+",
+          "appended": false
+        },
+        {
+          "name": "NO SCOUT NO PIVOT",
+          "appended": false
+        },
+        {
+          "name": "Nature's Shelter",
+          "appended": false
+        },
+        {
+          "name": "Omega Riftbeast",
+          "appended": false
+        },
+        {
+          "name": "Pandora's Items II",
+          "appended": false
+        },
+        {
+          "name": "Patient Study",
+          "appended": false
+        },
+        {
+          "name": "Pilfer",
+          "appended": false
+        },
+        {
+          "name": "Plot Armor",
+          "appended": false
+        },
+        {
+          "name": "Portable Forge",
+          "appended": false
+        },
+        {
+          "name": "Promised Protection",
+          "appended": false
+        },
+        {
+          "name": "Replication",
+          "appended": false
+        },
+        {
+          "name": "Salvage Bin",
+          "appended": false
+        },
+        {
+          "name": "Salvage Bin+",
+          "appended": false
+        },
+        {
+          "name": "Seraphim's Staff",
+          "appended": false
+        },
+        {
+          "name": "Slammin'",
+          "appended": false
+        },
+        {
+          "name": "Slammin'+",
+          "appended": false
+        },
+        {
+          "name": "Small Furry Friend",
+          "appended": false
+        },
+        {
+          "name": "Solo Leveling",
+          "appended": false
+        },
+        {
+          "name": "Solo Plate",
+          "appended": false
+        },
+        {
+          "name": "Speedy Double Kill",
+          "appended": false
+        },
+        {
+          "name": "Spirit Of Redemption",
+          "appended": false
+        },
+        {
+          "name": "Spreading Roots",
+          "appended": false
+        },
+        {
+          "name": "Spreading Roots+",
+          "appended": false
+        },
+        {
+          "name": "Staffsmith",
+          "appended": false
+        },
+        {
+          "name": "Sun and Moon",
+          "appended": false
+        },
+        {
+          "name": "Sun and Moon+",
+          "appended": false
+        },
+        {
+          "name": "Swordsmith",
+          "appended": false
+        },
+        {
+          "name": "The Golden Dragon",
+          "appended": false
+        },
+        {
+          "name": "Time Skip",
+          "appended": false
+        },
+        {
+          "name": "Tons of Stats!",
+          "appended": false
+        },
+        {
+          "name": "Trade Sector",
+          "appended": false
+        },
+        {
+          "name": "Trade Sector+",
+          "appended": false
+        },
+        {
+          "name": "U.R.F",
+          "appended": false
+        },
+        {
+          "name": "Unrivaled",
+          "appended": false
+        },
+        {
+          "name": "Verticality II",
+          "appended": false
+        },
+        {
+          "name": "Warpath",
+          "appended": false
+        },
+        {
+          "name": "Weight The Worth",
+          "appended": false
+        },
+        {
+          "name": "Worth the Wait",
+          "appended": false
+        },
+        {
+          "name": "Woven Magic",
+          "appended": false
+        },
+        {
+          "name": "Band of Thieves II",
+          "appended": false
+        },
+        {
+          "name": "Band of Thieves II+",
+          "appended": false
+        },
+        {
+          "name": "Band of Thieves II++",
+          "appended": false
+        },
+        {
+          "name": "Baron's Lair",
+          "appended": false
+        },
+        {
+          "name": "Belt Overflow",
+          "appended": false
+        },
+        {
+          "name": "Birthday Present",
+          "appended": false
+        },
+        {
+          "name": "Bronze For Life II",
+          "appended": false
+        },
+        {
+          "name": "Build A Bud",
+          "appended": false
+        },
+        {
+          "name": "Buried Treasures III",
+          "appended": false
+        },
+        {
+          "name": "Call To Chaos",
+          "appended": false
+        },
+        {
+          "name": "Celestial Blessing III",
+          "appended": false
+        },
+        {
+          "name": "Comeback Story",
+          "appended": false
+        },
+        {
+          "name": "Commerce Core",
+          "appended": false
+        },
+        {
+          "name": "Component Quest",
+          "appended": false
+        },
+        {
+          "name": "Coronation",
+          "appended": false
+        },
+        {
+          "name": "Cursed Crown",
+          "appended": false
+        },
+        {
+          "name": "Deadlier Blades",
+          "appended": false
+        },
+        {
+          "name": "Deadlier Caps",
+          "appended": false
+        },
+        {
+          "name": "Flexible",
+          "appended": false
+        },
+        {
+          "name": "Forged In Strength",
+          "appended": false
+        },
+        {
+          "name": "Giant and Mighty",
+          "appended": false
+        },
+        {
+          "name": "Going Long",
+          "appended": false
+        },
+        {
+          "name": "Golden Gamble",
+          "appended": false
+        },
+        {
+          "name": "Golden Gamble+",
+          "appended": false
+        },
+        {
+          "name": "Golden Gamble++",
+          "appended": false
+        },
+        {
+          "name": "Hard Commit",
+          "appended": false
+        },
+        {
+          "name": "Hedge Fund",
+          "appended": false
+        },
+        {
+          "name": "Hold the Line",
+          "appended": false
+        },
+        {
+          "name": "Invested+",
+          "appended": false
+        },
+        {
+          "name": "Invested++",
+          "appended": false
+        },
+        {
+          "name": "Investment Strategy II",
+          "appended": false
+        },
+        {
+          "name": "Jeweled Lotus II",
+          "appended": false
+        },
+        {
+          "name": "Level Up!",
+          "appended": false
+        },
+        {
+          "name": "Living Forge",
+          "appended": false
+        },
+        {
+          "name": "Lucky Gloves",
+          "appended": false
+        },
+        {
+          "name": "Lucky Gloves+",
+          "appended": false
+        },
+        {
+          "name": "Luxury Subscription",
+          "appended": false
+        },
+        {
+          "name": "Master of All Origins",
+          "appended": false
+        },
+        {
+          "name": "Min-Max",
+          "appended": false
+        },
+        {
+          "name": "Money Monsoon",
+          "appended": false
+        },
+        {
+          "name": "Nesting Anvils",
+          "appended": false
+        },
+        {
+          "name": "Nesting Anvils+",
+          "appended": false
+        },
+        {
+          "name": "Nesting Dolls",
+          "appended": false
+        },
+        {
+          "name": "One Buff Two Buff",
+          "appended": false
+        },
+        {
+          "name": "Pandora's Items III",
+          "appended": false
+        },
+        {
+          "name": "Prismatic Destiny",
+          "appended": false
+        },
+        {
+          "name": "Prismatic Destiny+",
+          "appended": false
+        },
+        {
+          "name": "Prismatic Ticket",
+          "appended": false
+        },
+        {
+          "name": "Radiant Rascal",
+          "appended": false
+        },
+        {
+          "name": "Radiant Relics",
+          "appended": false
+        },
+        {
+          "name": "Retribution",
+          "appended": false
+        },
+        {
+          "name": "Shimmerscale Essence",
+          "appended": false
+        },
+        {
+          "name": "Shopping Spree",
+          "appended": false
+        },
+        {
+          "name": "Soul Awakening",
+          "appended": false
+        },
+        {
+          "name": "Sweet Treats",
+          "appended": false
+        },
+        {
+          "name": "Sword Overflow",
+          "appended": false
+        },
+        {
+          "name": "TONS of Stats!",
+          "appended": false
+        },
+        {
+          "name": "Tactician's Kitchen",
+          "appended": false
+        },
+        {
+          "name": "The Golden Egg",
+          "appended": false
+        },
+        {
+          "name": "The Trait Tree",
+          "appended": false
+        },
+        {
+          "name": "The Trait Tree+",
+          "appended": false
+        },
+        {
+          "name": "Trait Ladder",
+          "appended": false
+        },
+        {
+          "name": "Upward Mobility",
+          "appended": false
+        },
+        {
+          "name": "Urf's Grab Bag",
+          "appended": false
+        },
+        {
+          "name": "Verticality III",
+          "appended": false
+        },
+        {
+          "name": "Wand Overflow",
+          "appended": false
+        },
+        {
+          "name": "We Stick Together",
+          "appended": false
+        },
+        {
+          "name": "Worth the Wait II",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/items/catalogue.json",
+      "sha256": "4e1d1f6d7e4590242d3cf05a32c6424e90650845b4fe77e3f4535b4e1a24bc68",
+      "target": "set18/items/catalogue",
+      "entries": [
+        {
+          "name": "Adaptive Helm",
+          "appended": false
+        },
+        {
+          "name": "Archangel's Staff",
+          "appended": false
+        },
+        {
+          "name": "Bloodthirster",
+          "appended": false
+        },
+        {
+          "name": "Blue Buff",
+          "appended": false
+        },
+        {
+          "name": "Bramble Vest",
+          "appended": false
+        },
+        {
+          "name": "Crownguard",
+          "appended": false
+        },
+        {
+          "name": "Deathblade",
+          "appended": false
+        },
+        {
+          "name": "Dragon's Claw",
+          "appended": false
+        },
+        {
+          "name": "Edge of Night",
+          "appended": false
+        },
+        {
+          "name": "Evenshroud",
+          "appended": false
+        },
+        {
+          "name": "Gargoyle Stoneplate",
+          "appended": false
+        },
+        {
+          "name": "Giant Slayer",
+          "appended": false
+        },
+        {
+          "name": "Guinsoo's Rageblade",
+          "appended": false
+        },
+        {
+          "name": "Hand Of Justice",
+          "appended": false
+        },
+        {
+          "name": "Hextech Gunblade",
+          "appended": false
+        },
+        {
+          "name": "Infinity Edge",
+          "appended": false
+        },
+        {
+          "name": "Ionic Spark",
+          "appended": false
+        },
+        {
+          "name": "Jeweled Gauntlet",
+          "appended": false
+        },
+        {
+          "name": "Kraken's Fury",
+          "appended": false
+        },
+        {
+          "name": "Last Whisper",
+          "appended": false
+        },
+        {
+          "name": "Morellonomicon",
+          "appended": false
+        },
+        {
+          "name": "Nashor's Tooth",
+          "appended": false
+        },
+        {
+          "name": "Protector's Vow",
+          "appended": false
+        },
+        {
+          "name": "Quicksilver",
+          "appended": false
+        },
+        {
+          "name": "Rabadon's Deathcap",
+          "appended": false
+        },
+        {
+          "name": "Red Buff",
+          "appended": false
+        },
+        {
+          "name": "Spear of Shojin",
+          "appended": false
+        },
+        {
+          "name": "Spirit Visage",
+          "appended": false
+        },
+        {
+          "name": "Steadfast Heart",
+          "appended": false
+        },
+        {
+          "name": "Sterak's Gage",
+          "appended": false
+        },
+        {
+          "name": "Striker's Flail",
+          "appended": false
+        },
+        {
+          "name": "Sunfire Cape",
+          "appended": false
+        },
+        {
+          "name": "Tactician's Cape",
+          "appended": false
+        },
+        {
+          "name": "Tactician's Crown",
+          "appended": false
+        },
+        {
+          "name": "Tactician's Shield",
+          "appended": false
+        },
+        {
+          "name": "Thief's Gloves",
+          "appended": false
+        },
+        {
+          "name": "Titan's Resolve",
+          "appended": false
+        },
+        {
+          "name": "Void Staff",
+          "appended": false
+        },
+        {
+          "name": "Warmog's Armor",
+          "appended": false
+        },
+        {
+          "name": "Aegis of Dawn",
+          "appended": false
+        },
+        {
+          "name": "Aegis of Dusk",
+          "appended": false
+        },
+        {
+          "name": "Blighting Jewel",
+          "appended": false
+        },
+        {
+          "name": "Dawncore",
+          "appended": false
+        },
+        {
+          "name": "Eternal Pact",
+          "appended": false
+        },
+        {
+          "name": "Fishbones",
+          "appended": false
+        },
+        {
+          "name": "Flickerblades",
+          "appended": false
+        },
+        {
+          "name": "Forbidden Idol",
+          "appended": false
+        },
+        {
+          "name": "Gambler's Blade",
+          "appended": false
+        },
+        {
+          "name": "Gold Collector",
+          "appended": false
+        },
+        {
+          "name": "Hellfire Hatchet",
+          "appended": false
+        },
+        {
+          "name": "Horizon Focus",
+          "appended": false
+        },
+        {
+          "name": "Infinity Force",
+          "appended": false
+        },
+        {
+          "name": "Lich Bane",
+          "appended": false
+        },
+        {
+          "name": "Lightshield Crest",
+          "appended": false
+        },
+        {
+          "name": "Luden's Tempest",
+          "appended": false
+        },
+        {
+          "name": "Manazane",
+          "appended": false
+        },
+        {
+          "name": "Mittens",
+          "appended": false
+        },
+        {
+          "name": "Mogul's Mail",
+          "appended": false
+        },
+        {
+          "name": "Rapid Firecannon",
+          "appended": false
+        },
+        {
+          "name": "Seeker's Armguard",
+          "appended": false
+        },
+        {
+          "name": "Silvermere Dawn",
+          "appended": false
+        },
+        {
+          "name": "Statikk Shiv",
+          "appended": false
+        },
+        {
+          "name": "Talisman of Ascension",
+          "appended": false
+        },
+        {
+          "name": "The Indomitable",
+          "appended": false
+        },
+        {
+          "name": "Titanic Hydra",
+          "appended": false
+        },
+        {
+          "name": "Void Gauntlet",
+          "appended": false
+        },
+        {
+          "name": "Wit's End",
+          "appended": false
+        },
+        {
+          "name": "Zhonya's Paradox",
+          "appended": false
+        },
+        {
+          "name": "Radiant Adaptive Helm",
+          "appended": false
+        },
+        {
+          "name": "Radiant Archangel's Staff",
+          "appended": false
+        },
+        {
+          "name": "Radiant Bloodthirster",
+          "appended": false
+        },
+        {
+          "name": "Radiant Blue Buff",
+          "appended": false
+        },
+        {
+          "name": "Radiant Bramble Vest",
+          "appended": false
+        },
+        {
+          "name": "Radiant Crownguard",
+          "appended": false
+        },
+        {
+          "name": "Radiant Deathblade",
+          "appended": false
+        },
+        {
+          "name": "Radiant Dragon's Claw",
+          "appended": false
+        },
+        {
+          "name": "Radiant Edge of Night",
+          "appended": false
+        },
+        {
+          "name": "Radiant Evenshroud",
+          "appended": false
+        },
+        {
+          "name": "Radiant Gargoyle Stoneplate",
+          "appended": false
+        },
+        {
+          "name": "Radiant Giant Slayer",
+          "appended": false
+        },
+        {
+          "name": "Radiant Guinsoo's Rageblade",
+          "appended": false
+        },
+        {
+          "name": "Radiant Hand of Justice",
+          "appended": false
+        },
+        {
+          "name": "Radiant Hextech Gunblade",
+          "appended": false
+        },
+        {
+          "name": "Radiant Infinity Edge",
+          "appended": false
+        },
+        {
+          "name": "Radiant Ionic Spark",
+          "appended": false
+        },
+        {
+          "name": "Radiant Jeweled Gauntlet",
+          "appended": false
+        },
+        {
+          "name": "Radiant Kraken's Fury",
+          "appended": false
+        },
+        {
+          "name": "Radiant Last Whisper",
+          "appended": false
+        },
+        {
+          "name": "Radiant Morellonomicon",
+          "appended": false
+        },
+        {
+          "name": "Radiant Nashor's Tooth",
+          "appended": false
+        },
+        {
+          "name": "Radiant Protector's Vow",
+          "appended": false
+        },
+        {
+          "name": "Radiant Quicksilver",
+          "appended": false
+        },
+        {
+          "name": "Radiant Rabadon's Deathcap",
+          "appended": false
+        },
+        {
+          "name": "Radiant Red Buff",
+          "appended": false
+        },
+        {
+          "name": "Radiant Spear of Shojin",
+          "appended": false
+        },
+        {
+          "name": "Radiant Spirit Visage",
+          "appended": false
+        },
+        {
+          "name": "Radiant Steadfast Heart",
+          "appended": false
+        },
+        {
+          "name": "Radiant Sterak's Gage",
+          "appended": false
+        },
+        {
+          "name": "Radiant Striker's Flail",
+          "appended": false
+        },
+        {
+          "name": "Radiant Sunfire Cape",
+          "appended": false
+        },
+        {
+          "name": "Radiant Thief's Gloves",
+          "appended": false
+        },
+        {
+          "name": "Radiant Titan's Resolve",
+          "appended": false
+        },
+        {
+          "name": "Radiant Void Staff",
+          "appended": false
+        },
+        {
+          "name": "Radiant Warmog's Armor",
+          "appended": false
+        },
+        {
+          "name": "Death's Defiance, Hullcrusher, Sniper's Focus",
+          "appended": true
+        }
+      ]
+    },
+    {
+      "path": "context/set18/items/mechanic-items.json",
+      "sha256": "f5af6bde91ce398fdcf23be484df312de3718b4a1fe2b3ce4ad97727a4ab51d2",
+      "target": "set18/items/mechanic-items",
+      "entries": [
+        {
+          "name": "Blast Potion, Health Potion, Mana Potion",
+          "appended": false
+        },
+        {
+          "name": "Doodad Jar / Bag / Sack",
+          "appended": false
+        },
+        {
+          "name": "Knick-Knack Jar / Bag / Sack",
+          "appended": false
+        },
+        {
+          "name": "Thingamajig Jar / Bag / Sack",
+          "appended": false
+        },
+        {
+          "name": "Alpha Mark",
+          "appended": false
+        },
+        {
+          "name": "Sprykin rider selection",
+          "appended": false
+        },
+        {
+          "name": "Emerald Aspect pairing",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/items/special.json",
+      "sha256": "bf48d74a23320490b7d11119260f299176430838d70eda255a4084837a89fb90",
+      "target": "set18/items/special",
+      "entries": [
+        {
+          "name": "Fae Emblem",
+          "appended": false
+        },
+        {
+          "name": "Hunter Emblem",
+          "appended": false
+        },
+        {
+          "name": "Inferno Emblem",
+          "appended": false
+        },
+        {
+          "name": "Rapidfire Emblem",
+          "appended": false
+        },
+        {
+          "name": "Elderwood Emblem",
+          "appended": false
+        },
+        {
+          "name": "Ravager Emblem",
+          "appended": false
+        },
+        {
+          "name": "Sprykin Emblem",
+          "appended": false
+        },
+        {
+          "name": "Vanguard Emblem",
+          "appended": false
+        },
+        {
+          "name": "Blossom Emblem",
+          "appended": false
+        },
+        {
+          "name": "Spellweaver Emblem",
+          "appended": false
+        },
+        {
+          "name": "Invoker Emblem",
+          "appended": false
+        },
+        {
+          "name": "Lunar Emblem",
+          "appended": false
+        },
+        {
+          "name": "Brawler Emblem",
+          "appended": false
+        },
+        {
+          "name": "Blackthorn Emblem",
+          "appended": false
+        },
+        {
+          "name": "Executioner Emblem",
+          "appended": false
+        },
+        {
+          "name": "Primal Emblem",
+          "appended": false
+        },
+        {
+          "name": "Coven Emblem",
+          "appended": false
+        },
+        {
+          "name": "Defender Emblem",
+          "appended": false
+        },
+        {
+          "name": "Flora Fatalis Emblem",
+          "appended": false
+        },
+        {
+          "name": "Juggernaut Emblem",
+          "appended": false
+        },
+        {
+          "name": "Consuming Flora emblem",
+          "appended": false
+        },
+        {
+          "name": "Radiant Lucky Item Chest",
+          "appended": false
+        },
+        {
+          "name": "Phantom Emblem",
+          "appended": false
+        },
+        {
+          "name": "Phantom Armor / Phantom Vest / Phantom Gloves",
+          "appended": false
+        },
+        {
+          "name": "B.F. Sword, Recurve Bow, Needlessly Large Rod, Tear of the Goddess, Chain Vest, Negatron Cloak, Giant's Belt, Sparring Gloves",
+          "appended": false
+        },
+        {
+          "name": "Spatula and Frying Pan",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/mechanics/wisps.json",
+      "sha256": "21caaa92ee19049da2af844fab9507bd50c229c15592d413e6466f40cebd146d",
+      "target": "set18/wisps/rules",
+      "entries": [
+        {
+          "name": "Wisps",
+          "appended": false
+        },
+        {
+          "name": "Planning phase",
+          "appended": false
+        },
+        {
+          "name": "Late combat guarantee",
+          "appended": false
+        },
+        {
+          "name": "Categories",
+          "appended": false
+        },
+        {
+          "name": "Blossom Wisps",
+          "appended": false
+        },
+        {
+          "name": "Forest Mage",
+          "appended": false
+        },
+        {
+          "name": "Early",
+          "appended": true
+        },
+        {
+          "name": "EarlyMid",
+          "appended": true
+        },
+        {
+          "name": "Mid",
+          "appended": true
+        },
+        {
+          "name": "MidLate",
+          "appended": true
+        },
+        {
+          "name": "Late",
+          "appended": true
+        },
+        {
+          "name": "VeryLate",
+          "appended": true
+        },
+        {
+          "name": "Re-offer cooldown",
+          "appended": false
+        },
+        {
+          "name": "Wisp eligibility",
+          "appended": false
+        },
+        {
+          "name": "Residual Magic / + / ++",
+          "appended": false
+        },
+        {
+          "name": "Wisp Rebate / +",
+          "appended": false
+        },
+        {
+          "name": "Blossom's Call",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/system_context.json",
+      "sha256": "1fa0dfdc4b3b4d3b889f347d2252381bb2359fbb0b1297ba34c9a65a0c3a6fe1",
+      "target": "set18/systems/overview",
+      "entries": [
+        {
+          "name": "Carousel",
+          "appended": false
+        },
+        {
+          "name": "Crowd-control targeting",
+          "appended": false
+        },
+        {
+          "name": "Missed PvE loot",
+          "appended": false
+        },
+        {
+          "name": "Opening encounters",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/traits/horizontal.json",
+      "sha256": "3da97916c43f3410efd1061e6c921407f7953bb1d4ec0741f777f8765ab318d8",
+      "target": "set18/traits/horizontal",
+      "entries": [
+        {
+          "name": "Adaptor",
+          "appended": false
+        },
+        {
+          "name": "Brawler",
+          "appended": false
+        },
+        {
+          "name": "Defender",
+          "appended": false
+        },
+        {
+          "name": "Executioner",
+          "appended": false
+        },
+        {
+          "name": "Hunter",
+          "appended": false
+        },
+        {
+          "name": "Invoker",
+          "appended": false
+        },
+        {
+          "name": "Juggernaut",
+          "appended": false
+        },
+        {
+          "name": "Rapidfire",
+          "appended": false
+        },
+        {
+          "name": "Ravager",
+          "appended": false
+        },
+        {
+          "name": "Spellweaver",
+          "appended": false
+        },
+        {
+          "name": "Summoner",
+          "appended": false
+        },
+        {
+          "name": "Vanguard",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/traits/major.json",
+      "sha256": "5657eeeb6d4532cb39cdd2ee2dee39ceaa4f1ec16ef94e6adec5785d94e5e60b",
+      "target": "set18/traits/major",
+      "entries": [
+        {
+          "name": "Blackthorn",
+          "appended": false
+        },
+        {
+          "name": "Blossom",
+          "appended": false
+        },
+        {
+          "name": "Coven",
+          "appended": false
+        },
+        {
+          "name": "Elderwood",
+          "appended": false
+        },
+        {
+          "name": "Fae",
+          "appended": false
+        },
+        {
+          "name": "Inferno",
+          "appended": false
+        },
+        {
+          "name": "Lunar",
+          "appended": false
+        },
+        {
+          "name": "Primal",
+          "appended": false
+        },
+        {
+          "name": "Riftbeast",
+          "appended": false
+        },
+        {
+          "name": "Solar",
+          "appended": false
+        },
+        {
+          "name": "Sprykin",
+          "appended": false
+        },
+        {
+          "name": "Eclipse",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/traits/unique.json",
+      "sha256": "4fd80a5d4b3b07da9c6d2c8f70f7a5f499cdd08e79348e19a879ce584c61b569",
+      "target": "set18/traits/unique",
+      "entries": [
+        {
+          "name": "Attuned",
+          "appended": false
+        },
+        {
+          "name": "Avatar",
+          "appended": false
+        },
+        {
+          "name": "Apex Predator",
+          "appended": false
+        },
+        {
+          "name": "Bounty Seeker",
+          "appended": false
+        },
+        {
+          "name": "Caustic",
+          "appended": false
+        },
+        {
+          "name": "Emerald Aspect",
+          "appended": false
+        },
+        {
+          "name": "Flora Fatalis",
+          "appended": false
+        },
+        {
+          "name": "Greenfather",
+          "appended": false
+        },
+        {
+          "name": "Monolith",
+          "appended": false
+        },
+        {
+          "name": "Old Growth",
+          "appended": false
+        },
+        {
+          "name": "Rival",
+          "appended": false
+        },
+        {
+          "name": "Thornmaiden",
+          "appended": false
+        }
+      ]
+    },
+    {
+      "path": "context/set18/unit_context.json",
+      "sha256": "90cb750fcd2f77322421c9387c4c7a692aa95f5e5b625986e67bd3dcb25f626a",
+      "target": "set18/units/roster",
+      "entries": [
+        {
+          "name": "Akali",
+          "appended": false
+        },
+        {
+          "name": "Camille",
+          "appended": false
+        },
+        {
+          "name": "Cinderling",
+          "appended": false
+        },
+        {
+          "name": "Karma",
+          "appended": false
+        },
+        {
+          "name": "Kobuko",
+          "appended": false
+        },
+        {
+          "name": "Leona",
+          "appended": false
+        },
+        {
+          "name": "Ornn",
+          "appended": false
+        },
+        {
+          "name": "Pebbles",
+          "appended": false
+        },
+        {
+          "name": "Rakan",
+          "appended": false
+        },
+        {
+          "name": "Rek'Sai",
+          "appended": false
+        },
+        {
+          "name": "Varus",
+          "appended": false
+        },
+        {
+          "name": "Veigar",
+          "appended": false
+        },
+        {
+          "name": "Xayah",
+          "appended": false
+        },
+        {
+          "name": "Yorick",
+          "appended": false
+        },
+        {
+          "name": "Alistar",
+          "appended": false
+        },
+        {
+          "name": "Caitlyn",
+          "appended": false
+        },
+        {
+          "name": "Elise",
+          "appended": false
+        },
+        {
+          "name": "Gromp",
+          "appended": false
+        },
+        {
+          "name": "Kayle",
+          "appended": false
+        },
+        {
+          "name": "LeBlanc",
+          "appended": false
+        },
+        {
+          "name": "Murkwolf",
+          "appended": false
+        },
+        {
+          "name": "Scuttlecrab",
+          "appended": false
+        },
+        {
+          "name": "Sejuani",
+          "appended": false
+        },
+        {
+          "name": "Shen",
+          "appended": false
+        },
+        {
+          "name": "Teemo",
+          "appended": false
+        },
+        {
+          "name": "Warwick",
+          "appended": false
+        },
+        {
+          "name": "Yunara",
+          "appended": false
+        },
+        {
+          "name": "Azir",
+          "appended": false
+        },
+        {
+          "name": "Cassiopeia",
+          "appended": false
+        },
+        {
+          "name": "Diana",
+          "appended": false
+        },
+        {
+          "name": "Fiddlesticks",
+          "appended": false
+        },
+        {
+          "name": "Hecarim",
+          "appended": false
+        },
+        {
+          "name": "Kha'Zix",
+          "appended": false
+        },
+        {
+          "name": "Kog'Maw",
+          "appended": false
+        },
+        {
+          "name": "Krug",
+          "appended": false
+        },
+        {
+          "name": "Mama Beak",
+          "appended": false
+        },
+        {
+          "name": "Master Yi",
+          "appended": false
+        },
+        {
+          "name": "Rammus",
+          "appended": false
+        },
+        {
+          "name": "Rengar",
+          "appended": false
+        },
+        {
+          "name": "Tristana",
+          "appended": false
+        },
+        {
+          "name": "Vi",
+          "appended": false
+        },
+        {
+          "name": "Ahri",
+          "appended": false
+        },
+        {
+          "name": "Amumu",
+          "appended": false
+        },
+        {
+          "name": "Aphelios",
+          "appended": false
+        },
+        {
+          "name": "Brambleback",
+          "appended": false
+        },
+        {
+          "name": "Ezreal",
+          "appended": false
+        },
+        {
+          "name": "Lillia",
+          "appended": false
+        },
+        {
+          "name": "Malphite",
+          "appended": false
+        },
+        {
+          "name": "Morgana",
+          "appended": false
+        },
+        {
+          "name": "Nidalee",
+          "appended": false
+        },
+        {
+          "name": "Sentinel",
+          "appended": false
+        },
+        {
+          "name": "Sett",
+          "appended": false
+        },
+        {
+          "name": "Sivir",
+          "appended": false
+        },
+        {
+          "name": "Soraka",
+          "appended": false
+        },
+        {
+          "name": "Zyra",
+          "appended": false
+        },
+        {
+          "name": "Alune",
+          "appended": false
+        },
+        {
+          "name": "Ashe",
+          "appended": false
+        },
+        {
+          "name": "Draven",
+          "appended": false
+        },
+        {
+          "name": "Elder Dragon",
+          "appended": false
+        },
+        {
+          "name": "Gnar",
+          "appended": false
+        },
+        {
+          "name": "Ivern",
+          "appended": false
+        },
+        {
+          "name": "Kennen",
+          "appended": false
+        },
+        {
+          "name": "Maokai",
+          "appended": false
+        },
+        {
+          "name": "Taric",
+          "appended": false
+        },
+        {
+          "name": "Lux",
+          "appended": false
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "markdown_bodies_preserved": 75,
+    "markdown_total": 75,
+    "normalization": "CRLF to LF and display-only variant labels",
+    "unmatched": [],
+    "wisp_variant_count": 365,
+    "validated_resource_count": 141
+  },
+  "source_commit": "e05a8cefba25c99c49270b253d6a9c8525e32ac5",
+  "policy": "Preserve every original Markdown body and companion claim; typed Wisp text remains verbatim. No game-fact conflicts are adjudicated."
+}

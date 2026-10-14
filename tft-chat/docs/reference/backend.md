@@ -34,18 +34,13 @@ response.
 
 ## Prompt context
 
-`domain.providers.context` owns the repository Markdown models and
-the injectable `ContextProvider`, while the raw documents live under
-`domain/resources/context`. Selection uses a bounded local shortlist followed
-by optional model reranking, then enforces excerpt-count and character budgets
-before rendering the same reference block for chat and its contextualized
-handoff agents. See the [context provider guide](../content_providers/context.md)
-for metadata, ranking, selector input, fallback behavior, and evaluation.
-
-The chat service selects bounded repository excerpts for chat and its
-contextualized analyst handoff. The analyst's spec excludes the private schema
-pack and relies on typed tools as the model-facing data boundary; no dedicated
-context endpoint is required.
+`domain.resources` validates authored metadata, hierarchical index relationships,
+and structured record views. Preparation loads a cached metadata index;
+`read_resource` loads complete content by stable ID and records hashes for actual
+reads. Reference sources live under `app/backend/src/resources/references`;
+portable skill packages remain under `resources/skills`. The older
+`domain.providers` package is an offline historical fixture adapter.
+See [resource layout](../content_providers/resource-layout.md).
 
 ## Prompt skills
 

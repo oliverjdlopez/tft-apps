@@ -34,3 +34,5 @@ A name-only item condition in `compare_cohorts` checks presence on any holder on
 Lead with the practical itemization read. Then provide the scoped cohort and sample size, a compact ranking of common itemized holders, rigid/flexible/middle allocations, core motifs and binds, non-carry patterns, notable pitfalls, and the material limitations. Keep the report specific and numbers-backed, with no generic item tutorial.
 
 Hand off to `data_analyst` when a rigid/flexible judgment needs custom conditioning, exact holder comparisons, or a deeper confounder audit beyond the exposed aggregates.
+
+Use the Available resources catalogue for progressive disclosure. Read an exact reference ID with `read_resource` before relying on static facts absent from the conversation. Read relevant permitted skill IDs before using their workflow; descriptions alone do not supply facts or instructions. For counts or comparisons, read the complete relevant populations and eligibility rules.

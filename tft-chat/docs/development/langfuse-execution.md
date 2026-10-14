@@ -16,7 +16,8 @@ and is retained in the frozen snapshot, including replay. This is separate from
 
 Advanced options include named model/prompt variants, reachable handoff prompt
 overrides, subsets, repetitions, historical dataset versions, and offline/live
-selectors. Each variant/repetition creates a separate experiment named
+historical selector fixtures. Live selector assistants are retired; their
+offline fixtures and immutable snapshots remain available. Each variant/repetition creates a separate experiment named
 `Active · <timestamp> · r1`. Job IDs and snapshot hashes live in metadata.
 Export and replay remain maintenance actions in the advanced payload and CLI.
 
@@ -52,8 +53,8 @@ and grading writes without making grading depend on content export.
 Bundles without captures remain readable and exportable as historical artifacts,
 but live execution and replay reject them with an instruction to export a fresh
 bundle. Existing snapshots are never backfilled with current definitions. Fixtures
-and selector benchmarks do not require bundle captures; selector model calls use
-`Assistant.run_sync`.
+and offline historical selector fixtures do not require bundle captures. Live
+selector execution reports retirement instead of running a removed assistant.
 
 The `decision_workflows` portable seed follows the same contract: local catalog
 registration validates its cases but does not capture execution definitions or

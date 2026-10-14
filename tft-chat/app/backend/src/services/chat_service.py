@@ -80,27 +80,6 @@ async def stream_chat(
     )
     run_context = invocation.context
     resources = run_context.resources
-    references, skills = resources.references, resources.skills
-    for reference in references:
-        yield stream_event(
-            {
-                "type": "context",
-                "name": reference.heading or reference.context_file,
-                "description": "Context chunk selected for this response.",
-                "path": reference.path,
-                "line": reference.line,
-                "content": reference.content,
-            }
-        )
-    for skill in skills:
-        yield stream_event(
-            {
-                "type": "skill",
-                "name": skill.name,
-                "description": skill.description,
-                "path": skill.path,
-            }
-        )
     reachable_tool_names = assistant.reachable_tool_names
     setup_started = time.perf_counter()
     tools_by_name = {
@@ -123,7 +102,7 @@ async def stream_chat(
                 for group in reachable_groups
             ),
             "context_sources": ",".join(
-                dict.fromkeys(snippet.path for snippet in references)
+                dict.fromkeys(read.path for read in resources.reads.values() if read.kind != 'skill')
             ),
         },
     ) as chat_trace:

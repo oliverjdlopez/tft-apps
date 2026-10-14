@@ -2,15 +2,12 @@
 from __future__ import annotations
 import time
 from typing import Any
-from domain.assistants import Assistant
-from domain.assistants.constants import AssistantName
 from domain.providers.constants import MAX_CONTEXT_SNIPPETS, MAX_SELECTOR_CHARS
 from domain.providers.models import ContextCandidate as _ContextCandidate
 from domain.providers.context import discover_context_files
 from domain.providers.utils import (rank_context_candidates as _rank_context_candidates,
     all_context_candidates as _all_context_candidates, context_selector_prompt as _context_selector_prompt,
     selected_context_ids as _selected_context_ids, shortlist_context_candidates as _shortlist_context_candidates)
-from domain.assistants.models import ContextSelection
 
 from .utils import coverage, validate_cases, validate_payload, selected_candidates, local_selection
 
@@ -72,20 +69,7 @@ def evaluate(case: dict[str, Any], *, live: bool = False, model: str | None = No
     }
 
     if live:
-        # There is one complete catalogue now; a second model call would only
-        # introduce stochastic differences into equivalent candidate inventories.
-        selected = select_live(shortlist_prompt, shortlist, model=model)
-        full_selected = selected
-        hits, _ = coverage(selected, required)
-        forbidden_hits, _ = coverage(selected, forbidden)
-        result.update(
-            selected=[{"content": candidate.snippet.content} for candidate in selected],
-            full_live_required_hits=coverage(full_selected, required)[0],
-            full_live_forbidden_hits=coverage(full_selected, forbidden)[0],
-            live_passed=hits == required_count and forbidden_hits == 0,
-            live_result={"selected_count": len(selected), "required_hits": hits,
-                         "required_count": required_count, "forbidden_hits": forbidden_hits},
-        )
+        raise ValueError("Selector assistants were retired; evaluate assistant read_resource behavior instead.")
     return result
 
 
@@ -93,13 +77,4 @@ def select_live(
     prompt: str, candidates: list[_ContextCandidate], model: str | None = None
 ) -> list[_ContextCandidate]:
     """Run one model-backed selector and decode its bounded candidate IDs."""
-    output = Assistant(AssistantName.CONTEXT_SELECTOR, model=model, output_type=ContextSelection, surface="eval").run_sync(
-        prompt,
-        max_turns=1,
-    ).final_output
-    selected_ids = _selected_context_ids(
-        output,
-        candidate_count=len(candidates),
-        max_selected=MAX_CONTEXT_SNIPPETS,
-    )
-    return selected_candidates(candidates, selected_ids)
+    raise ValueError("Selector assistants were retired; evaluate assistant read_resource behavior instead.")

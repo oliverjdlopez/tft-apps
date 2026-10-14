@@ -1,97 +1,47 @@
-"""Complete collection access to curated repository reference context."""
+"""Exact resource reads for assistant-driven progressive disclosure."""
 
 from __future__ import annotations
+
+import asyncio
 
 from typing import Annotated, Any
 
 from agents import function_tool
 from agents.tool_context import ToolContext
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import Field
 
-from core.config import load_config
+from domain.resources.catalogue import read_resource_content
 from domain.runtime.models import AssistantRunContext
 from domain.types import AssistantToolGroup
 
 
-class AdditionalContextRequest(BaseModel):
-    """A focused request for factual TFT reference material."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    query: Annotated[
-        str,
-        Field(
-            min_length=2,
-            max_length=500,
-            description=(
-                "TFT question or collection to retrieve from curated reference "
-                "sources, including full eligible pools, categories, units, traits, items, or mechanics."
-            ),
-        ),
-    ]
-
-
-def _context_provider():
-    """Import the provider lazily to avoid the assistant/context import cycle."""
-    from domain.providers.context import DEFAULT_CONTEXT_PROVIDER
-
-    return DEFAULT_CONTEXT_PROVIDER
-
-
 @function_tool(strict_mode=True)
-async def request_additional_context(
+async def read_resource(
     ctx: ToolContext[Any],
-    request: AdditionalContextRequest,
+    resource_id: Annotated[str, Field(min_length=1, max_length=512)],
 ) -> dict[str, object]:
-    """Retrieve complete relevant collections from curated TFT references.
+    """Read an index, complete reference, record view, or skill by stable resource ID.
 
-    Use when the current conversation lacks a static gameplay fact needed to
-    answer the user. Describe all factual needs, including the full comparison pool for odds or
-    counts. Selected collections, including stage-specific Wisp groups, are returned
-    in full for the configured set,
-    without application truncation. This does not establish that the curated
-    references document every game fact; never treat missing facts as absent
-    from the game. Arbitrary local files are never accessible.
+    Args:
+        ctx: SDK tool context identifying the active assistant and invocation.
+        resource_id: Exact ID from Available resources; arbitrary paths are denied.
+
+    Returns:
+        Full reference facts or workflow instructions, child IDs, and required links.
+        Reading an index reveals the next level of permitted resources. Read
+        all required populations for counts/comparisons; source completeness does
+        not establish complete coverage of game facts. Unknown or denied IDs
+        return an unavailable result. No selectors or model calls are involved.
     """
-    query = request.query.strip()
-    run_context = ctx.context
-    if isinstance(run_context, AssistantRunContext):
-        provider = run_context.context_provider
-        set_number = run_context.runtime.set_number
-    else:
-        provider = _context_provider()
-        set_number = load_config().chat.set_number
-    snippets = await provider.aselect(
-        query,
-        set_number=set_number,
-    )
-    return {
-        "query": query,
-        "sources": [
-            {
-                "name": snippet.context_file,
-                "path": snippet.path,
-                "heading": snippet.heading,
-            }
-            for snippet in snippets
-        ],
-        "context": provider.render(snippets),
-        "found": bool(snippets),
-        "complete_selected_collections": True,
-        "collection_count": len(snippets),
-    }
+    if not isinstance(ctx.context, AssistantRunContext) or ctx.agent is None:
+        return {"found": False, "error": "Resource reads require an assistant invocation."}
+    return await asyncio.to_thread(read_resource_content, ctx.context.resources, ctx.agent.name, resource_id)
 
 
 CONTEXT_TOOL_GROUP = AssistantToolGroup(
-    key="context",
-    label="Reference Context",
-    description="Complete curated TFT reference collections for the configured set.",
-    tools=(request_additional_context,),
+    key='context', label='Resource Reading',
+    description='Read permitted curated TFT references and skills by exact catalogue ID.',
+    tools=(read_resource,),
 )
 
-
-__all__ = [
-    "AdditionalContextRequest",
-    "CONTEXT_TOOL_GROUP",
-    "request_additional_context",
-]
+__all__ = ['CONTEXT_TOOL_GROUP', 'read_resource']

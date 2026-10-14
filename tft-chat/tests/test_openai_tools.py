@@ -21,7 +21,7 @@ from domain.tools import (
 from domain.tools.db_tools.cohort_tools import COHORT_TOOL_GROUP
 from domain.tools.db_tools.deltas import DELTA_TOOL_GROUP
 from domain.tools.db_tools.ranking_tools import RANKING_TOOL_GROUP
-from domain.tools.context import request_additional_context
+from domain.tools.context import read_resource
 from services.display_service import tool_catalog
 
 
@@ -170,49 +170,12 @@ def test_model_facing_tools_use_strict_bounded_schemas() -> None:
     assert "run_sql" not in tools
 
 
-def test_request_additional_context_reports_complete_collections(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    from domain.tools import context as context_tools
 
-    class FakeContextProvider:
-        async def aselect(self, query: str, *, set_number: int | None):
-            assert (query, set_number) == ("Anima Tech rewards", 17)
-            return [
-                SimpleNamespace(
-                    context_file="anima-mechanic",
-                    path="mechanics/anima.md",
-                    heading="Anima",
-                    content="- 3 Anima: gain Tech",
-                )
-            ]
 
-        def render(self, snippets: list[object]) -> str:
-            assert len(snippets) == 1
-            return "## Selected context excerpts for this task\n\n- 3 Anima: gain Tech"
-
-    monkeypatch.setattr(context_tools, "_context_provider", lambda: FakeContextProvider())
-    monkeypatch.setattr(
-        context_tools,
-        "load_config",
-        lambda: SimpleNamespace(chat=SimpleNamespace(set_number=17)),
-    )
-
-    result = asyncio.run(
-        call_tool("request_additional_context", {"request": {"query": "Anima Tech rewards"}})
-    )
-
-    assert result == {
-        "query": "Anima Tech rewards",
-        "sources": [
-            {
-                "name": "anima-mechanic",
-                "path": "mechanics/anima.md",
-                "heading": "Anima",
-            }
-        ],
-        "context": "## Selected context excerpts for this task\n\n- 3 Anima: gain Tech",
-        "found": True,
-        "complete_selected_collections": True,
-        "collection_count": 1,
-    }
+def test_read_resource_requires_invocation_and_has_strict_exact_id_schema():
+    """An unauthenticated tool explorer cannot read arbitrary repository files."""
+    result = asyncio.run(call_tool('read_resource', {'resource_id': '../secrets'}))
+    assert result['found'] is False
+    schema = get_tool('read_resource').params_json_schema
+    assert schema['additionalProperties'] is False
+    assert schema['properties']['resource_id']['maxLength'] == 512

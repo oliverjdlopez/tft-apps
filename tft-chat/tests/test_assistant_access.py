@@ -44,28 +44,9 @@ def test_skills_requires_a_string_list(tmp_path: Path, value: object) -> None:
 
 
 
-def test_prepared_handoffs_filter_shared_skills(tmp_path):
-    """Root excludes skills; handoffs enforce their own allowlists on shared selections."""
-    from dataclasses import replace
-    root = _load_spec(tmp_path, {'handoffs': ['child', 'denied']})
-    child = replace(root, name='child', handoff_names=(), skill_names=('allowed',))
-    denied = replace(child, name='denied', skill_names=())
-    registry = AssistantRegistry([root, child, denied])
-    registry.configure_tools(get_tool=lambda name: None, get_tool_group=lambda name: None, list_tools=lambda: [])
 
-    class Provider:
-        """Select both workflows to exercise filtering at each rendering boundary."""
-        async def aselect(self, query, **kwargs):
-            """Return workflows without database or model calls."""
-            return [SkillDefinition(name=name, description=name, body=name.upper(), path=name) for name in ('allowed', 'blocked')]
 
-        def render(self, skills):
-            """Make included workflows visible in rendered text."""
-            return ' '.join(skill.body for skill in skills)
-
-    invocation = asyncio.run(Assistant(root.name, registry=registry, skill_provider=Provider(), set_number=18).prepare('question'))
-    wrapper = RunContextWrapper(invocation.context)
-    assert invocation.agent.instructions(wrapper, invocation.agent) == 'BASE'
-    rendered = {agent.name: agent.instructions(wrapper, agent) for agent in invocation.agent.handoffs}
-    assert 'ALLOWED' in rendered['child'] and 'BLOCKED' not in rendered['child']
-    assert rendered['denied'] == 'BASE'
+def test_selectors_are_absent_from_runtime_discovery():
+    """Selection is owned by the running assistant through resource reads."""
+    from domain.assistants import list_assistants
+    assert not {'context_selector', 'skill_selector'} & set(list_assistants())

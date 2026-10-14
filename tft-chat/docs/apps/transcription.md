@@ -70,7 +70,7 @@ and obedience to instructions embedded in the source. An irrelevant source
 receives a brief statement that it has no useful TFT reference material.
 
 `distill-transcript` has no tools, handoffs, repository context, or skills.
-Preparation therefore makes no context or skill selector calls. This boundary
+Preparation therefore loads no reference or skill resources. This boundary
 keeps reference generation grounded in the supplied text. Prompt compliance
 still depends on model behavior; offline checks do not establish live quality.
 The task returns the Markdown to its caller; it does not automatically publish

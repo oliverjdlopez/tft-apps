@@ -1,158 +1,90 @@
-# Context Provider
+# Reference resources and progressive disclosure
 
-Repository context supplies factual references, separately from assistant policy
-and procedural skills. `domain.providers.context` owns context discovery and
-provider operations, `domain.providers.models` defines the shared data and
-protocol contracts, and `domain.providers.utils` contains parsing, candidate,
-selection, and serialization helpers. Sources live under
-`app/backend/src/resources/context`.
+Static facts live under `app/backend/src/resources/references`. Assistants see
+only root directory descriptions in their instructions. `read_resource("set18")`
+returns a set overview and permitted topic IDs; reading a topic reveals its
+children. A leaf read returns the complete source body. Any known ID may be read
+directly, but every read independently checks set scope and assistant permissions.
+Descriptions and index listings guide discovery; they are not factual evidence.
 
-Context rendering lives in `domain.providers.utils.render_context_files`, shared
-by reference injection and budget calculation. `domain.providers.context`
-re-exports it for existing consumers; utilities do not import the provider.
+`domain.resources` owns the current library, schemas, discovery, and reads.
+`domain.providers` retains historical offline fixture helpers only. Runtime
+preparation never uses lexical ranking, provider objects, or selector assistants.
 
-## Completeness-first retrieval
+## Authoring and parsing
 
-The selector sees a catalogue of **every source eligible for the configured
-set**. There is no lexical shortlist or default candidate, character, or selected
-source cap. Long documents cannot evict other sources before selection.
+See [resource layout and schema](resource-layout.md) for the complete contract.
+Reference Markdown has strict YAML frontmatter: stable `id`, `title`,
+`description`, `kind`, `parent`, and explicit `sets`; optional `patches`,
+`requires`, `related`, and `provenance` describe applicability and relationships.
+Identity is independent of physical paths. Unknown fields, duplicate keys/IDs,
+broken links, invalid set inheritance, and cyclic required dependencies fail
+validation rather than silently removing facts from discovery.
 
-The catalogue includes source names, paths, descriptions, headings, and all entry
-names. References without named entries retain their text as routing evidence;
-standalone JSON without descriptive Markdown metadata retains its values too.
-The selector chooses collections using semantic relevance, including informal
-names and synonyms. For counts, odds, comparisons, and exhaustive lists, it is
-instructed to select both the requested category and every collection needed for
-the comparison population, plus eligibility rules.
+Indexes are authored Markdown documents. Their child lists derive from parent
+IDs and are filtered for the active assistant. Leaf references preserve complete
+explanations, conditions, and tables. The champion roster remains a complete
+population reference rather than an arbitrary token-sized slice. Source patch
+coverage is explicit where known; an empty patch list does not claim currentness.
 
-After selection, the runtime injects **every selected collection in full**.
-Ordinary JSON sources are complete top-level objects; ordinary Markdown sources
-are complete bodies after frontmatter removal. Wisp categories use the complete
-stage chunks described below. There is no per-entry ranking inside a selected
-collection and no silent truncation. This deliberately spends more tokens
-than individual-entry retrieval; completeness takes precedence over token cost.
+## Structured Wisp populations
 
-`RepositoryContextProvider.select` and `aselect` use identical catalogue and
-hydration rules. `select_context_snippets` is the offline lexical path: it ranks
-whole collections using names, paths, descriptions, and contents, returning all
-positive matches. If model selection fails, runtime selection uses that same
-fallback. The fallback is less semantically capable and does not guarantee that
-all relevant sources were selected. Model/API context-window limits still apply;
-the provider does not conceal an oversized request by dropping facts.
+Seven record collections each have a Markdown descriptor and exactly one typed
+JSON backing file. These JSON files are authoritative records, not prose copies
+of independently maintained Markdown. They retain all 365 original variants,
+exact source wording, stable variant IDs, structured inclusive stage/round
+windows, modes, conditions, and augment exclusions. The full wording preserves
+restrictions beyond the normalized fields; absent normalized fields are not
+proof that a restriction is absent.
 
-Callers may explicitly provide `max_snippets` or `max_chars`. If selected sources
-cannot fit, the provider raises `ValueError` with required collection/character
-counts rather than returning a misleading partial pool. Character accounting
-includes the rendered source labels and guidance. Nonpositive limits explicitly
-disable selection. Default limits are `None`.
+`read_resource("set18/wisps/offers-goldxp")` returns the full category and its
+stage view IDs. `set18/wisps/offers-goldxp/stage-2` returns every variant whose
+window intersects Stage 2. Cross-stage variants appear in each matching view,
+with identical variant IDs. `stage-all` retains explicitly unrestricted offers;
+it does not make prismatic variants ordinary offers. Stage views link to required
+general rules and their applicable all-stage view. Count unions by variant ID.
+Other references, including patch 18.2 offer ledgers, retain their own source
+revision rather than silently superseding the baseline. Consult the source
+conflict reference when claims disagree.
 
-## Source formats and identity
+## Loading, caching, and provenance
 
-Markdown uses flat frontmatter, for example:
+Preparation scans metadata headers and reuses a validated index keyed by source
+modification time and size. It does not consume document bodies or record JSON.
+Reads perform filesystem work off the async event loop and cache complete bodies
+under that library revision. Old invocations retain their snapshot. A source
+changed before its first read returns an error asking for a fresh invocation;
+an already cached read retains the original content. Symlinks and arbitrary
+filesystem paths cannot become read targets.
 
-```yaml
----
-name: unit-reference
-description: Champion roster, costs, traits, and roles. Use for roster and shop-pool questions.
-kind: unit
-sets: 18
----
-```
+`AssistantRunContext.resources.reads` records actual read IDs, source paths,
+source SHA-256 hashes, complete returned content, and variant IDs. Captured
+execution receipts additionally record content hashes, including reads preceding
+a failed generation. Index reads count as reads too. Source paths identify
+provenance but are never resource identities. Body caches do not grant access:
+every read checks the active SDK assistant's frozen permissions.
 
-`name` is a unique identity; `description` supplies semantic routing guidance;
-`kind` defaults to `reference`. Optional `sets` limits eligibility.
+## Migration and validation
 
-JSON files must contain a top-level object. Their relative path is their source
-identity. Set scope comes from the nearest `set<number>` directory, including
-decimal sets. Empty objects contribute no selectable collection. Invalid JSON,
-duplicate keys, and non-object roots are ignored with a warning.
-
-A JSON source with a same-directory, same-stem Markdown companion inherits that
-Markdown source's description and kind for routing. Both remain selectable:
-matching filenames do not prove equivalent facts. The provider does not discard
-one companion or merge away divergent content. Selected context can therefore
-contain overlapping facts; token optimization is deferred.
-
-The current corpus is under `context/set18/`. See
-[Set 18 coverage and source notes](set18-context.md) for source limitations.
-Completeness of a retrieved file does not establish completeness of the game
-reference itself.
-
-## Wisp stage collections
-
-The seven Wisp category sources (`wisps-champion`, `wisps-combat`,
-`wisps-goldxp`, `wisps-item`, `wisps-misc`, `wisps-risky`, and `wisps-shop`)
-are partitioned into stage collections during candidate construction, for both
-Markdown and JSON. The original files remain authoritative and are not rewritten.
-General `wisps.md`/`wisps.json` rules remain whole and independently selectable.
-
-Each `Stage N` chunk contains **every variant whose explicit offer window
-intersects that stage**, retaining exact round windows, conditions, exclusions,
-cooldowns, mode restrictions, fallback wording, and effects. A window such as
-`3-5–4-1` contributes the unchanged entry to both Stage 3 and Stage 4; `6-1–10-1`
-contributes to Stages 6 through 10. A stage chunk is not a claim that all its
-entries are available throughout that stage or simultaneously eligible.
-
-Entries marked `All bands (no round-band tag)` form an `All stages` chunk.
-Stage-specific questions must also select these unrestricted chunks and general
-rules, then apply variant requirements. In particular, a prismatic entry without
-a round-band tag does not become an ordinary base offer.
-
-Stage chunks carry stable keys (`stage-2`, `stage-3`, …, `stage-all`) and visible
-headings in the catalogue, rendered context, and additional-context tool result.
-The selector is instructed to choose only requested stages, all relevant
-categories for a full probability denominator, applicable all-stage chunks, and
-general rules. No-stage questions can select all stage chunks; count unions by
-variant identity to avoid double-counting entries appearing in multiple stages.
-Offline lexical fallback remains conservative and can return additional stages.
-
-Markdown chunks retain the common introduction and complete entry blocks,
-including continuation lines. If any entry has missing or unrecognized window
-syntax, that source stays whole rather than silently losing the unknown entry.
-Empty stage groups are not offered. Other context sources retain their existing
-whole-collection behavior.
-
-## Additional context and assistant integration
-
-`request_additional_context` uses the same asynchronous provider. Its request
-should describe all factual needs, including the comparison population for odds.
-It returns full selected collection contents, source identities and stage headings, `collection_count`,
-and `complete_selected_collections: true`. That flag means no selected collection
-(including a stage chunk) was truncated; it does not assert that every relevant source or game fact was found.
-
-The top-level assistant and its contextualized handoffs share initial selected
-references. Tool calls can fetch additional collections. References are rendered
-as facts, never instructions; private analyst schema and procedural skills remain
-separate. Requests for another set cannot retrieve Set 18 sources.
-
-Chat prepares its initial selections once and stores them in
-`AssistantRunContext.resources`; each agent's factory-installed instruction
-callback only renders those selections under its own specification's permissions,
-including nested handoffs. Without typed context the callback returns the durable
-prompt without selection. `request_additional_context` receives SDK tool context and uses the
-invocation's `context_provider` and `runtime.set_number`. It returns newly fetched
-collections as tool output without replacing the initial prompt resources.
-Callers without the typed context retain the default provider and configured set.
-The model-facing request schema and complete-collection result format are unchanged.
-
-## Verification
+The [migration receipt](resource-migration.json) maps 75 original Markdown
+sources to stable IDs and records original hashes. All 75 bodies were checked
+against Git source bytes after normalizing line endings and removing display-only
+variant labels. Ten prose-only JSON companions were consolidated into Markdown;
+claims not matching an existing entry were explicitly retained in an appendix.
+Seven Wisp JSON companions became typed canonical backing records. Historical
+evaluation snapshots remain byte-for-byte intact. Their path-based gold can be
+stale after migration; live selector execution is retired.
 
 ```bash
-uv run pytest -q tests/test_context_service.py tests/test_chat_service.py tests/test_assistants.py tests/test_skill_provider.py
+.venv/bin/python -m domain.resources
+.venv/bin/python -m pytest -q tests/test_resource_library.py tests/test_assistant_runtime.py tests/test_context_service.py
 ```
 
-Regression tests cover full-catalogue visibility for informal Wisp, artifact,
-and shop-pool questions; complete Wisp collections beyond the former 12-unit and
-6,000-character caps; large-source crowding; divergent companion preservation;
-set filtering; explicit budget errors; and synchronous/asynchronous parity.
-Stage regressions verify corpus-wide Stage 2 membership, cross-stage windows,
-all-band entries, complete reconstruction across chunks, retained conditions,
-Markdown introductions, and lossless fallback for unknown eligibility syntax.
+Validation loads all bodies and structured views offline. Normal preparation
+remains metadata-only. It makes no model calls or database changes.
 
-The offline evaluation adapter currently imports retired provider symbols
-(`MAX_SELECTOR_CHARS` and `_ContextCandidate`). That pre-existing mismatch blocks
-the context-evaluation regression and offline manifest validation; runtime
-provider tests remain independently runnable. Repairing the adapter is separate
-from the invocation-context refactor. Its intended contract is coverage of full
-selected collections rather than a compression target. Frozen historical
-evaluations must not be rewritten to hide the mismatch.
+The final combined regression run passed 304 tests, including actual SDK hierarchy
+traversal against a local mock model. The corpus validator checked 141 resources
+and derived views; the explicit YAML dependency passes `uv lock --check --offline`.
+Global `evals validate` reports the historical `exact_unit` required-gold mismatch.
+No paid-model evaluations or frontend interaction were exercised.

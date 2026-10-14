@@ -1,5 +1,20 @@
 # Tests and Evaluations
 
+The progressive-disclosure runtime replaces initial context/skill selection with
+permission-filtered hierarchical directories and exact `read_resource` calls.
+The library validates stable IDs, typed YAML, parent/dependency links, and
+structured record views; preparation loads headers only and reads cache bodies. Focused tests
+cover metadata-only instructions, complete reads, denied sets/skills/paths,
+actual-read Activity events, and captured-run provenance. Historical selector
+snapshots and offline comparison helpers remain intact; live selectors are
+retired. Global `evals validate` still reports the historical context-selection
+`exact_unit` gold absent from the current corpus. No paid evaluations are required
+to validate this runtime change. The combined focused regression run passed
+304 tests, including resource migration/schema checks, import consistency,
+and real SDK subprocesses following set → topic → complete reference against a
+local mock model; live paid-model behavior and frontend interaction were not
+exercised.
+
 The [2026-10-12 merge validation](../../../docs/merge-validation-2026-10-12.md)
 records the current cross-application results, repaired worker/test regressions,
 and unresolved evaluation-content and import-policy decisions. It supersedes
@@ -55,8 +70,9 @@ frozen historical snapshots retain their original prompt and tool names.
 
 Invocation preparation is covered by `tests/test_assistant_runtime.py`, alongside
 `tests/test_assistants.py`, `tests/test_chat_service.py`, and `tests/test_task_service.py`.
-These use fake providers and runners to verify selection once, dynamic root and
-nested handoff policy, definition snapshots, fresh evidence/activity, task input
+These use isolated resource libraries and runners to verify metadata-only
+preparation, exact reads, dynamic root and nested handoff policy, definition
+snapshots, fresh evidence/activity, task input
 wrappers, synchronous/asynchronous entry points, and failure cleanup without
 paid calls. `evals/langfuse/tests/test_assistant_workspace.py` additionally executes
 a captured graph in a real SDK subprocess against a local mock model server;

@@ -1,0 +1,1249 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "wisps-risky/2e87b685d1fd",
+      "name": "Abandon Ship (base)",
+      "text": "liquidates the roster for gold and rerolls; 0 gold; tier 3; offer windows 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: No 3-star champion; a running subtotal of your army's unit sell values reaches between 15 and 24 gold; not on a win streak of 3 or more. Excluded by: NO SCOUT NO PIVOT, Worth the Wait, Worth the Wait II, Weight The Worth, Hard Commit, Luxury Subscription, Frontline Foundation, Backline Blueprint, Unrivaled, The Trait Tree, Trait Ladder. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "No 3-star champion; a running subtotal of your army's unit sell values reaches between 15 and 24 gold; not on a win streak of 3 or more.",
+      "augment_exclusions": "NO SCOUT NO PIVOT, Worth the Wait, Worth the Wait II, Weight The Worth, Hard Commit, Luxury Subscription, Frontline Foundation, Backline Blueprint, Unrivaled, The Trait Tree, Trait Ladder."
+    },
+    {
+      "id": "wisps-risky/acc099741110",
+      "name": "Abandon Ship (upgraded)",
+      "text": "liquidates the roster for gold and rerolls; 0 gold; tier 3; offer windows 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: No 3-star champion; a running subtotal of your army's unit sell values reaches between 15 and 24 gold; not on a win streak of 3 or more. Excluded by: NO SCOUT NO PIVOT, Worth the Wait, Worth the Wait II, Weight The Worth, Hard Commit, Luxury Subscription, Frontline Foundation, Backline Blueprint, Unrivaled, The Trait Tree, Trait Ladder. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "No 3-star champion; a running subtotal of your army's unit sell values reaches between 15 and 24 gold; not on a win streak of 3 or more.",
+      "augment_exclusions": "NO SCOUT NO PIVOT, Worth the Wait, Worth the Wait II, Weight The Worth, Hard Commit, Luxury Subscription, Frontline Foundation, Backline Blueprint, Unrivaled, The Trait Tree, Trait Ladder."
+    },
+    {
+      "id": "wisps-risky/8ccdd2ebd9ea",
+      "name": "Component Bounty (base)",
+      "text": "component reward for winning the next player fight; 4 gold; tier 1.Rabbit; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/0f45cf9985fe",
+      "name": "Component Bounty (upgraded)",
+      "text": "component reward for winning the next player fight; 2 gold; tier 1.Rabbit; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/bc5d77b443ac",
+      "name": "Cutpurse (base)",
+      "text": "periodic chances for champions to produce gold; 3 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/22bf23f384b9",
+      "name": "Cutpurse (upgraded)",
+      "text": "periodic chances for champions to produce gold; 3 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/c52a0fd055f0",
+      "name": "Drought (base)",
+      "text": "extends the loss-streak counter; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On no streak or a loss streak (any length). Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "On no streak or a loss streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/2381e6143018",
+      "name": "Drought (upgraded)",
+      "text": "extends the loss-streak counter; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On no streak or a loss streak (any length). Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "On no streak or a loss streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/f623fa4b2ee2",
+      "name": "Essence Theft (base)",
+      "text": "increased Coven Essence for this combat; 1 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: Coven active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Coven active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/773838ef1478",
+      "name": "Essence Theft (upgraded)",
+      "text": "increased Coven Essence for this combat; 0.9 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: Coven active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Coven active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/51634b7efe9b",
+      "name": "Fertilize (base)",
+      "text": "XP from enemy deaths; 1 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/3c3281dfd54c",
+      "name": "Fertilize (upgraded)",
+      "text": "XP from enemy deaths; 1 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/245ecec2713e",
+      "name": "Flip Frenzy (base)",
+      "text": "successive coin tosses yield gold until tails; 1 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/f05ad61f3edb",
+      "name": "Flip Frenzy (upgraded)",
+      "text": "successive coin tosses yield gold until tails; 0 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/fc08286b5161",
+      "name": "Flood (base)",
+      "text": "extends the win-streak counter; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On no streak or a win streak (any length). Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "On no streak or a win streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/ed64049de7cc",
+      "name": "Flood (upgraded)",
+      "text": "extends the win-streak counter; 1 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On no streak or a win streak (any length). Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "On no streak or a win streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/99b15217d001",
+      "name": "Golden Road (base)",
+      "text": "delayed payout based on wins; 2 gold; tier 2.Rabbit; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/b52b5f3df759",
+      "name": "Golden Road (upgraded)",
+      "text": "delayed payout based on wins; 2 gold; tier 2.Rabbit; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/1adb46a01056",
+      "name": "Good Loss (base)",
+      "text": "XP for losses during the next several fights; 5 gold; tier 2.Rabbit; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: Not on a win streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a win streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/f74ed4b3d3ed",
+      "name": "Good Loss (upgraded)",
+      "text": "XP for losses during the next several fights; 5 gold; tier 2.Rabbit; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Conditions: Not on a win streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a win streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/177815f0accb",
+      "name": "Major Gambit (base)",
+      "text": "gold conditional on winning the next fight; 3 gold; tier 2.Rabbit; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/5ebbd1e4711a",
+      "name": "Major Gambit (upgraded)",
+      "text": "gold conditional on winning the next fight; 3 gold; tier 2.Rabbit; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/6918de2da80f",
+      "name": "Major Polymorph (base)",
+      "text": "permanently converts an owned four-cost into a five-cost; 0 gold; tier 2; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: A 4-cost champion in your army. Excluded by: NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 4-cost champion in your army.",
+      "augment_exclusions": "NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-risky/afde08a95800",
+      "name": "Major Polymorph (upgraded)",
+      "text": "permanently converts an owned four-cost into a five-cost; 0 gold; tier 2; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: A 4-cost champion in your army. Excluded by: NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 4-cost champion in your army.",
+      "augment_exclusions": "NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-risky/10427fd64efa",
+      "name": "Minor Gambit (base)",
+      "text": "gold conditional on winning the next fight; 1 gold; tier 1.Rabbit; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more; Coven not active. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more; Coven not active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/d27c8ef7f1e8",
+      "name": "Minor Gambit (upgraded)",
+      "text": "gold conditional on winning the next fight; 1 gold; tier 1.Rabbit; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a loss streak of 3 or more; Coven not active. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a loss streak of 3 or more; Coven not active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/a71aa2379fb2",
+      "name": "Minor Polymorph (base)",
+      "text": "permanently converts an owned one-cost into a two-cost; 0 gold; tier 1; offer windows 3-1–3-4, 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: A 1-cost champion in your army. Excluded by: NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 1-cost champion in your army.",
+      "augment_exclusions": "NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-risky/431c0bead78d",
+      "name": "Minor Polymorph (upgraded)",
+      "text": "permanently converts an owned one-cost into a two-cost; 0 gold; tier 1; offer windows 3-1–3-4, 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: A 1-cost champion in your army. Excluded by: NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 1-cost champion in your army.",
+      "augment_exclusions": "NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-risky/a220b908130d",
+      "name": "Payday (base)",
+      "text": "gold per surviving ally; 4 gold; tier 2.Rabbit; offer windows 4-2–4-7, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/7c9ccd8f7574",
+      "name": "Payday (upgraded)",
+      "text": "gold per surviving ally; 4 gold; tier 2.Rabbit; offer windows 4-2–4-7, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/7e59bd11faf0",
+      "name": "Polymorph (base)",
+      "text": "permanently converts an owned two-cost into a three-cost; 0 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: A 2-cost champion in your army. Excluded by: NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 2-cost champion in your army.",
+      "augment_exclusions": "NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-risky/9bd5d6493daa",
+      "name": "Polymorph (upgraded)",
+      "text": "permanently converts an owned two-cost into a three-cost; 0 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: A 2-cost champion in your army. Excluded by: NO SCOUT NO PIVOT. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 2-cost champion in your army.",
+      "augment_exclusions": "NO SCOUT NO PIVOT."
+    },
+    {
+      "id": "wisps-risky/5825132c4e6f",
+      "name": "Take One With Ya (base)",
+      "text": "XP from losing after killing at least one enemy; 1 gold; tier 1.Rabbit; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a win streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a win streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/d83685432f65",
+      "name": "Take One With Ya (upgraded)",
+      "text": "XP from losing after killing at least one enemy; 1 gold; tier 1.Rabbit; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: Not on a win streak of 3 or more. Modes: Standard, Double Up.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up"
+      ],
+      "conditions": "Not on a win streak of 3 or more.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/776100657ce2",
+      "name": "Trophy Hunter (base)",
+      "text": "doubles Rival takedown credit next player fight; 2 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Rival active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Rival active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-risky/a9e57ae6242f",
+      "name": "Trophy Hunter (upgraded)",
+      "text": "doubles Rival takedown credit next player fight; 0 gold; tier 1; offer windows 2-1–2-7, 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Rival active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Rival active.",
+      "augment_exclusions": null
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "handoff_description": "Analyze a TFT comp's win conditions, traits, item demands, high-cost flex pieces, supporting units, and observable strengths and weaknesses.",
   "tools": {
     "include_all": false,
-    "groups": ["ranking", "query_cohorts"]
+    "groups": ["ranking", "query_cohorts", "context"]
   },
   "context": {"repository": true},
   "handoffs": []

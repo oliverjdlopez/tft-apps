@@ -1,0 +1,365 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "wisps-item/450827e6fb32",
+      "name": "Artifactinate (base)",
+      "text": "exchanges components, including equipped recipes, for an Artifact choice; 2 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 20 Wisp shops. Conditions: At least 3 item components, counting completed items. Excluded by: Spirit Of Redemption, Promised Protection, Lucky Gloves, Lucky Gloves+, Solo Plate, Seraphim's Staff, Heart of Steel, Deadlier Blades, Deadlier Caps, Living Forge, Forged In Strength, Portable Forge. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 3 item components, counting completed items.",
+      "augment_exclusions": "Spirit Of Redemption, Promised Protection, Lucky Gloves, Lucky Gloves+, Solo Plate, Seraphim's Staff, Heart of Steel, Deadlier Blades, Deadlier Caps, Living Forge, Forged In Strength, Portable Forge."
+    },
+    {
+      "id": "wisps-item/76555e6a6744",
+      "name": "Artifactinate (upgraded)",
+      "text": "exchanges components, including equipped recipes, for an Artifact choice; 2 gold; tier 2; offer windows 2-1–2-7, 3-1–3-4; re-offer cooldown 20 Wisp shops. Conditions: At least 3 item components, counting completed items. Excluded by: Spirit Of Redemption, Promised Protection, Lucky Gloves, Lucky Gloves+, Solo Plate, Seraphim's Staff, Heart of Steel, Deadlier Blades, Deadlier Caps, Living Forge, Forged In Strength, Portable Forge. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 3 item components, counting completed items.",
+      "augment_exclusions": "Spirit Of Redemption, Promised Protection, Lucky Gloves, Lucky Gloves+, Solo Plate, Seraphim's Staff, Heart of Steel, Deadlier Blades, Deadlier Caps, Living Forge, Forged In Strength, Portable Forge."
+    },
+    {
+      "id": "wisps-item/ef5f1468a23c",
+      "name": "Blood and Iron (base)",
+      "text": "component reward after enough champion deaths; 3 gold; tier 2.Rabbit; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 20 Wisp shops. Excluded by: Solo Leveling. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Solo Leveling."
+    },
+    {
+      "id": "wisps-item/c75fa4cce5a0",
+      "name": "Blood and Iron (upgraded)",
+      "text": "component reward after enough champion deaths; 3 gold; tier 2.Rabbit; offer windows 2-1–2-7; re-offer cooldown 20 Wisp shops. Excluded by: Solo Leveling. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Solo Leveling."
+    },
+    {
+      "id": "wisps-item/05047217ac9e",
+      "name": "Curio Cart (base)",
+      "text": "opens a priced equipment shop; 0 gold; tier 2; offer windows 3-5–4-1, 3-1–3-4, 4-2–4-7; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 10 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-item/f0e757311327",
+      "name": "Curio Cart (upgraded)",
+      "text": "opens a priced equipment shop; 0 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 3-5–4-1; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 10 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-item/5c750dbfebaa",
+      "name": "Idle Craftsman (base)",
+      "text": "upgrades a benched component into one of its completed recipes; 4 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 20 Wisp shops. Conditions: At least 1 item components on your bench. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 1 item components on your bench.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-item/8625c6672029",
+      "name": "Idle Craftsman (upgraded)",
+      "text": "upgrades a benched component into one of its completed recipes; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 20 Wisp shops. Conditions: At least 1 item components on your bench. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 1 item components on your bench.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-item/c343aa591d62",
+      "name": "Peddler (base)",
+      "text": "opens a priced random equipment shop; 0 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 10 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-item/e52e3c78466a",
+      "name": "Peddler (upgraded)",
+      "text": "opens a priced random equipment shop; 0 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 20 Wisp shops. Conditions: At least 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 10 gold.",
+      "augment_exclusions": null
+    }
+  ]
+}

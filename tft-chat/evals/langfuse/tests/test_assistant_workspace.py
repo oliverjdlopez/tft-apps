@@ -159,8 +159,30 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
             call = None
         elif 'transfer_to_target' in tools:
             call, arguments = 'transfer_to_target', '{}'
-        elif 'request_additional_context' in tools and not any(item.get('name') == 'request_additional_context' for item in body.get('input', []) if isinstance(item, dict)):
-            call, arguments = 'request_additional_context', '{"request":{"query":"Wisp rules"}}'
+        elif 'read_resource' in tools:
+            import ast
+            results = []
+            for item in body.get('input', []):
+                if not isinstance(item, dict) or item.get('type') != 'function_call_output':
+                    continue
+                output_text = item.get('output')
+                if not isinstance(output_text, str) or not output_text.startswith('{'):
+                    continue
+                # The SDK stringifies Python tool dictionaries; handoff and
+                # resource outputs can therefore be Python literals or JSON.
+                try:
+                    parsed = json.loads(output_text)
+                except json.JSONDecodeError:
+                    parsed = ast.literal_eval(output_text)
+                results.append(parsed)
+            resource_results = [result for result in results if result.get('found') and 'children' in result]
+            choices = (resource_results[-1]['children'] if resource_results
+                       else json.loads(body['instructions'].split('\n')[-1]))
+            if choices:
+                selected = next((entry for entry in choices if entry['id'] == 'set18/units'), choices[0])
+                call, arguments = 'read_resource', json.dumps({'resource_id': selected['id']})
+            else:
+                call, content = None, 'Mock application reply.'
         else:
             call, content = None, 'Mock application reply.'
         output = ({'id': 'fc_' + uuid.uuid4().hex, 'type': 'function_call', 'name': call,
@@ -190,9 +212,8 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
     monkeypatch.delenv('LANGFUSE_SECRET_KEY', raising=False)
     files = {'fixture': {'system.md': 'Captured draft root', 'task.md': 'Frozen task wrapper',
                         'agent.json': json.dumps({'model': 'gpt-6-sol', 'reasoning': 'low', 'skills': [], 'handoffs': ['target']})},
-             'target': {'system.md': 'Captured handoff policy', 'agent.json': '{"model":"gpt-6-luna","tools":{"groups":["context"]},"skills":[]}'},
-             'context_selector': {'system.md': 'Select no context', 'agent.json': '{"model":"gpt-6-luna","skills":[]}'},
-             'skill_selector': {'system.md': 'Select no skills', 'agent.json': '{"model":"gpt-6-luna","skills":[]}'}}
+             'target': {'system.md': 'Captured handoff policy', 'agent.json': '{"model":"gpt-6-luna","tools":{"groups":["context"]},"context":{"repository":true},"skills":[]}'},
+             }
     frozen = capture(registry_from_files(files))
     try:
         result = isolated_operation({'operation': 'evaluate', 'config': {'family': 'assistant', 'assistant': 'fixture',
@@ -202,8 +223,10 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
         metadata = result['metadata']
         assert metadata['database'] == 'assistant_workspace_test'
         assert metadata['assembled_instructions']['fixture'] == 'Captured draft root'
-        assert metadata['assembled_instructions']['target'] == 'Captured handoff policy'
-        assert any(row['name'] == 'request_additional_context' for row in metadata['tft_trace']['tool_calls'])
+        assert metadata['assembled_instructions']['target'].startswith('Captured handoff policy')
+        assert [read['id'] for read in metadata['resources']['reads']] == ['set18', 'set18/units', 'set18/units/roster']
+        assert all(read['sha256'] and read['content_sha256'] for read in metadata['resources']['reads'])
+        assert any(row['name'] == 'read_resource' for row in metadata['tft_trace']['tool_calls'])
         assert metadata['tft_trace']['handoffs'][0]['target'] == 'target'
         root = next(row for row in requests if row.get('instructions') == 'Captured draft root')
         assert root['model'] == 'gpt-6-sol'

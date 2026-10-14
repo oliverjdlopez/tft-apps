@@ -1,0 +1,6416 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "wisps-combat/4001884b189e",
+      "name": "Aftershock (base)",
+      "text": "delayed enemy-team stun; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Excluded by: Arcane Viktor-y. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Arcane Viktor-y."
+    },
+    {
+      "id": "wisps-combat/459d1cd195d6",
+      "name": "Aftershock (upgraded)",
+      "text": "delayed enemy-team stun; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Excluded by: Arcane Viktor-y. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Arcane Viktor-y."
+    },
+    {
+      "id": "wisps-combat/c318a9729772",
+      "name": "Backrow Star (base)",
+      "text": "temporary AS increase for a randomly selected back-row unit; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/8d0857063f0c",
+      "name": "Backrow Star (upgraded)",
+      "text": "temporary AS increase for a randomly selected back-row unit; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d08f557d0309",
+      "name": "Bark Armor (base)",
+      "text": "temporary team shielding; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On a win streak (any length). Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "On a win streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/c3bd6bc2f8ad",
+      "name": "Bark Armor (upgraded)",
+      "text": "temporary team shielding; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On a win streak (any length). Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "On a win streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/f9a7b4a6a6fc",
+      "name": "Barrier (base)",
+      "text": "large team shields that decay; 4 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/a6d9c1522d11",
+      "name": "Barrier (prismatic)",
+      "text": "large team shields that decay; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/db6a82532f05",
+      "name": "Barrier (upgraded)",
+      "text": "large team shields that decay; 4 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/17b471d497bc",
+      "name": "Bear's Visit (base)",
+      "text": "temporary Bear Primal blessing; 3 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: You have not already taken the Bear Primal blessing; Primal active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "You have not already taken the Bear Primal blessing; Primal active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/305433987910",
+      "name": "Big Boom (base)",
+      "text": "first allied death triggers a max-Health-based explosion; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/6fd7a760be8b",
+      "name": "Big Boom (upgraded)",
+      "text": "first allied death triggers a max-Health-based explosion; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/db0560055618",
+      "name": "Blaze (base)",
+      "text": "board-spreading fire damages enemies; 5 gold; tier 3; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/3882f0d8bfc9",
+      "name": "Blaze (prismatic)",
+      "text": "board-spreading fire damages enemies; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/7018ceaf2933",
+      "name": "Blaze (upgraded)",
+      "text": "board-spreading fire damages enemies; 5 gold; tier 3; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/e57abc9c90eb",
+      "name": "Booster Shot (base)",
+      "text": "temporarily promotes one-star units; 6 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 1-star champions on the board, OR a 1-star 5-cost champion holding 3 items. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 1-star champions on the board, OR a 1-star 5-cost champion holding 3 items.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/004b226abd68",
+      "name": "Booster Shot (upgraded)",
+      "text": "temporarily promotes one-star units; 6 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 1-star champions on the board, OR a 1-star 5-cost champion holding 3 items. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 1-star champions on the board, OR a 1-star 5-cost champion holding 3 items.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/9f35bce51448",
+      "name": "Borrowed Gear (base)",
+      "text": "temporary recommended equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/0791a6311b45",
+      "name": "Borrowed Gear (upgraded)",
+      "text": "temporary recommended equipment; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/09878f1ea8d3",
+      "name": "Bulwark (base)",
+      "text": "low-Health shield for Tanks; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Tanks on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Tanks on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1c9027c4fc1f",
+      "name": "Bulwark (upgraded)",
+      "text": "low-Health shield for Tanks; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Tanks on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Tanks on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/aaa8c921661c",
+      "name": "Bunch-o'-Belts (base)",
+      "text": "temporary Belts distributed to allies; cannot be removed; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fb991547d368",
+      "name": "Bunch-o'-Belts (upgraded)",
+      "text": "temporary Belts distributed to allies; cannot be removed; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/f0bdc63266d9",
+      "name": "Combust (base)",
+      "text": "allied deaths trigger max-Health-based explosions; 5 gold; tier 3; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/ef3d2d801fca",
+      "name": "Combust (prismatic)",
+      "text": "allied deaths trigger max-Health-based explosions; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/28c1ddad97f1",
+      "name": "Combust (upgraded)",
+      "text": "allied deaths trigger max-Health-based explosions; 5 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/47e8a7fe78c6",
+      "name": "Counterspell (base)",
+      "text": "delays enemies' next casts by increasing their Mana requirement; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d81d8b834657",
+      "name": "Counterspell (prismatic)",
+      "text": "delays enemies' next casts by increasing their Mana requirement; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/b5c2cd55f402",
+      "name": "Counterspell (upgraded)",
+      "text": "delays enemies' next casts by increasing their Mana requirement; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/49645affe780",
+      "name": "Diversified (base)",
+      "text": "team Health scales with active non-unique traits; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 5 active non-unique traits. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 5 active non-unique traits.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/0bfc0938951d",
+      "name": "Diversified (upgraded)",
+      "text": "team Health scales with active non-unique traits; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 5 active non-unique traits. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 5 active non-unique traits.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1f13a1bb1af6",
+      "name": "Downpour (base)",
+      "text": "team Mana Regen; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/5ee3ed478abc",
+      "name": "Downpour (prismatic)",
+      "text": "team Mana Regen; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/81fe6373e704",
+      "name": "Downpour (upgraded)",
+      "text": "team Mana Regen; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/b5de60403b3b",
+      "name": "Fellowship (base)",
+      "text": "shield and Damage Amp based on adjacent allies; 4 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/366321619f83",
+      "name": "Fellowship (upgraded)",
+      "text": "shield and Damage Amp based on adjacent allies; 4 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d92a81f8fc69",
+      "name": "Flow (base)",
+      "text": "temporary Unstoppable status and AS; 3 gold; tier 1; offer windows 6-1–10-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/a8235561cfc6",
+      "name": "Flow (upgraded)",
+      "text": "temporary Unstoppable status and AS; 3 gold; tier 1; offer windows 6-1–10-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/60197e876eca",
+      "name": "Found Friend (base)",
+      "text": "temporary dummy equipped with a Belt; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On a win streak (any length). Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "On a win streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/850242610314",
+      "name": "Found Friend (upgraded)",
+      "text": "temporary dummy equipped with a Belt; 0 gold; tier 1; offer windows 2-1–2-7; re-offer cooldown 5 Wisp shops. Conditions: On a win streak (any length). Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            2,
+            1
+          ],
+          "end": [
+            2,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "On a win streak (any length).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fba37e497e33",
+      "name": "Giant Growth (base)",
+      "text": "max-Health increase for the highest-Health unit; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/6c126f31092a",
+      "name": "Giant Growth (upgraded)",
+      "text": "max-Health increase for the highest-Health unit; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/8d52579adcd4",
+      "name": "Giant's Aura (base)",
+      "text": "damaging aura on the highest-Health ally; 5 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Tank role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Tank role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/bbced7f67a6b",
+      "name": "Giant's Aura (prismatic)",
+      "text": "damaging aura on the highest-Health ally; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/7395d1e48fd5",
+      "name": "Giant's Aura (upgraded)",
+      "text": "damaging aura on the highest-Health ally; 5 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Tank role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Tank role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/973ce9788146",
+      "name": "Hand Of Baron (base)",
+      "text": "Baron stat buff for the team; 6 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Riftbeast active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Riftbeast active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/104d4f781bf7",
+      "name": "Hand Of Baron (upgraded)",
+      "text": "Baron stat buff for the team; 6 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Riftbeast active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Riftbeast active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/3e820c3e733c",
+      "name": "Hero's Entrance (base)",
+      "text": "delayed entry of the leftmost benched unit with recommended equipment; 4 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 1 champion on your bench. Modes: Standard, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Tockers"
+      ],
+      "conditions": "At least 1 champion on your bench.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fd8f1a87a87d",
+      "name": "Hero's Entrance (upgraded)",
+      "text": "delayed entry of the leftmost benched unit with recommended equipment; 4 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 1 champion on your bench. Modes: Standard, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Tockers"
+      ],
+      "conditions": "At least 1 champion on your bench.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/98d836416019",
+      "name": "Heroic Sacrifice (base)",
+      "text": "sacrifices allies to empower the three strongest units; 5 gold; tier 3; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Exactly 2 or 3 (no more or less) champions holding 3 items each. Excluded by: Makeshift Armor I, Makeshift Armor II. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Exactly 2 or 3 (no more or less) champions holding 3 items each.",
+      "augment_exclusions": "Makeshift Armor I, Makeshift Armor II."
+    },
+    {
+      "id": "wisps-combat/63be89eada6b",
+      "name": "Heroic Sacrifice (upgraded)",
+      "text": "sacrifices allies to empower the three strongest units; 5 gold; tier 3; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Exactly 2 or 3 (no more or less) champions holding 3 items each. Excluded by: Makeshift Armor I, Makeshift Armor II. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Exactly 2 or 3 (no more or less) champions holding 3 items each.",
+      "augment_exclusions": "Makeshift Armor I, Makeshift Armor II."
+    },
+    {
+      "id": "wisps-combat/d9bcc1e71e9f",
+      "name": "Hireling (base)",
+      "text": "temporary equipped five-cost reinforcements; 5 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/018367d0e724",
+      "name": "Hireling (prismatic)",
+      "text": "temporary equipped five-cost reinforcements; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/264c6db42a57",
+      "name": "Hireling (upgraded)",
+      "text": "temporary equipped five-cost reinforcements; 5 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/de877f81359c",
+      "name": "Homing Fireflies (base)",
+      "text": "Caster Mana spending launches damaging fireflies; 2 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Casters on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Casters on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/46b2418ac81c",
+      "name": "Homing Fireflies (upgraded)",
+      "text": "Caster Mana spending launches damaging fireflies; 2 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Casters on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Casters on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/0816dd61d9b7",
+      "name": "Hugify (base)",
+      "text": "Health increase for selected high-Health units; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/2c65a505a482",
+      "name": "Hugify (prismatic)",
+      "text": "Health increase for selected high-Health units; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fecf4f427667",
+      "name": "Hugify (upgraded)",
+      "text": "Health increase for selected high-Health units; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/6dffb7898a52",
+      "name": "Hummingbird (base)",
+      "text": "AS increase for selected high-AS units; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/58eb420fbfd7",
+      "name": "Hummingbird (prismatic)",
+      "text": "AS increase for selected high-AS units; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/12c108cbe52a",
+      "name": "Hummingbird (upgraded)",
+      "text": "AS increase for selected high-AS units; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/577d76c036f5",
+      "name": "Improved Reach (base)",
+      "text": "additional Fighter attack range; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Fighters on the board; an itemized champion with the Fighter role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Fighters on the board; an itemized champion with the Fighter role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/c53a513f1f1b",
+      "name": "Improved Reach (upgraded)",
+      "text": "additional Fighter attack range; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Fighters on the board; an itemized champion with the Fighter role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Fighters on the board; an itemized champion with the Fighter role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/5c1765d29c15",
+      "name": "Infliction (base)",
+      "text": "teamwide enemy Slow, Burn, Shred and Sunder; 6 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant); either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant); either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/812a2f9bb792",
+      "name": "Infliction (upgraded)",
+      "text": "teamwide enemy Slow, Burn, Shred and Sunder; 6 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant); either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant); either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/9ce7acbe3c6c",
+      "name": "Iron Core (base)",
+      "text": "front-center unit gains Health from front-row population; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Excluded by: Solo Plate. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Solo Plate."
+    },
+    {
+      "id": "wisps-combat/5f8fcc319e15",
+      "name": "Iron Core (upgraded)",
+      "text": "front-center unit gains Health from front-row population; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Excluded by: Solo Plate. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": "Solo Plate."
+    },
+    {
+      "id": "wisps-combat/06748cd48a34",
+      "name": "Ironwood (base)",
+      "text": "reduces damage from enemies attacking the highest-Health ally; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/2823ba34ac93",
+      "name": "Ironwood (upgraded)",
+      "text": "reduces damage from enemies attacking the highest-Health ally; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/696c47ec11bf",
+      "name": "Killer's Regret (base)",
+      "text": "early allied deaths stun their killers; 2 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/8e32752d748f",
+      "name": "Killer's Regret (upgraded)",
+      "text": "early allied deaths stun their killers; 2 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/5615b5453787",
+      "name": "Killing Frenzy (base)",
+      "text": "Fighter executes and kill-triggered AS; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Fighter role; at least 2 Fighters on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Fighter role; at least 2 Fighters on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/caf0e950e35e",
+      "name": "Killing Frenzy (upgraded)",
+      "text": "Fighter executes and kill-triggered AS; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: An itemized champion with the Fighter role; at least 2 Fighters on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "An itemized champion with the Fighter role; at least 2 Fighters on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/00f0b3d6c9ff",
+      "name": "Late Bloomer (base)",
+      "text": "temporary promoted one-cost reinforcements; 6 gold; tier 3; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/41b1564e1c1b",
+      "name": "Late Bloomer (prismatic)",
+      "text": "temporary promoted one-cost reinforcements; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1bfd339aec7d",
+      "name": "Late Bloomer (upgraded)",
+      "text": "temporary promoted one-cost reinforcements; 6 gold; tier 3; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/e93fa46cdbfe",
+      "name": "Lightning Storm (base)",
+      "text": "repeated max-Health true-damage strikes; 5 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/4df439dbafc0",
+      "name": "Lightning Storm (prismatic)",
+      "text": "repeated max-Health true-damage strikes; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/3cc5e7073394",
+      "name": "Lightning Storm (upgraded)",
+      "text": "repeated max-Health true-damage strikes; 5 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/2b65edb2e0a4",
+      "name": "Lightning Strike (base)",
+      "text": "enemy-team max-Health true damage; 2 gold; tier 1; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/43330ec80a5d",
+      "name": "Lightning Strike (upgraded)",
+      "text": "enemy-team max-Health true damage; 2 gold; tier 1; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/4956b2c059b5",
+      "name": "Living Soil (base)",
+      "text": "periodic roots stun an enemy; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d4e4f4398239",
+      "name": "Living Soil (upgraded)",
+      "text": "periodic roots stun an enemy; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/ce38ffd068a9",
+      "name": "Mana-Rich Soil (base)",
+      "text": "reduced Caster maximum Mana; 3 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Casters on the board; an itemized champion with the Caster role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Casters on the board; an itemized champion with the Caster role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d02246c7d2c9",
+      "name": "Mana-Rich Soil (upgraded)",
+      "text": "reduced Caster maximum Mana; 3 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Casters on the board; an itemized champion with the Caster role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Casters on the board; an itemized champion with the Caster role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/4f89d8eff929",
+      "name": "Marksmen's Gale (base)",
+      "text": "Marksman attacks accumulate AS; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Marksmans on the board; an itemized champion with the Marksman role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Marksmans on the board; an itemized champion with the Marksman role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/598ece0eee82",
+      "name": "Marksmen's Gale (upgraded)",
+      "text": "Marksman attacks accumulate AS; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Marksmans on the board; an itemized champion with the Marksman role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Marksmans on the board; an itemized champion with the Marksman role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/5ae8dd822e64",
+      "name": "Marksmen's Marks (base)",
+      "text": "chance for Marksmen to attack twice; 3 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Marksmans on the board; an itemized champion with the Marksman role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Marksmans on the board; an itemized champion with the Marksman role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/54f0aef05b1f",
+      "name": "Marksmen's Marks (upgraded)",
+      "text": "chance for Marksmen to attack twice; 3 gold; tier 2; offer windows 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Marksmans on the board; an itemized champion with the Marksman role. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Marksmans on the board; an itemized champion with the Marksman role.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/e98f42466a54",
+      "name": "Mercenary Force (base)",
+      "text": "Damage Amp scales with saved gold; 3 gold; tier 2; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 30 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 30 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/568c70414d6d",
+      "name": "Mercenary Force (upgraded)",
+      "text": "Damage Amp scales with saved gold; 3 gold; tier 2; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 30 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 30 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/23b03cd903c4",
+      "name": "Moonlight Ritual (base)",
+      "text": "temporary promotion of the lowest-star eligible one- or two-costs; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: A 1-cost or 2-cost champion at 2 stars or higher. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 1-cost or 2-cost champion at 2 stars or higher.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/ad8445db17aa",
+      "name": "Moonlight Ritual (upgraded)",
+      "text": "temporary promotion of the lowest-star eligible one- or two-costs; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: A 1-cost or 2-cost champion at 2 stars or higher. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "A 1-cost or 2-cost champion at 2 stars or higher.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/bb35b683e937",
+      "name": "Moonrise (base)",
+      "text": "delayed amplification of Lunar bonuses; 2 gold; tier 1; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Lunar active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Lunar active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/ff41a715389d",
+      "name": "Moonrise (upgraded)",
+      "text": "delayed amplification of Lunar bonuses; 2 gold; tier 1; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: Lunar active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Lunar active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/7c01b7183d92",
+      "name": "Nature's Ally (base)",
+      "text": "allied deaths summon random Riftbeasts; 2 gold; tier 2; offer windows 6-1–10-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/e29abdd9cabd",
+      "name": "Nature's Ally (upgraded)",
+      "text": "allied deaths summon random Riftbeasts; 2 gold; tier 2; offer windows 4-2–4-7, 3-1–3-4; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/5557dd99fab1",
+      "name": "Nature's Wrath (base)",
+      "text": "delayed elimination of itemless units on both sides; 1 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 5 champions each holding 1 or more items; Elderwood not active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 5 champions each holding 1 or more items; Elderwood not active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fb932a15683c",
+      "name": "Nature's Wrath (upgraded)",
+      "text": "delayed elimination of itemless units on both sides; 1 gold; tier 3; offer windows 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 5 champions each holding 1 or more items; Elderwood not active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 5 champions each holding 1 or more items; Elderwood not active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/19cbfd895527",
+      "name": "Petrified Dummy (base)",
+      "text": "first allied death produces a defensive dummy; 2 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d3f4bab89a88",
+      "name": "Petrified Dummy (upgraded)",
+      "text": "first allied death produces a defensive dummy; 2 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/b85577db8925",
+      "name": "Petrify Shields (base)",
+      "text": "enemy AS and shield reduction; 2 gold; tier 1; offer windows 4-2–4-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/b392b6f03250",
+      "name": "Petrify Shields (upgraded)",
+      "text": "enemy AS and shield reduction; 2 gold; tier 1; offer windows 4-2–4-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/3985f16d2288",
+      "name": "Phantom Armor (base)",
+      "text": "temporary Warmog equipment; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/44b249451466",
+      "name": "Phantom Armor (prismatic)",
+      "text": "temporary Warmog equipment; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/619c4cffcb83",
+      "name": "Phantom Armor (upgraded)",
+      "text": "temporary Warmog equipment; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/6586d3f44590",
+      "name": "Phantom Emblem (base)",
+      "text": "temporary emblem for the most active trait; 3 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/a752a516b62f",
+      "name": "Phantom Emblem (upgraded)",
+      "text": "temporary emblem for the most active trait; 1 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/bd94ff81b19c",
+      "name": "Phantom Gloves (base)",
+      "text": "temporary Thief's Gloves; 3 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/a9f1a0c2ada9",
+      "name": "Phantom Gloves (upgraded)",
+      "text": "temporary Thief's Gloves; 3 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/ff7b7fbaf700",
+      "name": "Phantom Splash (base)",
+      "text": "temporarily activates inactive traits at their first breakpoint; 2 gold; tier 2; offer windows 5-1–5-7, 4-2–4-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 2 inactive traits. Excluded by: Trait Ladder. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 inactive traits.",
+      "augment_exclusions": "Trait Ladder."
+    },
+    {
+      "id": "wisps-combat/d2b71cc150ed",
+      "name": "Phantom Splash (upgraded)",
+      "text": "temporarily activates inactive traits at their first breakpoint; 2 gold; tier 2; offer windows 5-1–5-7, 4-2–4-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 4 inactive traits. Excluded by: Trait Ladder. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 4 inactive traits.",
+      "augment_exclusions": "Trait Ladder."
+    },
+    {
+      "id": "wisps-combat/9cda51de05e1",
+      "name": "Phantom Vest (base)",
+      "text": "temporary Bramble Vest; 2 gold; tier 2; offer windows 3-1–3-4, 5-1–5-7, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/ec458917b553",
+      "name": "Phantom Vest (upgraded)",
+      "text": "temporary Bramble Vest; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/4681ba19d294",
+      "name": "Plated Shields (base)",
+      "text": "improved shields plus a temporary team shield; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1b89967de746",
+      "name": "Plated Shields (upgraded)",
+      "text": "improved shields plus a temporary team shield; 2 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1062d55467ad",
+      "name": "Potted Lifebloom (base)",
+      "text": "temporary Elderwood healing plant; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Elderwood active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/41bc2e88b82b",
+      "name": "Potted Lifebloom (upgraded)",
+      "text": "temporary Elderwood healing plant; 1 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Elderwood active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/e918f3d87112",
+      "name": "Potted Stonebark (base)",
+      "text": "temporary Elderwood tank plant; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Elderwood active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/f7a662944f82",
+      "name": "Potted Stonebark (upgraded)",
+      "text": "temporary Elderwood tank plant; 1 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Elderwood active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d4fbbea0552a",
+      "name": "Preppers (base)",
+      "text": "stacking equipment begins combat with progress already accumulated; 2 gold; tier 2; offer windows 3-5–4-1, 3-1–3-4, 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 stacking items in your army. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 stacking items in your army.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1858d2bd35fd",
+      "name": "Preppers (upgraded)",
+      "text": "stacking equipment begins combat with progress already accumulated; 2 gold; tier 2; offer windows 3-1–3-4, 3-5–4-1, 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 stacking items in your army. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 stacking items in your army.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/576542c51670",
+      "name": "Prolific Power (base)",
+      "text": "team AD and AP; 0 gold; tier 1; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Less than 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Less than 10 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/9f3ed705a907",
+      "name": "Prolific Power (upgraded)",
+      "text": "team AD and AP; 0 gold; tier 1; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Less than 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Less than 10 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/c180628a7c91",
+      "name": "Quicken (base)",
+      "text": "temporary AS after casting; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Not offered when a manaless champion on the board holds 3 items. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Not offered when a manaless champion on the board holds 3 items.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/aca65e84c467",
+      "name": "Quicken (upgraded)",
+      "text": "temporary AS after casting; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Not offered when a manaless champion on the board holds 3 items. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Not offered when a manaless champion on the board holds 3 items.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/7e5a45553ac8",
+      "name": "Radiantize (base)",
+      "text": "temporarily promotes randomly selected equipped items to Radiant; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/98886e886869",
+      "name": "Radiantize (upgraded)",
+      "text": "temporarily promotes randomly selected equipped items to Radiant; 4 gold; tier 3; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/2eed80b65c1f",
+      "name": "Rain (base)",
+      "text": "team Mana Regen; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1ce536c807c1",
+      "name": "Rain (upgraded)",
+      "text": "team Mana Regen; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/dd0588d78e7e",
+      "name": "Regeneration (base)",
+      "text": "continuous percentage-Health team healing; 3 gold; tier 2; offer windows 4-2–4-7, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/cd157647335a",
+      "name": "Regeneration (upgraded)",
+      "text": "continuous percentage-Health team healing; 3 gold; tier 2; offer windows 4-2–4-7, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/f8ac4f3e4db9",
+      "name": "Resistant (base)",
+      "text": "flat reduction to individual damage instances against Tanks; 2 gold; tier 1; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/91385b032912",
+      "name": "Resistant (upgraded)",
+      "text": "flat reduction to individual damage instances against Tanks; 2 gold; tier 1; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/8d782546caeb",
+      "name": "Revenge (base)",
+      "text": "team Damage Amp accumulates on allied deaths; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/0cedb236c5de",
+      "name": "Revenge (upgraded)",
+      "text": "team Damage Amp accumulates on allied deaths; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/048c7a7c55d8",
+      "name": "Scrappy (base)",
+      "text": "temporary recommended equipment for itemless units; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 champions with no items. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 champions with no items.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/8e322bb26884",
+      "name": "Scrappy (upgraded)",
+      "text": "temporary recommended equipment for itemless units; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 3 champions with no items. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 3 champions with no items.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/22c135014785",
+      "name": "Snacktime! (base)",
+      "text": "BFF executes sufficiently injured enemies it damages; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Sprykin active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Sprykin active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/1f83dcc4f3bd",
+      "name": "Snacktime! (upgraded)",
+      "text": "BFF executes sufficiently injured enemies it damages; 2 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Sprykin active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Sprykin active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/256e5ff0bbee",
+      "name": "Solitude's Cloak (base)",
+      "text": "Health and Damage Amp for nonadjacent allies; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Elderwood, Lunar and Greenfather all inactive. Excluded by: Group Hug I, Group Hug II, Hold the Line. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood, Lunar and Greenfather all inactive.",
+      "augment_exclusions": "Group Hug I, Group Hug II, Hold the Line."
+    },
+    {
+      "id": "wisps-combat/e230bfb22259",
+      "name": "Solitude's Cloak (upgraded)",
+      "text": "Health and Damage Amp for nonadjacent allies; 3 gold; tier 2; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Elderwood, Lunar and Greenfather all inactive. Excluded by: Group Hug I, Group Hug II, Hold the Line. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood, Lunar and Greenfather all inactive.",
+      "augment_exclusions": "Group Hug I, Group Hug II, Hold the Line."
+    },
+    {
+      "id": "wisps-combat/516eb555b845",
+      "name": "Stand Alone (base)",
+      "text": "Health and Damage Amp for units alone in their row; 3 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Elderwood not active; Lunar not active; Greenfather not active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood not active; Lunar not active; Greenfather not active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/dd7e877db507",
+      "name": "Stand Alone (prismatic)",
+      "text": "Health and Damage Amp for units alone in their row; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/9321d16a4fba",
+      "name": "Stand Alone (upgraded)",
+      "text": "Health and Damage Amp for units alone in their row; 3 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: Elderwood not active; Lunar not active; Greenfather not active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Elderwood not active; Lunar not active; Greenfather not active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/37f7d52a5ba6",
+      "name": "Stealthy (base)",
+      "text": "temporary untargetability for the strongest Fighters or Assassins; 0 gold; tier 1; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Fighters or Assassins on the board; an itemized champion with a role of Assassin or Fighter. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Fighters or Assassins on the board; an itemized champion with a role of Assassin or Fighter.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fa2499031278",
+      "name": "Stealthy (upgraded)",
+      "text": "temporary untargetability for the strongest Fighters or Assassins; 0 gold; tier 1; offer windows 5-1–5-7, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Fighters or Assassins on the board; an itemized champion with a role of Assassin or Fighter. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Fighters or Assassins on the board; an itemized champion with a role of Assassin or Fighter.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/017dfc65ee52",
+      "name": "Sunfire Sorcery (base)",
+      "text": "enemy-team Burn and Wound; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d3de61653fb7",
+      "name": "Sunfire Sorcery (upgraded)",
+      "text": "enemy-team Burn and Wound; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Either no Morellonomicon, Sunfire Cape or Red Buff (base or Radiant), or Inferno active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/6ee7637c91f7",
+      "name": "Supercritical (base)",
+      "text": "extra critical damage for allies with Precision; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 2 champions that can critically strike with abilities. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 champions that can critically strike with abilities.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/515ff8de287c",
+      "name": "Supercritical (upgraded)",
+      "text": "extra critical damage for allies with Precision; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Conditions: At least 2 champions that can critically strike with abilities. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 champions that can critically strike with abilities.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/30a1dd022cc0",
+      "name": "Tattered Armor (base)",
+      "text": "enemy-team Armor and MR reduction; 1 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant). Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fbd814b1b82b",
+      "name": "Tattered Armor (prismatic)",
+      "text": "enemy-team Armor and MR reduction; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/ec6bebef3a05",
+      "name": "Tattered Armor (upgraded)",
+      "text": "enemy-team Armor and MR reduction; 1 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant). Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Not offered while you hold Last Whisper, Void Staff, Ionic Spark or Evenshroud (base or Radiant).",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/28ca39e2dddd",
+      "name": "Tiger's Visit (base)",
+      "text": "temporary Tiger Primal blessing; 3 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: You have not already taken the Tiger Primal blessing; Primal active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "You have not already taken the Tiger Primal blessing; Primal active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/c5bd2092995a",
+      "name": "Tiger's Visit (upgraded)",
+      "text": "temporary Tiger Primal blessing; 2 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: You have not already taken the Tiger Primal blessing; Primal active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "You have not already taken the Tiger Primal blessing; Primal active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/61c0f351bc24",
+      "name": "Training Yard (base)",
+      "text": "equipped Training Dummies; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/2e3740e65e3e",
+      "name": "Training Yard (upgraded)",
+      "text": "equipped Training Dummies; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/68b5ed957ee8",
+      "name": "Treetop Archers (base)",
+      "text": "periodic physical-damage volleys; 5 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/e18856291d49",
+      "name": "Treetop Archers (prismatic)",
+      "text": "periodic physical-damage volleys; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/0ac6b60388d2",
+      "name": "Treetop Archers (upgraded)",
+      "text": "periodic physical-damage volleys; 5 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d509b1e5dd80",
+      "name": "Tremors (base)",
+      "text": "periodic enemy stuns; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/9c079f0f0af2",
+      "name": "Tremors (prismatic)",
+      "text": "periodic enemy stuns; 0 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/d88ff3ce1c51",
+      "name": "Tremors (upgraded)",
+      "text": "periodic enemy stuns; 4 gold; tier 3; offer windows 5-1–5-7, 6-1–10-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/36dce9f4234e",
+      "name": "Turtle's Visit (base)",
+      "text": "temporary Turtle Primal blessing; 3 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: You have not already taken the Turtle Primal blessing; Primal active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "You have not already taken the Turtle Primal blessing; Primal active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/2e061c93463d",
+      "name": "Turtle's Visit (upgraded)",
+      "text": "temporary Turtle Primal blessing; 2 gold; tier 2; offer windows 3-5–4-1, 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: You have not already taken the Turtle Primal blessing; Primal active. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "You have not already taken the Turtle Primal blessing; Primal active.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/0f028c38f289",
+      "name": "Ultra Ascension (base)",
+      "text": "large delayed team Damage Amp; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/54496398912d",
+      "name": "Ultra Ascension (prismatic)",
+      "text": "large delayed team Damage Amp; 1 gold; tier 3; offer windows All bands (no round-band tag); re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [],
+      "all_stages": true,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/7c53d2f1202f",
+      "name": "Ultra Ascension (upgraded)",
+      "text": "large delayed team Damage Amp; 1 gold; tier 1; offer windows 3-1–3-4, 3-5–4-1; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            1
+          ],
+          "end": [
+            3,
+            4
+          ]
+        },
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/fadf66e34e0d",
+      "name": "Verdant Vitality (base)",
+      "text": "team Health; 0 gold; tier 1; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Less than 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Less than 10 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/e8a8ed2b8588",
+      "name": "Verdant Vitality (upgraded)",
+      "text": "team Health; 0 gold; tier 1; offer windows 5-1–5-7, 6-1–10-1, 4-2–4-7; re-offer cooldown 5 Wisp shops. Conditions: Less than 10 gold. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "Less than 10 gold.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/22609f972523",
+      "name": "Wrapped In Thorns (base)",
+      "text": "periodic Tank damage reflection; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Tanks on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Tanks on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/f54946eba109",
+      "name": "Wrapped In Thorns (upgraded)",
+      "text": "periodic Tank damage reflection; 2 gold; tier 1; offer windows 3-5–4-1, 4-2–4-7, 6-1–10-1, 5-1–5-7; re-offer cooldown 5 Wisp shops. Conditions: At least 2 Tanks on the board. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            3,
+            5
+          ],
+          "end": [
+            4,
+            1
+          ]
+        },
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            6,
+            1
+          ],
+          "end": [
+            10,
+            1
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": "At least 2 Tanks on the board.",
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/8dad98f9afe7",
+      "name": "Yordle Spirit (base)",
+      "text": "brief near-total attack dodge; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    },
+    {
+      "id": "wisps-combat/069397d3ba9c",
+      "name": "Yordle Spirit (upgraded)",
+      "text": "brief near-total attack dodge; 3 gold; tier 2; offer windows 4-2–4-7, 5-1–5-7; re-offer cooldown 5 Wisp shops. Modes: Standard, Double Up, Tockers.",
+      "offer_windows": [
+        {
+          "start": [
+            4,
+            2
+          ],
+          "end": [
+            4,
+            7
+          ]
+        },
+        {
+          "start": [
+            5,
+            1
+          ],
+          "end": [
+            5,
+            7
+          ]
+        }
+      ],
+      "all_stages": false,
+      "modes": [
+        "Standard",
+        "Double Up",
+        "Tockers"
+      ],
+      "conditions": null,
+      "augment_exclusions": null
+    }
+  ]
+}

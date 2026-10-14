@@ -4,7 +4,7 @@
   "handoff_description": "Analyze the units most relevant to a TFT composition question, using scoped frequency, star levels, outcomes, and itemization when useful.",
   "tools": {
     "include_all": false,
-    "groups": ["ranking", "query_cohorts"]
+    "groups": ["ranking", "query_cohorts", "context"]
   },
   "context": {"repository": true},
   "handoffs": []

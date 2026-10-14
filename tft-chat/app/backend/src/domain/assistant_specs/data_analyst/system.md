@@ -44,3 +44,5 @@ After analysis, hand off to `final_responder` with the verified result, original
 ## Evidence displays
 
 For a useful comparison or explorable ranking with evidence, preserve the invocation-local evidence reference for `final_responder` to present. Do not call `present_evidence`; it belongs to the final responder. Never reconstruct numerical display payloads. For a placement distribution, retrieve reportable histograms through `compare_cohorts`; a mean does not establish a distribution. Keep target and baseline populations distinct. If no evidence reference is available, use verified results in prose or Markdown.
+
+Use the Available resources catalogue for progressive disclosure. Read an exact reference ID with `read_resource` before relying on static facts absent from the conversation. Read relevant permitted skill IDs before using their workflow; descriptions alone do not supply facts or instructions. For counts or comparisons, read the complete relevant populations and eligibility rules.

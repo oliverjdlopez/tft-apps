@@ -2,9 +2,9 @@
 
 ChatTFT is a Python 3.13+ Teamfight Tactics analysis application: Riot and Community Dragon inputs become a normalized PostgreSQL match graph and scoped aggregate projections, which FastAPI, an unbundled React UI, and OpenAI Agents SDK assistants expose through bounded tools.
 
-## Agentic Guidelines 
+## Agentic Guidelines
 
-- When asked to dispatch subagents, use whatever the user requested in terms of model and reasoning effort. If not specified then 
+- When asked to dispatch subagents, use whatever the user requested in terms of model and reasoning effort. If not specified then
   1. Use GPT luna 6 on high reasoning if in Codex harness
   2. Use Claude Sonnet 5.5 on medium reasoning if in Claude Code harness
 
@@ -55,7 +55,7 @@ Before completing a task, first gather the related repository documentation.
 | --- | --- |
 | `app/backend/api/**`, `app/backend/src/services/**`, `app/frontend/src/**`, `scripts/start.py` | [Web runtime and UI](docs/architecture/web-runtime.md) |
 | `app/backend/src/domain/assistants/**`, `assistant_specs/**`, `domain/tasks/**` | [Assistants and tasks](docs/architecture/assistants-and-tasks.md) |
-| `app/backend/src/domain/providers/**` | [Runtime context](docs/content_providers/context.md) and [skills](docs/content_providers/skills.md) |
+| `app/backend/src/domain/resources/**`, `app/backend/src/resources/**`, historical `domain/providers/**` | [Runtime context](docs/content_providers/context.md) and [skills](docs/content_providers/skills.md) |
 | `app/backend/src/domain/tools/**` | [Model-facing tools](docs/tools/README.md) |
 | `app/backend/src/db/**`, database rebuild/migration/publication scripts | [Persistence and analytics](docs/data/persistence-and-analytics.md) |
 | `scripts/ingestion/**`, Riot/Community Dragon clients, `db/insert.py` | [Ingestion and upstreams](docs/data/ingestion.md) |

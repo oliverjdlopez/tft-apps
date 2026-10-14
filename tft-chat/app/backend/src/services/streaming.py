@@ -170,6 +170,22 @@ async def stream_agent_events(
                 )
                 output = getattr(item, "output", None)
                 model_output = model_jsonable(output)
+                if name == 'read_resource':
+                    resource = model_output
+                    if isinstance(resource, str):
+                        try:
+                            resource = json.loads(resource)
+                        except (ValueError, TypeError):
+                            resource = None
+                    if isinstance(resource, dict) and resource.get('found'):
+                        yield stream_event({
+                            'type': 'skill' if resource['kind'] == 'skill' else 'context',
+                            'name': resource.get('heading') or resource['name'],
+                            'description': 'Resource read for this response.',
+                            'path': resource['path'],
+                            **({'line': 1, 'content': resource['content']}
+                               if resource['kind'] == 'reference' else {}),
+                        })
                 if name == "present_evidence":
                     yield stream_event(
                         presentation_event(

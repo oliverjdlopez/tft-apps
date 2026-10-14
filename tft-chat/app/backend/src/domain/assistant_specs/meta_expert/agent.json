@@ -4,7 +4,7 @@
   "handoff_description": "Give expert TFT meta reads from the data, including strongest comps, itemization patterns, patch shifts, and traps.",
   "tools": {
     "include_all": false,
-    "groups": ["ranking", "query_cohorts"]
+    "groups": ["ranking", "query_cohorts", "context"]
   },
   "context": {"repository": true},
   "handoffs": ["data_analyst"]
