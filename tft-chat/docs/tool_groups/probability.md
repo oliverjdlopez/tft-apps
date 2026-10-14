@@ -7,6 +7,14 @@ number of champions in each rarity. Shop odds and champion bag sizes are
 explicit parameters in the calculator so they can be updated together when a
 game patch changes them.
 
+The roster boundary excludes traitless combat entities (neutral monsters,
+training dummies and summons), excludes costs outside 1–5, and deduplicates
+champion display identities before selecting a complete set. Set 18 Avatar
+forms share one Lux pool: the picker and tool use **Lux**, not separate
+`Lux (Solar)`/other form targets. Lux probabilities cover any Avatar form;
+trait selection is outside this normal-shop model. Riftbeast shop champions
+remain included, including the playable Krug and Elder Dragon.
+
 All internal unit-name comparisons use `TFTNameResolver.normalize_name`, the
 same canonical identity rule used by CommunityDragon ingestion and lookup.
 
@@ -75,6 +83,8 @@ targets. A two-dimensional request prepares the full Cartesian product and
 does not impose a combination limit. Each returned run includes its axis
 `coordinates`; the browser does not add a separate baseline. The singular
 `sweep` field remains accepted for older clients.
+Trailing commas or spaces in browser dimension values do not add a zero-valued
+run.
 
 The service retains a bounded roster snapshot and shared trial set for 30
 minutes. After preparation, the browser separates two ideas that used to be a

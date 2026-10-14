@@ -211,15 +211,31 @@ def _youtube_source_id(url: str) -> str | None:
     return candidate if re.fullmatch(r'[A-Za-z0-9_-]{11}', candidate) else None
 
 
+def _online_source(url: str) -> tuple[str, str] | None:
+    """Recover stable playback identity without resolving remote transports."""
+    youtube_id = _youtube_source_id(url)
+    if youtube_id:
+        return youtube_id, f"https://www.youtube.com/watch?v={youtube_id}"
+    try:
+        from .online import canonical_source
+    except ImportError:
+        from online import canonical_source
+    try:
+        return canonical_source(url)
+    except ValueError:
+        return None
+
+
 def _recover_download_sources(connection: sqlite3.Connection) -> None:
     """Recover metadata only from completed download tasks linked to existing reviews."""
     rows = connection.execute("SELECT d.*, v.duration AS local_duration FROM download_tasks d JOIN videos v ON v.id=d.video_id WHERE d.status='completed' AND d.url IS NOT NULL AND v.source_id IS NULL ORDER BY d.updated_at").fetchall()
     for row in rows:
-        source_id = _youtube_source_id(row["url"])
-        if source_id:
+        source = _online_source(row["url"])
+        if source:
+            source_id, source_url = source
             start = row["start_seconds"] or 0
             end = row["end_seconds"] if row["end_seconds"] is not None else start + row["local_duration"]
-            connection.execute("UPDATE videos SET source_id=?, source_url=?, source_start_seconds=?, source_end_seconds=?, source_quality=? WHERE id=? AND source_id IS NULL", (source_id, f"https://www.youtube.com/watch?v={source_id}", start, end, row["quality"], row["video_id"]))
+            connection.execute("UPDATE videos SET source_id=?, source_url=?, source_start_seconds=?, source_end_seconds=?, source_quality=? WHERE id=? AND source_id IS NULL", (source_id, source_url, start, end, row["quality"], row["video_id"]))
 
 
 def physical_video_path(video_id: str) -> Path | None:
@@ -915,15 +931,16 @@ def bind_local_copy(video_id: str, path: Path, mime_type: str, width: int, heigh
 def update_source_metadata(video_id: str, url: str, start_seconds: float | None = None, end_seconds: float | None = None,
                            quality: str = "720p") -> None:
     """Track supported source identity for a newly completed ordinary download."""
-    source_id = _youtube_source_id(url)
-    if not source_id:
+    source = _online_source(url)
+    if not source:
         return
+    source_id, source_url = source
     connection = get_db()
     try:
         with connection:
             # Freeze the observed range even when the import had no explicit end.
             # Later edits to the upstream video must not silently extend a review.
-            connection.execute("UPDATE videos SET source_url=?,source_id=?,source_start_seconds=?,source_end_seconds=COALESCE(?, ? + duration),source_quality=? WHERE id=?", (f'https://www.youtube.com/watch?v={source_id}', source_id, start_seconds or 0, end_seconds, start_seconds or 0, quality, video_id))
+            connection.execute("UPDATE videos SET source_url=?,source_id=?,source_start_seconds=?,source_end_seconds=COALESCE(?, ? + duration),source_quality=? WHERE id=?", (source_url, source_id, start_seconds or 0, end_seconds, start_seconds or 0, quality, video_id))
     finally:
         connection.close()
 

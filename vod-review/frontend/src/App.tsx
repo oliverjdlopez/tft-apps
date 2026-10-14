@@ -14,6 +14,7 @@ import { ChangeEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, use
 import { createPortal } from "react-dom";
 import { Activity, Check, CircleHelp, Cpu, Crosshair, Download, Film, FolderOpen, Link2, ListVideo, LoaderCircle, Pause, Play, RefreshCcw, Save, ScanSearch, Settings, SkipBack, SkipForward, Trash2, TriangleAlert, Upload, X } from "lucide-react";
 import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getReplayAutomation, getVideoTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
+import { TwitchPlayer } from "./TwitchPlayer";
 import { YouTubePlayer, PlayerAdapter } from "./YouTubePlayer";
 import { importOnlineVideo, setVideoMode, downloadOfflineVideo, getVideoFrame, getOfflineDownload } from "./api";
 import DriveUpload from "./DriveUpload";
@@ -201,8 +202,8 @@ function parseDownloadTime(hours: string, minutes: string): number | null {
   return parsedHours * 3600 + parsedMinutes * 60;
 }
 
-function isYouTubeUrl(value: string): boolean {
-  try { return /^(?:www\.|m\.)?(?:youtube\.com|youtu\.be)$/.test(new URL(value).hostname); }
+function isOnlineUrl(value: string): boolean {
+  try { const url = new URL(value); return /^(?:www\.|m\.)?(?:youtube\.com|youtu\.be)$/.test(url.hostname) || (/^(?:www\.|m\.)?twitch\.tv$/.test(url.hostname) && /^\/(?:videos\/|[^/]+\/video\/)\d+\/?$/.test(url.pathname)); }
   catch { return false; }
 }
 
@@ -229,8 +230,8 @@ function App() {
   const [downloading, setDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloadTask, setDownloadTask] = useState<DownloadTask | null>(null);
-  const onlineForm = importMode === "online" && downloadMediaType === "video" && (!videoUrl.trim() || isYouTubeUrl(videoUrl));
-  const onlineImport = importMode === "online" && downloadMediaType === "video" && isYouTubeUrl(videoUrl);
+  const onlineForm = importMode === "online" && downloadMediaType === "video" && (!videoUrl.trim() || isOnlineUrl(videoUrl));
+  const onlineImport = importMode === "online" && downloadMediaType === "video" && isOnlineUrl(videoUrl);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [automationOpen, setAutomationOpen] = useState(false);
@@ -586,8 +587,8 @@ function App() {
           )}
           <form className="url-import" onSubmit={(event) => { event.preventDefault(); void handleUrlImport(); }}>
             <label htmlFor="video-url"><Link2 size={13} /> Twitch or YouTube URL</label>
-            <label className="url-import-quality">Playback mode<UiNativeSelect aria-label="Import playback mode" value={importMode} onChange={(event) => setImportMode(event.target.value as "online" | "offline")} disabled={downloading || downloadMediaType === "audio"}><option value="online">Online · YouTube streaming</option><option value="offline">Offline · download video</option></UiNativeSelect></label>
-            <span>Online analyzes YouTube samples without saving the full video. Twitch and audio use offline downloads.</span>
+            <label className="url-import-quality">Playback mode<UiNativeSelect aria-label="Import playback mode" value={importMode} onChange={(event) => setImportMode(event.target.value as "online" | "offline")} disabled={downloading || downloadMediaType === "audio"}><option value="online">Online · YouTube / Twitch streaming</option><option value="offline">Offline · download video</option></UiNativeSelect></label>
+            <span>Online analyzes YouTube and Twitch VOD samples without saving the full video. Audio uses offline downloads.</span>
             <label className="url-import-transcription" htmlFor="transcription-only">Transcription only<UiSwitch id="transcription-only" checked={downloadMediaType === "audio"} onCheckedChange={(checked) => setDownloadMediaType(checked ? "audio" : "video")} disabled={downloading || downloadTask?.status === "paused"} /></label>
             {downloadMediaType === "audio" && <span>Downloads only audio and automatically transcribes the full URL. Click View transcript when it finishes.</span>}
             <div className="url-import-row">
@@ -645,6 +646,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
   const initialSeekPending = useRef(true);
   const online = video.mode === "online";
   const youtubeRef = useRef<PlayerAdapter>(null);
+  const OnlinePlayer = video.source_id?.startsWith("twitch:") ? TwitchPlayer : YouTubePlayer;
   const playback = useOptimizedPlayback(video.id, videoRef, !online);
   const [preview, setPreview] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -1015,7 +1017,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
     {online && <p className="analysis-note">Switch to Offline for transcription and clip exports. Coarse sampling may miss rounds shorter than the scan interval.</p>}
     <div className="video-stage-wrap">
       <div className="video-stage" ref={overlayRef} style={{ aspectRatio: `${video.width} / ${video.height}` }}>
-        {online && video.source_id ? <YouTubePlayer ref={youtubeRef} sourceId={video.source_id} start={video.source_start_seconds ?? 0} duration={video.duration} initialTime={currentTime} onTime={(time) => { if (!boxEditing) setCurrentTime(time); }} onError={onError} /> : <video ref={videoRef} controls playsInline preload="metadata" onPause={(event) => { setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const initialTime = currentTime; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); }} />}
+        {online && video.source_id ? <OnlinePlayer ref={youtubeRef} sourceId={video.source_id} start={video.source_start_seconds ?? 0} duration={video.duration} initialTime={currentTime} onTime={(time) => { if (!boxEditing) setCurrentTime(time); }} onError={onError} /> : <video ref={videoRef} controls playsInline preload="metadata" onPause={(event) => { setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const initialTime = currentTime; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); }} />}
         {online && boxEditing && preview && <img className="online-frame-preview" src={preview} alt="Still frame for drawing the round crop" />}
         {!online && playback.status === "preparing" && <div className="playback-status"><LoaderCircle className="spin" size={18} /><strong>Preparing fast playback…</strong><span>This one-time step makes startup and scrubbing responsive.</span></div>}
         {!online && playback.status === "failed" && playback.error && <div className="playback-warning"><span>{playback.error ?? "Optimized playback is unavailable."}</span><UiButton variant="outline" type="button" onClick={() => void playback.retry()}>Retry</UiButton></div>}

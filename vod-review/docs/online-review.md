@@ -1,15 +1,19 @@
 # Online round review
 
-Public prerecorded YouTube links can be opened in **Online** mode. The review
-streams through YouTube's embedded player; choosing a detected round seeks the
+Public prerecorded YouTube links and Twitch VOD links can be opened in **Online** mode. The review
+streams through the source platform's embedded player; choosing a detected round seeks the
 player on the original video timeline. Metadata and detected rounds stay local.
-Live/upcoming broadcasts, playlists, uploads, and Twitch sources use the existing
+Live/upcoming broadcasts, playlists, clips, and local uploads use the existing
 Offline workflow. Internet access and permission to embed the video are required
 for online playback; the source can subsequently become unavailable.
 
 Use **Draw box** to fetch a still at the current player position and draw the
 normalized round-indicator crop. The backend fetches the still from the source;
-the application never attempts to read pixels from YouTube's iframe.
+the application never attempts to read pixels from the player iframe.
+
+Twitch playback uses the interactive player with the frontend hostname as its
+`parent`. Saved Twitch downloads retain source identity for switching to Online.
+Channels and clips do not support online analysis.
 
 ## Sparse analysis
 
@@ -20,6 +24,13 @@ saving a full playable video. Each seek still needs nearby compressed frames;
 network savings and runtime depend on the source's encoding and request latency.
 A server that does not respond to byte-range requests is rejected with an Offline
 option rather than silently read from beginning to end.
+
+Twitch analysis selects HLS at the requested resolution and fetches only the
+MPEG-TS segment containing each sample, plus at most its successor. Playlist
+durations map timestamps onto the VOD timeline, including discontinuities.
+One segment is buffered for adjacent samples. Playlists are limited to 4 MiB
+and segments to 64 MiB. Encrypted, byte-range, and fragmented-MP4 playlists
+require Offline mode. There is no full-VOD fallback.
 
 The first pass classifies coarse samples from the beginning through a final
 sample near the end. Differing readable labels identify intervals for a second
@@ -42,7 +53,7 @@ Use Offline analysis at a denser interval when completeness matters.
 ## Cache and transport boundaries
 
 The cache contains timestamped lossless crop arrays and OCR observations. Its
-identity includes source ID, range, MP4 representation policy/resolution, crop,
+identity includes platform-qualified source ID, range, representation policy/resolution, crop,
 and analysis version. Ordinary retries reuse saved observations; OCR reruns reuse
 crops and can finish without source access when all necessary crops exist. New
 crops still require internet. Changing the range, crop, or representation creates
@@ -78,8 +89,13 @@ For an opt-in native Electron embed smoke, build the VOD frontend, then run from
 env -u ELECTRON_RUN_AS_NODE node_modules/electron/dist/electron --disable-gpu tests/online-vod-electron.mjs
 ```
 
+Set `VOD_TWITCH_ID` to a numeric public Twitch VOD ID to exercise Twitch
+playback and round seeking through the same smoke test. The Twitch smoke shows
+the VOD view, mutes its player, and sends a native Play click before seeking. Pending seeks are
+retained during metadata loading and preroll ads.
+
 This uses an isolated Electron profile and mocked backend with a real public
-YouTube embed. It verifies the desktop VOD view, player identity headers,
+YouTube embed by default, or the supplied Twitch VOD. It verifies the desktop VOD view, player identity headers,
 round-click seeking, and the 10-second default without application databases or
 inference. It requires internet access and a working graphical Electron runtime.
 
@@ -112,3 +128,9 @@ matching EJS package is installed together. Resolution enables Deno and Node
 Remote decoder input uses Python HTTP byte ranges in chunks of at most 256 KiB,
 with adjacent-read buffering, so transport does not depend on the FFmpeg build's
 HTTPS behavior. Every HTTP read requires a valid partial-content response.
+
+Twitch compatibility validation covered real public VOD metadata and remote
+preview decoding, along with deterministic MPEG-TS timeline and API tests. The
+native Electron embed loaded and visually sought to the requested timestamp,
+but the automated playback-time check stalled in the validation environment;
+sustained native playback remains unverified.

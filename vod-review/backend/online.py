@@ -1,14 +1,15 @@
-"""Bounded remote frame sampling and coarse-to-fine YouTube round analysis."""
+"""Bounded remote frame sampling and coarse-to-fine YouTube/Twitch round analysis."""
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import math
 import re
 import time
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse, urljoin
 from urllib.request import Request, urlopen
 
 import numpy as np
@@ -23,11 +24,16 @@ NETWORK_TIMEOUT = 20
 
 
 def canonical_source(url: str) -> tuple[str, str]:
-    """Validate a YouTube video URL and return its stable identity and URL."""
+    """Validate a YouTube or Twitch VOD URL and return its stable identity and URL."""
     parsed = urlparse(url)
     host = (parsed.hostname or "").lower()
     if parsed.scheme not in {"http", "https"} or parsed.username or parsed.password:
-        raise ValueError("Online mode requires a public YouTube video URL")
+        raise ValueError("Online mode requires a public YouTube or Twitch VOD URL")
+    if host in {"twitch.tv", "www.twitch.tv", "m.twitch.tv"}:
+        match = re.fullmatch(r"/(?:videos/|[^/]+/video/)([0-9]+)/?", parsed.path)
+        if not match:
+            raise ValueError("Online mode requires a Twitch VOD URL, not a live channel or clip")
+        return f"twitch:{match[1]}", f"https://www.twitch.tv/videos/{match[1]}"
     if host == "youtu.be":
         video_id = parsed.path.strip("/")
     elif host in {"youtube.com", "www.youtube.com", "m.youtube.com"}:
@@ -50,22 +56,24 @@ def _resolve(url: str, quality: str) -> dict[str, Any]:
 
     source_id, canonical = canonical_source(url)
     height = int(str(quality).removesuffix("p")) if str(quality).removesuffix("p").isdigit() else 720
+    twitch = source_id.startswith("twitch:")
     with yt_dlp.YoutubeDL({
         "quiet": True, "no_warnings": True, "noplaylist": True,
         "socket_timeout": NETWORK_TIMEOUT, "retries": 1, "extractor_retries": 1,
         "js_runtimes": {"deno": {}, "node": {}},
-        "format": f"bestvideo[ext=mp4][height<={height}][protocol=https]/best[ext=mp4][height<={height}][protocol=https]",
+        "format": f"best[height<={height}][protocol=m3u8_native]/best[height<={height}][protocol=m3u8]" if twitch else f"bestvideo[ext=mp4][height<={height}][protocol=https]/best[ext=mp4][height<={height}][protocol=https]",
     }) as downloader:
         info = downloader.extract_info(canonical, download=False)
     if not info or info.get("is_live") or info.get("live_status") in {"is_live", "is_upcoming", "post_live"}:
         raise ValueError("Online analysis requires a completed prerecorded video")
-    if info.get("id") != source_id:
+    resolved_id = str(info.get("id", "")).removeprefix("v") if twitch else info.get("id")
+    if resolved_id != source_id.removeprefix("twitch:"):
         raise ValueError("Resolved video identity does not match the requested source")
     duration = float(info.get("duration") or 0)
     if not math.isfinite(duration) or duration <= 0 or not info.get("url"):
         raise ValueError("No seekable video representation is available; use Offline mode")
     transport = urlparse(info["url"])
-    if transport.scheme != "https" or info.get("protocol") not in {None, "https", "http"}:
+    if transport.scheme != "https" or info.get("protocol") not in {None, "https", "http", "m3u8_native", "m3u8"}:
         raise ValueError("No seekable HTTPS video representation is available; use Offline mode")
     if not info.get("width") or not info.get("height") or int(info["width"]) <= 0 or int(info["height"]) <= 0:
         raise ValueError("Video dimensions are unavailable; use Offline mode")
@@ -73,7 +81,7 @@ def _resolve(url: str, quality: str) -> dict[str, Any]:
 
 
 def resolve_metadata(url: str, quality: str = "720p") -> dict[str, Any]:
-    """Return stable metadata for a public, completed YouTube video."""
+    """Return stable metadata for a public, completed YouTube video or Twitch VOD."""
     source_id, source_url = canonical_source(url)
     info = _resolve(source_url, quality)
     return {"source_id": source_id, "source_url": source_url,
@@ -166,6 +174,93 @@ class _RangeReader:
         self._headers.clear()
 
 
+class _HlsVideo:
+    """Read bounded unencrypted MPEG-TS VOD segments on the playlist timeline."""
+
+    def __init__(self, url: str, headers: dict[str, str]):
+        self.headers = headers
+        playlist = self._fetch(url, 4 * 1024 * 1024).decode("utf-8")
+        if not playlist.startswith("#EXTM3U") or "#EXT-X-ENDLIST" not in playlist:
+            raise RuntimeError("Online HLS requires a completed VOD; use Offline mode")
+        # Twitch publishes independent MPEG-TS segments. Reject layouts that need
+        # encryption, initialization fragments or partial byte-range assembly.
+        if any(tag in playlist for tag in ("#EXT-X-KEY", "#EXT-X-MAP", "#EXT-X-BYTERANGE")):
+            raise RuntimeError("Unsupported HLS layout; use Offline mode")
+        self.segments = []
+        elapsed = 0.0
+        duration = None
+        for line in playlist.splitlines():
+            line = line.strip()
+            if line.startswith("#EXTINF:"):
+                duration = float(line.split(":", 1)[1].split(",", 1)[0])
+                if not math.isfinite(duration) or duration <= 0:
+                    raise RuntimeError("Invalid HLS segment duration")
+            elif line and not line.startswith("#"):
+                if duration is None:
+                    raise RuntimeError("Invalid HLS media playlist")
+                segment_url = urljoin(url, line)
+                if urlparse(segment_url).scheme != "https":
+                    raise RuntimeError("HLS segments must use HTTPS")
+                self.segments.append((elapsed, duration, segment_url))
+                elapsed += duration
+                duration = None
+        if not self.segments:
+            raise RuntimeError("Empty HLS media playlist")
+        self.cached = None
+
+    def _fetch(self, url: str, limit: int) -> bytes:
+        """Fetch a bounded playlist or segment without retaining signed URLs."""
+        try:
+            with urlopen(Request(url, headers=self.headers), timeout=NETWORK_TIMEOUT) as response:
+                payload = response.read(limit + 1)
+        except Exception:
+            raise RuntimeError("HLS resource unavailable; retry or choose Offline mode") from None
+        if len(payload) > limit:
+            raise RuntimeError("HLS resource exceeded its download budget")
+        return payload
+
+    def frame(self, video: dict[str, Any], timestamp: float) -> tuple[np.ndarray, float]:
+        """Decode the selected segment and at most its immediate successor."""
+        import av
+
+        start = float(video.get("source_start_seconds") or 0)
+        end = start + float(video["duration"])
+        target = start + timestamp
+        index = next((i for i, (offset, duration, _) in enumerate(self.segments)
+                      if offset <= target < offset + duration), None)
+        if index is None:
+            raise RuntimeError("Timestamp is outside the HLS playlist")
+        last = None
+        begun = time.monotonic()
+        for offset, duration, url in self.segments[index:index + 2]:
+            if offset >= end:
+                break
+            if self.cached is None or self.cached[0] != url:
+                self.cached = (url, self._fetch(url, 64 * 1024 * 1024))
+            with av.open(io.BytesIO(self.cached[1])) as container:
+                stream = container.streams.video[0]
+                # MPEG-TS PTS may start far from zero or reset at discontinuities.
+                # The playlist supplies source time; stream start supplies local time.
+                origin = stream.start_time
+                for count, frame in enumerate(container.decode(stream)):
+                    if count >= 1800 or time.monotonic() - begun > NETWORK_TIMEOUT:
+                        raise RuntimeError("HLS sample exceeded its decode budget")
+                    if frame.pts is None:
+                        continue
+                    if origin is None:
+                        origin = frame.pts
+                    actual = offset + float((frame.pts - origin) * frame.time_base)
+                    if actual >= min(end, offset + duration):
+                        break
+                    if actual >= start:
+                        last = (frame.to_ndarray(format="rgb24"), actual - start)
+                        if actual + 1e-6 >= target:
+                            return last
+        if last is not None:
+            return last
+        raise RuntimeError("No frame found in HLS sample")
+
+
 class RemoteVideo:
     """Seek a resolved remote video with bounded decode and transport retries."""
 
@@ -174,15 +269,18 @@ class RemoteVideo:
         self.container = None
         self._reader = None
         self.stream = None
+        self._hls = None
         # The selected representation policy and resolved dimensions identify
         # crops independently of expiring signed URLs. Opening stays lazy so
         # cached OCR reruns do not need a network connection.
-        self.representation = f"mp4-{video.get('source_quality') or video.get('quality') or '720p'}-{video.get('width', '')}x{video.get('height', '')}"
+        transport = "hls" if str(video.get("source_id", "")).startswith("twitch:") else "mp4"
+        self.representation = f"{transport}-{video.get('source_quality') or video.get('quality') or '720p'}-{video.get('width', '')}x{video.get('height', '')}"
 
     def __enter__(self) -> "RemoteVideo":
         return self
 
     def __exit__(self, *args: Any) -> None:
+        self._hls = None
         if self.container is not None:
             self.container.close()
             self.container = None
@@ -195,6 +293,9 @@ class RemoteVideo:
 
         self.__exit__()
         info = _resolve(self.video["source_url"], self.video.get("source_quality") or self.video.get("quality") or "720p")
+        if info.get("protocol") in {"m3u8_native", "m3u8"}:
+            self._hls = _HlsVideo(info["url"], info.get("http_headers", {}))
+            return
         try:
             self._reader = _RangeReader(info["url"], info.get("http_headers", {}))
             self.container = av.open(self._reader, buffer_size=32768)
@@ -215,8 +316,16 @@ class RemoteVideo:
         """Decode the first frame at/after a review-relative sample timestamp."""
         if not math.isfinite(review_timestamp) or review_timestamp < 0 or review_timestamp >= float(self.video["duration"]):
             raise ValueError("Sample timestamp must be inside the review")
-        if self.container is None:
+        if self.container is None and self._hls is None:
             self._open()
+        if self._hls is not None:
+            for attempt in range(2):
+                try:
+                    return self._hls.frame(self.video, review_timestamp)
+                except Exception:
+                    if attempt:
+                        raise RuntimeError("Remote HLS frame unavailable; retry or choose Offline mode") from None
+                    self._open()
         source_start = float(self.video.get("source_start_seconds") or 0)
         source_end = source_start + float(self.video["duration"])
         target = source_start + review_timestamp

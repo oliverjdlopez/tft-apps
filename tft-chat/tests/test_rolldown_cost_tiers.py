@@ -22,11 +22,52 @@ def roster() -> list[CDragonChampion]:
     """Provide two named champions per cost without contacting static-data APIs."""
     return [
         CDragonChampion(
-            name=f"Unit {cost}{letter}", apiName=f"TFT_Unit{cost}{letter}", cost=cost,
+            name=f"Unit {cost}{letter}", apiName=f"TFT_Unit{cost}{letter}", cost=cost, traits=["Example Trait"],
         )
         for cost in range(1, 6)
         for letter in ("A", "B")
     ]
+
+
+def test_roster_excludes_neutrals_and_counts_avatar_once(roster) -> None:
+    """Static combat entities and Avatar forms must not inflate shop bags."""
+    lux = CDragonChampion(name="Lux", apiName="DA_Lux18_Base", cost=5, traits=["Avatar"])
+    polluted = [
+        *roster, lux, lux,
+        CDragonChampion(name="Lux (Solar)", apiName="DA_18_Lux_Sunbeam", cost=5, traits=["Solar", "Avatar"]),
+        CDragonChampion(name="Training Dummy", apiName="TFT_TrainingDummy", cost=1),
+        CDragonChampion(name="Golem", apiName="TFT_BlueGolem", cost=1),
+    ]
+    request = RolldownRequest(level=9, budget=10, targets=[{"unit": "Lux", "copies_needed": 1}], simulations=800)
+    clean_result = calculate_rolldown_for_roster(request, [*roster, lux])
+    polluted_result = calculate_rolldown_for_roster(request, polluted)
+    assert polluted_result == clean_result
+    assert polluted_result["parameters"]["champions_in_current_roster_by_cost"][5] == 3
+    assert [champion.name for champion in rolldown.normal_shop_champions(polluted)].count("Lux") == 1
+    for excluded in ("Training Dummy", "Golem", "Lux (Solar)"):
+        invalid = RolldownRequest.model_validate({**request.model_dump(), "targets": [{"unit": excluded, "copies_needed": 1}]})
+        with pytest.raises(ValueError, match="not a normal"):
+            calculate_rolldown_for_roster(invalid, polluted)
+
+
+def test_complete_roster_selection_ignores_neutral_only_future_set(monkeypatch, roster) -> None:
+    """Neutral entities cannot make an unreleased roster appear complete."""
+    from types import SimpleNamespace
+
+    class Client:
+        """Return a playable set followed by five costed neutral entities."""
+
+        async def all_sets(self):
+            """Provide static set records without a network request."""
+            return [
+                SimpleNamespace(number=18, champions=roster),
+                SimpleNamespace(number=19, champions=[
+                    CDragonChampion(name=f"Neutral {cost}", cost=cost) for cost in range(1, 6)
+                ]),
+            ]
+
+    monkeypatch.setattr(rolldown, "load_config", lambda: SimpleNamespace(chat=SimpleNamespace(set_number=None)))
+    assert asyncio.run(rolldown.load_rolldown_champions(Client())) == roster
 
 
 def test_three_cost_matches_unspecified_champion_shop_probability(roster) -> None:

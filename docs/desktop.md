@@ -19,7 +19,7 @@ VOD Review unavailable; retry cleans up before creating a new runtime. Quit
 stops only the owned service trees. The former Wisps tab and workspace were
 removed; see [VOD scope](vod-review-scope.md).
 
-VOD Review can embed public prerecorded YouTube videos in **Online** mode, with
+VOD Review can embed public prerecorded YouTube videos and Twitch VODs in **Online** mode, with
 backend-owned sparse frame analysis and an **Offline** download option. The
 iframe uses the local VOD frontend origin and a cross-origin referrer for
 YouTube's player identity. Backend CORS permits both standalone port 5173 and
@@ -59,6 +59,12 @@ user and environment over private pipes. Run `npm run setup:wsl` once from
 dependencies remain in WSL. Windows GUI validation is reported separately.
 Windows shell staging includes both media scripts; the renderer requests
 catalogue resources over the existing owned backend URL across the WSL bridge.
+
+Langfuse startup is opt-in: from `desktop/`, run `npm start -- --langfuse`
+or `npm run dev -- --langfuse` to start or reuse its stack and host runner.
+Plain `npm start` and `npm run dev` skip Langfuse startup, including on WSL.
+The Langfuse tab remains available for a separately running stack; launching
+without the flag does not stop an existing stack.
 
 Langfuse uses Compose project `tft-apps-evals`, project ID `tft-apps-evals`, new
 project-scoped volumes, generated credentials in ignored

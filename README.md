@@ -28,7 +28,8 @@ CloudBeaver starts explicitly:
 docker compose -f desktop/cloudbeaver/compose.yaml up -d
 ```
 
-Langfuse starts through the desktop launcher or, for troubleshooting, from
+Langfuse starts only when requested with `npm start -- --langfuse` (or
+`npm run dev -- --langfuse`) from `desktop/`, or, for troubleshooting, from
 `tft-chat/` with `uv run --locked --extra evals python -m evals up --no-browser`.
 Backend CLI commands remain available within each application for troubleshooting
 and tests. This repository has fresh history on `dev`; nothing is pushed.

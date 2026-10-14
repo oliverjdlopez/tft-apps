@@ -15,7 +15,7 @@ export async function launchFromWsl(args, entry = new URL("./windows.mjs", impor
   const root = fileURLToPath(new URL("../", import.meta.url)).replace(/\/$/, "");
   const options = launchOptions(applicationArgs, root);
   if (options.help) {
-    console.log("WSL desktop: npm run setup:wsl (once), then npm start | npm run dev\nOptions (after --): --windows-node /mnt/c/path/node.exe --python LINUX_PATH --port PORT --dev-port PORT --startup-timeout SECONDS");
+    console.log("WSL desktop: npm run setup:wsl (once), then npm start | npm run dev\nOptions (after --): --langfuse (start Langfuse; off by default) --windows-node /mnt/c/path/node.exe --python LINUX_PATH --port PORT --dev-port PORT --startup-timeout SECONDS");
     return;
   }
   if (!process.env.WSL_DISTRO_NAME) throw new Error("Run this command in your WSL checkout using Linux Node.");
@@ -31,7 +31,7 @@ export async function launchFromWsl(args, entry = new URL("./windows.mjs", impor
   }
   const script = execFileSync("wslpath", ["-w", fileURLToPath(entry)], { encoding: "utf8" }).trim();
   // Docker and Python belong to the Linux checkout, not the Windows shell cache.
-  if (!setup && entry.href === new URL("./windows.mjs", import.meta.url).href) {
+  if (options.langfuse && !setup && entry.href === new URL("./windows.mjs", import.meta.url).href) {
     await ensureLangfuse(root, options.python);
   }
   const context = {

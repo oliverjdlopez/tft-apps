@@ -143,7 +143,9 @@ def test_recovery_only_from_completed_supported_download(isolated_db):
     db.init_db()
     video = db.get_video('youtube')
     assert video['source_id'] == 'abcdefghijk' and video['source_start_seconds'] == 60 and video['source_end_seconds'] == 360
-    for identifier in ('upload', 'failed', 'twitch'):
+    assert db.get_video('twitch')['source_id'] == 'twitch:123'
+    assert db.get_video('twitch')['source_url'] == 'https://www.twitch.tv/videos/123'
+    for identifier in ('upload', 'failed'):
         assert db.get_video(identifier)['source_id'] is None
 
 

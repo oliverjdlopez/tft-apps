@@ -303,6 +303,34 @@ def _wilson_score_interval_95(successes: int, trials: int) -> tuple[float, float
     return _rounded(center - margin), _rounded(center + margin)
 
 
+def normal_shop_champions(champions: list[CDragonChampion]) -> list[CDragonChampion]:
+    """Select one record per normal-shop champion from static game entities.
+
+    Args:
+        champions: CommunityDragon records, including neutral units and forms.
+
+    Returns:
+        Trait-bearing 1-5 cost champions with a single shared Lux identity.
+    """
+    roster: dict[str, CDragonChampion] = {}
+    has_base_lux = any(
+        champion.name == "Lux" and "Avatar" in champion.traits
+        for champion in champions
+    )
+    for champion in champions:
+        # Neutral monsters, dummies and summons also have gold costs in the
+        # static export. Cost alone is not evidence of a shop champion.
+        if champion.cost not in COPIES_PER_CHAMPION or not champion.traits:
+            continue
+        # Avatar forms share Lux's bag; counting each form dilutes every
+        # other five-cost's odds. The normal-shop model queries Lux as a whole.
+        if has_base_lux and "Avatar" in champion.traits and champion.name != "Lux":
+            continue
+        identity = TFTNameResolver.normalize_name(champion.name or champion.apiName)
+        roster.setdefault(identity, champion)
+    return list(roster.values())
+
+
 def _normal_roster_counts(champions: list[CDragonChampion]) -> dict[int, int]:
     """Count normal-shop champions by cost.
 
@@ -351,7 +379,7 @@ async def load_rolldown_champions(client: CDragon) -> list[CDragonChampion]:
     """
     configured_set = load_config().chat.set_number
     if configured_set is not None:
-        champions = await client.champions(set_number=configured_set)
+        champions = normal_shop_champions(await client.champions(set_number=configured_set))
         if not _is_complete_normal_roster(champions):
             raise ValueError(
                 f"Configured TFT set {configured_set} does not have a complete "
@@ -360,9 +388,10 @@ async def load_rolldown_champions(client: CDragon) -> list[CDragonChampion]:
         return champions
 
     candidates = [
-        set_data for set_data in await client.all_sets()
-        if _is_complete_normal_roster(set_data.champions)
+        (set_data, normal_shop_champions(set_data.champions))
+        for set_data in await client.all_sets()
     ]
+    candidates = [candidate for candidate in candidates if _is_complete_normal_roster(candidate[1])]
     if not candidates:
         raise RuntimeError("Community Dragon returned no complete 1-5 cost shop roster")
 
@@ -380,7 +409,7 @@ async def load_rolldown_champions(client: CDragon) -> list[CDragonChampion]:
         except (TypeError, ValueError):
             return -1.0
 
-    return max(candidates, key=set_number).champions
+    return max(candidates, key=lambda candidate: set_number(candidate[0]))[1]
 
 
 def calculate_rolldown(
@@ -817,6 +846,7 @@ def calculate_rolldown_for_roster(
     Returns:
         Estimated joint and per-target hit distributions.
     """
+    champions = normal_shop_champions(champions)
     roster = {
         TFTNameResolver.normalize_name(champion.name or champion.apiName): champion
         for champion in champions

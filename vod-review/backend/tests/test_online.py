@@ -190,10 +190,10 @@ def range_server(payload, support_ranges=True):
         server.server_close()
 
 
-def make_video(path):
+def make_video(path, transport=False):
     av = pytest.importorskip("av")
-    with av.open(str(path), "w") as container:
-        stream = container.add_stream("mpeg4", rate=10)
+    with av.open(str(path), "w", format="mpegts" if transport else None) as container:
+        stream = container.add_stream("mpeg2video" if transport else "mpeg4", rate=10)
         stream.width, stream.height, stream.pix_fmt = 32, 32, "yuv420p"
         for index in range(60):
             frame = av.VideoFrame.from_ndarray(np.full((32, 32, 3), index * 3, np.uint8), format="rgb24")
@@ -311,3 +311,76 @@ def test_resolver_enables_available_node_without_runtime_script_downloads(monkey
     assert online._resolve(VIDEO["source_url"], "720p")["id"] == "abcdefghijk"
     assert captured["js_runtimes"] == {"deno": {}, "node": {}}
     assert not captured.get("remote_components")
+
+
+@pytest.mark.parametrize('url', ['https://www.twitch.tv/videos/123?t=1h', 'https://twitch.tv/example/video/123'])
+def test_twitch_source_identity(url):
+    assert online.canonical_source(url) == ('twitch:123', 'https://www.twitch.tv/videos/123')
+
+
+@pytest.mark.parametrize('url', ['https://twitch.tv/example', 'https://clips.twitch.tv/example', 'https://twitch.tv.evil.test/videos/123'])
+def test_twitch_rejects_non_vod_sources(url):
+    with pytest.raises(ValueError):
+        online.canonical_source(url)
+
+
+def test_hls_decode_preserves_segment_and_review_timeline(monkeypatch, tmp_path):
+    payload = make_video(tmp_path / 'segment.ts', transport=True)
+    calls = []
+    def fetch(self, url, limit):
+        calls.append(url)
+        if url.endswith('.m3u8'):
+            return b'#EXTM3U\n#EXTINF:6,\nfirst.ts\n#EXT-X-DISCONTINUITY\n#EXTINF:6,\nsecond.ts\n#EXT-X-ENDLIST\n'
+        return payload
+    monkeypatch.setattr(online._HlsVideo, '_fetch', fetch)
+    monkeypatch.setattr(online, '_resolve', lambda *args: {'url': 'https://fixture.test/vod.m3u8', 'protocol': 'm3u8_native'})
+    with online.RemoteVideo({**VIDEO, 'source_id': 'twitch:123', 'duration': 4, 'source_start_seconds': 7}) as source:
+        frame, actual = source.frame(.2)
+        assert actual == pytest.approx(.2, abs=.1)
+        assert np.mean(frame) == pytest.approx(12 * 3, abs=5)
+        source.frame(.4)
+    assert calls == ['https://fixture.test/vod.m3u8', 'https://fixture.test/second.ts']
+
+
+@pytest.mark.parametrize('extra', ['#EXT-X-KEY:METHOD=AES-128', '#EXT-X-MAP:URI="init.mp4"', '#EXT-X-BYTERANGE:100', ''])
+def test_hls_rejects_unsupported_or_unfinished_playlists(monkeypatch, extra):
+    playlist = '#EXTM3U\n' + extra + '\n#EXTINF:6,\nsegment.ts\n' + ('#EXT-X-ENDLIST' if extra else '')
+    monkeypatch.setattr(online._HlsVideo, '_fetch', lambda *args: playlist.encode())
+    with pytest.raises(RuntimeError):
+        online._HlsVideo('https://fixture.test/vod.m3u8', {})
+
+
+def test_twitch_resolver_selects_hls_and_checks_identity(monkeypatch):
+    import sys
+    from types import SimpleNamespace
+    options = {}
+    info = {'id': 'v123', 'duration': 60, 'url': 'https://stream.test/vod.m3u8',
+            'width': 1280, 'height': 720, 'protocol': 'm3u8_native'}
+    class Downloader:
+        def __init__(self, config):
+            options.update(config)
+        def __enter__(self):
+            return self
+        def __exit__(self, *args):
+            pass
+        def extract_info(self, url, download=False):
+            assert url == 'https://www.twitch.tv/videos/123'
+            assert download is False
+            return info
+    monkeypatch.setitem(sys.modules, 'yt_dlp', SimpleNamespace(YoutubeDL=Downloader))
+    assert online._resolve('https://twitch.tv/videos/123', '720p')['id'] == 'v123'
+    assert 'm3u8_native' in options['format']
+    info['id'] = 'v999'
+    with pytest.raises(ValueError, match='identity'):
+        online._resolve('https://twitch.tv/videos/123', '720p')
+
+
+def test_hls_fetch_masks_transport_errors(monkeypatch):
+    source = object.__new__(online._HlsVideo)
+    source.headers = {}
+    def unavailable(*args, **kwargs):
+        raise OSError('https://signed.test?token=secret')
+    monkeypatch.setattr(online, 'urlopen', unavailable)
+    with pytest.raises(RuntimeError, match='Offline') as error:
+        source._fetch('https://signed.test?token=secret', 10)
+    assert 'secret' not in str(error.value)

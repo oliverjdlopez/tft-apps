@@ -106,7 +106,7 @@ class SecretConfig:
 
 @dataclass(frozen=True)
 class ModelConfig:
-    openai_model: str = "gpt-5"
+    openai_model: str = "gpt-6-luna"
     anthropic_model: str = "claude-sonnet-5"
 
 

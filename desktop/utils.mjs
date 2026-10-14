@@ -41,7 +41,7 @@ export function pythonExecutable(root, override, platform = process.platform, cw
  * Args:
  *   args: User command-line arguments; root: checkout root.
  * Returns:
- *   Resolved mode, interpreter, ports, timeout, and help flag.
+ *   Resolved mode, interpreter, ports, timeout, Langfuse opt-in, and help flag.
  */
 export function launchOptions(args, root) {
   const { values } = parseArgs({ args, allowPositionals: false, options: {
@@ -49,6 +49,7 @@ export function launchOptions(args, root) {
     python: { type: "string" }, port: { type: "string" },
     "dev-port": { type: "string", default: "5173" },
     "startup-timeout": { type: "string", default: "120" },
+    langfuse: { type: "boolean", default: false },
     help: { type: "boolean", default: false },
   } });
   if (!["production", "dev"].includes(values.mode)) throw new Error("--mode must be production or dev.");
@@ -57,7 +58,7 @@ export function launchOptions(args, root) {
   return {
     mode: values.mode, python: pythonExecutable(launcherPaths(root).chat, values.python), port, devPort,
     startupTimeout: integerOption(values["startup-timeout"], "--startup-timeout", 3600) * 1000,
-    help: values.help,
+    langfuse: values.langfuse, help: values.help,
   };
 }
 

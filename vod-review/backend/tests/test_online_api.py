@@ -42,7 +42,10 @@ def client():
     return httpx.AsyncClient(transport=httpx.ASGITransport(app=service.app), base_url='http://test')
 
 
-def test_import_range_metadata_errors_and_preview(isolated, monkeypatch):
+@pytest.mark.parametrize("twitch", [False, True])
+def test_import_range_metadata_errors_and_preview(isolated, monkeypatch, twitch):
+    if twitch:
+        monkeypatch.setattr(service.online, "resolve_metadata", lambda *args: {**metadata(), "source_id": "twitch:123", "source_url": "https://www.twitch.tv/videos/123"})
     captured = []
 
     def preview(video, timestamp):
@@ -53,7 +56,7 @@ def test_import_range_metadata_errors_and_preview(isolated, monkeypatch):
 
     async def check():
         async with client() as api:
-            response = await api.post('/api/videos/online', json={'url': 'https://youtu.be/abcdefghijk', 'start_seconds': 300, 'end_seconds': 900, 'quality': '480p'})
+            response = await api.post('/api/videos/online', json={'url': 'https://twitch.tv/videos/123' if twitch else 'https://youtu.be/abcdefghijk', 'start_seconds': 300, 'end_seconds': 900, 'quality': '480p'})
             assert response.status_code == 201
             video = response.json()
             assert video['mode'] == 'online' and video['duration'] == 600 and not video['local_available']

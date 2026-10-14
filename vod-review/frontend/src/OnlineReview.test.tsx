@@ -10,6 +10,13 @@ vi.mock("./YouTubePlayer", async () => {
     return <div data-testid="youtube-player" data-start={props.start}>{props.sourceId}</div>;
   }) };
 });
+vi.mock("./TwitchPlayer", async () => {
+  const { forwardRef, useImperativeHandle } = await import("react");
+  return { TwitchPlayer: forwardRef((props: { sourceId: string }, ref) => {
+    useImperativeHandle(ref, () => adapter);
+    return <div data-testid="twitch-player">{props.sourceId}</div>;
+  }) };
+});
 afterEach(() => { cleanup(); vi.restoreAllMocks(); adapter.seek.mockClear(); adapter.pause.mockClear(); });
 const round = { timestamp_seconds: 20, scheduled_timestamp_seconds: 20, timing_error_ms: 0, class_label: "21", confidence: 1 };
 const video: VideoRecord = { id: "online", original_name: "Remote review", mime_type: "video/mp4", duration: 120, width: 1280, height: 720,
@@ -124,4 +131,15 @@ it("recovers this review's paused conversion independently of the latest global 
   await waitFor(() => expect(screen.getByLabelText('Review playback mode')).toBeEnabled());
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith('/downloads/this-review/dismiss'))).toBe(true);
   expect(screen.getByLabelText('Review playback mode')).toHaveValue('online');
+});
+
+it("imports Twitch VODs online without a download", async () => {
+  const record = { ...video, source_id: "twitch:123", source_url: "https://www.twitch.tv/videos/123" };
+  const fetch = mockApi(record);
+  render(<App />);
+  fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: record.source_url } });
+  fireEvent.click(screen.getByRole("button", { name: "Open online video from link" }));
+  await screen.findByTestId("twitch-player");
+  expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/videos/online"))).toBe(true);
+  expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/from-url"))).toBe(false);
 });

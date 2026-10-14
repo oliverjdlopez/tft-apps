@@ -18,7 +18,7 @@ async function main() {
   const args = process.argv.slice(2);
   const options = launchOptions(args, root);
   if (options.help) {
-    console.log("ChatTFT desktop: npm start | npm run dev\nOptions (after --): --python PATH --port PORT --dev-port PORT --startup-timeout SECONDS");
+    console.log("ChatTFT desktop: npm start | npm run dev\nOptions (after --): --langfuse (start Langfuse; off by default) --python PATH --port PORT --dev-port PORT --startup-timeout SECONDS");
     return;
   }
   const require = createRequire(import.meta.url);
@@ -32,7 +32,7 @@ async function main() {
   } catch {
     throw new Error("Electron is not installed. Run npm ci in desktop/, then retry.");
   }
-  await ensureLangfuse(root, options.python);
+  if (options.langfuse) await ensureLangfuse(root, options.python);
   const env = { ...process.env, CHATTFT_DESKTOP_NODE: process.execPath };
   delete env.ELECTRON_RUN_AS_NODE;
   const lifetime = process.platform === "win32" ? await createParentPipe() : undefined;

@@ -68,6 +68,9 @@ test("launch options reject invalid ports and preserve configured-port default",
   assert.equal(defaults.devPort, 5173);
   assert.equal(defaults.mode, "production");
   assert.equal(defaults.startupTimeout, 120000);
+  assert.equal(defaults.langfuse, false);
+  assert.equal(launchOptions(["--langfuse"], "/repo").langfuse, true);
+  assert.equal(launchOptions(["--mode", "dev", "--langfuse"], "/repo").langfuse, true);
   const dev = launchOptions(["--mode", "dev", "--port", "8301", "--dev-port", "5174"], "/repo");
   assert.equal(dev.port, 8301);
   assert.equal(dev.devPort, 5174);

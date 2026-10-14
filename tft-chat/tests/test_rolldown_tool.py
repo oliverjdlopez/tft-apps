@@ -314,7 +314,7 @@ def test_target_copies_out_cannot_exceed_selected_unit_bag() -> None:
     with pytest.raises(ValueError, match="exceeds the bag size"):
         calculate_rolldown_for_roster(
             request,
-            [SimpleNamespace(name="Example", apiName="TFT_Example", cost=5)],
+            [SimpleNamespace(name="Example", apiName="TFT_Example", cost=5, traits=["Example Trait"])],
         )
 
 
@@ -329,7 +329,7 @@ def test_rolldown_units_returns_only_sorted_normal_shop_champions(
         async def all_sets(self) -> list[SimpleNamespace]:
             """Return a partial future roster after one complete live roster."""
             complete = [
-                SimpleNamespace(name=name, apiName=f"TFT_{name}", cost=cost)
+                SimpleNamespace(name=name, apiName=f"TFT_{name}", cost=cost, traits=["Example Trait"])
                 for name, cost in [
                     ("Five", 5),
                     ("Two", 2),
@@ -342,7 +342,7 @@ def test_rolldown_units_returns_only_sorted_normal_shop_champions(
                 SimpleNamespace(number=16, champions=complete),
                 SimpleNamespace(
                     number=17,
-                    champions=[SimpleNamespace(name="Future", apiName="TFT_Future", cost=4)],
+                    champions=[SimpleNamespace(name="Future", apiName="TFT_Future", cost=4, traits=["Example Trait"])],
                 ),
             ]
 
@@ -384,7 +384,7 @@ def test_rolldown_simulate_reuses_one_roster_for_grouped_runs(
     async def fake_load(client: object) -> list[SimpleNamespace]:
         """Return one shared roster snapshot for every requested run."""
         loaded_clients.append(client)
-        return [SimpleNamespace(name="Example", apiName="TFT_Example", cost=4)]
+        return [SimpleNamespace(name="Example", apiName="TFT_Example", cost=4, traits=["Example Trait"])]
 
     def fake_calculate(
         request: RolldownRequest,
@@ -448,7 +448,7 @@ def test_prepared_runs_reuse_roster_and_samples_for_new_targets(
     async def fake_load(client: object) -> list[SimpleNamespace]:
         """Return a shared roster and record its single load."""
         loaded_clients.append(client)
-        return [SimpleNamespace(name="Example", apiName="TFT_Example", cost=4)]
+        return [SimpleNamespace(name="Example", apiName="TFT_Example", cost=4, traits=["Example Trait"])]
 
     def fake_calculate(
         request: RolldownRequest,
@@ -542,8 +542,8 @@ def test_prepared_boolean_query_buys_all_listed_units_for_full_budget(
         created_at=0,
         runs=(run,),
         champions=(
-            SimpleNamespace(name="Unit A", apiName="TFT_A", cost=4),
-            SimpleNamespace(name="Unit B", apiName="TFT_B", cost=4),
+            SimpleNamespace(name="Unit A", apiName="TFT_A", cost=4, traits=["Example Trait"]),
+            SimpleNamespace(name="Unit B", apiName="TFT_B", cost=4, traits=["Example Trait"]),
         ),
         trial_seeds=tuple(range(800)),
     )
@@ -656,7 +656,7 @@ def test_rolldown_explore_reuses_roster_and_duplicate_scenarios(
     async def fake_load(client: object) -> list[SimpleNamespace]:
         """Return one shared roster snapshot for the exploration."""
         loaded_clients.append(client)
-        return [SimpleNamespace(name="Example", apiName="TFT_Example", cost=4)]
+        return [SimpleNamespace(name="Example", apiName="TFT_Example", cost=4, traits=["Example Trait"])]
 
     def fake_calculate(
         request: RolldownRequest,

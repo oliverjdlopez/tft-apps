@@ -1,0 +1,52 @@
+import { act, cleanup, render, waitFor } from "@testing-library/react";
+import { createRef } from "react";
+import { afterEach, expect, it, vi } from "vitest";
+import type { PlayerAdapter } from "./YouTubePlayer";
+import { TwitchPlayer } from "./TwitchPlayer";
+afterEach(() => { cleanup(); delete window.Twitch; vi.restoreAllMocks(); });
+it("configures Twitch VOD embedding and maps review seeks to source time", async () => {
+  let ready: (() => void) | undefined;
+  const player = { seek: vi.fn(), play: vi.fn(), pause: vi.fn(), getCurrentTime: () => 615, getDuration: () => 900, addEventListener: vi.fn((_event, callback) => { ready = callback; }), removeEventListener: vi.fn() };
+  const construct = Object.assign(vi.fn(function() { return player; }), { READY: "ready" });
+  window.Twitch = { Player: construct as unknown as NonNullable<typeof window.Twitch>["Player"] };
+  const ref = createRef<PlayerAdapter>();
+  const { unmount } = render(<TwitchPlayer ref={ref} sourceId="twitch:123" start={600} duration={120} initialTime={3.5} onTime={vi.fn()} onError={vi.fn()} />);
+  await waitFor(() => expect(construct).toHaveBeenCalledOnce());
+  expect(construct.mock.calls[0]).toEqual([expect.any(String), expect.objectContaining({ video: "123", parent: [window.location.hostname], autoplay: false })]);
+  act(() => ready?.());
+  expect(player.seek).toHaveBeenLastCalledWith(603.5);
+  act(() => ref.current?.seek(17, true));
+  expect(player.seek).toHaveBeenLastCalledWith(617);
+  expect(player.play).toHaveBeenCalledOnce();
+  act(() => ref.current?.seek(-20));
+  expect(player.seek).toHaveBeenLastCalledWith(600);
+  expect(ref.current?.currentTime()).toBe(15);
+  unmount();
+  expect(player.removeEventListener).toHaveBeenCalledOnce();
+  expect(player.pause).toHaveBeenCalledOnce();
+});
+it("retains a round seek until Twitch metadata and playback are available", async () => {
+  vi.useFakeTimers();
+  try {
+    let ready: (() => void) | undefined;
+    let duration = 0;
+    let time = 0;
+    const player = { seek: vi.fn(), play: vi.fn(), pause: vi.fn(), getCurrentTime: () => time, getDuration: () => duration, addEventListener: vi.fn((_event, callback) => { ready = callback; }), removeEventListener: vi.fn() };
+    const construct = Object.assign(vi.fn(function() { return player; }), { READY: "ready" });
+    window.Twitch = { Player: construct as unknown as NonNullable<typeof window.Twitch>["Player"] };
+    const ref = createRef<PlayerAdapter>();
+    render(<TwitchPlayer ref={ref} sourceId="twitch:123" start={0} duration={120} initialTime={0} onTime={vi.fn()} onError={vi.fn()} />);
+    await act(async () => { await Promise.resolve(); });
+    act(() => ready?.());
+    act(() => ref.current?.seek(20, true));
+    expect(player.seek).not.toHaveBeenCalled();
+    duration = 120;
+    act(() => vi.advanceTimersByTime(5000));
+    expect(player.seek).toHaveBeenLastCalledWith(20);
+    act(() => vi.advanceTimersByTime(5000));
+    expect(player.seek).toHaveBeenCalledTimes(2);
+    time = 20;
+    act(() => vi.advanceTimersByTime(5000));
+    expect(player.seek).toHaveBeenCalledTimes(2);
+  } finally { cleanup(); vi.useRealTimers(); }
+});

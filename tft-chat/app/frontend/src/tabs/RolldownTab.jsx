@@ -25,6 +25,7 @@ function rdRunLabel(parameters) {
 function rdParseSweepValues(raw) {
   return String(raw || "")
     .split(/[,\s]+/)
+    .filter((value) => value.trim() !== "")
     .map((value) => Number(value))
     .filter((value) => Number.isFinite(value));
 }
