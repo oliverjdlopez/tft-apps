@@ -6,7 +6,6 @@ kind: reference
 parent: set18/wisps
 sets:
 - '18'
-legacy_name: set-18-reference-mechanics-wisp-preppers
 provenance: Migrated from resources/context/set18/mechanics/wisp-preppers.md; original source wording retained.
 patches:
 - '18.2'

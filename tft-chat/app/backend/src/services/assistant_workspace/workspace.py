@@ -9,8 +9,9 @@ import time
 import uuid
 
 from common.assistant_workspace import atomic_bytes, checkout_lock, recover_locked
-from domain.assistants.capture import EDITABLE_FILES, capture, configure, digest, reachable, registry_from_files
+from domain.assistants.capture import EDITABLE_FILES, capture, digest, registry_from_files
 from domain.assistants.registry import assistant_registry
+from domain.assistants.utils import configure_tools
 from .store import Store
 
 
@@ -47,7 +48,9 @@ class Workspace:
 
     def active(self):
         """Capture the cached registry before inspecting a mutable source tree."""
-        return configure(self.registry.snapshot())
+        registry = self.registry.snapshot()
+        configure_tools(registry)
+        return registry
 
     def state(self, name: str) -> dict:
         """Describe active instructions, editable head, source drift, and saved runs."""
@@ -137,7 +140,10 @@ class Workspace:
         if head is None:
             raise ValueError('Save a draft before testing or applying')
         draft = registry_from_files({**active.source_files, name: head['files']})
-        names = sorted(set(reachable(active, entry)) | set(reachable(draft, entry)))
+        names = sorted(
+            set(active.list_reachable_assistant_names(entry))
+            | set(draft.list_reachable_assistant_names(entry))
+        )
         if name not in names:
             raise ValueError('The edited assistant is not reachable from this workflow')
         return capture(active, names), capture(draft, names), head

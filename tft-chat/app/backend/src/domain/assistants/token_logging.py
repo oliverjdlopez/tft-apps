@@ -163,51 +163,6 @@ def _handoff_definitions(agent: Agent[Any]) -> list[dict[str, Any]]:
     return definitions
 
 
-def log_instruction_parts(
-    *,
-    assistant_name: str,
-    model: str,
-    base_instructions: str,
-    task_prompt: str,
-    repository_context: str,
-    skills: str,
-    assembled_instructions: str,
-    context_names: list[str],
-    skill_names: list[str],
-) -> None:
-    """Log token counts for the sections assembled by prompt providers.
-
-    Args:
-        assistant_name: Registered assistant name.
-        model: Configured model name used to choose an encoding.
-        base_instructions: Durable assistant instructions.
-        task_prompt: Optional task input wrapper.
-        repository_context: Rendered selected factual context.
-        skills: Rendered selected skill instructions.
-        assembled_instructions: Final joined instruction string.
-        context_names: Selected context source names.
-        skill_names: Selected skill names.
-    """
-    payload = {
-        "event": "instruction_parts",
-        "assistant": assistant_name,
-        "model": model,
-        "encoding": _encoding_name(model),
-        "tokens": {
-            "base_instructions": count_tokens(base_instructions, model=model),
-            "task_prompt": count_tokens(task_prompt, model=model),
-            "repository_context": count_tokens(repository_context, model=model),
-            "skills": count_tokens(skills, model=model),
-            "assembled_instructions": count_tokens(
-                assembled_instructions, model=model
-            ),
-        },
-        "context_sources": context_names,
-        "skills": skill_names,
-    }
-    prompt_token_logger.info(json.dumps(payload, separators=(",", ":")))
-
-
 def log_agent_graph(agent: Agent[Any], *, task_prompt: str) -> None:
     """Log instruction and tool-definition counts for a fresh agent graph.
 
@@ -286,5 +241,4 @@ __all__ = [
     "agent_model_name",
     "count_tokens",
     "log_agent_graph",
-    "log_instruction_parts",
 ]

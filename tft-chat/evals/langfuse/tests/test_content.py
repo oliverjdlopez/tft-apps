@@ -63,7 +63,7 @@ class FakeClient:
 
 def fixture_bundle():
     """Load the committed passing fixture definition without legacy dependencies."""
-    return load_snapshot("12919b463fd2b4bd5fdda2765fe6f7745191fcd4668a062576ff8a923f493591", ROOT)
+    return load_snapshot("17ea34010655d094a8072f69eb914a704c82d037ab82f57066c205156db46f1f", ROOT)
 
 
 def test_committed_inventory_preserves_authored_checks():
@@ -73,10 +73,10 @@ def test_committed_inventory_preserves_authored_checks():
     decision = next(b for b in bundles if b["suite"]["name"] == "decision_workflows")
     distillation = next(b for b in bundles if b["suite"]["name"] == "distill-transcript")
     historical = [b for b in bundles if b is not decision and b is not distillation]
-    assert len(entries) == 13
-    assert len(historical) == 11
-    assert sum(len(b["items"]) for b in bundles) == 165
-    assert sum(len(b["items"]) for b in historical) == 151
+    assert len(entries) == 11
+    assert len(historical) == 9
+    assert sum(len(b["items"]) for b in bundles) == 142
+    assert sum(len(b["items"]) for b in historical) == 128
     assert len(distillation["items"]) == 6
     assert len(decision["items"]) == 8
     assert all(item["expected_output"]["requirements"] for item in decision["items"])
@@ -104,7 +104,7 @@ def test_committed_inventory_preserves_authored_checks():
     assert {b["suite"]["name"] for b in bundles}.isdisjoint(
         {"clean_transcript", "compact_transcript", "analyze_transcript"})
     assert all("file://" not in json.dumps(b) for b in bundles)
-    assert next(a for a in assertions if a.get("selector") == "payload_reduction")["threshold"] == .75
+    assert {b["suite"]["family"] for b in bundles} == {"assistant"}
 
 
 def test_baseline_snapshots_retain_complete_authored_content():
@@ -115,11 +115,11 @@ def test_baseline_snapshots_retain_complete_authored_content():
         "c927d07be966f4d7c2c53a80a369cba4cbf4cfe7833d8b1959839e83ff062d7c",
         "4ac53489862d17447488c399f047384565bb91bdf6bf50b9af62fad99b67d888",
         "aaf6d5f43a6fd32e80a88270b495099bc766b8dbd0e1c05f15ccd89d408d9e08",
-        "548ed5b704124f3d59fc4a097b4c8246ee54f1a76a889009e9ebb138764fb099",
+        "25850fe05520c398f4723b09c2b26c2c4421c9bed73c5ec0bb4bd9725793ff8d",
         "9eeaa3d2c7624fe920cad5e8194386e72728a09a72d6b995771e1128b3bcbe84",
         "bc613ff033405bb733b4a7b052cd785858f0ffce416ce98689b410b7eba09e90",
     ]
-    bundles = [load_snapshot(identifier, ROOT) for identifier in baseline_ids]
+    bundles = [json.loads((ROOT / f"{identifier}.json").read_text()) for identifier in baseline_ids]
     items = [item for bundle in bundles for item in bundle["items"]]
     assert len(items) == 54 and len({item["id"] for item in items}) == 54
     assertions = [assertion for item in items for assertion in item["expected_output"]["assertions"]]

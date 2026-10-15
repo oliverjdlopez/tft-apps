@@ -8,7 +8,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-ResourceId = Annotated[str, Field(pattern=r'^(?:set[0-9]+(?:\.[0-9]+)?|skill:[a-z0-9-]+)(?:/[a-z0-9-]+)*$')]
+ResourceId = Annotated[str, Field(pattern=r'^(?:set[0-9]+(?:\.[0-9]+)?|(?:skill|playbook):[a-z0-9-]+)(?:/[a-z0-9-]+)*$')]
 
 
 class ResourceMetadata(BaseModel):
@@ -23,14 +23,13 @@ class ResourceMetadata(BaseModel):
     id: ResourceId
     title: Annotated[str, Field(min_length=1, max_length=200)]
     description: Annotated[str, Field(min_length=1, max_length=1024)]
-    kind: Literal['index', 'reference', 'records', 'skill', 'skill-reference']
+    kind: Literal['index', 'reference', 'records', 'skill', 'skill-reference', 'playbook', 'playbook-reference']
     parent: ResourceId | None = None
     sets: tuple[Annotated[str, Field(pattern=r'^\d+(?:\.\d+)?$')], ...] = ()
     patches: tuple[str, ...] = ()
     requires: tuple[ResourceId, ...] = ()
     related: tuple[ResourceId, ...] = ()
     provenance: str = ''
-    legacy_name: str | None = None
     data_file: str | None = None
     views: tuple[Annotated[str, Field(pattern=r'^stage-(?:[1-9][0-9]*|all)$')], ...] = ()
 
@@ -46,11 +45,12 @@ class ResourceMetadata(BaseModel):
                 raise ValueError('Records require a same-directory JSON data_file')
         elif self.data_file or self.views:
             raise ValueError('Only records may declare data_file or stage views')
-        if self.id.startswith('skill:'):
-            if self.kind not in {'skill', 'skill-reference', 'index'}:
-                raise ValueError('Skill resources require a skill resource kind')
-        elif self.kind in {'skill', 'skill-reference'}:
-            raise ValueError('Reference IDs cannot grant skill instructions')
+        namespace = self.id.split(':', 1)[0]
+        if namespace in {'skill', 'playbook'}:
+            if self.kind not in {namespace, f'{namespace}-reference', 'index'}:
+                raise ValueError(f'{namespace.title()} resources require a matching resource kind')
+        elif self.kind in {'skill', 'skill-reference', 'playbook', 'playbook-reference'}:
+            raise ValueError('Reference IDs cannot grant skill or playbook instructions')
         elif not self.sets or self.id.split('/')[0].removeprefix('set') not in self.sets:
             raise ValueError('Reference namespace must agree with explicit set scope')
         return self

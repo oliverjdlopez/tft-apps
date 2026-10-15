@@ -38,19 +38,16 @@ response.
 and structured record views. Preparation loads a cached metadata index;
 `read_resource` loads complete content by stable ID and records hashes for actual
 reads. Reference sources live under `app/backend/src/resources/references`;
-portable skill packages remain under `resources/skills`. The older
-`domain.providers` package is an offline historical fixture adapter.
+portable skill packages remain under `resources/skills`. All resource loading,
+discovery, and reads use the resource library directly.
 See [resource layout](../content_providers/resource-layout.md).
 
 ## Prompt skills
 
-`domain.providers.skills` owns the `SkillDefinition` model and
-injectable `SkillProvider`. The raw skill files live under
-`domain/resources/skills`; the repository provider discovers them and deterministically
-selects one focused playbook from the latest user task. The chat service builds
-these selections into its backend-owned integration context and injects skill instructions
-only into contextualized handoffs, not the top-level chat assistant or frontend
-configuration.
+Portable `SKILL.md` packages and their supporting references use the same
+validated resource library. Instructions expose permitted entry-point metadata;
+`read_resource` returns the complete workflow or supporting document. Permission
+checks apply to every read, including descendants. Chat cannot read skill bodies.
 
 ## Shared clients
 

@@ -3,28 +3,22 @@
 ## Chat flow
 
 1. The browser sends messages to `/api/chat`.
-2. The chat service passes the request to the backend chat assistant. The
-   assistant runtime discovers scoped tools and asks its domain context and
-   skill providers for task-relevant material.
-3. The prompt includes bounded repository excerpts and the `data_analyst`
-   handoff. The handoff also receives one focused skill when its metadata
-   matches the latest user task.
-4. The Agents SDK streams model output and handoff events back to the UI.
-5. Chat answers non-statistical conversation directly and hands every data-
-   backed TFT question to `data_analyst`, which owns focused ranking, cohort,
-   and delta tools. After gathering evidence, the analyst hands off to the
-   tool-free `final_responder` for the user-facing answer.
+2. `Assistant.prepare` builds a fresh graph, runtime context, evidence store,
+   activity hooks, and permission-filtered resource metadata.
+3. Instructions contain durable policy plus root resource descriptions. The
+   assistant chooses index and leaf reads through `read_resource`; `domain.resources`
+   owns validation, caching, exact reads, and actual-read provenance. There is no
+   provider selection or selector assistant stage before generation.
+4. Chat can answer direct reference questions and run bounded ranking or rolldown
+   tools. Conditional cohort or multi-step questions can hand off to `data_analyst`.
+5. Analytical results transfer to `final_responder`, which owns evidence displays
+   and permitted resource reads. SDK history and invocation context are shared
+   across handoffs; resource bodies stay in read results rather than instructions.
+6. SDK events drive browser text, tool/source activity, and handoff events.
 
-The assistant owns the decision to attach task context to direct runs. Markdown
-discovery, parsing, local shortlisting, optional model reranking, and rendering
-stay behind the `domain.providers.context.ContextProvider`
-dependency; they are not assistant methods and do not require a dedicated HTTP
-endpoint.
-
-Repository skill loading and deterministic task selection likewise stay behind
-`domain.providers.skills.SkillProvider`. The chat service retains
-the policy for rendering selected skill instructions only into contextualized
-handoffs.
+Resource IDs remain stable across file moves. Every index or leaf read checks the
+active assistant's frozen access and configured set. Skills and their supporting
+references inherit the same package permission; chat cannot read skill bodies.
 
 ## Name normalization flow
 

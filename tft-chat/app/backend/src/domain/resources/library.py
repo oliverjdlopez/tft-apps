@@ -7,39 +7,45 @@ from pathlib import Path
 from threading import RLock
 
 from domain.resources.models import ResourceDescriptor, ResourceLibrary, ResourceMetadata, ResourceRead
-from domain.resources.utils import load_content, read_header, skill_metadata, source_revision
+from domain.resources.utils import instruction_metadata, load_content, read_header, source_revision
 
 RESOURCE_ROOT = Path(__file__).resolve().parents[2] / 'resources'
 REFERENCE_ROOT = RESOURCE_ROOT / 'references'
 SKILL_ROOT = RESOURCE_ROOT / 'skills'
+PLAYBOOK_ROOT = RESOURCE_ROOT / 'playbooks'
 _CACHE: dict[tuple, ResourceLibrary] = {}
 _CACHE_LOCK = RLock()
 
 
-def build_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKILL_ROOT) -> ResourceLibrary:
+def build_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKILL_ROOT,
+                  playbook_root: Path = PLAYBOOK_ROOT) -> ResourceLibrary:
     """Validate the complete metadata graph without consuming resource bodies.
 
     Args:
         reference_root: Approved root of reference Markdown and backing records.
         skill_root: Approved root of portable skill packages and supporting files.
+        playbook_root: Approved root of specific guide packages and supporting files.
 
     Returns:
         An independently validated library with an initially empty body cache.
     """
     library = ResourceLibrary()
-    roots = (reference_root.resolve(), skill_root.resolve())
+    stores = ((reference_root, None), (skill_root, 'skill'), (playbook_root, 'playbook'))
+    roots = tuple(root.resolve() for root, _ in stores)
     declared_data = set()
-    paths = sorted(reference_root.rglob('*.md')) + sorted(skill_root.rglob('*.md'))
-    for path in paths:
+    paths = [(root, kind, path) for root, kind in stores for path in sorted(root.rglob('*.md'))]
+    for root, kind, path in paths:
         if path.is_symlink() or not any(path.resolve().is_relative_to(root) for root in roots):
             raise ValueError(f'Resource escapes approved roots: {path}')
         revision = source_revision(path)
-        metadata = (skill_metadata(path, skill_root) if path.name == 'SKILL.md'
+        entrypoint = f'{kind.upper()}.md' if kind else None
+        metadata = (instruction_metadata(path, root, kind) if path.name == entrypoint
                     else ResourceMetadata.model_validate(read_header(path)))
-        if path.is_relative_to(reference_root) and metadata.id.startswith('skill:'):
-            raise ValueError(f'Skill metadata cannot live in reference storage: {path}')
-        if path.is_relative_to(skill_root) and not metadata.id.startswith('skill:'):
-            raise ValueError(f'Reference metadata cannot live in skill storage: {path}')
+        namespace = metadata.id.split(':', 1)[0]
+        if (kind is None and namespace in {'skill', 'playbook'}) or (kind and namespace != kind):
+            raise ValueError(f'Resource namespace does not match its storage: {path}')
+        if kind and metadata.kind == kind and path.name != entrypoint:
+            raise ValueError(f'Instruction entry point must be {entrypoint}: {path}')
         if metadata.id in library.entries:
             raise ValueError(f'Duplicate resource ID: {metadata.id}')
         data_path = path.with_name(metadata.data_file) if metadata.data_file else None
@@ -68,13 +74,13 @@ def build_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKIL
                 raise ValueError(f'Self-referencing resource link: {resource_id}')
         if metadata.parent:
             parent = library.entries[metadata.parent].metadata
-            if metadata.id.startswith('skill:'):
+            if metadata.id.startswith(('skill:', 'playbook:')):
                 owner = metadata.id.split('/')[0]
                 if not metadata.parent.startswith(owner) or not resource_id.startswith(metadata.parent + '/'):
-                    raise ValueError(f'Skill child must inherit its package: {resource_id}')
+                    raise ValueError(f'Instruction child must inherit its package: {resource_id}')
             elif not resource_id.startswith(metadata.parent + '/') or metadata.sets != parent.sets:
                 raise ValueError(f'Child must inherit parent identity and set scope: {resource_id}')
-        elif metadata.kind not in {'index', 'skill'}:
+        elif metadata.kind not in {'index', 'skill', 'playbook'}:
             raise ValueError(f'Leaf resource needs a parent: {resource_id}')
         for view in metadata.views:
             view_id = f'{resource_id}/{view}'
@@ -104,23 +110,25 @@ def build_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKIL
     return library
 
 
-def get_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKILL_ROOT) -> ResourceLibrary:
+def get_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKILL_ROOT,
+                  playbook_root: Path = PLAYBOOK_ROOT) -> ResourceLibrary:
     """Reuse metadata and body caches until an authored source revision changes.
 
     Args:
         reference_root: Reference source root.
         skill_root: Skill package root.
+        playbook_root: Playbook package root.
 
     Returns:
         A validated snapshot; old invocations retain their prior snapshot.
     """
-    paths = sorted(reference_root.rglob('*')) + sorted(skill_root.rglob('*'))
-    signature = (str(reference_root), str(skill_root), tuple(
+    paths = [path for root in (reference_root, skill_root, playbook_root) for path in sorted(root.rglob('*'))]
+    signature = (str(reference_root), str(skill_root), str(playbook_root), tuple(
         (str(path), source_revision(path)) for path in paths if path.is_file()
     ))
     with _CACHE_LOCK:
         if signature not in _CACHE:
-            library = build_library(reference_root, skill_root)
+            library = build_library(reference_root, skill_root, playbook_root)
             # Existing invocations retain their object; avoid unbounded global history.
             _CACHE.clear()
             _CACHE[signature] = library
@@ -144,17 +152,19 @@ def read_content(library: ResourceLibrary, resource_id: str) -> ResourceRead:
         return library.body_cache[resource_id]
 
 
-def validate_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKILL_ROOT) -> ResourceLibrary:
+def validate_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKILL_ROOT,
+                  playbook_root: Path = PLAYBOOK_ROOT) -> ResourceLibrary:
     """Validate metadata, every complete body, and every declared structured view.
 
     Args:
         reference_root: Reference source root.
         skill_root: Skill package root.
+        playbook_root: Playbook package root.
 
     Returns:
         Fully checked library suitable for an offline validation receipt.
     """
-    library = build_library(reference_root, skill_root)
+    library = build_library(reference_root, skill_root, playbook_root)
     record_owners = {}
     for resource_id, descriptor in library.entries.items():
         read = read_content(library, resource_id)

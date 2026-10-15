@@ -17,7 +17,6 @@ def migrate_workspace(destination: Path, *, apply: bool = False) -> dict:
     """Export once, prepare a lossless plan, and optionally resume its application."""
     from dotenv import dotenv_values
     import domain.assistants
-    from domain.providers.skills import _discover_skills
     root = Path(__file__).parent
     workspace = configured_workspace()
     destination.mkdir(parents=True, exist_ok=True)
@@ -30,7 +29,7 @@ def migrate_workspace(destination: Path, *, apply: bool = False) -> dict:
         else:
             suites = {entry['name']: load_snapshot(entry['snapshot'], root / 'snapshots')['suite']
                       for entry in load_catalog(root / 'snapshots')}
-            plan = plan_migration(backup, suites, available_skills={skill.name for skill in _discover_skills()})
+            plan = plan_migration(backup, suites)
             atomic_write(plan_path, canonical_json(plan))
         if not apply:
             return {'plan': str(plan_path), 'datasets': len(plan['datasets']), 'assertions': len(plan['assertions'])}

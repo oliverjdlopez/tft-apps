@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from common.assistant_workspace import checkout_lock
-from domain.assistants.capture import digest, from_capture, reachable
+from domain.assistants.capture import digest, registry_from_capture
 from evals.assistant_execution import current_execution
 from .prompts import publish_graph_prompts
 from .content import fetch_bundle, load_catalog, load_snapshot, validate_bundle
@@ -78,11 +78,15 @@ def submit_comparison(service, body: ComparisonRequest) -> dict:
             selected = next((row for row in registered_datasets(service, live=False) if row['name'] == body.dataset), None)
             if selected is None:
                 raise ValueError('Unknown registered live assistant dataset')
-            active, draft = from_capture(body.active_graph), from_capture(body.draft_graph)
+            active = registry_from_capture(body.active_graph)
+            draft = registry_from_capture(body.draft_graph)
             name = body.lineage.get('assistant')
             if body.lineage.get('active_graph_hash') != body.active_graph['hash'] or body.lineage.get('draft_graph_hash') != body.draft_graph['hash']:
                 raise ValueError('Graph lineage does not match captured definitions')
-            if name not in set(reachable(active, selected['assistant'])) | set(reachable(draft, selected['assistant'])):
+            if name not in (
+                set(active.list_reachable_assistant_names(selected['assistant']))
+                | set(draft.list_reachable_assistant_names(selected['assistant']))
+            ):
                 raise ValueError('Edited assistant is unreachable from this workflow')
             if set(body.active_graph['specs']) != set(body.draft_graph['specs']) or any(
                     body.active_graph['specs'][key] != body.draft_graph['specs'][key]

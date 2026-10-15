@@ -84,7 +84,7 @@ def evaluate_item(*, input: str | dict, output: dict, expected_output: str | dic
 
 
 def run_local_item(item: dict, *, suite: dict, variant: dict, prompts: dict) -> dict:
-    """Run one credential-free fixture or selector and preserve its full scores."""
+    """Run one credential-free fixture and preserve its full scores."""
     result = execute_attempt(suite, item, variant, prompts)
     from .utils import artifact_execution_fields
     return {"id": item["id"], "result": result, "result_is_execution_wrapper": True,
@@ -138,8 +138,6 @@ def run_bundle(bundle: dict, client: Any = None, *, group_id: str | None = None)
         suite['workspace_lineage'] = bundle['execution'].get('lineage')
     if config.get("assistant") is not None:
         suite["assistant"] = config["assistant"]
-    if suite["family"] in {"context_selection", "skill_selection"}:
-        suite["execution"] = "live" if config.get("selection_live") else "offline"
     if config.get("data_snapshot_label"):
         suite["dataset"] = config["data_snapshot_label"]
     if client is None and (suite.get("execution") == "live" or any(

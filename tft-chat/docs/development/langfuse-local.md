@@ -136,11 +136,11 @@ to refresh this provenance. Running raw Compose commands without these values
 records `unknown` rather than claiming a clean revision.
 
 CLI `run` freezes the effective definition before execution, including
-`--selection-live` and `--data-snapshot-label` when supplied. Online runs freeze current native cases and reviewed baseline prompt labels;
+`--data-snapshot-label` when supplied. Online runs freeze current native cases and reviewed baseline prompt labels;
 explicit snapshot replay retains the frozen inputs.
 The resulting snapshot identifier appears in the JSON result. Unchanged offline
-definitions reuse their existing content hash. Validation retains corpus
-warnings, including references to removed skills.
+definitions reuse their existing content hash. Validation checks the active assistant catalogue; retired selector suites and
+corpus checks are removed.
 
 An explicit CLI `run` executes the selected definition even when its catalog
 entry came from the UI's export-only action. It records `action: run` in the

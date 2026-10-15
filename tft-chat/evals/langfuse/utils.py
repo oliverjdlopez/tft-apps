@@ -20,12 +20,6 @@ from domain.assistants.constants import AssistantName
 # These helpers do not make model calls or change assistant specifications.
 # ===========================================================================
 
-SELECTORS = {
-    "offline_selection_policy", "shortlist_required_recall", "final_required_recall",
-    "required_skill_recall", "forbidden_context_excluded", "forbidden_skills_excluded",
-    "payload_reduction", "selection_policy",
-}
-
 
 def canonical_json(value: Any) -> bytes:
     """Encode snapshot content deterministically, rejecting nonfinite numbers.
@@ -73,7 +67,7 @@ def default_config() -> dict[str, Any]:
     """Return isolated native webhook defaults shared by seeded datasets."""
     return {"action": "run", "cases": [], "variants": [{"name": "Active", "model": None, "prompts": {}}],
             "dataset_version": None, "concurrency": 4, "repetitions": 1,
-            "selection_live": False, "data_snapshot_label": None, "snapshot": None}
+            "data_snapshot_label": None, "snapshot": None}
 
 
 def check_assertion(assertion: dict[str, Any]) -> None:
@@ -94,9 +88,6 @@ def check_assertion(assertion: dict[str, Any]) -> None:
     kind = assertion.get("kind")
     if kind == "trace":
         evaluate_trace_check(assertion["check"], EvalTrace())
-    elif kind == "selector":
-        if assertion.get("selector") not in SELECTORS:
-            raise ValueError(f"Unknown selector check: {assertion.get('selector')}")
     elif kind == "rubric":
         if not isinstance(assertion.get("rubric"), str) or not assertion["rubric"].strip():
             raise ValueError("Rubric text must be nonempty")
@@ -148,6 +139,9 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captur
     """Validate frozen run controls and candidate targets without remote requests."""
     from .models import RunConfig
     inbound = deepcopy(config)
+    # Historical exports remain immutable even though live selector execution
+    # and its control flag have been retired from the current run model.
+    inbound.pop("selection_live", None)
     for variant in inbound.get("variants", []):
         for target, reference in variant.get("prompts", {}).items():
             if not isinstance(reference.get("text"), str) or not reference["text"].strip():
@@ -188,24 +182,12 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captur
 
 
 def validate_case_semantics(suite: dict[str, Any], items: list[dict[str, Any]]) -> None:
-    """Retain registry and selector corpus preflight against the migrated content."""
+    """Validate assistant tool and handoff references before execution."""
     import domain.assistants
     items = [legacy_execution_item(item) for item in items if item.get("status", "ACTIVE") == "ACTIVE"]
     if suite["family"] == "assistant" and suite["execution"] == "live":
         from evals.utils import validate_registry_references
         validate_registry_references(suite["assistant"], items)
-    elif suite["family"] in {"context_selection", "skill_selection"}:
-        cases = [{**item["input"]["expected"], "name": item["metadata"]["case"], "query": item["input"]["input"]} for item in items]
-        if suite["family"] == "context_selection":
-            from evals.context_selection.utils import validate_cases
-            from domain.providers.context import discover_context_files
-            from domain.providers.utils import all_context_candidates as _all_context_candidates
-            validate_cases(cases, _all_context_candidates(discover_context_files(), set_number=None))
-        else:
-            from evals.skill_selection.utils import validate_cases, ignore_unknown_skill_references
-            from domain.providers.skills import _discover_skills
-            skills = _discover_skills()
-            validate_cases(ignore_unknown_skill_references(cases, skills), skills)
 
 # ===========================================================================
 # Native grading resource identity and version comparison
@@ -279,10 +261,10 @@ def native_score_name(name: str) -> str:
 
 
 def deterministic_score_type(check: dict) -> str:
-    """Use native Boolean types for predicates and numeric types for selector ratios."""
-    predicates = {'offline_selection_policy', 'forbidden_context_excluded',
-                  'forbidden_skills_excluded', 'selection_policy'}
-    return 'BOOLEAN' if check['kind'] == 'trace' or check.get('selector') in predicates else 'NUMERIC'
+    """Use native Boolean scores for supported deterministic trace checks."""
+    if check['kind'] != 'trace':
+        raise ValueError(f"Unsupported deterministic check kind: {check['kind']}")
+    return 'BOOLEAN'
 
 
 # ===========================================================================
@@ -351,13 +333,14 @@ def host_runner_ready(root: Path) -> bool:
 
 def playground_assistants() -> list[str]:
     """List runnable Playground targets, excluding legacy-discovered router docs."""
-    from domain.assistants import assistant_spec, list_assistants, reload_assistant_specs
+    from domain.assistants import Assistant
 
-    reload_assistant_specs()
+    Assistant.reload()
 
     # The legacy markdown discoverer also sees AGENTS.md; it is repository
     # guidance, never an executable prompt or a useful default for the editor.
-    names = [name for name in list_assistants() if Path(assistant_spec(name).path).name.lower() != "agents.md"]
+    names = [name for name in Assistant.names()
+             if Path(Assistant(name).spec.path).name.lower() != "agents.md"]
     return sorted(names, key=lambda name: (name != AssistantName.CHAT, name))
 
 

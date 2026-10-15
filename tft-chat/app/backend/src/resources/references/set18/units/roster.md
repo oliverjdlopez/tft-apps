@@ -7,7 +7,6 @@ kind: reference
 parent: set18/units
 sets:
 - '18'
-legacy_name: set-18-units
 provenance: Migrated from resources/context/set18/unit_context.md; original source wording retained.
 patches:
 - '18.1'

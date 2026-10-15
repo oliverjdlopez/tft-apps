@@ -8,7 +8,6 @@ kind: records
 parent: set18/wisps
 sets:
 - '18'
-legacy_name: set-18-wisps-item
 provenance: Migrated from resources/context/set18/mechanics/wisps-item.md; original source wording retained.
 patches:
 - '18.1'

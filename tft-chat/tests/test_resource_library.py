@@ -42,7 +42,7 @@ def roots(tmp_path):
     (package / 'SKILL.md').write_text('---\nname: workflow\ndescription: A workflow\n---\nFULL WORKFLOW')
     document(package, 'references/example.md', dict(id='skill:workflow/example', title='Example',
              description='Supporting example', kind='skill-reference', parent='skill:workflow'), 'PRIVATE EXAMPLE')
-    return references, skills
+    return references, skills, tmp_path / 'playbooks'
 
 
 def prepared(library, *, skills=(), references=True):
@@ -229,3 +229,80 @@ def test_authoritative_collections_cannot_reuse_variant_identities(roots):
         (roots[0] / f'topic/{name}.json').write_text(json.dumps({'schema_version': 1, 'records': [record]}))
     with pytest.raises(ValueError, match='multiple authoritative owners'):
         validate_library(*roots)
+
+
+@pytest.fixture
+def playbook_roots(roots):
+    """Add a specific guide whose name deliberately matches an existing skill."""
+    package = roots[2] / 'workflow'
+    document(package, 'PLAYBOOK.md', {'name': 'workflow', 'description': 'Specific task guide'},
+             'FULL SPECIFIC GUIDE')
+    document(package, 'references/example.md', dict(id='playbook:workflow/example', title='Example',
+             description='Guide example', kind='playbook-reference', parent='playbook:workflow'), 'GUIDE EXAMPLE')
+    return roots
+
+
+def test_playbooks_have_independent_discovery_reads_and_child_permissions(playbook_roots):
+    """Identically named skills and guides never grant access to each other."""
+    library = build_library(*playbook_roots)
+    resources = PreparedResources(library=library, set_number=18, access={
+        'guide': ResourceAccess(playbooks=('workflow',)),
+        'general': ResourceAccess(skills=('workflow',)),
+    })
+    assert [entry['id'] for entry in resource_entries(resources, 'guide')] == ['playbook:workflow']
+    assert not library.body_cache
+    guide = read_resource_content(resources, 'guide', 'playbook:workflow')
+    assert guide['content'] == 'FULL SPECIFIC GUIDE' and guide['kind'] == 'playbook'
+    assert guide['children'][0]['id'] == 'playbook:workflow/example'
+    assert read_resource_content(resources, 'guide', 'playbook:workflow/example')['content'] == 'GUIDE EXAMPLE'
+    assert not read_resource_content(resources, 'guide', 'skill:workflow')['found']
+    assert read_resource_content(resources, 'general', 'skill:workflow')['found']
+    assert not read_resource_content(resources, 'general', 'playbook:workflow/example')['found']
+
+
+def test_playbook_changes_invalidate_metadata_and_retain_cached_reads(playbook_roots):
+    """Guide edits refresh discovery while completed reads retain their revision."""
+    first = get_library(*playbook_roots)
+    original = read_content(first, 'playbook:workflow')
+    path = playbook_roots[2] / 'workflow/PLAYBOOK.md'
+    path.write_text(path.read_text().replace('FULL SPECIFIC GUIDE', 'REVISED SPECIFIC GUIDE'))
+    second = get_library(*playbook_roots)
+    assert second is not first
+    assert read_content(first, 'playbook:workflow') == original
+    assert read_content(second, 'playbook:workflow').content == 'REVISED SPECIFIC GUIDE'
+
+
+@pytest.mark.parametrize('mutation, message', [
+    ({'name': 'different'}, 'must match'),
+    ({'name': '../escape'}, 'Invalid playbook name'),
+    ({'description': ''}, 'description'),
+    ({'keywords': ['custom']}, 'Unsupported playbook protocol'),
+])
+def test_playbook_entrypoint_validation(playbook_roots, mutation, message):
+    """Specific guides enforce the same strict package metadata as skills."""
+    fields = {'name': 'workflow', 'description': 'A guide'}
+    fields.update(mutation)
+    document(playbook_roots[2] / 'workflow', 'PLAYBOOK.md', fields)
+    with pytest.raises(ValueError, match=message):
+        build_library(*playbook_roots)
+
+
+@pytest.mark.parametrize('kind', ['skill-reference', 'reference'])
+def test_playbook_namespace_cannot_claim_other_resource_kinds(kind):
+    """Guide IDs cannot masquerade as general guidance or factual material."""
+    with pytest.raises(ValueError, match='matching resource kind'):
+        ResourceMetadata(id='playbook:workflow/example', title='Example', description='Example', kind=kind)
+
+
+def test_playbook_storage_and_parent_boundaries(playbook_roots):
+    """Supporting guides cannot cross package ownership or storage namespaces."""
+    package = playbook_roots[2] / 'workflow'
+    fields = dict(id='playbook:workflow/example', title='Example', description='Example',
+                  kind='playbook-reference', parent='skill:workflow')
+    document(package, 'references/example.md', fields)
+    with pytest.raises(ValueError, match='inherit its package'):
+        build_library(*playbook_roots)
+    fields.update(id='skill:workflow/other', parent='skill:workflow', kind='skill-reference')
+    document(package, 'references/example.md', fields)
+    with pytest.raises(ValueError, match='namespace does not match'):
+        build_library(*playbook_roots)

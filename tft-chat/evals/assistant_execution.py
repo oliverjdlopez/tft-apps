@@ -84,12 +84,12 @@ def require_capture(config: dict[str, Any]) -> AssistantRegistry:
     Raises:
         ValueError: If the graph is absent or candidate targets are invalid.
     """
-    from domain.assistants.capture import from_capture, reachable
+    from domain.assistants.capture import registry_from_capture
 
     if not config.get('captured_graph'):
         raise ValueError('Live assistant execution requires a captured graph; export a fresh bundle before running it.')
-    registry = from_capture(config['captured_graph'])
-    names = set(reachable(registry, config['assistant']))
+    registry = registry_from_capture(config['captured_graph'])
+    names = set(registry.list_reachable_assistant_names(config['assistant']))
     if set(config.get('prompt_candidates', {})) - names:
         raise ValueError('Prompt candidates target assistants outside the captured execution graph')
     return registry
@@ -128,12 +128,12 @@ def current_execution(suite: dict, variants: list[dict]) -> dict:
         Versioned execution graphs and repository lineage metadata.
     """
     from copy import deepcopy
-    from domain.assistants.capture import capture, reachable, registry_from_files
+    from domain.assistants.capture import capture, registry_from_files
     from domain.assistants.specs import ASSISTANT_SPECS_DIR, ROOT_DIR
     from services.assistant_workspace.workspace import Workspace
     workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)
     registry = registry_from_files(workspace.source_files())
-    names = reachable(registry, suite['assistant'])
+    names = registry.list_reachable_assistant_names(suite['assistant'])
     graph = capture(registry, names)
     return {'version': 1, 'graphs': {variant['name']: deepcopy(graph) for variant in variants},
             'lineage': {'origin': 'repository', 'active_graph_hash': graph['hash']}}

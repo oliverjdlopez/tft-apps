@@ -10,18 +10,6 @@ import threading
 from domain.assistants.specs import AssistantSpec, discover_assistants_specs
 
 
-def _tool_name(tool: Any) -> str:
-    """Return the registered name for an SDK tool or Python callable.
-
-    Args:
-        tool: SDK tool or callable registered in a tool group.
-
-    Returns:
-        The tool's registered name.
-    """
-    return getattr(tool, "name", getattr(tool, "__name__", ""))
-
-
 class AssistantRegistry:
     """Store assistant specs and resolve their graph and tool metadata."""
 
@@ -33,6 +21,7 @@ class AssistantRegistry:
         self._get_tool: Callable[[str], Any] | None = None
         self._get_tool_group: Callable[[str], Any] | None = None
         self._list_tools: Callable[[], list[Any]] | None = None
+        self._tool_name: Callable[[Any], str] | None = None
         if specs is None:
             self.reload()
         else:
@@ -69,6 +58,7 @@ class AssistantRegistry:
         registry._get_tool = self._get_tool
         registry._get_tool_group = self._get_tool_group
         registry._list_tools = self._list_tools
+        registry._tool_name = self._tool_name
         return registry
 
     def install(self, registry: AssistantRegistry) -> None:
@@ -84,6 +74,7 @@ class AssistantRegistry:
         get_tool: Callable[[str], Any],
         get_tool_group: Callable[[str], Any],
         list_tools: Callable[[], list[Any]],
+        tool_name: Callable[[Any], str],
     ) -> None:
         """Configure direct access to the independent tool registry.
 
@@ -91,10 +82,12 @@ class AssistantRegistry:
             get_tool: Function returning one registered tool by name.
             get_tool_group: Function returning one registered group by key.
             list_tools: Function returning all registered tools.
+            tool_name: Function returning the registered name of a tool.
         """
         self._get_tool = get_tool
         self._get_tool_group = get_tool_group
         self._list_tools = list_tools
+        self._tool_name = tool_name
 
     def get_spec(self, name: str) -> AssistantSpec:
         """Return a registered assistant specification.
@@ -128,8 +121,6 @@ class AssistantRegistry:
         spec = self.get_spec(name)
         names: list[str] = []
         for handoff_name in spec.handoff_names:
-            if handoff_name == name:
-                continue
             if handoff_name not in self._specs:
                 raise KeyError(
                     f"Unknown handoff assistant {handoff_name!r} in {name!r}"
@@ -153,6 +144,7 @@ class AssistantRegistry:
             self._get_tool is None
             or self._get_tool_group is None
             or self._list_tools is None
+            or self._tool_name is None
         ):
             raise RuntimeError("assistant tool registry is not configured")
         if spec.include_all_tools:
@@ -162,7 +154,7 @@ class AssistantRegistry:
         seen: set[str] = set()
         for group_key in spec.tool_group_keys:
             for grouped_tool in self._get_tool_group(group_key).list_tools():
-                name = _tool_name(grouped_tool)
+                name = self._tool_name(grouped_tool)
                 if name not in seen:
                     resolved.append(self._get_tool(name))
                     seen.add(name)
@@ -193,7 +185,37 @@ class AssistantRegistry:
         Returns:
             Registered tool names in resolution order.
         """
-        return [_tool_name(tool) for tool in self.get_tools(name)]
+        if self._tool_name is None:
+            raise RuntimeError("assistant tool registry is not configured")
+        return [self._tool_name(tool) for tool in self.get_tools(name)]
+
+    def list_reachable_assistant_names(self, name: str) -> list[str]:
+        """Return an assistant and every handoff target in traversal order.
+
+        Args:
+            name: Root registered assistant name.
+
+        Returns:
+            Deduplicated assistant names in depth-first handoff order.
+        """
+        resolved: list[str] = []
+        seen: set[str] = set()
+
+        def visit(assistant_name: str) -> None:
+            """Visit each registered assistant once.
+
+            Args:
+                assistant_name: Current assistant in the handoff graph.
+            """
+            if assistant_name in seen:
+                return
+            seen.add(assistant_name)
+            resolved.append(assistant_name)
+            for handoff_name in self.get_handoff_names(assistant_name):
+                visit(handoff_name)
+
+        visit(name)
+        return resolved
 
     def list_reachable_tool_names(self, name: str) -> list[str]:
         """Return tools callable by an assistant or any handoff target.
@@ -206,46 +228,47 @@ class AssistantRegistry:
         """
         resolved: list[str] = []
         seen_tools: set[str] = set()
-        seen_assistants: set[str] = set()
-
-        def visit(assistant_name: str) -> None:
-            """Collect tools while traversing the handoff graph.
-
-            Args:
-                assistant_name: Current registered assistant name.
-            """
-            if assistant_name in seen_assistants:
-                return
-            seen_assistants.add(assistant_name)
+        for assistant_name in self.list_reachable_assistant_names(name):
             for tool_name in self.list_tool_names(assistant_name):
                 if tool_name not in seen_tools:
                     resolved.append(tool_name)
                     seen_tools.add(tool_name)
-            for handoff_name in self.get_handoff_names(assistant_name):
-                visit(handoff_name)
-
-        visit(name)
         return resolved
 
     def list_assistants(self) -> list[str]:
         """Return registered assistant names sorted alphabetically."""
         return sorted(self._specs)
 
-    def list_skill_names(self, name: str, available: list[str]) -> list[str]:
-        """Return skill names an assistant may read in discovery order.
+    def validate(self) -> None:
+        """Reject unknown tools, missing handoffs, cycles, and invalid models."""
+        visited: set[str] = set()
 
-        Args:
-            name: Registered assistant name.
-            available: Discoverable repository skill names.
+        def visit(name: str, ancestors: tuple[str, ...]) -> None:
+            """Validate one definition before visiting its handoff targets.
 
-        Returns:
-            All available names by default, or the configured allowlist subset.
-        """
-        configured = self.get_spec(name).skill_names
-        if configured is None:
-            return available
-        allowed = set(configured)
-        return [skill_name for skill_name in available if skill_name in allowed]
+            Args:
+                name: Current registered assistant name.
+                ancestors: Names already present on this traversal path.
+
+            Raises:
+                ValueError: If the handoff graph contains a cycle.
+            """
+            if name in ancestors:
+                cycle = " -> ".join((*ancestors, name))
+                raise ValueError(f"assistant handoff cycle: {cycle}")
+            if name in visited:
+                return
+            spec = self.get_spec(name)
+            self.resolve_tools(spec)
+            spec.model_settings()
+            if not spec.resolved_model().strip():
+                raise ValueError("Model must be nonempty")
+            for target in self.get_handoff_names(name):
+                visit(target, (*ancestors, name))
+            visited.add(name)
+
+        for name in self.list_assistants():
+            visit(name, ())
 
     def reload(self) -> None:
         """Reload assistant specifications from their source files."""

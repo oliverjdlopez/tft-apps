@@ -7,7 +7,6 @@ kind: reference
 parent: set18/items
 sets:
 - '18'
-legacy_name: set-18-mechanic-items
 provenance: Migrated from resources/context/set18/items/mechanic-items.md; original source wording retained.
 patches:
 - '18.1'

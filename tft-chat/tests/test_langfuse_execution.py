@@ -17,7 +17,7 @@ def fixture_bundle():
     """Load the real migrated offline suite for adapter parity checks."""
     root = Path(__file__).resolve().parents[1] / "evals/langfuse/snapshots"
     # UI exports advance the catalog; unit parity uses the accepted baseline.
-    return load_snapshot("548ed5b704124f3d59fc4a097b4c8246ee54f1a76a889009e9ebb138764fb099", root)
+    return load_snapshot("25850fe05520c398f4723b09c2b26c2c4421c9bed73c5ec0bb4bd9725793ff8d", root)
 
 
 def test_fixture_five_authored_checks_and_variant_repetitions(fixture_bundle):
@@ -138,7 +138,7 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
         "config": {"action": "run", "cases": [], "variants": [{"name": "baseline",
                                                                     "model": None, "prompts": {}}],
                    "dataset_version": None, "concurrency": 1, "repetitions": 1,
-                   "selection_live": False, "data_snapshot_label": None, "snapshot": None},
+                   "data_snapshot_label": None, "snapshot": None},
     }
     monkeypatch.setattr(experiments, "execute_attempt", lambda *args: {
         "output": "Unscored answer", "metadata": {"tft_trace": {"tool_calls": [

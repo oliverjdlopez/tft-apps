@@ -107,26 +107,27 @@ def source_revision(path: Path) -> tuple[int, int]:
     return stat.st_mtime_ns, stat.st_size
 
 
-def skill_metadata(path: Path, root: Path) -> ResourceMetadata:
-    """Adapt portable SKILL.md metadata without adding custom protocol fields.
+def instruction_metadata(path: Path, root: Path, kind: str) -> ResourceMetadata:
+    """Adapt skill or playbook entry-point metadata into a resource descriptor.
 
     Args:
-        path: Skill entry point under the configured skill root.
-        root: Root used to validate direct-child skill packages.
+        path: SKILL.md or PLAYBOOK.md entry point under its package root.
+        root: Root used to validate direct-child packages.
+        kind: Instruction namespace, either skill or playbook.
 
     Returns:
-        A stable skill descriptor shared by discovery and permission checks.
+        A stable instruction descriptor shared by discovery and permission checks.
     """
     metadata = read_header(path)
     allowed = {'name', 'description', 'license', 'compatibility', 'metadata', 'allowed-tools'}
     if set(metadata) - allowed:
-        raise ValueError(f'Unsupported skill protocol fields: {path}')
+        raise ValueError(f'Unsupported {kind} protocol fields: {path}')
     name, description = metadata.get('name'), metadata.get('description')
     if not isinstance(name, str) or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', name) or len(name) > 64:
-        raise ValueError(f'Invalid skill name: {path}')
+        raise ValueError(f'Invalid {kind} name: {path}')
     if path.parent.parent != root or path.parent.name != name:
-        raise ValueError(f'Skill name must match its direct-child package: {path}')
-    return ResourceMetadata(id=f'skill:{name}', title=name, description=description, kind='skill')
+        raise ValueError(f'{kind.title()} name must match its direct-child package: {path}')
+    return ResourceMetadata(id=f'{kind}:{name}', title=name, description=description, kind=kind)
 
 
 # ---------------------------------------------------------------------------

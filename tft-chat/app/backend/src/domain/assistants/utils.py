@@ -47,21 +47,25 @@ def render_instruction_layers(
     return "\n\n".join(part.strip() for part in parts if part.strip())
 
 
-def can_receive_skills(spec: AssistantSpec) -> bool:
-    """Apply graph-level eligibility before an assistant's skill allowlist.
+def can_receive_instruction_resources(
+    spec: AssistantSpec,
+    configured_names: tuple[str, ...] | None,
+) -> bool:
+    """Apply graph-level eligibility before an instruction-resource allowlist.
 
     Args:
         spec: Assistant whose instructions are being rendered.
+        configured_names: Skill or playbook allowlist from the specification.
 
     Returns:
-        Whether the assistant may receive selected skills in this graph.
+        Whether the assistant may receive that resource kind in this graph.
     """
-    # `None` means unrestricted; an empty tuple explicitly denies skill access.
-    # Chat remains a router even when its spec declares a broader allowlist.
+    # `None` means unrestricted; an empty tuple explicitly denies this category.
+    # Chat remains a router even if its spec declares a broader allowlist.
     return (
         spec.name != AssistantName.CHAT
-        and spec.skill_names != ()
-        and (spec.repository_context or bool(spec.skill_names))
+        and configured_names != ()
+        and (spec.repository_context or bool(configured_names))
     )
 
 
@@ -223,10 +227,11 @@ def configure_tools(registry) -> None:
     Args:
         registry: Registry receiving the tool lookup operations.
     """
-    from domain.tools import get_tool, get_tool_group, list_tools
+    from domain.tools import get_tool, get_tool_group, list_tools, tool_name
 
     registry.configure_tools(
         get_tool=get_tool,
         get_tool_group=get_tool_group,
         list_tools=list_tools,
+        tool_name=tool_name,
     )

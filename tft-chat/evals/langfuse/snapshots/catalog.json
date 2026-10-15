@@ -10,7 +10,7 @@
       "family": "assistant",
       "max_turns": 7,
       "name": "chat",
-      "snapshot": "ad8e512e0c863cd51acdacdf5d992830b2a96fb15765ca4a87c50f60ed2b6961"
+      "snapshot": "705e8c0a1d71bc21a39c4cdcca6cd5c96a5bebd3ee35e5496665ba368a8e63bc"
     },
     {
       "assistant": "comp_expert",
@@ -22,7 +22,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "comp-expert",
-      "snapshot": "1364f9a16f2d736d7bf50a97601ce383b7e7e0a4da7c07178c94a67d96898b46"
+      "snapshot": "4dc6ec4f266e85459280196a3323a39808f0a06bc91dc0b93308c09837312624"
     },
     {
       "assistant": "chat",
@@ -33,18 +33,7 @@
       "family": "assistant",
       "max_turns": 12,
       "name": "context_response_smoke",
-      "snapshot": "79de877f5085b31dfc7708eee067d7354b1e29df840dbde568a22520ec298071"
-    },
-    {
-      "assistant": "context_selector",
-      "case_count": 11,
-      "database": null,
-      "description": "Context Selection",
-      "execution": "offline",
-      "family": "context_selection",
-      "max_turns": null,
-      "name": "context_selection",
-      "snapshot": "5b1f3a521647735524b7ad55ca64a25f785220ea8b2dc0c2812245d09e5ddeb6"
+      "snapshot": "3a3f8e3d694d5d928b82ff8bcfa7be3628ed1d77d4b450d106018d16b26bc4bc"
     },
     {
       "assistant": "data_analyst",
@@ -55,7 +44,7 @@
       "family": "assistant",
       "max_turns": 7,
       "name": "data_analyst",
-      "snapshot": "a5e3f8486711884369fb4902c81994673f0f1770e0438c05834d155e7e0cdba6"
+      "snapshot": "d698a77aa043f70ae002a638b2bf56fd284bfb834662395c416450c14e206fce"
     },
     {
       "assistant": "chat",
@@ -67,7 +56,7 @@
       "managed_workflow": true,
       "max_turns": 12,
       "name": "decision_workflows",
-      "snapshot": "16f624a45fc8a1febf7bdfe53cc90a2555a0e984701a26e6d7c87ea308a9d0b0"
+      "snapshot": "5ab7703c3f6692b505fff6a30db6edc40b874b6ba7b04511e0fddc67e7c51894"
     },
     {
       "assistant": "distill-transcript",
@@ -79,7 +68,7 @@
       "managed_workflow": true,
       "max_turns": 2,
       "name": "distill-transcript",
-      "snapshot": "58774fb9b284e6d86df589b456d18e3bfb7576fcedb6a70da8e3caa1c14b011c"
+      "snapshot": "61db4bce0bb3040de8f5dda7db87b04cc277676ec0583d970d4fcb2092eb9515"
     },
     {
       "assistant": "dummy_assistant",
@@ -90,7 +79,7 @@
       "family": "assistant",
       "max_turns": null,
       "name": "dummy_assistant",
-      "snapshot": "22e4cfa51eb9ee7a7422214115eefe55e1ff9c5a427d3c1e8bf6b6f028661985"
+      "snapshot": "e4eaf40dd2d5c5f7ff3cde9cb284c538c8c50d3754f732429be8cacc99ffcf7f"
     },
     {
       "assistant": "item_expert",
@@ -102,7 +91,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "item-expert",
-      "snapshot": "8b4fc4dd7d225c7c2040fce2f745bb70210817edeeb78b2a1c61867f806f4bcf"
+      "snapshot": "5b2295bdc8a3edbdd72606a28366b8f02b99381c22d36bd1ad4079f26e73f8d0"
     },
     {
       "assistant": "meta_expert",
@@ -114,18 +103,7 @@
       "managed_workflow": true,
       "max_turns": 10,
       "name": "meta-expert",
-      "snapshot": "0091f2ae8e0ef6062e8365f3b6f0f3524586dd659ed17429fe127f56fb633a64"
-    },
-    {
-      "assistant": "skill_selector",
-      "case_count": 12,
-      "database": null,
-      "description": "Skill Selection",
-      "execution": "offline",
-      "family": "skill_selection",
-      "max_turns": null,
-      "name": "skill_selection",
-      "snapshot": "67136a874084824eb7d0eb1413e1a705d5fe66147f9b9b767424eab1c0bc109e"
+      "snapshot": "bc7046a0639e5aca42f967ca24852eb4b0162f8e4b78e16a844ca45a3374f572"
     },
     {
       "assistant": "chat",
@@ -137,7 +115,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "trait-expert",
-      "snapshot": "8a8adf076e0c6a99c8a25c7d2f1dc4c80d8b44c41cb6d981472c9f1ff932abf1"
+      "snapshot": "a7ffbf01ffd1aa4c27552df59b3527261e707eda566e9c016cd4525f1b6c7984"
     },
     {
       "assistant": "unit_expert",
@@ -149,7 +127,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "unit-expert",
-      "snapshot": "3f909e362dff051925f8640328c7a755d666323cd136ccc4089d9cfb1e6db10a"
+      "snapshot": "cce632111f3b07bbde1aa1cfe3ff1b50fdf4ce3e89ee19f3a58342c02fc58882"
     }
   ]
 }

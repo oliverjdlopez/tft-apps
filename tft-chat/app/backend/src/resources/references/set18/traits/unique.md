@@ -8,7 +8,6 @@ kind: reference
 parent: set18/traits
 sets:
 - '18'
-legacy_name: set-18-unique-traits
 provenance: Migrated from resources/context/set18/traits/unique.md; original source wording retained.
 patches:
 - '18.1'

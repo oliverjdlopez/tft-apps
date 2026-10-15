@@ -18,8 +18,6 @@ DATASET_NAMES = {
     AssistantName.DATA_ANALYST: 'data-analysis',
     'clean_transcript': 'chattft/transcripts/cleanup',
     'compact_transcript': 'chattft/transcripts/compaction',
-    'context_selection': 'chattft/selectors/context',
-    'skill_selection': 'chattft/selectors/skills',
     AssistantName.DUMMY_ASSISTANT: 'internal/fixtures/deterministic-trace',
     'analyze_transcript': 'archive/analyze-transcript',
 }
@@ -52,11 +50,6 @@ def dataset_schemas(suite: dict, *, version: int = 2) -> dict:
     input_schema = {'type': 'object', 'properties': fields, 'required': list(fields), 'additionalProperties': False}
     if suite.get('scoring') == 'none':
         expected_schema = None
-    elif suite['family'] in {'context_selection', 'skill_selection'}:
-        expected_schema = {'type': 'object', 'properties': {
-            'required': {'type': 'array'}, 'forbidden': {'type': 'array'},
-            'expect_empty': {'type': 'boolean'}, 'max_skills': {'type': 'integer', 'minimum': 0},
-            'explicit': {'type': 'boolean'}, 'exact': {'type': 'boolean'}}, 'additionalProperties': False}
     else:
         expected_schema = {'oneOf': [{'type': 'string'}, {'type': 'object', 'properties': {
             'requirements': {'type': 'array', 'items': {'type': 'string'}},
@@ -70,13 +63,12 @@ def dataset_schemas(suite: dict, *, version: int = 2) -> dict:
     return {'input': input_schema, 'expected_output': expected_schema}
 
 
-def migrate_item(suite: dict, item: dict, *, available_skills: set[str] | None = None) -> tuple[dict, list[dict]]:
+def migrate_item(suite: dict, item: dict) -> tuple[dict, list[dict]]:
     """Convert one case without losing authored expectations or original definitions.
 
     Args:
         suite: Stable CLI identity and execution family.
         item: Complete source item, including optional hosted linkage.
-        available_skills: Current skill identities used to flag obsolete expectations.
 
     Returns:
         Converted item and one audit entry for each original assertion.
@@ -93,8 +85,7 @@ def migrate_item(suite: dict, item: dict, *, available_skills: set[str] | None =
                        else {'text': original['input']})
     if original.get('fixture'):
         metadata['fixture'] = deepcopy(original['fixture'])
-    selector = suite['family'] in {'context_selection', 'skill_selection'}
-    result['expected_output'] = deepcopy(original.get('expected', {})) if selector else {'requirements': []}
+    result['expected_output'] = {'requirements': []}
     metadata['deterministic_checks'] = []
     manifest = []
     profiles = set()
@@ -119,18 +110,11 @@ def migrate_item(suite: dict, item: dict, *, available_skills: set[str] | None =
         # Keep every authored threshold; consolidation never relaxes a gate.
         thresholds = [a.get('threshold', .8) for a in item['expected_output']['assertions'] if a['kind'] == 'rubric']
         metadata['quality_threshold'] = max(thresholds, default=.8)
-    if suite['family'] == 'skill_selection' and available_skills is not None:
-        required = set(original.get('expected', {}).get('required', []))
-        forbidden = set(original.get('expected', {}).get('forbidden', []))
-        missing = sorted((required | forbidden) - available_skills)
-        if missing:
-            result['status'] = 'ARCHIVED'
-            metadata.update(needs_repair=True, repair_reason='Removed skill definitions: ' + ', '.join(missing))
     result.setdefault('status', 'ACTIVE')
     return result, manifest
 
 
-def migrate_bundle(bundle: dict, *, available_skills: set[str] | None = None) -> dict:
+def migrate_bundle(bundle: dict) -> dict:
     """Create a new snapshot definition while leaving old content immutable."""
     if bundle.get('schema_version') in {2, 3}:
         return deepcopy(bundle)
@@ -139,7 +123,7 @@ def migrate_bundle(bundle: dict, *, available_skills: set[str] | None = None) ->
     result['dataset_name'] = DATASET_NAMES[bundle['suite']['name']]
     result['items'] = []
     for item in bundle['items']:
-        converted, manifest = migrate_item(bundle['suite'], item, available_skills=available_skills)
+        converted, manifest = migrate_item(bundle['suite'], item)
         result['items'].append(converted)
         result['assertion_manifest'].extend(manifest)
     result['acceptance'] = {'execution_success': True, 'all_required_checks': True,

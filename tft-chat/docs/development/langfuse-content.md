@@ -27,8 +27,8 @@ retaining its dataset, item, and experiment identities. See the
 JSON/CSV and its one-fact-regex-per-case contract. The seven former
 intake prompts are included in `end-to-end`. The nested `chattft/`, `internal/`,
 `archive/`, and `set18-buildout` datasets were removed after backup and verified
-copying. Local historical selector, transcript, and fixture snapshots remain
-available for offline regression checks; normal startup seeds the active
+copying. Archived snapshots remain data records; selector definitions have no runtime
+compatibility path. Current deterministic fixtures support offline checks; normal startup seeds the active
 workflows listed above. Test deployments can still seed the historical fixtures.
 
 ### Create another assistant dataset
@@ -140,7 +140,7 @@ The name above is an example; use an existing PostgreSQL database accessible
 through your configured `RDS_EVAL_*` connection. Pin old cases to their old
 database and add new cases with the new database name. Both can remain active
 in the same dataset and experiment. This setting applies to assistant cases;
-context and skill selectors use repository content rather than a database.
+resource reads use the local library rather than a database.
 
 Selection precedence is case `metadata.database`, suite `database`, then the
 configured evaluation database. Missing or null values inherit the next level;

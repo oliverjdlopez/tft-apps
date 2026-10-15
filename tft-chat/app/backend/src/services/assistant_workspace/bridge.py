@@ -31,12 +31,18 @@ def request(workspace, method: str, path: str, payload: dict | None = None) -> d
 
 def datasets(workspace, name: str) -> dict:
     """Offer only registered live workflows reachable in the active/draft graph."""
-    from domain.assistants.capture import reachable, registry_from_files
+    from domain.assistants.capture import registry_from_files
     active = workspace.active()
     head = workspace.store.head(name)
     draft = registry_from_files({**active.source_files, name: head['files']}) if head and workspace.validate(name, head['files'])['valid'] else active
     result = request(workspace, 'GET', '/workspace/datasets')
-    result['datasets'] = [row for row in result['datasets'] if name in set(reachable(active, row['assistant'])) | set(reachable(draft, row['assistant']))]
+    result['datasets'] = [
+        row for row in result['datasets']
+        if name in (
+            set(active.list_reachable_assistant_names(row['assistant']))
+            | set(draft.list_reachable_assistant_names(row['assistant']))
+        )
+    ]
     return result
 
 

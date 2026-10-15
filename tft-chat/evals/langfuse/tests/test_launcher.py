@@ -62,7 +62,7 @@ def test_run_exports_effective_definition_before_execution(tmp_path: Path, monke
     from evals.langfuse import content, experiments
 
     bundle = content.load_snapshot(
-        "548ed5b704124f3d59fc4a097b4c8246ee54f1a76a889009e9ebb138764fb099",
+        "25850fe05520c398f4723b09c2b26c2c4421c9bed73c5ec0bb4bd9725793ff8d",
         launcher.SNAPSHOT_ROOT,
     )
     bundle["config"]["action"] = "export"

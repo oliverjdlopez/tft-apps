@@ -7,7 +7,6 @@ kind: reference
 parent: set18/systems
 sets:
 - '18'
-legacy_name: set-18-reference-systems-reference-conflicts
 provenance: Migrated from resources/context/set18/systems/reference-conflicts.md; original source wording retained.
 patches:
 - '18.2'

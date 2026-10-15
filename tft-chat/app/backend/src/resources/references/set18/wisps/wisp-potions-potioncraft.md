@@ -6,7 +6,6 @@ kind: reference
 parent: set18/wisps
 sets:
 - '18'
-legacy_name: set-18-reference-mechanics-wisp-potions-potioncraft
 provenance: Migrated from resources/context/set18/mechanics/wisp-potions-potioncraft.md; original source wording
   retained.
 patches:

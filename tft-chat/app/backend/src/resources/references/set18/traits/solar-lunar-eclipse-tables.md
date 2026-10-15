@@ -6,7 +6,6 @@ kind: reference
 parent: set18/traits
 sets:
 - '18'
-legacy_name: set-18-reference-traits-solar-lunar-eclipse-tables
 provenance: Migrated from resources/context/set18/traits/solar-lunar-eclipse-tables.md; original source wording
   retained.
 patches:

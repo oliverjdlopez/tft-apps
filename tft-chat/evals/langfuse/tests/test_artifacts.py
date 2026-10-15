@@ -141,7 +141,7 @@ def test_offline_cli_runs_real_fixture_and_exports(tmp_path, monkeypatch, capsys
     """The ordinary CLI path writes a report after a credential-free fixture run."""
     from evals.langfuse import launcher
     from evals.langfuse.content import export_snapshot, load_snapshot
-    bundle = load_snapshot("548ed5b704124f3d59fc4a097b4c8246ee54f1a76a889009e9ebb138764fb099",
+    bundle = load_snapshot("25850fe05520c398f4723b09c2b26c2c4421c9bed73c5ec0bb4bd9725793ff8d",
                            launcher.SNAPSHOT_ROOT)
     snapshots = tmp_path / "snapshots"
     snapshots.mkdir()

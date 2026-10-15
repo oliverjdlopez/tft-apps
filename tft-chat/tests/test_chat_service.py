@@ -18,14 +18,8 @@ from services.chat_service import (
     resolve_chat_assistant,
     stream_chat,
 )
-from domain.providers.context import (
-    ContextFile,
-    ContextSnippet,
-    select_context_snippets,
-)
-from domain.providers.skills import SkillDefinition
 from domain.tools import get_tool
-from domain.assistants import assistant_tool_names, list_assistants, prepare_resources
+from domain.assistants import Assistant
 from domain.runtime import AssistantRunContext, PreparedResources, ToolActivity
 from domain.runtime.activity import ActivityRunHooks
 from domain.tools.evidence import EvidenceStore
@@ -72,7 +66,7 @@ def test_chat_config_includes_models_and_tools() -> None:
     config = chat_config()
 
     assert config["default_assistant"] == "chat"
-    assert config["assistants"] == list_assistants()
+    assert config["assistants"] == Assistant.names()
     assert config["default_model"] == load_config().models.openai_model
     assert [tool["name"] for tool in config["tools"]] == [
         *[tool.name for tool in CONTEXT_TOOL_GROUP.tools],
@@ -346,7 +340,7 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
     assert metadata["model"] == "openai-latest"
     assert metadata["message_count"] == "1"
     assert metadata["direct_tool_names"] == ",".join(
-        assistant_tool_names("meta_expert")
+        Assistant("meta_expert").tool_names
     )
     assert metadata["context_sources"] == ""
     create_kwargs = captured["create_kwargs"]

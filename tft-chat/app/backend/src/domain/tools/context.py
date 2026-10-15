@@ -20,7 +20,7 @@ async def read_resource(
     ctx: ToolContext[Any],
     resource_id: Annotated[str, Field(min_length=1, max_length=512)],
 ) -> dict[str, object]:
-    """Read an index, complete reference, record view, or skill by stable resource ID.
+    """Read an index, reference, record view, skill, or playbook by stable resource ID.
 
     Args:
         ctx: SDK tool context identifying the active assistant and invocation.
@@ -40,7 +40,7 @@ async def read_resource(
 
 CONTEXT_TOOL_GROUP = AssistantToolGroup(
     key='context', label='Resource Reading',
-    description='Read permitted curated TFT references and skills by exact catalogue ID.',
+    description='Read permitted curated TFT references, skills, and playbooks by exact catalogue ID.',
     tools=(read_resource,),
 )
 

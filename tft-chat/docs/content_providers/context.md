@@ -8,8 +8,8 @@ directly, but every read independently checks set scope and assistant permission
 Descriptions and index listings guide discovery; they are not factual evidence.
 
 `domain.resources` owns the current library, schemas, discovery, and reads.
-`domain.providers` retains historical offline fixture helpers only. Runtime
-preparation never uses lexical ranking, provider objects, or selector assistants.
+There is no provider package or selector evaluation execution path. Preparation
+and reads use this library directly.
 
 ## Authoring and parsing
 
@@ -71,20 +71,19 @@ sources to stable IDs and records original hashes. All 75 bodies were checked
 against Git source bytes after normalizing line endings and removing display-only
 variant labels. Ten prose-only JSON companions were consolidated into Markdown;
 claims not matching an existing entry were explicitly retained in an appendix.
-Seven Wisp JSON companions became typed canonical backing records. Historical
-evaluation snapshots remain byte-for-byte intact. Their path-based gold can be
-stale after migration; live selector execution is retired.
+Seven Wisp JSON companions became typed canonical backing records. Selector
+suites, scoring hooks, legacy metadata aliases, and provider tests have been
+removed. Current assistant snapshots use the current run schema; archived bytes
+are records only and are not given a compatibility execution path.
 
 ```bash
 .venv/bin/python -m domain.resources
-.venv/bin/python -m pytest -q tests/test_resource_library.py tests/test_assistant_runtime.py tests/test_context_service.py
+.venv/bin/python -m pytest -q tests/test_resource_library.py tests/test_assistant_runtime.py
 ```
 
 Validation loads all bodies and structured views offline. Normal preparation
 remains metadata-only. It makes no model calls or database changes.
 
-The final combined regression run passed 304 tests, including actual SDK hierarchy
-traversal against a local mock model. The corpus validator checked 141 resources
-and derived views; the explicit YAML dependency passes `uv lock --check --offline`.
-Global `evals validate` reports the historical `exact_unit` required-gold mismatch.
-No paid-model evaluations or frontend interaction were exercised.
+Offline corpus validation checks 141 resources and derived views. Global
+`evals validate` checks 11 assistant suites and 142 cases; no selector corpus
+preflight remains. No paid-model evaluations or hosted content edits are needed.

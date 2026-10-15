@@ -17,10 +17,7 @@ from core.config import load_config
 from common.langfuse_tracing import development_trace
 from domain.assistants import (
     SPECS_DIR,
-    assistant_reachable_tool_names,
-    assistant_spec,
     Assistant,
-    list_assistants,
 )
 from domain.assistants.constants import AssistantName
 from domain.runtime.activity import finalize_activity
@@ -230,7 +227,7 @@ def resolve_chat_assistant(header_value: str | None) -> str:
     if not assistant_name:
         raise LookupError("X-Chat-Assistant must name a registered assistant.")
     try:
-        assistant_spec(assistant_name)
+        Assistant(assistant_name)
     except KeyError:
         raise LookupError(
             f"Unknown chat assistant {assistant_name!r}."
@@ -251,13 +248,14 @@ def chat_config(
     """
     config = load_config()
     model_specs = chat_model_specs(config)
-    tool_names = assistant_reachable_tool_names(CHAT_ASSISTANT_NAME)
+    assistant = Assistant(CHAT_ASSISTANT_NAME)
+    tool_names = assistant.reachable_tool_names
     tools = list_tool_metadata(tool_names)
     return {
         "composition_workbench": config.chat.composition_workbench,
         "flowchart_source": config.chat.flowchart_source,
         "default_assistant": CHAT_ASSISTANT_NAME,
-        "assistants": list_assistants(),
+        "assistants": Assistant.names(),
         "default_model": config.models.openai_model,
         "models": [
             {

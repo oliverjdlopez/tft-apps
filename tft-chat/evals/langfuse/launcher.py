@@ -172,14 +172,13 @@ def validate() -> None:
 
 
 def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
-        selection_live: bool = False, data_snapshot_label: str | None = None) -> int:
+        data_snapshot_label: str | None = None) -> int:
     """Execute a committed definition for CI or an explicitly requested run.
 
     Args:
         suite: Stable suite name in the exported catalog.
         snapshot: Optional immutable snapshot identifier overriding the catalog.
-        offline: Use local fixture and selector evaluation without Langfuse.
-        selection_live: Explicitly enable live model selector execution.
+        offline: Use local fixture evaluation without Langfuse.
         data_snapshot_label: Label recording evaluation database provenance.
 
     Returns:
@@ -200,8 +199,6 @@ def run(suite: str, *, snapshot: str | None = None, offline: bool = False,
     bundle = load_snapshot(snapshot, SNAPSHOT_ROOT)
     # A UI export may be the latest catalog entry; this command explicitly runs it.
     bundle["config"]["action"] = "run"
-    if selection_live:
-        bundle["config"]["selection_live"] = True
     if data_snapshot_label is not None:
         bundle["config"]["data_snapshot_label"] = data_snapshot_label
     client = None
@@ -292,7 +289,6 @@ def main(argv: list[str] | None = None) -> int:
     evaluate.add_argument("--suite", default=AssistantName.DUMMY_ASSISTANT)
     evaluate.add_argument("--snapshot")
     evaluate.add_argument("--offline", action="store_true")
-    evaluate.add_argument("--selection-live", action="store_true")
     evaluate.add_argument("--data-snapshot-label")
     migrate = commands.add_parser('migrate', help='Export and plan or resume the native workspace migration')
     migrate.add_argument('--directory', type=Path, default=PLATFORM_ROOT / '.runtime')
@@ -348,7 +344,7 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(result, indent=2))
         else:
             return run(args.suite, snapshot=args.snapshot, offline=args.offline,
-                       selection_live=args.selection_live, data_snapshot_label=args.data_snapshot_label)
+                       data_snapshot_label=args.data_snapshot_label)
     except (OSError, ValueError, subprocess.CalledProcessError) as error:
         print(f"Evaluation launcher: {error}", file=sys.stderr)
         return 2

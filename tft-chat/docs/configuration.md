@@ -86,7 +86,8 @@ does not read a `CHAT_TFT_DATABASE_URL`-style environment variable. Resolved
 URLs, logs, and subprocess displays use credential-safe forms.
 
 Langfuse's Custom Experiment configuration controls case selection, model/prompt
-variants, concurrency, repetitions, and offline/live selector mode. The Python
+variants, concurrency, repetitions, and dataset versions. Selector execution
+options are removed. The Python
 service processes one queued job at a time, with one to four concurrent attempts
 (default four). This cap bounds application execution; Langfuse schedules quality
 grading separately. Each variant/repetition produces a separate native experiment.

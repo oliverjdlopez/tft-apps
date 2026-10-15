@@ -30,7 +30,7 @@ def test_every_assertion_and_threshold_survives_conversion():
     """Audit all retained rubrics and deterministic definitions independently."""
     profiles = {}
     for original in bundles():
-        converted = migrate_bundle(original, available_skills={'tft-statistical-investigation'})
+        converted = migrate_bundle(original)
         validate_bundle(converted)
         assert migrate_bundle(converted) == converted
         for before, after in zip(original['items'], converted['items'], strict=True):

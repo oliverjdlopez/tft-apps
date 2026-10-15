@@ -7,7 +7,6 @@ kind: reference
 parent: set18/systems
 sets:
 - '18'
-legacy_name: set-18-system-info
 provenance: Migrated from resources/context/set18/system_context.md; original source wording retained.
 patches:
 - '18.1'

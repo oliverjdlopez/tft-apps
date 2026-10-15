@@ -38,9 +38,9 @@ def validate_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("Evaluation bundle requires items and prompts")
     if not re.fullmatch(r"[A-Za-z0-9_-]+", suite["name"]):
         raise ValueError("Invalid suite name")
-    if suite.get("family") not in {"assistant", "context_selection", "skill_selection"}:
+    if suite.get("family") != "assistant":
         raise ValueError("Unknown suite family")
-    if suite.get("execution") not in {"offline", "fixture", "live"}:
+    if suite.get("execution") not in {"fixture", "live"}:
         raise ValueError("Unknown execution mode")
     if suite.get("scoring", "required") not in {"required", "none"}:
         raise ValueError("Unknown scoring mode")
@@ -103,15 +103,15 @@ def validate_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(f"Unknown case IDs: {sorted(set(selected) - ids)}")
     captured_names = None
     if value.get('execution'):
-        from domain.assistants.capture import from_capture, reachable
+        from domain.assistants.capture import registry_from_capture
         execution = value['execution']
         if execution.get('version') != 1 or set(execution.get('graphs', {})) != {variant['name'] for variant in config['variants']}:
             raise ValueError('Invalid captured execution version or variants')
         captured_names = set()
         entry = config.get('assistant') or suite['assistant']
         for graph in execution['graphs'].values():
-            registry = from_capture(graph)
-            captured_names.update(reachable(registry, entry))
+            registry = registry_from_capture(graph)
+            captured_names.update(registry.list_reachable_assistant_names(entry))
     validate_frozen_config(config, suite, captured_names)
     return value
 
@@ -216,8 +216,7 @@ def seed_content(client: Any, root: Path, *, natural: bool = False, include_fixt
         if natural:
             from .contracts import migrate_bundle
             import domain.assistants
-            from domain.providers.skills import _discover_skills
-            bundle = migrate_bundle(bundle, available_skills={skill.name for skill in _discover_skills()})
+            bundle = migrate_bundle(bundle)
         for assistant_name, prompt in bundle["prompts"].items():
             if natural:
                 continue
@@ -338,10 +337,6 @@ def fetch_bundle(client: Any, dataset_name: str, config: dict[str, Any], root: P
             if profile and metadata.get("scoring") != "none":
                 metadata.setdefault('quality_profile', profile)
                 metadata.setdefault('quality_threshold', .8)
-            if baseline['suite']['family'] in {'context_selection', 'skill_selection'}:
-                from .contracts import legacy_execution_item
-                defaults = legacy_execution_item(baseline['items'][0])['expected_output']['assertions']
-                metadata.setdefault('deterministic_checks', deepcopy(defaults))
         value["items"].append({"id": case_id, "remote_id": item.id, "input": deepcopy(item.input),
                                "expected_output": deepcopy(item.expected_output), "metadata": metadata,
                                **({"status": str(item.status).upper().split(".")[-1],

@@ -29,7 +29,15 @@ from .schemas import input_schema as _input_schema
 from .schemas import output_schema as _output_schema
 
 
-def _tool_name(tool: Any) -> str:
+def tool_name(tool: Any) -> str:
+    """Return the registered name for an SDK tool or Python callable.
+
+    Args:
+        tool: SDK tool or callable registered with the application.
+
+    Returns:
+        The tool's registered name.
+    """
     return getattr(tool, "name", getattr(tool, "__name__", ""))
 
 
@@ -100,11 +108,11 @@ _TOOL_GROUPS = (
 )
 _TOOL_GROUP_BY_KEY = {group.key: group for group in _TOOL_GROUPS}
 _TOOL_GROUP_OF = {
-    _tool_name(tool): group.key for group in _TOOL_GROUPS for tool in group.tools
+    tool_name(tool): group.key for group in _TOOL_GROUPS for tool in group.tools
 }
 _TOOL_FUNCTIONS = dict(
     sorted(
-        (_tool_name(tool), _ensure_sdk_tool(tool))
+        (tool_name(tool), _ensure_sdk_tool(tool))
         for group in _TOOL_GROUPS
         for tool in group.tools
     )
@@ -242,9 +250,9 @@ def list_tool_group_metadata(
     groups: list[dict[str, Any]] = []
     for group in _TOOL_GROUPS:
         tools = [
-            tools_by_name[_tool_name(tool)]
+            tools_by_name[tool_name(tool)]
             for tool in group.tools
-            if selected_names is None or _tool_name(tool) in selected_names
+            if selected_names is None or tool_name(tool) in selected_names
         ]
         if selected_names is not None and not tools:
             continue
@@ -293,4 +301,5 @@ __all__ = [
     "list_tool_metadata",
     "list_tool_names",
     "list_tools",
+    "tool_name",
 ]

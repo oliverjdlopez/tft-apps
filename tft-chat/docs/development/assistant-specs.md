@@ -29,8 +29,8 @@ never overwrites an existing directory or registered name. It validates the new
 spec's tool references and handoffs before publishing the complete directory.
 New names use lowercase letters, digits, underscores, and hyphens and start with a letter.
 
-A fresh spec starts with no tools, skills, handoffs, or repository context.
-Copies retain the source's access and optional task wrapper. Review copied
+A fresh spec starts with no tools, skills, playbooks, handoffs, or repository context.
+Copies retain the source's independent skill and playbook access and optional task wrapper. Review copied
 instructions for references to the old assistant's name. Configure access in
 `app/backend/src/domain/assistant_specs/<name>/agent.json` and edit instructions
 in `system.md`; the application's Developer → Specs page can edit these files too.

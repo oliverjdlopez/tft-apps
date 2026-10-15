@@ -229,7 +229,7 @@ def test_import_guard_reports_all_disjoint_cycles() -> None:
 
 
 @pytest.mark.parametrize("module", [
-    "domain.providers.context", "domain.providers.utils",
+    "domain.resources.library", "domain.resources.catalogue",
     "domain.assistants", "domain.assistants.assistant",
     "domain.compositions.acceleration", "domain.compositions.reference",
     "services.compositions.persistence", "services.compositions.utils",

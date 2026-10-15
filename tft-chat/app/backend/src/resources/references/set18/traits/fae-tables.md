@@ -7,7 +7,6 @@ kind: reference
 parent: set18/traits
 sets:
 - '18'
-legacy_name: set-18-reference-traits-fae-tables
 provenance: Migrated from resources/context/set18/traits/fae-tables.md; original source wording retained.
 patches:
 - '18.2'

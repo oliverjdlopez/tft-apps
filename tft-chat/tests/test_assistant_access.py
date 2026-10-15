@@ -9,7 +9,6 @@ import pytest
 from agents import RunContextWrapper
 from domain.assistants import Assistant, AssistantRegistry
 from domain.assistants.specs import AssistantSpec, load_assistant_spec
-from domain.providers.models import SkillDefinition
 
 
 def _load_spec(tmp_path: Path, config: dict) -> AssistantSpec:
@@ -48,5 +47,35 @@ def test_skills_requires_a_string_list(tmp_path: Path, value: object) -> None:
 
 def test_selectors_are_absent_from_runtime_discovery():
     """Selection is owned by the running assistant through resource reads."""
-    from domain.assistants import list_assistants
-    assert not {'context_selector', 'skill_selector'} & set(list_assistants())
+    assert not {'context_selector', 'skill_selector'} & set(Assistant.names())
+
+
+@pytest.mark.parametrize('value', [True, 'all', {'all': True}, [1], ['duplicate', 'duplicate'], ['']])
+def test_playbooks_require_unique_nonempty_names(tmp_path, value):
+    """Malformed guide allowlists fail before constructing an assistant graph."""
+    with pytest.raises(ValueError, match='playbooks must'):
+        _load_spec(tmp_path, {'playbooks': value})
+
+
+def test_playbook_access_is_independent_of_skills(tmp_path):
+    """Omitted, empty, and named guide permissions survive spec parsing."""
+    assert _load_spec(tmp_path / 'omitted', {}).playbook_names is None
+    spec = _load_spec(tmp_path / 'named', {'playbooks': ['specific-guide'], 'skills': []})
+    assert spec.playbook_names == ('specific-guide',) and spec.skill_names == ()
+    spec = _load_spec(tmp_path / 'empty', {'playbooks': [], 'skills': ['general-guidance']})
+    assert spec.playbook_names == () and spec.skill_names == ('general-guidance',)
+
+
+
+def test_workspace_configuration_accepts_and_captures_playbooks():
+    """Draft validation and graph serialization retain independent guide access."""
+    from domain.assistants.capture import capture, registry_from_capture, registry_from_files
+    source = registry_from_files({'fixture': {
+        'system.md': 'Use the specific guide when relevant.',
+        'agent.json': json.dumps({'tools': {'groups': ['context']},
+                                  'skills': [], 'playbooks': ['specific-guide']}),
+    }})
+    graph = capture(source)
+    assert graph['specs']['fixture']['playbook_names'] == ['specific-guide']
+    restored = registry_from_capture(graph).get_spec('fixture')
+    assert restored.playbook_names == ('specific-guide',) and restored.skill_names == ()

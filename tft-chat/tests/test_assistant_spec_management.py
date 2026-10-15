@@ -11,25 +11,29 @@ from evals.langfuse import prompts
 
 
 @pytest.fixture
-def specs(tmp_path, monkeypatch):
-    """Provide isolated specs and avoid runtime tool imports during file tests."""
-    import domain.assistants
-
+def specs(tmp_path):
+    """Provide isolated specifications for lifecycle tests."""
     root = tmp_path / "specs"
     root.mkdir()
-    monkeypatch.setattr(domain.assistants, "resolve_assistant_tools", lambda spec: [])
     create_spec(root, "old_expert", prompt="Explain the evidence.")
     return root
 
 
 def test_create_copy_and_recoverable_removal(specs, tmp_path):
     """Copy optional files and preserve the complete removed directory in a backup."""
+    config_path = specs / "old_expert/agent.json"
+    config = json.loads(config_path.read_text())
+    assert config['playbooks'] == []
+    config['playbooks'] = ['specific-guide']
+    config_path.write_text(json.dumps(config))
     (specs / "old_expert/task.md").write_text("Analyze: {input}")
     (specs / "old_expert/notes.txt").write_text("Preserve this too.")
     create_spec(specs, "new_expert", copy_from="old_expert", prompt="New behavior.")
     assert (specs / "new_expert/system.md").read_text() == "New behavior."
     assert (specs / "new_expert/task.md").read_text().strip() == "Analyze: {input}"
-    assert json.loads((specs / "new_expert/agent.json").read_text())["name"] == "new_expert"
+    copied = json.loads((specs / "new_expert/agent.json").read_text())
+    assert copied['name'] == 'new_expert'
+    assert copied['playbooks'] == ['specific-guide'] and copied['skills'] == []
     assert not (specs / "new_expert/notes.txt").exists()
     assert remove_spec(specs, tmp_path, "old_expert")["blockers"] == []
     assert (specs / "old_expert").exists()
@@ -166,8 +170,23 @@ def test_experiment_prompts_follow_current_graph(monkeypatch):
     """Freeze new handoff targets without retaining unrelated retired prompts."""
     import domain.assistants
 
-    monkeypatch.setattr(domain.assistants, "reload_assistant_specs", lambda: None)
-    monkeypatch.setattr(domain.assistants, "assistant_handoff_names", lambda name: ["new"] if name == "active" else [])
+    class FakeAssistant:
+        """Expose the class-level discovery used by prompt selection."""
+
+        def __init__(self, name):
+            """Retain the selected root name."""
+            self.name = name
+
+        @classmethod
+        def reload(cls):
+            """Avoid touching repository definitions in this focused test."""
+
+        @property
+        def reachable_assistant_names(self):
+            """Return the fixture graph in traversal order."""
+            return [self.name, "new"] if self.name == "active" else [self.name]
+
+    monkeypatch.setattr(domain.assistants, "Assistant", FakeAssistant)
     monkeypatch.setattr(prompts, "repository_prompts", lambda: {
         name: {"name": f"chattft/assistants/{name}"} for name in ("active", "new", "unrelated")})
     assert set(prompts.experiment_prompts({"assistant": "active", "execution": "live"})) == {"active", "new"}

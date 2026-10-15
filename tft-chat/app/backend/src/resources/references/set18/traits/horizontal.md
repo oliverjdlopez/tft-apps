@@ -8,7 +8,6 @@ kind: reference
 parent: set18/traits
 sets:
 - '18'
-legacy_name: set-18-horizontal-traits
 provenance: Migrated from resources/context/set18/traits/horizontal.md; original source wording retained.
 patches:
 - '18.1'

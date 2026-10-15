@@ -9,7 +9,6 @@ from typing import Any
 
 from evals.database import eval_database_override, resolve_eval_target
 from evals.trace import extract_trace
-from evals.utils import selector_case
 
 
 def run_assistant(prompt: str, config: dict[str, Any], identity: dict[str, Any]) -> dict[str, Any]:
@@ -105,17 +104,7 @@ def execute(payload: dict[str, Any]) -> dict[str, Any]:
         if payload["input"].get("messages"):
             config = {**config, "messages": payload["input"]["messages"]}
         return run_assistant(prompt, config, identity)
-    import domain.assistants
-    if family == "context_selection":
-        from evals.context_selection.provider import evaluate
-    elif family == "skill_selection":
-        from evals.skill_selection.provider import evaluate
-    else:
-        raise ValueError(f"Unknown eval family: {family}")
-    case = selector_case(payload["input"], identity)
-    metrics = evaluate(case,
-                       live=config.get("execution") == "live", model=config.get("model"))
-    return {"output": metrics.get("selected", metrics.get("selected_skills", [])), "metadata": {"selection": metrics}}
+    raise ValueError(f"Unknown eval family: {family}")
 
 
 def terminate_worker(signum, frame) -> None:

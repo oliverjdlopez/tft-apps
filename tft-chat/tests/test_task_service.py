@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from domain.tasks import transcript
-from domain.assistants import assistant_spec
+from domain.assistants import Assistant
 from domain.assistants.constants import AssistantName
 from domain.assistants.utils import wrap_task_input
 from services import task_service
@@ -39,7 +39,7 @@ def test_transcription_pipeline_distills_original_source_once(monkeypatch, origi
     assert transcript.run_transcription_pipeline(original) == output
     assert calls == [
         (AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
-            original, assistant_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,
+            original, Assistant(AssistantName.DISTILL_TRANSCRIPT).spec.task_prompt,
         )),
     ]
 
@@ -101,7 +101,7 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
         "result": "# Distilled reference\n\nSource-grounded notes.",
     }
     assert calls == [(AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
-        source, assistant_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,
+        source, Assistant(AssistantName.DISTILL_TRANSCRIPT).spec.task_prompt,
     ))]
 
 
@@ -123,6 +123,6 @@ def test_assistant_cli_distills_file_with_default_or_explicit_name(monkeypatch, 
     monkeypatch.setattr("domain.assistants.assistant.Runner.run", fake_run)
     main()
     assert calls == [(AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
-        source.read_text(), assistant_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,
+        source.read_text(), Assistant(AssistantName.DISTILL_TRANSCRIPT).spec.task_prompt,
     ), "cli")]
     assert capsys.readouterr().out == "# Distilled reference\n"

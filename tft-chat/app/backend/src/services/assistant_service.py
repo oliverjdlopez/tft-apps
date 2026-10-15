@@ -7,26 +7,21 @@ from typing import Any
 
 from agents.tracing import trace
 
-from domain.assistants import (
-    assistant_handoff_names,
-    assistant_spec,
-    assistant_tool_names,
-    Assistant,
-    list_assistants,
-)
+from domain.assistants import Assistant
 from services.task_service import task_catalog
 from services.tracing_service import ensure_local_trace_processor, trace_file_path
 
 
 def assistant_catalog() -> dict[str, Any]:
     assistants = []
-    for name in list_assistants():
+    for name in Assistant.names():
+        assistant = Assistant(name)
         assistants.append(
             {
                 "name": name,
-                "description": assistant_spec(name).description,
-                "tools": assistant_tool_names(name),
-                "handoffs": assistant_handoff_names(name),
+                "description": assistant.spec.description,
+                "tools": assistant.tool_names,
+                "handoffs": assistant.handoff_names,
             }
         )
 

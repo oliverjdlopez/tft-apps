@@ -1,8 +1,9 @@
-# Skill resources and progressive disclosure
+# Skills, playbooks, and progressive disclosure
 
-Repository skills are complete task procedures read on demand through
-`read_resource("skill:<name>")`. Assistants see only names and descriptions in
-their permitted resource catalogue until they explicitly read a skill. Supporting procedures appear as child IDs
+Repository skills provide reusable general guidance; playbooks provide specific
+task guides. Both are complete resources read on demand through
+`read_resource("skill:<name>")` or `read_resource("playbook:<name>")`. Assistants see only names and descriptions in
+their permitted resource catalogue until they explicitly read the resource. Supporting procedures appear as child IDs
 and are read separately with the same tool. No
 provider or selector chooses workflows before execution. Factual game material
 belongs in reference resources; durable assistant policy belongs in `system.md`.
@@ -58,11 +59,55 @@ the user or game references; item statistics alone do not establish ability
 scaling or item mechanics.
 
 ```bash
-.venv/bin/python -m pytest -q tests/test_skill_provider.py tests/test_assistant_runtime.py tests/test_assistant_access.py
+.venv/bin/python -m pytest -q tests/test_resource_library.py tests/test_assistant_runtime.py tests/test_assistant_access.py
 ```
 
 The unit-itemization entry point now links to its allocation-patterns supporting
 reference; its original interpretation guidance is retained verbatim there.
 
-Historical selector snapshots are preserved. Offline lexical helpers support
-historical fixture comparisons, while live selector execution is retired.
+## Adding a playbook
+
+Create `app/backend/src/resources/playbooks/<name>/PLAYBOOK.md` with the same
+`name` and `description` frontmatter rules as a skill:
+
+```markdown
+---
+name: specific-guide
+description: A step-by-step guide for a specific TFT task. Describe when to use it and its boundaries.
+---
+# Specific guide
+
+Write the complete procedure, including prerequisites, steps, and caveats.
+```
+
+The package directory must match `name`. Its ID is `playbook:specific-guide`.
+Supporting Markdown declares `kind: playbook-reference`, a child ID such as
+`playbook:specific-guide/example`, and `parent: playbook:specific-guide`.
+Children inherit the owning playbook's permissions. Links to skills or references
+never grant additional access.
+
+Use skills for guidance reused across many tasks (for example statistical
+interpretation), and playbooks for concrete task sequences. Existing skill IDs
+remain valid; adding this category does not move authored content automatically.
+
+An assistant's `agent.json` can independently declare:
+
+```json
+{"skills": ["general-guidance"], "playbooks": ["specific-guide"]}
+```
+
+Omitting `playbooks` permits all discovered playbooks for an eligible assistant;
+`[]` denies them all. Eligibility requires repository context or an explicit
+nonempty playbook allowlist, plus the `read_resource` tool. Chat cannot read
+playbooks, matching its skill boundary; transcript-only assistants remain without
+resources unless explicitly configured. Playbook bodies appear only in tool
+results after a read, never automatically in instructions. Requests naming
+`playbook:<name>` or `/playbook <name>` identify the guide the assistant should read.
+
+Permissions are frozen per assistant and captured handoff graph. Historical
+captures without a playbook field deny playbooks to preserve their original
+capabilities. Newly captured graphs preserve the independent allowlist. The Specs
+configuration summary displays both categories.
+
+Skill and playbook discovery use the resource library exclusively. The provider classes,
+lexical rankers, selector evaluators, and their compatibility models are removed.

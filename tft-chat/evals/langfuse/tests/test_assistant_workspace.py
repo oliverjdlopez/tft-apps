@@ -9,7 +9,7 @@ import threading
 import pytest
 from fastapi import Request
 
-from domain.assistants.capture import capture, digest, from_capture, registry_from_files
+from domain.assistants.capture import capture, digest, registry_from_capture, registry_from_files
 from evals.langfuse import assistant_workspace as module
 from evals.langfuse.jobs import JobStore
 from evals.langfuse.content import validate_bundle
@@ -36,14 +36,14 @@ def bundle(execution):
 def test_capture_preserves_models_handoffs_and_hash_independently_of_source():
     """Restored definitions never reread later source instructions or configuration."""
     frozen = graph(handoffs=['target'])
-    registry = from_capture(frozen)
+    registry = registry_from_capture(frozen)
     assert registry.get_handoff_names('fixture') == ['target']
     assert registry.get_spec('target').system_prompt == 'Frozen target'
     assert registry.resolved_models['fixture'] == frozen['specs']['fixture']['resolved_model']
     broken = deepcopy(frozen)
     broken['specs']['fixture']['system_prompt'] = 'Intervening edit'
     with pytest.raises(ValueError, match='captured'):
-        from_capture(broken)
+        registry_from_capture(broken)
 
 
 def test_optional_execution_version_preserves_legacy_bundles():

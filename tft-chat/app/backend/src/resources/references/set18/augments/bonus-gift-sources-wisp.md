@@ -7,7 +7,6 @@ kind: reference
 parent: set18/augments
 sets:
 - '18'
-legacy_name: set-18-reference-augments-bonus-gift-sources-wisp
 provenance: Migrated from resources/context/set18/augments/bonus-gift-sources-wisp.md; original source wording retained.
 patches:
 - '18.2'

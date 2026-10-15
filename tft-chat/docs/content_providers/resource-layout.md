@@ -20,6 +20,9 @@ app/backend/src/resources/
   skills/tft-unit-itemization/
     SKILL.md
     references/allocation-patterns.md
+  playbooks/<name>/
+    PLAYBOOK.md
+    references/example.md
 ```
 
 ## Reference metadata
@@ -39,13 +42,13 @@ provenance: Source coverage and revision notes belong here.
 # Complete champion roster
 ```
 
-`id` is a set or skill namespace followed by lowercase slash-separated names.
-`kind` is `index`, `reference`, `records`, `skill`, or `skill-reference`.
+`id` is a set, skill, or playbook namespace followed by lowercase slash-separated names.
+`kind` is `index`, `reference`, `records`, `skill`, `skill-reference`, `playbook`, or
+`playbook-reference`.
 Every reference declares its set scope; children inherit their parent's scope.
 Every non-root reference has a known parent. Reference roots are indexes. Skill
 supporting resources inherit the owning package's permission; they cannot grant
-new access through links. `legacy_name` is migration metadata used only by offline
-historical adapters. New references do not need it.
+new access through links. Stable IDs are the only resource identities; old provider aliases are not accepted.
 
 `requires` names resources needed to interpret the facts correctly. `related`
 names useful adjacent references; those links may be mutual. Required dependency
@@ -90,6 +93,17 @@ skill-reference`, an ID such as `skill:tft-unit-itemization/allocation-patterns`
 and `parent: skill:tft-unit-itemization`. The entry point links to required
 supporting procedures and the read tool exposes its permitted child directory.
 Chat cannot discover or read skill entry points or their descendants.
+
+## Specific playbooks
+
+Playbooks live under `resources/playbooks/<name>/PLAYBOOK.md`. They use `name`
+and `description` frontmatter with the same package naming and description
+limits as skills. IDs use `playbook:<name>`; supporting Markdown uses
+`kind: playbook-reference`, child IDs such as `playbook:<name>/example`, and an
+explicit parent within the same package. Storage namespaces and resource kinds
+must agree. Their `playbooks` allowlist is independent of `skills`; both apply
+to children and exact reads. See [authoring and access](skills.md#adding-a-playbook).
+The metadata cache tracks changes in all three resource roots.
 
 ## Offline checks
 

@@ -6,7 +6,6 @@ kind: reference
 parent: set18/items
 sets:
 - '18'
-legacy_name: set-18-reference-items-selected-effect-tables
 provenance: Migrated from resources/context/set18/items/selected-effect-tables.md; original source wording retained.
 patches:
 - '18.2'

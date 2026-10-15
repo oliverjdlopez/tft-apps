@@ -42,7 +42,6 @@ class RunConfig(BaseModel):
     dataset_version: str | None = None
     concurrency: int = Field(default=4, ge=1, le=4)
     repetitions: int = Field(default=1, ge=1, le=20)
-    selection_live: bool = False
     data_snapshot_label: str | None = None
     snapshot: str | None = None
 

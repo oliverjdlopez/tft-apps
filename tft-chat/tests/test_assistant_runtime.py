@@ -41,7 +41,12 @@ def resources(monkeypatch, tmp_path):
         package = skills / name
         package.mkdir()
         (package / 'SKILL.md').write_text(f'---\nname: {name}\ndescription: {name} workflow\n---\nPRIVATE {name.upper()}')
-    monkeypatch.setattr('domain.assistants.runtime.get_library', lambda: build_library(references, skills))
+    playbooks = tmp_path / 'playbooks'
+    for name in ('allowed', 'other'):
+        package = playbooks / name
+        package.mkdir(parents=True)
+        (package / 'PLAYBOOK.md').write_text(f'---\nname: {name}\ndescription: Specific {name} guide\n---\nPLAYBOOK {name.upper()}')
+    monkeypatch.setattr('domain.assistants.runtime.get_library', lambda: build_library(references, skills, playbooks))
 
     async def forbidden(*args, **kwargs):
         """Fail if preparation or a resource read invokes another model."""
@@ -57,10 +62,10 @@ def registry(*, resources=True, root_name='root', root_skill_names=()):
                          system_prompt='ROOT', task_prompt='TASK', path='root/system.md',
                          model='gpt-6-luna', repository_context=resources,
                          tool_group_keys=('context',) if resources else (),
-                         handoff_names=('child',) if resources else (), skill_names=root_skill_names)
+                         handoff_names=('child',) if resources else (), skill_names=root_skill_names, playbook_names=())
     child = replace(root, name='child', system_prompt='CHILD', task_prompt='',
-                    handoff_names=('leaf',), skill_names=('allowed',))
-    leaf = replace(child, name='leaf', system_prompt='LEAF', handoff_names=(), skill_names=('other',))
+                    handoff_names=('leaf',), skill_names=('allowed',), playbook_names=('allowed',))
+    leaf = replace(child, name='leaf', system_prompt='LEAF', handoff_names=(), skill_names=('other',), playbook_names=('other',))
     result = AssistantRegistry([root, child, leaf])
     from domain.assistants.utils import configure_tools
     configure_tools(result)
@@ -149,7 +154,7 @@ def test_context_disabled_and_empty_allowlists_deny_reads():
     source = registry()
     source.install(AssistantRegistry([
         replace(source.get_spec('root'), repository_context=False, skill_names=('allowed',)),
-        replace(source.get_spec('child'), repository_context=False, skill_names=()),
+        replace(source.get_spec('child'), repository_context=False, skill_names=(), playbook_names=()),
         source.get_spec('leaf'),
     ]))
     invocation = asyncio.run(Assistant('root', registry=source, set_number=18).prepare('Question'))
@@ -240,3 +245,57 @@ def test_failed_execution_finalizes_pending_activity(monkeypatch):
     with pytest.raises(ValueError, match='Mock failure'):
         instance.run_sync('Question')
     assert contexts[0].activity.calls['pending'].status == 'failed'
+
+
+def test_playbook_handoff_catalogues_and_reads_enforce_frozen_permissions():
+    """Captured handoffs expose guide metadata and load bodies only on request."""
+    source = registry()
+    instance = Assistant.from_capture(capture(source), 'root', set_number=18)
+    invocation = asyncio.run(instance.prepare('Specific question'))
+    child = invocation.agent.handoffs[0]
+    leaf = child.handoffs[0]
+    assert 'playbook:allowed' in instructions(child, invocation)
+    assert 'playbook:other' not in instructions(child, invocation)
+    assert 'PLAYBOOK ALLOWED' not in instructions(child, invocation)
+    assert 'playbook:other' in instructions(leaf, invocation)
+    assert not read(invocation, invocation.agent, 'playbook:allowed')['found']
+    assert not read(invocation, child, 'playbook:other')['found']
+    source.install(AssistantRegistry([replace(source.get_spec(name), playbook_names=())
+                                      for name in source.list_assistants()]))
+    result = read(invocation, child, 'playbook:allowed')
+    assert result['content'] == 'PLAYBOOK ALLOWED' and result['complete']
+    assert invocation.context.resources.reads['playbook:allowed'].sha256 == result['sha256']
+
+
+def test_explicit_playbook_access_without_references_or_skills():
+    """Specific guides can be granted independently while chat remains restricted."""
+    source = registry()
+    source.install(AssistantRegistry([
+        replace(source.get_spec(name), repository_context=False, skill_names=(), playbook_names=('allowed',))
+        for name in source.list_assistants()
+    ]))
+    invocation = asyncio.run(Assistant('root', registry=source).prepare('Guide question'))
+    assert read(invocation, invocation.agent, 'playbook:allowed')['found']
+    assert not read(invocation, invocation.agent, 'skill:allowed')['found']
+    assert not read(invocation, invocation.agent, 'set18')['found']
+    chat_source = registry(root_name='chat')
+    chat_source.install(AssistantRegistry([
+        replace(chat_source.get_spec(name), playbook_names=('allowed',)) for name in chat_source.list_assistants()
+    ]))
+    chat = asyncio.run(Assistant('chat', registry=chat_source).prepare('Guide question'))
+    assert 'playbook:allowed' not in instructions(chat.agent, chat)
+    assert not read(chat, chat.agent, 'playbook:allowed')['found']
+
+
+def test_historical_captures_do_not_gain_playbook_permissions():
+    """Graphs captured before guides existed retain their original access boundary."""
+    from domain.assistants.capture import digest
+    graph = capture(registry())
+    for definition in graph['specs'].values():
+        definition.pop('playbook_names')
+    graph['hash'] = digest({key: graph[key] for key in ('version', 'specs')})
+    invocation = asyncio.run(Assistant.from_capture(graph, 'root').prepare('Question'))
+    child = invocation.agent.handoffs[0]
+    assert 'playbook:' not in instructions(child, invocation)
+    assert not read(invocation, child, 'playbook:allowed')['found']
+    assert read(invocation, child, 'skill:allowed')['found']

@@ -25,7 +25,8 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
     Returns:
         Created identity and source path.
     """
-    from domain.assistants import load_assistant_spec, resolve_assistant_tools
+    from domain.assistants import AssistantRegistry, load_assistant_spec
+    from domain.assistants.utils import configure_tools
 
     validate_name(name)
     specs = spec_inventory(root)
@@ -62,12 +63,14 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
                 config["reasoning"] = original.reasoning.value
             if original.skill_names is not None:
                 config["skills"] = list(original.skill_names)
+            if original.playbook_names is not None:
+                config["playbooks"] = list(original.playbook_names)
             (candidate / "system.md").write_text(original.system_prompt + "\n", encoding="utf-8")
             if original.task_prompt:
                 (candidate / "task.md").write_text(original.task_prompt + "\n", encoding="utf-8")
         else:
             config = {"description": name, "tools": {"groups": [], "names": []},
-                      "handoffs": [], "skills": [], "context": {"repository": False}}
+                      "handoffs": [], "skills": [], "playbooks": [], "context": {"repository": False}}
         config["name"] = name
         (candidate / "agent.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
         if prompt is not None:
@@ -78,7 +81,9 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
         missing = set(spec.handoff_names) - set(specs)
         if missing:
             raise ValueError(f"Unknown handoff targets: {sorted(missing)}")
-        resolve_assistant_tools(spec)
+        registry = AssistantRegistry([spec])
+        configure_tools(registry)
+        registry.resolve_tools(spec)
         candidate.rename(destination)
     return {"created": name, "path": str(destination)}
 

@@ -10,7 +10,7 @@ from .contracts import DATASET_NAMES, dataset_schemas, migrate_item, validate_na
 from .utils import atomic_write, canonical_json, content_hash
 
 
-def plan_migration(backup: dict, suites: dict, *, available_skills: set[str]) -> dict:
+def plan_migration(backup: dict, suites: dict) -> dict:
     """Build a reviewable rollback mapping from live content, including UI additions."""
     plan = {'version': 1, 'backup_sha256': content_hash(canonical_json(backup)), 'datasets': [], 'assertions': []}
     for dataset in backup['datasets']:
@@ -30,7 +30,7 @@ def plan_migration(backup: dict, suites: dict, *, available_skills: set[str]) ->
             local = {'id': case_id, 'remote_id': remote['id'], 'input': remote['input'],
                      'expected_output': remote['expectedOutput'], 'metadata': metadata,
                      'status': remote['status']}
-            converted, mappings = migrate_item(suite, local, available_skills=available_skills)
+            converted, mappings = migrate_item(suite, local)
             validate_natural_item(suite, converted)
             change['items'].append({'original': remote, 'converted': converted})
             plan['assertions'].extend(mappings)

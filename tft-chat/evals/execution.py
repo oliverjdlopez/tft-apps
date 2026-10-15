@@ -7,7 +7,7 @@ import time
 from typing import Any
 
 from evals.trace import evaluate_trace_check, trace_from_dict
-from evals.utils import evaluation_database, isolated_operation, resolve_eval_operation_timeout, selector_score, render_judge_prompt
+from evals.utils import evaluation_database, isolated_operation, resolve_eval_operation_timeout, render_judge_prompt
 
 
 def execute_attempt(suite: dict, item: dict, variant: dict, prompts: dict) -> dict[str, Any]:
@@ -88,9 +88,6 @@ def score_attempt(item: dict, result: dict, prompts: dict) -> list[dict[str, Any
                                                  trace_from_dict(trace) if trace else None,
                                                  output=result.get("output", ""))
                     value, comment = check.score, check.message
-                elif assertion["kind"] == "selector":
-                    value = selector_score(assertion["selector"], metadata["selection"])
-                    comment = f"{assertion['selector']}: {value:.6f} (required {threshold})"
                 elif assertion["kind"] == "rubric":
                     prompt = render_judge_prompt(prompts["judge"]["text"], item, result, assertion["rubric"])
                     response = isolated_operation({"operation": "judge", "config": {"family": "judge"},

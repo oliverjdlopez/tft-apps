@@ -7,7 +7,6 @@ kind: reference
 parent: set18/traits
 sets:
 - '18'
-legacy_name: set-18-reference-traits-lux-avatar-tables
 provenance: Migrated from resources/context/set18/traits/lux-avatar-tables.md; original source wording retained.
 patches:
 - '18.2'

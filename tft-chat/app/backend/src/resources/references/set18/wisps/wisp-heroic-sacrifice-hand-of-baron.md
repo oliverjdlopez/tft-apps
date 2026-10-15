@@ -6,7 +6,6 @@ kind: reference
 parent: set18/wisps
 sets:
 - '18'
-legacy_name: set-18-reference-mechanics-wisp-heroic-sacrifice-hand-of-baron
 provenance: Migrated from resources/context/set18/mechanics/wisp-heroic-sacrifice-hand-of-baron.md; original source
   wording retained.
 patches:

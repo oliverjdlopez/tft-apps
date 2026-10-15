@@ -7,7 +7,6 @@ kind: reference
 parent: set18/wisps
 sets:
 - '18'
-legacy_name: set-18-reference-mechanics-wisp-offer-rules
 provenance: Migrated from resources/context/set18/mechanics/wisp-offer-rules.md; original source wording retained.
 patches:
 - '18.2'

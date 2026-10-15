@@ -6,7 +6,6 @@ kind: reference
 parent: set18/items
 sets:
 - '18'
-legacy_name: set-18-reference-items-emblem-recipes
 provenance: Migrated from resources/context/set18/items/emblem-recipes.md; original source wording retained.
 patches:
 - '18.2'

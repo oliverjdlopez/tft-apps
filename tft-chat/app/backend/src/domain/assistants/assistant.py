@@ -79,6 +79,7 @@ class Assistant:
             for key in self._registry.list_assistants()
         }
         self._registry.resolved_models = dict(self._resolved_models)
+
     @classmethod
     def from_capture(cls, graph: dict[str, Any], name: str, **kwargs: Any) -> Assistant:
         """Restore a verified graph for draft trials or frozen experiments.
@@ -91,9 +92,29 @@ class Assistant:
         Returns:
             An assistant isolated from the application's active definitions.
         """
-        from domain.assistants.capture import from_capture
+        from domain.assistants.capture import registry_from_capture
 
-        return cls(name, registry=from_capture(graph), **kwargs)
+        return cls(name, registry=registry_from_capture(graph), **kwargs)
+
+    @classmethod
+    def names(cls) -> list[str]:
+        """Return active repository assistant names sorted alphabetically."""
+        return assistant_registry.list_assistants()
+
+    @classmethod
+    def reload(cls) -> None:
+        """Reload the active registry from repository specifications."""
+        assistant_registry.reload()
+
+    @property
+    def handoff_names(self) -> list[str]:
+        """Return direct handoff names from this instance's definition snapshot."""
+        return self._registry.get_handoff_names(self.name)
+
+    @property
+    def tools(self) -> list[Any]:
+        """Return direct SDK tools from this instance's definition snapshot."""
+        return self._registry.get_tools(self.name)
 
     @property
     def tool_names(self) -> list[str]:
@@ -105,16 +126,53 @@ class Assistant:
         """Return tools reachable through this instance's captured handoffs."""
         return self._registry.list_reachable_tool_names(self.name)
 
+    @property
+    def reachable_assistant_names(self) -> list[str]:
+        """Return this assistant and every target reachable through handoffs."""
+        return self._registry.list_reachable_assistant_names(self.name)
+
     def build_agent(self) -> Agent[Any]:
         """Construct a fresh SDK graph with dynamic instruction callbacks.
 
         Returns:
             A new root and handoffs using the instance's frozen model defaults.
         """
-        agent = build_assistant(
-            self._registry, self.name, model=self.model,
-            output_type=self.output_type, resolved_models=self._resolved_models,
-        )
+        def build(candidate: str, path: tuple[str, ...]) -> Agent[Any]:
+            """Build one assistant and its handoff descendants.
+
+            Args:
+                candidate: Assistant currently being constructed.
+                path: Ancestor names used for cycle detection.
+
+            Returns:
+                A fresh SDK agent for the candidate.
+
+            Raises:
+                ValueError: If the candidate already occurs in the path.
+            """
+            if candidate in path:
+                cycle = " -> ".join((*path, candidate))
+                raise ValueError(f"assistant handoff cycle: {cycle}")
+            spec = self._registry.get_spec(candidate)
+            handoffs = [
+                build(handoff_name, (*path, candidate))
+                for handoff_name in self._registry.get_handoff_names(candidate)
+            ]
+            resolved_model = self.model
+            if resolved_model is None:
+                resolved_model = self._resolved_models[candidate]
+            return Agent(
+                name=spec.name,
+                handoff_description=spec.handoff_description,
+                instructions=instruction_callback(spec, root=not path),
+                model=resolved_model,
+                model_settings=spec.model_settings(),
+                tools=self._registry.resolve_tools(spec),
+                handoffs=handoffs,
+                output_type=self.output_type if candidate == self.name else None,
+            )
+
+        agent = build(self.name, ())
         log_agent_graph(agent, task_prompt=self.spec.task_prompt)
         return agent
 
@@ -146,15 +204,10 @@ class Assistant:
             timing["agent_setup_ms"] = round(
                 (time.perf_counter() - setup_started) * 1000, 3,
             )
-        names = set()
-        pending = [self.name]
-        while pending:
-            name = pending.pop()
-            if name in names:
-                continue
-            names.add(name)
-            pending.extend(self._registry.get_handoff_names(name))
-        specs = {name: self._registry.get_spec(name) for name in names}
+        specs = {
+            name: self._registry.get_spec(name)
+            for name in self.reachable_assistant_names
+        }
         resources = await prepare_resources(
             specs=specs, set_number=self.set_number, timing=timing,
         )
@@ -230,69 +283,4 @@ class Assistant:
                 input, max_turns=max_turns, run_config=run_config, system=system,
             ))
         raise RuntimeError("Assistant.run_sync cannot run inside an event loop; await run()")
-
-
-def build_assistant(
-    registry: AssistantRegistry,
-    name: str,
-    *,
-    model: object | None = None,
-    output_type: type[Any] | None = None,
-    resolved_models: Mapping[str, str] | None = None,
-) -> Agent[Any]:
-    """Construct a fresh graph with each agent's context policy installed.
-
-    Args:
-        registry: Assistant registry used for specs, handoffs, and tools.
-        name: Root registered assistant name.
-        model: Optional model override propagated through the graph.
-        output_type: Optional structured output type for the root agent.
-        resolved_models: Frozen model defaults keyed by assistant name.
-
-    Returns:
-        A fresh SDK agent and handoffs with default instruction renderers.
-
-    Raises:
-        ValueError: If the handoff graph contains a cycle.
-    """
-    def build(candidate: str, path: tuple[str, ...]) -> Agent[Any]:
-        """Build one assistant and its handoff descendants.
-
-        Args:
-            candidate: Assistant currently being constructed.
-            path: Ancestor names used for cycle detection.
-
-        Returns:
-            A fresh SDK agent for the candidate.
-
-        Raises:
-            ValueError: If the candidate already occurs in the path.
-        """
-        if candidate in path:
-            cycle = " -> ".join((*path, candidate))
-            raise ValueError(f"assistant handoff cycle: {cycle}")
-        spec = registry.get_spec(candidate)
-        handoffs = [
-            build(handoff_name, (*path, candidate))
-            for handoff_name in registry.get_handoff_names(candidate)
-        ]
-        resolved_model = model
-        if resolved_model is None:
-            resolved_model = (
-                resolved_models[candidate]
-                if resolved_models is not None and candidate in resolved_models
-                else spec.resolved_model()
-            )
-        return Agent(
-            name=spec.name,
-            handoff_description=spec.handoff_description,
-            instructions=instruction_callback(spec, root=not path),
-            model=resolved_model,
-            model_settings=spec.model_settings(),
-            tools=registry.resolve_tools(spec),
-            handoffs=handoffs,
-            output_type=output_type if candidate == name else None,
-        )
-
-    return build(name, ())
 

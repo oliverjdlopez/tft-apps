@@ -15,9 +15,8 @@ and is retained in the frozen snapshot, including replay. This is separate from
 `variants[].prompts`, which selects instruction versions for reachable assistants.
 
 Advanced options include named model/prompt variants, reachable handoff prompt
-overrides, subsets, repetitions, historical dataset versions, and offline/live
-historical selector fixtures. Live selector assistants are retired; their
-offline fixtures and immutable snapshots remain available. Each variant/repetition creates a separate experiment named
+overrides, subsets, repetitions, and historical dataset versions. Selector
+evaluation families, metrics, and live/offline selection options are removed. Each variant/repetition creates a separate experiment named
 `Active · <timestamp> · r1`. Job IDs and snapshot hashes live in metadata.
 Export and replay remain maintenance actions in the advanced payload and CLI.
 
@@ -52,9 +51,8 @@ and grading writes without making grading depend on content export.
 
 Bundles without captures remain readable and exportable as historical artifacts,
 but live execution and replay reject them with an instruction to export a fresh
-bundle. Existing snapshots are never backfilled with current definitions. Fixtures
-and offline historical selector fixtures do not require bundle captures. Live
-selector execution reports retirement instead of running a removed assistant.
+bundle. Existing snapshots are never backfilled with current definitions. Deterministic fixtures do not require bundle captures. Only assistant
+evaluation families are accepted.
 
 The `decision_workflows` portable seed follows the same contract: local catalog
 registration validates its cases but does not capture execution definitions or
@@ -75,10 +73,10 @@ resource files, tool implementations, database contents, or model behavior.
 ## Acceptance
 
 Python retains regex semantics, tool ordering, argument matching, paired results,
-handoff ownership, resolver provenance, and selector metrics. Natural-contract
+handoff ownership, resolver provenance, and execution metrics. Natural-contract
 experiments publish each diagnostic plus Boolean `execution_success` and
 `contract_pass`. The experiment output is the actual assistant answer or
-structured task result; selectors return selected content or skill identities.
+structured task result; resource tool reads retain their identities and hashes in execution provenance.
 Latency, errors, usage, and diagnostic evidence belong in observations/metadata.
 
 Five native Langfuse evaluators own quality grading: `answer_quality`,

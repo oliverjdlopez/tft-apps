@@ -39,7 +39,7 @@ Inspect the target `system.md`, optional `agent.json`/`task.md`, registry constr
 ## Validation
 
 ```bash
-uv run pytest -q tests/test_assistants.py tests/test_chat_service.py tests/test_agent_workflow_evals.py tests/test_context_service.py tests/test_skill_provider.py
+uv run pytest -q tests/test_assistants.py tests/test_chat_service.py tests/test_agent_workflow_evals.py
 uv run --extra evals chat-tft-evals validate
 ```
 

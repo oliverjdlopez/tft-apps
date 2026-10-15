@@ -55,7 +55,7 @@ Before completing a task, first gather the related repository documentation.
 | --- | --- |
 | `app/backend/api/**`, `app/backend/src/services/**`, `app/frontend/src/**`, `scripts/start.py` | [Web runtime and UI](docs/architecture/web-runtime.md) |
 | `app/backend/src/domain/assistants/**`, `assistant_specs/**`, `domain/tasks/**` | [Assistants and tasks](docs/architecture/assistants-and-tasks.md) |
-| `app/backend/src/domain/resources/**`, `app/backend/src/resources/**`, historical `domain/providers/**` | [Runtime context](docs/content_providers/context.md) and [skills](docs/content_providers/skills.md) |
+| `app/backend/src/domain/resources/**`, `app/backend/src/resources/**` | [Runtime context](docs/content_providers/context.md) and [skills](docs/content_providers/skills.md) |
 | `app/backend/src/domain/tools/**` | [Model-facing tools](docs/tools/README.md) |
 | `app/backend/src/db/**`, database rebuild/migration/publication scripts | [Persistence and analytics](docs/data/persistence-and-analytics.md) |
 | `scripts/ingestion/**`, Riot/Community Dragon clients, `db/insert.py` | [Ingestion and upstreams](docs/data/ingestion.md) |

@@ -20,22 +20,18 @@ def experiment_prompts(suite: dict) -> dict[str, dict]:
     Returns:
         Current reachable prompt identities, without reading historical inventories.
     """
-    from domain.assistants import assistant_handoff_names, reload_assistant_specs
+    from domain.assistants import Assistant
 
-    reload_assistant_specs()
+    Assistant.reload()
     available = repository_prompts()
     if suite.get("execution") == "fixture":
         return {}
-    pending = [suite["assistant"]]
+    assistant = Assistant(suite["assistant"])
     selected = {}
-    while pending:
-        name = pending.pop()
-        if name in selected:
-            continue
+    for name in assistant.reachable_assistant_names:
         if name not in available:
             raise ValueError(f"Workflow targets missing assistant: {name}")
         selected[name] = available[name]
-        pending.extend(assistant_handoff_names(name))
     return selected
 
 

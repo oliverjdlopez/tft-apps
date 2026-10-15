@@ -111,5 +111,5 @@ uv run --extra evals pytest -q tests/test_context_response_suite.py evals/langfu
 Tests validate all 30 cases, one regex each, the string-input contract, CSV and
 snapshot parity, positive/empty-output scoring, dataset registration, and
 idempotent native seeding that preserves UI edits. They do not invoke the model.
-The older context-selector `exact_unit` gold mismatch still blocks global eval
-validation; this new suite is validated independently.
+Global evaluation validation now passes for the active assistant catalogue;
+retired selector corpus checks have been removed.

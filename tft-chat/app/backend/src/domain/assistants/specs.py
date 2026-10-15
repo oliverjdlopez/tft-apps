@@ -118,28 +118,29 @@ def _read_context_policy(config: dict[str, Any]) -> bool:
     return bool(context.get("repository"))
 
 
-def _read_skill_access(config: dict[str, Any]) -> tuple[str, ...] | None:
-    """Read the optional skill-name allowlist from an assistant configuration.
+def _read_instruction_access(config: dict[str, Any], key: str) -> tuple[str, ...] | None:
+    """Read an optional skill or playbook allowlist from an assistant configuration.
 
     Args:
         config: Parsed assistant configuration object.
+        key: Independent access field, skills or playbooks.
 
     Returns:
-        ``None`` when every skill is allowed, otherwise the configured names.
+        ``None`` when every package is allowed, otherwise the configured names.
 
     Raises:
-        ValueError: If ``skills`` is not a JSON array of unique strings.
+        ValueError: If the field is not a JSON array of unique strings.
     """
-    if "skills" not in config:
+    if key not in config:
         return None
-    raw_skills = config["skills"]
-    if not isinstance(raw_skills, list) or any(
-        not isinstance(name, str) or not name.strip() for name in raw_skills
+    raw_names = config[key]
+    if not isinstance(raw_names, list) or any(
+        not isinstance(name, str) or not name.strip() for name in raw_names
     ):
-        raise ValueError("skills must be a list of non-empty strings")
-    names = tuple(name.strip() for name in raw_skills)
+        raise ValueError(f"{key} must be a list of non-empty strings")
+    names = tuple(name.strip() for name in raw_names)
     if len(names) != len(set(names)):
-        raise ValueError("skills must not contain duplicate names")
+        raise ValueError(f"{key} must not contain duplicate names")
     return names
 
 
@@ -181,6 +182,7 @@ class AssistantSpec:
     # ``None`` is intentionally permissive for backward-compatible specs;
     # an empty tuple explicitly prevents this assistant from reading skills.
     skill_names: tuple[str, ...] | None = None
+    playbook_names: tuple[str, ...] | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "model", _coerce_optional_enum(self.model, OpenAIModels, "model"))
@@ -259,7 +261,8 @@ def load_assistant_spec(path: Path, *, root_dir: Path = ROOT_DIR) -> AssistantSp
         "tool_names": tool_names,
         "handoff_names": _read_handoffs(config, metadata),
         "repository_context": repository_context,
-        "skill_names": _read_skill_access(config),
+        "skill_names": _read_instruction_access(config, "skills"),
+        "playbook_names": _read_instruction_access(config, "playbooks"),
     }
     if model:
         spec_kwargs["model"] = str(model).strip()

@@ -117,7 +117,7 @@ def test_export_and_replay_use_frozen_content(tmp_path, monkeypatch):
     from evals.langfuse import content
     source = Path(__file__).resolve().parents[1] / "snapshots"
     entry = next(e for e in content.load_catalog(source) if e["name"] == "dummy_assistant")
-    bundle = content.load_snapshot("12919b463fd2b4bd5fdda2765fe6f7745191fcd4668a062576ff8a923f493591", source)
+    bundle = content.load_snapshot("17ea34010655d094a8072f69eb914a704c82d037ab82f57066c205156db46f1f", source)
     bundle["dataset_id"] = "dataset"
     remote = deepcopy(bundle)
     remote["config"]["action"] = "export"
@@ -139,7 +139,7 @@ def test_slow_preparation_never_schedules_after_webhook_expiry(tmp_path, monkeyp
     from evals.langfuse import content, server
     source = Path(__file__).resolve().parents[1] / "snapshots"
     entry = next(entry for entry in content.load_catalog(source) if entry["name"] == "dummy_assistant")
-    bundle = content.load_snapshot("12919b463fd2b4bd5fdda2765fe6f7745191fcd4668a062576ff8a923f493591", source)
+    bundle = content.load_snapshot("17ea34010655d094a8072f69eb914a704c82d037ab82f57066c205156db46f1f", source)
     bundle["dataset_id"] = "dataset"
     monkeypatch.setattr(content, "fetch_bundle", lambda *args: deepcopy(bundle))
     clock = iter([100.0, 115.0])

@@ -99,7 +99,7 @@ Unlisted conditions are omitted rather than asserted to be unrestricted.
   cost and trait agreement; the extra generic Lux card is not a separate unit.
 - Verified 65 roster entries, 36 trait entries, 246 distinct augment names and
   365 retained Wisp variant records; checked unique context names and set tags.
-- Added retrieval regressions in `tests/test_context_service.py` for Set 18
+- Added retrieval regressions in `tests/test_resource_library.py` for Set 18
   entity selection, unsupported-set isolation, unrelated-query abstention, excerpt budget
   preservation and Wisp eligibility retention and citation-free excerpts.
 - Assistant, context and skill suites: **39 passed**, using assistant tests

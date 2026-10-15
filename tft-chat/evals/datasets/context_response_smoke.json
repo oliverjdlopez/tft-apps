@@ -846,7 +846,6 @@
     "dataset_version": null,
     "concurrency": 4,
     "repetitions": 1,
-    "selection_live": false,
     "data_snapshot_label": null,
     "snapshot": null
   }

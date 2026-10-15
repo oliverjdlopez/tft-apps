@@ -8,7 +8,6 @@ kind: reference
 parent: set18/items
 sets:
 - '18'
-legacy_name: set-18-special-items
 provenance: Migrated from resources/context/set18/items/special.md; original source wording retained.
 patches:
 - '18.1'

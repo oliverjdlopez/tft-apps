@@ -33,8 +33,8 @@ def test_all_cases_and_original_assertions_are_migrated() -> None:
     assert sizes.pop("distill-transcript") == 6
     assert sizes == {
         "chat": 21, "comp-expert": 18, "context_response_smoke": 30,
-        "context_selection": 11, "data_analyst": 7, "dummy_assistant": 1,
-        "item-expert": 17, "meta-expert": 0, "skill_selection": 12,
+        "data_analyst": 7, "dummy_assistant": 1,
+        "item-expert": 17, "meta-expert": 0,
         "trait-expert": 17, "unit-expert": 17,
     }
     assert all(
@@ -101,7 +101,7 @@ def test_live_execution_uses_neutral_worker_protocol(monkeypatch) -> None:
     monkeypatch.setattr(execution, "isolated_operation", operation)
     bundle = suite_bundle("chat")
     item = bundle["items"][0]
-    from evals.langfuse.assistant_workspace import current_execution
+    from evals.assistant_execution import current_execution
     variants = bundle["config"]["variants"]
     captured = current_execution(bundle["suite"], variants)
     suite = {**bundle["suite"], "captured_graphs": captured["graphs"]}
@@ -115,7 +115,7 @@ def test_live_execution_uses_neutral_worker_protocol(monkeypatch) -> None:
 def test_timeout_terminates_isolated_worker() -> None:
     """A timed-out operation returns promptly instead of leaving daemon work."""
     with pytest.raises(TimeoutError, match="exceeded"):
-        isolated_operation({"operation": "evaluate", "config": {"family": "context_selection"},
+        isolated_operation({"operation": "evaluate", "config": {"family": "assistant"},
                             "input": {"input": "request"}}, 0.001)
 
 
@@ -167,7 +167,8 @@ def test_assistant_execution_uses_real_assembly_and_scoped_target(monkeypatch) -
 def test_probability_case_keeps_python_regex_contract(output) -> None:
     """Equivalent probability forms retain their existing case semantics."""
     # This retired case remains an immutable regex regression fixture.
-    historical = load_snapshot("3058c4d6ba657b496b3f52e4113a61c787f160f4355449e3a19c9e24e6502c3b", ROOT)
+    import json
+    historical = json.loads((ROOT / "3058c4d6ba657b496b3f52e4113a61c787f160f4355449e3a19c9e24e6502c3b.json").read_text())
     case = next(t for t in historical["items"] if t["metadata"]["case"] == "context_six_anima_thiefs_gloves_odds")
     assertion = next(a for a in legacy_execution_item(case)["expected_output"]["assertions"] if a.get("check", {}).get("type") == "regex")
     assert evaluate_trace_check(assertion["check"], None, output).passed

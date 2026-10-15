@@ -1,19 +1,19 @@
 # Tests and Evaluations
 
-The progressive-disclosure runtime replaces initial context/skill selection with
-permission-filtered hierarchical directories and exact `read_resource` calls.
-The library validates stable IDs, typed YAML, parent/dependency links, and
-structured record views; preparation loads headers only and reads cache bodies. Focused tests
-cover metadata-only instructions, complete reads, denied sets/skills/paths,
-actual-read Activity events, and captured-run provenance. Historical selector
-snapshots and offline comparison helpers remain intact; live selectors are
-retired. Global `evals validate` still reports the historical context-selection
-`exact_unit` gold absent from the current corpus. No paid evaluations are required
-to validate this runtime change. The combined focused regression run passed
-304 tests, including resource migration/schema checks, import consistency,
-and real SDK subprocesses following set → topic → complete reference against a
-local mock model; live paid-model behavior and frontend interaction were not
-exercised.
+The current resource implementation uses `domain.resources` exclusively. The
+provider package, generic provider protocol, selector execution/scoring families,
+legacy resource aliases, and provider-specific tests are removed. Current run
+configs do not accept the removed selector option. Local successor snapshots keep
+assistant cases and grading rules while removing obsolete selector configuration,
+prompts, and captured selector definitions. No hosted content is changed.
+The combined resource, assistant, tool, import, and evaluation regression run
+passed 372 tests, including all Langfuse adapter tests and local SDK subprocesses.
+No paid evaluations or frontend interaction were exercised.
+
+`python -m domain.resources` validates 141 resources/views, and
+`python -m evals validate` passes for 11 assistant suites and 142 cases. The former
+selector `exact_unit` preflight no longer exists. The lower dated validation
+reports describe earlier checkouts, not current blockers.
 
 The [2026-10-12 merge validation](../../../docs/merge-validation-2026-10-12.md)
 records the current cross-application results, repaired worker/test regressions,
@@ -24,7 +24,7 @@ the older failure counts recorded below.
 imports deferred inside functions. It reports all strongly connected groups in
 one failure. Imports guarded by `TYPE_CHECKING` or `typing.TYPE_CHECKING` are
 excluded, while their runtime branches remain checked. Sixteen isolated process
-checks import the affected provider, assistant, composition, transcription, and
+checks import the affected resource, assistant, composition, transcription, and
 Langfuse entry modules first, so pytest's already-loaded modules cannot conceal
 initialization-order failures. Run these checks from the ChatTFT root:
 
@@ -192,16 +192,10 @@ See [the evaluation guide](../../evals/README.md),
 
 ### Existing coverage gaps
 
-The offline context cases `numeric_heading`, `partial_heading_category`,
-`semantic_description`, and `semantic_unit_mechanic` still fail. Ten skill cases
-reference removed definitions and are archived with repair metadata and intact expectations.
-CI runs the passing fixture without weakening benchmark expectations.
-The obsolete assistant access test has been replaced with current spec parsing and
-prepared-invocation permission checks; removed APIs are not restored for compatibility.
-Full eval validation also reports that `exact_unit` has required
-gold absent from the current corpus. Both failures reproduce on the `dev`
-baseline used for the display integration; the focused evidence/chat tests and
-offline fixture are independent of these blockers.
+Selector corpus cases and compatibility checks have been removed. Resource
+coverage now lives in `tests/test_resource_library.py` and the assistant runtime,
+permission, and captured-execution tests. The deterministic fixture remains
+credential-free.
 
 Historical Promptfoo results are retained untouched. The
 [compatibility history](native-promptfoo-compatibility.md) describes the retired
@@ -331,7 +325,7 @@ Live assistant experiments and Playground require captured definitions; historic
 snapshots remain readable. Run focused checks from the ChatTFT root:
 
 ```bash
-uv run --extra evals pytest -q tests/test_assistant_runtime.py tests/test_assistant_access.py tests/test_assistants.py tests/test_langfuse_execution.py tests/test_evaluation_assistant.py tests/test_evaluation_selectors.py tests/test_task_service.py tests/test_spec_service.py evals/langfuse/tests
+uv run --extra evals pytest -q tests/test_assistant_runtime.py tests/test_assistant_access.py tests/test_assistants.py tests/test_langfuse_execution.py tests/test_evaluation_assistant.py tests/test_task_service.py tests/test_spec_service.py evals/langfuse/tests
 ```
 
 Local HTTP mock

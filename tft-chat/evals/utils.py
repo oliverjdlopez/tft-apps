@@ -633,29 +633,16 @@ def isolated_operation(payload: dict[str, Any], timeout: float) -> dict[str, Any
 
 def validate_registry_references(assistant: str, cases: list[dict[str, Any]]) -> None:
     """Check positive assertions against the current registered assistant graph."""
-    from domain.assistants import (
-        assistant_handoff_names,
-        assistant_reachable_tool_names,
-        assistant_spec,
-    )
+    from domain.assistants import Assistant
 
     try:
-        assistant_spec(assistant)
+        root = Assistant(assistant)
     except KeyError:
         raise ValueError(f"live eval targets unknown assistant {assistant!r}") from None
 
-    reachable_assistants = {assistant}
-    handoff_targets: set[str] = set()
-    pending = [assistant]
-    while pending:
-        current = pending.pop()
-        for target in assistant_handoff_names(current):
-            handoff_targets.add(target)
-            if target not in reachable_assistants:
-                reachable_assistants.add(target)
-                pending.append(target)
-
-    reachable_tools = set(assistant_reachable_tool_names(assistant))
+    reachable_assistants = set(root.reachable_assistant_names)
+    handoff_targets = reachable_assistants - {assistant}
+    reachable_tools = set(root.reachable_tool_names)
     for case in cases:
         for check in [a["check"] for a in case["expected_output"]["assertions"] if a["kind"] == "trace"]:
             check_type = str(check["type"])
@@ -709,17 +696,6 @@ def validate_registry_references(assistant: str, cases: list[dict[str, Any]]) ->
                 )
 
 
-def selector_case(input_data: dict[str, Any], identity: dict[str, Any]) -> dict[str, Any]:
-    """Combine frozen selector input with canonical expectations and case identity.
-
-    Args:
-        input_data: Input text and selector expectations from the frozen item.
-        identity: Stable case metadata.
-
-    Returns:
-        The one-attempt selector contract, without duplicate query/name fields.
-    """
-    return {**input_data["expected"], "name": identity["case"], "query": input_data["input"]}
 
 # ======================================================================
 # Neutral execution and scoring
@@ -729,23 +705,6 @@ def selector_case(input_data: dict[str, Any], identity: dict[str, Any]) -> dict[
 # ======================================================================
 
 
-def selector_score(selector: str, metrics: dict[str, Any]) -> float:
-    """Return one selector metric using the established offline/live policy."""
-    selected = metrics.get("live_result", metrics)
-    required = metrics["required_count"]
-    hits = selected.get("required_hits", metrics.get("final_required_hits", 0))
-    forbidden = selected.get("forbidden_hits", metrics.get("final_forbidden_hits", 0))
-    recall = hits / required if required else 1.0
-    return float({
-        "offline_selection_policy": float(metrics["offline_passed"]),
-        "shortlist_required_recall": metrics.get("shortlist_required_hits", 0) / required if required else 1.0,
-        "final_required_recall": recall,
-        "required_skill_recall": recall,
-        "forbidden_context_excluded": float(forbidden == 0),
-        "forbidden_skills_excluded": float(forbidden == 0),
-        "payload_reduction": metrics.get("payload_reduction", 0.0),
-        "selection_policy": float(metrics.get("live_passed", metrics["offline_passed"])),
-    }[selector])
 
 
 def render_judge_prompt(template: str, item: dict, result: dict, rubric: str) -> str:

@@ -5,11 +5,17 @@ fresh OpenAI Agents SDK graphs for each logical invocation. Assistant behavior,
 tool access, handoffs, request-specific context, and synchronous task pipelines
 remain separate concerns.
 
-The public `domain.assistants` package re-exports the invocation API. Invocation
-construction imports its implementation dependencies directly, without importing
-that facade. `domain.assistants.utils.configure_tools(registry)` wires the supplied
-registry to the tool catalogue; the facade and `Assistant` use that same helper.
-Isolated captured registries retain their existing tool configuration.
+The public `domain.assistants` package exposes `Assistant` plus its registry,
+invocation, and specification types. It does not maintain a parallel function
+facade for specifications, tools, handoffs, discovery, or reloads. Named runtime
+metadata comes from an `Assistant` instance (`spec`, `tools`, `tool_names`,
+`handoff_names`, `reachable_assistant_names`, and `reachable_tool_names`), while
+`Assistant.names()` and `Assistant.reload()` own active-registry discovery.
+Invocation construction imports implementation dependencies directly, without
+importing the package facade. `domain.assistants.utils.configure_tools(registry)`
+wires isolated registries to the tool catalogue, and `AssistantRegistry` owns
+handoff traversal and validation. Captured code that needs a registry uses the
+explicit `registry_from_capture` loader; execution uses `Assistant.from_capture`.
 
 ## Assistant specifications
 
@@ -21,7 +27,7 @@ Each assistant lives under `app/backend/src/domain/assistant_specs/<name>/`:
 
 - `system.md` contains plain Markdown instructions without frontmatter.
 - `agent.json` optionally declares the description, model and reasoning
-  overrides, tool groups, individual tools, skill access, and handoffs.
+  overrides, tool groups, individual tools, skill and playbook access, and handoffs.
 - `task.md` optionally wraps task-style input. Most assistants do not need one.
 
 All current assistant definitions use this same layout. The `distill-transcript`
@@ -43,16 +49,23 @@ header is validated before streaming, and the selected specification controls
 request instructions, reachable tools, handoffs, and tracing metadata without
 granting capabilities outside the registered graph.
 
-Skill access uses the optional `skills` array in `agent.json`. When the field is
-omitted, the assistant may read every discovered skill. When it is present,
-only the named skills may be rendered into that assistant's instructions; an
-empty array denies all skill access. Instruction assembly enforces this boundary
-again for preselected skills, so a caller cannot bypass the assistant's
-allowlist. For example:
+Skill and playbook access use independent optional `skills` and `playbooks`
+arrays in `agent.json`. Omission permits every discovered resource in that
+category for an eligible assistant; an empty array denies the category. Each
+category requires repository context or its own nonempty allowlist, and reads
+require the read tool. Chat cannot read either category. Instructions expose
+only permitted metadata; bodies arrive through exact `read_resource` calls.
+Skills contain reusable general guidance, while playbooks contain specific task
+guides. For example:
 
 ```json
-{"skills": ["tft-statistical-investigation"]}
+{"skills": ["tft-statistical-interpretation"], "playbooks": ["specific-guide"]}
 ```
+
+Captured graphs freeze both allowlists. Historical captures without
+`playbook_names` deny playbook access, preserving their original capabilities.
+See [skill and playbook authoring](../content_providers/skills.md).
+
 Backend code imports this public surface through the installed `domain.assistants`
 package. It must not mix that package with repository-qualified
 `app.backend.src.domain.assistants` imports, because Python would initialize two
@@ -60,8 +73,8 @@ copies of the package and split registry state between them.
 
 The direct tool set and reachable tool set are intentionally different. A
 top-level assistant may reach tools only through a handoff, so UI discovery
-uses `assistant_reachable_tool_names` rather than only the assistant's direct
-tools. The `chat` assistant directly owns context retrieval, bounded rankings,
+uses `Assistant.reachable_tool_names` rather than only `Assistant.tool_names`.
+The `chat` assistant directly owns context retrieval, bounded rankings,
 and rolldown probability estimation. Multi-step investigations can still follow
 the `chat` to `data_analyst` to `final_responder` path: the analyst runs bounded
 rankings and anonymous-board cohort investigations, with `query_cohorts` kept
@@ -100,7 +113,7 @@ Chat, direct assistant API, CLI, transcript distillation, and captured evaluatio
 use `domain.assistants.Assistant` to prepare each invocation. Preparation loads a
 cached, validated resource metadata without selecting prompt material or calling
 models. Bodies are loaded only by reads.
-Each target initially receives only root reference and permitted skill
+Each target initially receives only root reference and permitted skill and playbook
 descriptions. Index reads reveal children; exact reads enforce permissions at
 every level. Bodies arrive through `read_resource`
 tool results. See [reference resources](../content_providers/context.md) and
@@ -168,7 +181,7 @@ execution is retired. Static instruction assembly, the `create_assistant` factor
 
 Dynamic callbacks use `render_instruction_layers` to combine the stable prompt
 with the target's permitted discovery catalogue. Chat sees reference metadata;
-eligible specialists see permitted reference and skill metadata. Transcript
+eligible specialists see permitted reference, skill, and playbook metadata. Transcript
 assistants see neither. Exact reads enforce the same permissions independently
 of the instructions, and return bodies only as tool results.
 

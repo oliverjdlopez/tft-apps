@@ -37,6 +37,7 @@ class ResourceAccess:
 
     references: bool = False
     skills: tuple[str, ...] = ()
+    playbooks: tuple[str, ...] = ()
 
 
 @dataclass
