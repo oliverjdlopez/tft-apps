@@ -2,6 +2,9 @@
 
 The resource library separates identity, discovery metadata, and complete content.
 Physical paths can change while authored IDs and links remain stable.
+`domain.resources` manages this library without assistant presentation or access
+policy. `domain.assistants.resources` turns its metadata and content into
+permission-filtered instruction directories and read-tool responses.
 
 ```text
 app/backend/src/resources/

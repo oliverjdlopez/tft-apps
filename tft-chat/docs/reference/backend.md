@@ -38,8 +38,10 @@ response.
 and structured record views. Preparation loads a cached metadata index;
 `read_resource` loads complete content by stable ID and records hashes for actual
 reads. Reference sources live under `app/backend/src/resources/references`;
-portable skill packages remain under `resources/skills`. All resource loading,
-discovery, and reads use the resource library directly.
+portable skill packages remain under `resources/skills`.
+`domain.assistants.resources` owns permission-filtered discovery, instruction
+directory rendering, read-tool response formatting, and invocation read tracking.
+The resource library handles storage and loading without assistant dependencies.
 See [resource layout](../content_providers/resource-layout.md).
 
 ## Prompt skills

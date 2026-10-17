@@ -228,8 +228,22 @@ def test_import_guard_reports_all_disjoint_cycles() -> None:
     assert _cyclic_components(graph) == [("a", "b"), ("c", "d"), ("self",)]
 
 
+def test_resource_library_has_no_assistant_dependencies() -> None:
+    """Keep storage and loading independent of assistant policy and presentation."""
+    forbidden = ('agents', 'domain.assistants', 'domain.runtime', 'domain.tools')
+    violations = []
+    for path in (ROOT / 'app/backend/src/domain/resources').glob('*.py'):
+        for node in ast.walk(ast.parse(path.read_text())):
+            modules = ([alias.name for alias in node.names] if isinstance(node, ast.Import)
+                       else [node.module or ''] if isinstance(node, ast.ImportFrom) else [])
+            for module in modules:
+                if any(module == prefix or module.startswith(prefix + '.') for prefix in forbidden):
+                    violations.append(f'{path.name}:{node.lineno}: {module}')
+    assert not violations, '\n'.join(violations)
+
+
 @pytest.mark.parametrize("module", [
-    "domain.resources.library", "domain.resources.catalogue",
+    "domain.resources.library", "domain.assistants.resources",
     "domain.assistants", "domain.assistants.assistant",
     "domain.compositions.acceleration", "domain.compositions.reference",
     "services.compositions.persistence", "services.compositions.utils",

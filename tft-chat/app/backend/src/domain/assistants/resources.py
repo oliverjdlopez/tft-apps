@@ -1,4 +1,4 @@
-"""Permission-filtered hierarchical discovery and exact resource reads."""
+"""Present library resources through assistant instructions and tool responses."""
 
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ def can_read_resource(resources: PreparedResources, name: str, resource_id: str)
     return access.references and (resources.set_number is None or str(resources.set_number) in metadata.sets)
 
 
-def render_catalogue(resources: PreparedResources, name: str) -> str:
+def render_resource_directory(resources: PreparedResources, name: str) -> str:
     """Render a small initial directory, leaving leaf discovery to index reads.
 
     Args:

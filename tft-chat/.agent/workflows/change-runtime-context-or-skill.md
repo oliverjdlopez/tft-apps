@@ -21,7 +21,7 @@ Changing the factual TFT corpus, context-file parsing/ranking/budgets, or task p
 
 ## Before editing
 
-Decide which layer owns the change: factual reference → `resources/references`; general guidance → `resources/skills`; specific task guide → `resources/playbooks`; durable assistant policy → `domain/assistant_specs`. Resource loading, catalogues, and models live in `domain/resources`. Read the library and its tests before changing routing metadata.
+Decide which layer owns the change: factual reference → `resources/references`; general guidance → `resources/skills`; specific task guide → `resources/playbooks`; durable assistant policy → `domain/assistant_specs`. Resource loading, validation, and models live in `domain/resources`; assistant presentation, access checks, and read-tool responses live in `domain/assistants/resources.py`. Read the library and its tests before changing routing metadata.
 
 ## Implementation sequence
 

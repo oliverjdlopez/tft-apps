@@ -7,9 +7,11 @@ children. A leaf read returns the complete source body. Any known ID may be read
 directly, but every read independently checks set scope and assistant permissions.
 Descriptions and index listings guide discovery; they are not factual evidence.
 
-`domain.resources` owns the current library, schemas, discovery, and reads.
-There is no provider package or selector evaluation execution path. Preparation
-and reads use this library directly.
+`domain.resources` owns resource schemas, metadata validation, storage, caching,
+and complete content loading. `domain.assistants.resources` owns the assistant
+view: permission and set filtering, instruction directory rendering, tool-response
+formatting, and recording actual reads. The resources package has no assistant
+or invocation dependencies. There is no provider or selector execution path.
 
 ## Authoring and parsing
 

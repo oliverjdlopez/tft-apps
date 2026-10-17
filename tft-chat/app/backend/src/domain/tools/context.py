@@ -10,7 +10,7 @@ from agents import function_tool
 from agents.tool_context import ToolContext
 from pydantic import Field
 
-from domain.resources.catalogue import read_resource_content
+from domain.assistants.resources import read_resource_content
 from domain.runtime.models import AssistantRunContext
 from domain.types import AssistantToolGroup
 

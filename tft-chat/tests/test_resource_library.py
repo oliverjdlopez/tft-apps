@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from domain.resources.catalogue import read_resource_content, resource_entries
+from domain.assistants.resources import read_resource_content, resource_entries
 from domain.resources.library import build_library, get_library, read_content, validate_library
 from domain.resources.models import ResourceMetadata, WispDocument
 from domain.runtime.models import PreparedResources, ResourceAccess

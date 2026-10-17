@@ -13,7 +13,7 @@ from agents.tool_context import ToolContext
 from domain.assistants import Assistant, AssistantRegistry
 from domain.assistants.capture import capture
 from domain.assistants.specs import AssistantSpec
-from domain.resources.catalogue import resource_entries
+from domain.assistants.resources import resource_entries
 from domain.resources.library import build_library
 from domain.runtime.models import ToolActivity
 from domain.tools import get_tool

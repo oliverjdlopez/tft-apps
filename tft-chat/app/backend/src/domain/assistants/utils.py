@@ -39,11 +39,11 @@ def render_instruction_layers(
     Returns:
         Durable instructions followed by the permitted resource catalogue.
     """
-    from domain.resources.catalogue import render_catalogue
+    from domain.assistants.resources import render_resource_directory
 
     parts = [spec.system_prompt if base_instructions is None else base_instructions]
     if resources is not None:
-        parts.append(render_catalogue(resources, spec.name))
+        parts.append(render_resource_directory(resources, spec.name))
     return "\n\n".join(part.strip() for part in parts if part.strip())
 
 

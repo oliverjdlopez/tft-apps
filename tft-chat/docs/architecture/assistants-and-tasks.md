@@ -113,6 +113,11 @@ Chat, direct assistant API, CLI, transcript distillation, and captured evaluatio
 use `domain.assistants.Assistant` to prepare each invocation. Preparation loads a
 cached, validated resource metadata without selecting prompt material or calling
 models. Bodies are loaded only by reads.
+`domain.assistants.resources` owns resource presentation and assistant access
+checks: it renders the initial directory, filters children and links, formats
+read-tool responses, and records read provenance. `domain.resources` supplies
+the validated library and complete content loading without depending on
+assistant or invocation state.
 Each target initially receives only root reference and permitted skill and playbook
 descriptions. Index reads reveal children; exact reads enforce permissions at
 every level. Bodies arrive through `read_resource`
