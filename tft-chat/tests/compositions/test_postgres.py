@@ -172,7 +172,7 @@ def test_owned_process_queue_restart_failure_and_cancellation(isolated_store):
             elapsed_seconds=0,
             request={
                 **first.request.model_dump(mode="json"),
-                "algorithm_id": "missing-adapter",
+                "parameters": {"min_cluster_size": 0},
             },
         )
         interrupted = CompositionExperiment(
@@ -235,8 +235,8 @@ def test_hdbscan_persists_saved_snapshot_and_population(isolated_store):
                 assert (
                     display.inspect_board(
                         run.experiment_id, "discovery_sample", assignment.observation_id
-                    ).assignment
-                    == assignment
+                    ).assignment.model_dump(include=set(type(assignment).model_fields))
+                    == assignment.model_dump()
                 )
         assert display.compare_experiments(
             runs[0].experiment_id, runs[0].experiment_id, "full_population"

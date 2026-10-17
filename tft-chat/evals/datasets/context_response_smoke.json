@@ -65,7 +65,7 @@
             "threshold": 1,
             "check": {
               "type": "regex",
-              "value": "(?is)(?=.*\\bnidalee\\b)(?=.*\\b(?:adaptor|four[-\\s]?cost|4[-\\s]?cost)\\b)"
+              "value": "(?is)^(?!.*\\bnidalee\\s+is\\s+not\\b)(?!.*\\bno\\s+(?:4|four)[-\\s]?cost\\s+adaptors?\\b)(?=.*\\bnidalee\\b)(?=.*\\b(?:adaptor|four[-\\s]?cost|4[-\\s]?cost)\\b)"
             }
           }
         ]
@@ -92,7 +92,7 @@
             "threshold": 1,
             "check": {
               "type": "regex",
-              "value": "(?is)(?=.*\\b(?:10|ten)\\b)(?=.*\\b(?:five[-\\s]?cost|5[-\\s]?cost|champions?)\\b)"
+              "value": "(?is)^(?!.*\\b(?:not\\s+(?:10|ten)|11|eleven)\\b)(?=.*\\b(?:10|ten)\\b)(?=.*\\b(?:five[-\\s]?cost|5[-\\s]?cost|champions?)\\b)"
             }
           }
         ]
@@ -686,7 +686,7 @@
             "threshold": 1,
             "check": {
               "type": "regex",
-              "value": "(?is)(?=.*\\bcoin\\s+flip\\b)(?=.*(?:\\b0\\s*gold\\b|\\bfree\\b))(?=.*\\b(?:coin\\s+toss|heads|tails|flip)\\b)(?=.*\\b(?:gold|pays?)\\b)"
+              "value": "(?is)^(?!.*\\bdoes\\s+not\\s+cost\\s+(?:0|zero)\\b)(?!.*\\bcosts?\\s+(?:[1-9]\\d*)\\s+gold\\b)(?=.*\\bcoin\\s+flip\\b)(?=.*(?:\\b0\\s*gold\\b|\\bfree\\b))(?=.*\\b(?:coin\\s+toss|heads|tails|flip)\\b)(?=.*\\b(?:gold|pays?)\\b)"
             }
           }
         ]

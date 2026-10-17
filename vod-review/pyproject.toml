@@ -36,6 +36,8 @@ build-backend = "setuptools.build_meta"
 dev = [
     "httpx>=0.27",
     "pytest>=8.0",
+    "pytest-cov>=6,<8",
+    "hypothesis>=6.130,<7",
 ]
 
 [tool.setuptools.packages.find]

@@ -8,6 +8,7 @@ from evals.langfuse.content import load_catalog, load_snapshot, validate_bundle
 from evals.langfuse.utils import validate_case_semantics
 from evals.langfuse.assistant_workspace import current_execution
 from evals.assistant_execution import require_bundle_captures
+from evals.baselines import validate_baselines
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,7 +40,7 @@ def test_portable_suite_validates_and_covers_player_decision_workflows() -> None
 
     snapshots = ROOT / "evals/langfuse/snapshots"
     entry = next(item for item in load_catalog(snapshots) if item["name"] == "decision_workflows")
-    frozen = load_snapshot(entry["snapshot"], snapshots)
+    frozen = load_snapshot(validate_baselines()["decision_workflows"], snapshots)
     assert frozen["dataset_name"] == "decision-workflows"
     assert frozen["suite"]["managed_workflow"] is True
     frozen_items = {item["id"]: item for item in frozen["items"]}

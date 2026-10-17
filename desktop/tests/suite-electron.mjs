@@ -1,7 +1,8 @@
 /** Opt-in real application smoke using fresh suite-local VOD data and no RDS. */
 import { app, BrowserWindow } from "electron";
 import assert from "node:assert/strict";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, symlink, readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import net from "node:net";
@@ -12,8 +13,14 @@ import { DesktopWorkspace } from "../workspace.mjs";
 import { launchOptions } from "../utils.mjs";
 import { launcherPaths } from "../paths.mjs";
 
-const roots = launcherPaths();
-const temporary = await mkdtemp(path.join(roots.suite, ".migration/desktop-smoke-"));
+const checkout = launcherPaths();
+const temporary = await mkdtemp(path.join(checkout.suite, ".migration/desktop-smoke-"));
+// Runtime enforces <suite>/media, so use a disposable suite coordinate too.
+// Only immutable application/dependency paths are linked into this fixture.
+for (const name of ["desktop", "tft-chat", "vod-review"]) {
+  await symlink(path.join(checkout.suite, name), path.join(temporary, name), "dir");
+}
+const roots = launcherPaths(temporary);
 app.setPath("userData", path.join(temporary, "electron"));
 app.setPath("sessionData", path.join(temporary, "electron"));
 for (const prefix of ["RDS_", "RDS_EVAL_", "RDS_TEST_"]) {
@@ -33,9 +40,22 @@ async function freePort() {
   return port;
 }
 
+/** Wait for an observable renderer/media outcome with a bounded deadline. */
+async function until(predicate) {
+  const deadline = Date.now() + 30000;
+  while (!await predicate()) {
+    if (Date.now() > deadline) throw new Error("Native renderer/media assertion timed out");
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+}
+
 const options = launchOptions(["--startup-timeout", "180", ...(disposablePorts ? ["--port", String(await freePort())] : [])], roots.suite);
 const chat = new DesktopRuntime(roots.suite, process.env.CHATTFT_DESKTOP_NODE || "/usr/bin/node", options);
 const video = new VideoRuntime(roots.suite, process.env.CHATTFT_DESKTOP_NODE || "/usr/bin/node", options);
+// Entry-point identity checks compare argv with import.meta.url; launch shell
+// scripts through their real paths while keeping the runtime suite coordinate private.
+chat.roots = Object.freeze({ ...chat.roots, desktop: checkout.desktop });
+video.roots = Object.freeze({ ...video.roots, desktop: checkout.desktop });
 if (disposablePorts) { video.backendPort = await freePort(); video.frontendPort = await freePort(); }
 let window;
 let workspace;
@@ -79,7 +99,29 @@ async function run() {
     workspace.select(tab);
     assert(await page.view.webContents.executeJavaScript("document.body.innerText.length > 0"));
     console.log(`PASS: ${tab} loads the round review page`);
+    const source = path.join(temporary, "synthetic.mp4");
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-f", "lavfi", "-i", "color=s=128x96:d=5:r=10",
+      "-c:v", "libx264", "-pix_fmt", "yuv420p", source], { timeout: 30000 });
+    const form = new FormData();
+    form.append("file", new Blob([await readFile(source)], { type: "video/mp4" }), "synthetic.mp4");
+    const response = await fetch(`http://127.0.0.1:${video.backendPort}/api/videos`, { method: "POST", body: form });
+    assert.equal(response.status, 201);
+    const record = await response.json();
+    await page.view.webContents.loadURL(page.url);
+    await until(() => page.view.webContents.executeJavaScript(`!!document.querySelector('option[value="${record.id}"]')`));
+    await page.view.webContents.executeJavaScript(`(() => { const select=document.querySelector('[aria-label="Recent videos"]'); select.value=${JSON.stringify(record.id)}; select.dispatchEvent(new Event('change',{bubbles:true})); })()`);
+    await until(() => page.view.webContents.executeJavaScript("(() => { const video=document.querySelector('video'); return video?.readyState>=2 && video.videoWidth===128 && video.videoHeight===96; })()"));
+    await page.view.webContents.executeJavaScript("document.querySelector('video').currentTime=2");
+    await until(() => page.view.webContents.executeJavaScript("document.querySelector('video').currentTime>=1.9"));
+    console.log("PASS: native synthetic upload, decoded playback and seek");
   }
+  workspace.select("chat");
+  await workspace.chat.webContents.executeJavaScript("(() => { const input=document.querySelector('textarea'); Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set.call(input,'Native retained draft'); input.dispatchEvent(new Event('input',{bubbles:true})); })()");
+  await until(() => workspace.chat.webContents.executeJavaScript("document.querySelector('.send-btn')?.disabled === false"));
+  workspace.select("rolldown");
+  workspace.select("chat");
+  assert.equal(await workspace.chat.webContents.executeJavaScript("document.querySelector('textarea').value"), "Native retained draft");
+  console.log("PASS: native view switching retains the chat draft");
   window.once("closed", () => stop().then(() => app.quit()));
   window.close();
   await stop();

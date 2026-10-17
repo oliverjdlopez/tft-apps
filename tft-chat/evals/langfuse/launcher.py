@@ -169,6 +169,8 @@ def validate() -> None:
         validate_case_semantics(bundle["suite"], bundle["items"])
         count += len(bundle["items"])
     print(f"Validated {len(catalog)} suites and {count} cases.")
+    from evals.baselines import validate_baselines
+    validate_baselines()
 
 
 def run(suite: str, *, snapshot: str | None = None, offline: bool = False,

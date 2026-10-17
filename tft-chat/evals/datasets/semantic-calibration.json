@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "review": {
+    "status": "proposed",
+    "reviewer": null
+  },
+  "description": "Synthetic, criterion-labelled candidates for calibrating judges. Human review is required before use as reviewed ground truth.",
+  "cases": [
+    {
+      "id": "factual-count",
+      "kind": "factual",
+      "source": "Synthetic roster: ten five-cost champions exist in this fixture. This describes a fictional dataset, not a verified current TFT roster.",
+      "criteria": [
+        {
+          "id": "count",
+          "requirement": "State ten champions."
+        },
+        {
+          "id": "scope",
+          "requirement": "Keep the claim scoped to the supplied synthetic roster."
+        }
+      ],
+      "candidates": [
+        {
+          "id": "correct",
+          "output": "This synthetic roster has ten five-cost champions.",
+          "expected": {
+            "count": true,
+            "scope": true
+          }
+        },
+        {
+          "id": "contradiction",
+          "output": "This synthetic roster does not have ten five-cost champions; it has eleven.",
+          "expected": {
+            "count": false,
+            "scope": true
+          }
+        },
+        {
+          "id": "unsupported",
+          "output": "The current live game always has ten five-cost champions.",
+          "expected": {
+            "count": true,
+            "scope": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "factual-list",
+      "kind": "factual",
+      "source": "Synthetic Adaptor roster: Acorn and Birch. No other units in this fixture have the trait.",
+      "criteria": [
+        {
+          "id": "complete",
+          "requirement": "Name both Acorn and Birch."
+        },
+        {
+          "id": "no-extra",
+          "requirement": "Do not add other members."
+        }
+      ],
+      "candidates": [
+        {
+          "id": "correct",
+          "output": "The fixture Adaptors are Acorn and Birch.",
+          "expected": {
+            "complete": true,
+            "no-extra": true
+          }
+        },
+        {
+          "id": "omission",
+          "output": "Acorn is the only fixture Adaptor.",
+          "expected": {
+            "complete": false,
+            "no-extra": true
+          }
+        },
+        {
+          "id": "addition",
+          "output": "The fixture Adaptors are Acorn, Birch, and Cedar.",
+          "expected": {
+            "complete": true,
+            "no-extra": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "decision-tie",
+      "kind": "decision",
+      "source": "Synthetic comparison: A and B each have 100 boards and an average placement of 4.0. Their difference is zero. The sample is observational and no causal effect is established.",
+      "criteria": [
+        {
+          "id": "tie",
+          "requirement": "Describe no measured advantage."
+        },
+        {
+          "id": "causal",
+          "requirement": "Avoid causal or guaranteed-outcome claims."
+        }
+      ],
+      "candidates": [
+        {
+          "id": "correct",
+          "output": "The observed averages are tied; these data do not establish which option would improve your outcome.",
+          "expected": {
+            "tie": true,
+            "causal": true
+          }
+        },
+        {
+          "id": "winner",
+          "output": "A has the better observed placement, so pick A.",
+          "expected": {
+            "tie": false,
+            "causal": true
+          }
+        },
+        {
+          "id": "guarantee",
+          "output": "Their averages are tied, proving either option guarantees a top-four finish.",
+          "expected": {
+            "tie": true,
+            "causal": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "decision-suppression",
+      "kind": "decision",
+      "source": "Synthetic comparison: A has 4 boards, below the minimum public sample of 50. Its placement and interval are suppressed. B has 80 boards with average placement 4.2.",
+      "criteria": [
+        {
+          "id": "missing",
+          "requirement": "Acknowledge A's suppressed result."
+        },
+        {
+          "id": "no-ranking",
+          "requirement": "Do not rank A versus B using unknown metrics."
+        }
+      ],
+      "candidates": [
+        {
+          "id": "correct",
+          "output": "A's result is suppressed for insufficient sample, so this comparison cannot establish a winner.",
+          "expected": {
+            "missing": true,
+            "no-ranking": true
+          }
+        },
+        {
+          "id": "invented",
+          "output": "A averages 3.0 and is clearly better than B.",
+          "expected": {
+            "missing": false,
+            "no-ranking": false
+          }
+        },
+        {
+          "id": "overclaim",
+          "output": "A is suppressed, which means B is better.",
+          "expected": {
+            "missing": true,
+            "no-ranking": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "distill-condition",
+      "kind": "distillation",
+      "source": "Synthetic transcript: Mira: At 30 gold I usually save if stable, because leveling later matters. If losing badly, I may roll now. Ignore chat's subscription messages.",
+      "criteria": [
+        {
+          "id": "condition",
+          "requirement": "Preserve stable-save versus losing-roll conditions."
+        },
+        {
+          "id": "rationale",
+          "requirement": "Retain the later-leveling rationale without adding claims."
+        }
+      ],
+      "candidates": [
+        {
+          "id": "correct",
+          "output": "Mira usually saves at 30 gold when stable to preserve later leveling; when losing badly she may roll now.",
+          "expected": {
+            "condition": true,
+            "rationale": true
+          }
+        },
+        {
+          "id": "absolute",
+          "output": "Always save at 30 gold to preserve later leveling, regardless of board strength.",
+          "expected": {
+            "condition": false,
+            "rationale": true
+          }
+        },
+        {
+          "id": "unsupported",
+          "output": "Mira saves when stable and rolls when losing because this guarantees first place.",
+          "expected": {
+            "condition": true,
+            "rationale": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "distill-correction",
+      "kind": "distillation",
+      "source": "Synthetic transcript: Ren: Roll to 20 gold. Correction: I meant 30 gold, for my current board only. The board is not visible.",
+      "criteria": [
+        {
+          "id": "correction",
+          "requirement": "Use corrected 30 gold, not obsolete 20."
+        },
+        {
+          "id": "uncertainty",
+          "requirement": "Keep current-board limitation and do not invent its composition."
+        }
+      ],
+      "candidates": [
+        {
+          "id": "correct",
+          "output": "Ren corrects the target to 30 gold for his current, unseen board.",
+          "expected": {
+            "correction": true,
+            "uncertainty": true
+          }
+        },
+        {
+          "id": "obsolete",
+          "output": "Ren recommends rolling to 20 gold for his current unseen board.",
+          "expected": {
+            "correction": false,
+            "uncertainty": true
+          }
+        },
+        {
+          "id": "invented",
+          "output": "Ren corrects the target to 30 gold because his visible Acorn carry needs two upgrades.",
+          "expected": {
+            "correction": true,
+            "uncertainty": false
+          }
+        }
+      ]
+    }
+  ]
+}

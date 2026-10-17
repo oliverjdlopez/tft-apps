@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from evals.assistant_execution import require_bundle_captures
+from evals.baselines import validate_baselines
 from evals.langfuse.assistant_workspace import current_execution
 from evals.langfuse.content import load_catalog, load_snapshot, validate_bundle
 from evals.langfuse.utils import validate_case_semantics
@@ -20,7 +21,7 @@ def test_distillation_suite_matches_catalog_and_captures_only_the_distiller() ->
     validate_case_semantics(bundle["suite"], bundle["items"])
     snapshots = ROOT / "evals/langfuse/snapshots"
     entry = next(row for row in load_catalog(snapshots) if row["name"] == "distill-transcript")
-    assert load_snapshot(entry["snapshot"], snapshots) == bundle
+    assert load_snapshot(validate_baselines()["distill-transcript"], snapshots) == bundle
     assert {item["metadata"]["case"] for item in bundle["items"]} == {
         "conditional_rationale", "explicit_correction_jsonl",
         "disagreement_and_missing_visuals", "article_dates_and_reported_statistics",

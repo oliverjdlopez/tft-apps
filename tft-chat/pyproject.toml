@@ -86,6 +86,9 @@ chat-tft-benchmarks = "scripts.benchmarks.main:main"
 chat-tft-sync-rds-ip = "scripts.sync_rds_ip:main"
 chat-tft-refactor-move = "scripts.refactor_move:main"
 
+[dependency-groups]
+test = ["pytest-cov>=6,<8", "hypothesis>=6.130,<7"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

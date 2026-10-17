@@ -100,8 +100,11 @@ including when using Windows/WSL staging.
 Use the [ChatTFT backend guide](../tft-chat/docs/architecture/web-runtime.md) or
 [VOD guide](../vod-review/README.md) for standalone troubleshooting commands. Run
 Python suites from each application root and desktop tests with `npm test` from
-`desktop/`; run desktop Python tests from `tft-chat/` with
-`.venv/bin/python -m pytest ../desktop/tests -q`. Database tests require isolated
+`desktop/`; run desktop Python tests from `desktop/` with
+`../tft-chat/.venv/bin/python -m pytest -q`. From the suite root,
+`python scripts/test_suite.py --tier offline --component desktop` runs both suites.
+See [validation tiers](../tft-chat/docs/development/testing-and-evals.md).
+Database tests require isolated
 complete `RDS_TEST_*` targets ending in `_test`.
 
 Inherited VOD data/cache paths and OAuth token storage are redirected to the

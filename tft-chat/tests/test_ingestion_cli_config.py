@@ -309,6 +309,8 @@ def _run_args(**overrides: Any) -> Any:
     import argparse
 
     merged = dict(ingestion_cli.INGEST_DEFAULTS)
+    # These worker fixtures exercise one platform regardless of checkout INI defaults.
+    merged.update(platform="na1", platforms="na1", tiers="challenger")
     merged.update(overrides)
     return argparse.Namespace(**merged)
 
@@ -462,6 +464,7 @@ def test_persist_failure_rolls_back_and_continues(
         platform: str | None = None,
         resolver: Any = None,
         commit: bool = True,
+        patch_override: str | None = None,
     ) -> bool:
         match_id = payload["metadata"]["match_id"]
         calls.append(match_id)
@@ -474,7 +477,7 @@ def test_persist_failure_rolls_back_and_continues(
         ingest_module.TFTNameResolver, "from_latest", _fake_resolver_from_latest
     )
 
-    conn = ingestion_cli.open_db()
+    conn = ingestion_cli.open_db(purpose="test")
     rollbacks = 0
     original_rollback = conn.rollback
 
@@ -536,7 +539,7 @@ def test_uncapped_run_ingests_every_player(
         ingest_module.TFTNameResolver, "from_latest", _fake_resolver_from_latest
     )
 
-    conn = ingestion_cli.open_db()
+    conn = ingestion_cli.open_db(purpose="test")
     try:
         result = asyncio.run(
             ingestion_cli.ingest_top_matches(
@@ -572,7 +575,7 @@ def test_player_batch_size_processes_players_in_batches(
         ingest_module.TFTNameResolver, "from_latest", _fake_resolver_from_latest
     )
 
-    conn = ingestion_cli.open_db()
+    conn = ingestion_cli.open_db(purpose="test")
     try:
         result = asyncio.run(
             ingestion_cli.ingest_top_matches(

@@ -39,6 +39,27 @@ DEFAULT_TEST_TIMEOUT_SECONDS = 60.0
 TEST_TIMEOUT_ENV = "PYTEST_TEST_TIMEOUT_SECONDS"
 
 
+def pytest_addoption(parser):
+    """Select database tests explicitly without depending on skip side effects."""
+    parser.addoption("--database-tests", choices=("all", "exclude", "only"), default="all")
+    parser.addoption("--require-test-database", action="store_true")
+
+
+def pytest_collection_modifyitems(config, items):
+    """Classify database tests through their transitive fixture dependencies."""
+    mode = config.getoption("--database-tests")
+    if mode == "all":
+        return
+    selected, excluded = [], []
+    for item in items:
+        database = "_pg_schema" in item.fixturenames
+        (selected if database == (mode == "only") else excluded).append(item)
+    items[:] = selected
+    config.hook.pytest_deselected(items=excluded)
+    if mode == "only" and not selected:
+        raise pytest.UsageError("Required PostgreSQL tier collected no database tests")
+
+
 class StalledTestTimeoutError(TimeoutError):
     """Report a test that exceeded its configured call-phase deadline."""
 
@@ -132,12 +153,14 @@ def _test_target():
 
 
 @pytest.fixture(scope="session")
-def _pg_schema():
+def _pg_schema(request):
     """Ensure the test database is reachable and its schema exists (once)."""
     try:
         target = _test_target()
         psycopg.connect(target.connect_url).close()
     except Exception as exc:  # noqa: BLE001 - any connect failure means "skip DB tests".
+        if request.config.getoption("--require-test-database"):
+            pytest.fail(f"Required isolated PostgreSQL target unavailable: {exc}", pytrace=False)
         pytest.skip(f"RDS_TEST_* database is not configured or reachable: {exc}")
 
     from db.session import open_db

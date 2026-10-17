@@ -58,7 +58,7 @@ See [content and snapshot contracts](../docs/development/langfuse-content.md) an
 ```bash
 uv run --extra evals python -m evals validate
 uv run --extra evals python -m evals run --suite dummy_assistant --offline
-uv run --extra evals pytest -q
+uv run --locked --extra evals --extra compositions --group test pytest -q
 uv run --extra evals python -m evals down
 ```
 
@@ -68,13 +68,15 @@ Langfuse stack; the live workflow remains an explicit dispatch with model and
 typed evaluation-database credentials. See
 [testing and evaluations](../docs/development/testing-and-evals.md).
 
-The local catalog contains 165 cases across 13 suites. `distill-transcript`
+Use `python -m evals validate` for the current catalog inventory. `distill-transcript`
 replaces the three legacy transcript suites with six synthetic source-fidelity
 cases; their immutable snapshots remain available as historical definitions.
 The new cases cover conditions, corrections, attribution, uncertainty, source
 metadata, embedded instructions, and irrelevant inputs. See the
 [transcription guide](../docs/apps/transcription.md) for the runtime contract.
-No live model quality result is implied by catalog validation.
+No live model quality result is implied by catalog validation. Reviewed regression
+definitions are pinned separately in `baselines.json`; native UI exports remain
+editable. See [validation tiers](../docs/development/testing-and-evals.md).
 
 Historical Promptfoo data in `evals/.promptfoo/` is retained untouched and is not
 imported into Langfuse. The retired in-app Evals editor and `/api/evals` routes

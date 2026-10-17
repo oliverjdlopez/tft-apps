@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "suites": [
+    {
+      "snapshot": "decfa747ab03f258c53ada1c4af5c150f95b0a2e6b170850324bd4084a0044ef",
+      "source": "datasets/context_response_smoke.json",
+      "suite": "context_response_smoke"
+    },
+    {
+      "snapshot": "5ab7703c3f6692b505fff6a30db6edc40b874b6ba7b04511e0fddc67e7c51894",
+      "source": "datasets/decision_workflows.json",
+      "suite": "decision_workflows"
+    },
+    {
+      "snapshot": "61db4bce0bb3040de8f5dda7db87b04cc277676ec0583d970d4fcb2092eb9515",
+      "source": "datasets/distill-transcript.json",
+      "suite": "distill-transcript"
+    },
+    {
+      "snapshot": "e4eaf40dd2d5c5f7ff3cde9cb284c538c8c50d3754f732429be8cacc99ffcf7f",
+      "source": null,
+      "suite": "dummy_assistant"
+    }
+  ]
+}

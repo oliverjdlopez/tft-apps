@@ -17,3 +17,7 @@ profiles/
 vod-review/frames/
 vod-review/boxes/
 /media/
+**/.coverage*
+**/htmlcov/
+**/coverage/
+**/.hypothesis/

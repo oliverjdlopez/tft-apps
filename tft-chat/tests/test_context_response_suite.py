@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from evals.execution import score_attempt
+from evals.baselines import validate_baselines
 from evals.langfuse.content import load_catalog, load_snapshot, validate_bundle
 from evals.langfuse.contracts import ACTIVE_WORKFLOW_SUITES, DATASET_NAMES, legacy_execution_item
 from evals.langfuse.utils import validate_case_semantics
@@ -70,7 +71,7 @@ def test_suite_is_registered_portable_and_has_exactly_thirty_single_checks() -> 
     original_seed = load_snapshot(seed, snapshots)
     assert original_seed["dataset_name"] == "context-response-smoke"
     assert original_seed["items"][0]["metadata"]["placeholder_checks"] is True
-    current = load_snapshot(entry["snapshot"], snapshots)
+    current = load_snapshot(validate_baselines()["context_response_smoke"], snapshots)
     assert current == bundle
     with SOURCE.with_suffix(".csv").open(newline="") as file:
         csv_rows = list(csv.DictReader(file))
@@ -103,6 +104,20 @@ def test_each_fact_check_runs_through_the_real_scoring_adapter(item: dict) -> No
 def test_question_echo_does_not_satisfy_fact_check(item: dict) -> None:
     """Prevent the input wording itself from satisfying an answer check."""
     scores = score_attempt(item, {"output": item["input"], "success": True}, {})
+    assert next(score for score in scores if score["name"] == "reasonable_response")["value"] == 0
+
+
+@pytest.mark.parametrize("case,output", [
+    ("five_cost_count", "There are not 10 five-cost champions; there are 11."),
+    ("five_cost_count", "There are 11 five-cost champions."),
+    ("four_cost_adaptors", "Nidalee is not a 4-cost Adaptor. There are no 4-cost Adaptors."),
+    ("coin_flip_cost", "Coin Flip does not cost 0 gold. It costs 99 gold, and there is no coin toss."),
+    ("riftbeast_roster", "Cinderling, Pebbles, Gromp, and Murkwolf are all the Riftbeasts."),
+])
+def test_plausible_incorrect_answers_are_rejected(case, output):
+    """Reject known contradictions, wrong quantities, and incomplete populations."""
+    item = next(item for item in BUNDLE["items"] if item["metadata"]["case"] == case)
+    scores = score_attempt(item, {"output": output, "success": True}, {})
     assert next(score for score in scores if score["name"] == "reasonable_response")["value"] == 0
 
 

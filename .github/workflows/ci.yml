@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: tft-chat
@@ -40,29 +41,24 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: tft-chat/app/frontend/package-lock.json
-      - name: Test and build frontend
-        working-directory: tft-chat/app/frontend
-        run: |
-          npm ci
-          npm test
-          npm run build
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm --prefix app/frontend ci
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-      - name: Verify isolated test target
-        run: |
-          test -n "$RDS_TEST_HOST"
-          test -n "$RDS_TEST_PORT"
-          test -n "$RDS_TEST_ADMIN"
-          test "$RDS_TEST_DB" = "${RDS_TEST_DB%_test}_test"
-          uv run python -c 'import psycopg; from core.config import resolve_database_target; target = resolve_database_target("test"); connection = psycopg.connect(target.connect_url); connection.close()' 2>/dev/null || { echo "Configured RDS_TEST_* PostgreSQL target is unreachable" >&2; exit 1; }
-      - name: Run tests
-        run: uv run --locked --extra evals pytest -q
-      - name: Validate and test Langfuse content and execution
-        run: |
-          uv run --locked --extra evals python -m evals validate
-          uv run --locked --extra evals pytest -q evals/langfuse/tests tests/test_langfuse_execution.py tests/test_evaluation_catalog.py
-          uv run --locked --extra evals python -m evals run --suite dummy_assistant --offline
+      - name: Install declared ChatTFT test environment
+        run: uv sync --locked --extra evals --extra compositions --group test
+      - name: Offline tests, builds, coverage, and authored baselines
+        run: python ../scripts/test_suite.py --tier offline --component chat --coverage
+      - name: Required PostgreSQL integration
+        run: python ../scripts/test_suite.py --tier postgres --component chat
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chattft-validation
+          path: |
+            .runtime/validation
+            tft-chat/app/frontend/coverage
 
   langfuse-browser:
     env:
@@ -127,6 +123,7 @@ jobs:
 
   desktop:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: desktop
@@ -136,15 +133,22 @@ jobs:
         with:
           node-version: 22
       - uses: astral-sh/setup-uv@v5
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: npm ci
       - run: npm --prefix ../tft-chat/app/frontend ci
-      - run: npm test
       - name: Install the independent VOD environment for cross-backend media tests
         run: uv sync --project ../vod-review --locked
-      - run: uv run --project ../tft-chat --locked --extra evals pytest -c ../tft-chat/pyproject.toml -q tests
+      - run: uv sync --project ../tft-chat --locked --extra evals --extra compositions --group test
+      - run: python ../scripts/test_suite.py --tier offline --component desktop
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-validation
+          path: .runtime/validation
 
   vod-review:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     defaults:
       run:
         working-directory: vod-review
@@ -154,7 +158,74 @@ jobs:
         with:
           node-version: 22
       - uses: astral-sh/setup-uv@v5
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: npm --prefix frontend ci
-      - run: npm --prefix frontend test
-      - run: npm --prefix frontend run build
-      - run: uv run --locked pytest --import-mode=importlib -q
+      - run: uv sync --locked
+      - run: python ../scripts/test_suite.py --tier offline --component vod --coverage
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vod-validation
+          path: |
+            .runtime/validation
+            vod-review/frontend/coverage
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: uv sync --project tft-chat --locked --extra evals --extra compositions --group test
+      - run: uv sync --project vod-review --locked
+      - run: npm --prefix tft-chat/app/frontend ci
+      - run: npm --prefix vod-review/frontend ci
+      - run: npm --prefix tests/browser ci
+      - run: tests/browser/node_modules/.bin/playwright install --with-deps chromium
+      - run: python scripts/test_suite.py --tier browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-validation
+          path: .runtime/validation
+
+  native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+      - run: sudo apt-get update && sudo apt-get install -y xvfb ffmpeg
+      - run: uv sync --project tft-chat --locked --extra evals --extra compositions --group test
+      - run: uv sync --project vod-review --locked
+      - run: npm --prefix desktop ci
+      - run: npm --prefix tft-chat/app/frontend ci
+      - run: npm --prefix vod-review/frontend ci
+      - run: xvfb-run -a python scripts/test_suite.py --tier native --component desktop
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-validation
+          path: .runtime/validation
+
+  pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: sudo apt-get update && sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b fonts-dejavu-core
+      - run: uv sync --project tft-chat --locked --extra evals --extra compositions --extra eval-pdfs --group test
+      - run: python scripts/test_suite.py --tier pdf --component chat
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pdf-validation
+          path: .runtime/validation

@@ -1,6 +1,8 @@
 """Flowchart workspace CRUD against the isolated RDS_TEST PostgreSQL target."""
 
 import pytest
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
 
 from db.session import open_db
 from services.flowchart import service
@@ -60,3 +62,26 @@ def test_group_library_round_trip_and_unique_names(isolated_store):
         service.create_group(GroupCreateRequest(name="Slam", fragment=fragment))
     service.delete_group(group.id)
     assert service.list_groups().groups == []
+
+
+def test_two_connections_cannot_both_replace_the_same_revision(isolated_store):
+    """Require one winner and one conflict from genuinely competing transactions."""
+    original = service.create_workspace(PatchWorkspace(name="Concurrent fixture"), "database")
+    barrier = Barrier(2)
+
+    def save(index):
+        """Race through the real service, which opens a separate database session."""
+        document = original.workspace.model_copy(update={"name": f"Writer {index}"})
+        barrier.wait(timeout=5)
+        try:
+            return service.save_workspace(original.id, original.revision, document, "database")
+        except WorkspaceConflictError:
+            return None
+
+    with ThreadPoolExecutor(max_workers=2) as workers:
+        results = list(workers.map(save, range(2)))
+    winners = [row for row in results if row is not None]
+    assert len(winners) == 1
+    stored = service.get_workspace(original.id, "database")
+    assert stored.revision == original.revision + 1
+    assert stored.workspace == winners[0].workspace

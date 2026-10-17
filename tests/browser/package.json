@@ -1,0 +1,6 @@
+{
+  "name": "tft-suite-browser-tests",
+  "private": true,
+  "type": "module",
+  "devDependencies": { "playwright": "1.58.2" }
+}

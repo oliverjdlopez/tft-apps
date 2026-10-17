@@ -33,7 +33,7 @@
       "family": "assistant",
       "max_turns": 12,
       "name": "context_response_smoke",
-      "snapshot": "3a3f8e3d694d5d928b82ff8bcfa7be3628ed1d77d4b450d106018d16b26bc4bc"
+      "snapshot": "decfa747ab03f258c53ada1c4af5c150f95b0a2e6b170850324bd4084a0044ef"
     },
     {
       "assistant": "data_analyst",

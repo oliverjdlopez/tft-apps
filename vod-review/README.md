@@ -131,6 +131,11 @@ Use `--no-detailed-profiling` to measure normal production overhead without CUDA
 synchronization.
 
 Run the backend tests from the repository root with `uv run pytest backend/tests`.
+For the complete independent suite (including round-classifier and text-detection
+tests), use `uv run pytest --import-mode=importlib -q` or the suite-root command
+`python scripts/test_suite.py --tier offline --component vod --coverage`.
+The [suite validation guide](../tft-chat/docs/development/testing-and-evals.md)
+documents browser journeys, generated sampling checks, and opt-in inference limits.
 
 Evaluate PaddleOCR over every labeled image in
 `data/datasets/round_classifier/train/` with:

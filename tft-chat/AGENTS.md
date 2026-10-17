@@ -83,7 +83,7 @@ Before completing a task, first gather the related repository documentation.
 ## Basic validation
 
 ```bash
-uv run pytest -q
+uv run --locked --extra evals --extra compositions --group test pytest -q
 ```
 
 CI runs the full pytest suite, frontend tests/build, and Langfuse snapshot validation/adapter tests, the offline fixture, and a local platform browser smoke job. There is no repository lint, format, or static-type command. Database-backed tests skip locally when `RDS_TEST_*` is absent or unreachable, while CI supplies PostgreSQL 16.
