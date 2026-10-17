@@ -5,8 +5,11 @@ import hashlib
 from pathlib import Path
 
 from domain.assistants import ASSISTANT_SPECS_DIR
+from devtools.assistants.workspace.workspace import (
+    ConflictError as DocumentConflictError,
+    Workspace,
+)
 from evals.config import load_eval_suites
-from services.assistant_workspace.workspace import ConflictError as DocumentConflictError, Workspace
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 EDITABLE_FILES = ('system.md', 'agent.json', 'task.md')
@@ -18,8 +21,8 @@ def workspace_service() -> Workspace:
 
 
 def initialize_workspace() -> None:
-    """Mark persisted trials interrupted once when the backend starts."""
-    workspace_service().store.interrupt_trials()
+    """Recover authoring state before publishing live assistant definitions."""
+    workspace_service().initialize()
 
 
 def workspace() -> dict:
@@ -30,8 +33,8 @@ def workspace() -> dict:
         suites.setdefault(suite.assistant, []).append(suite.name)
     active = service.active()
     assistants = []
-    for name in active.list_assistants():
-        spec = active.get_spec(name)
+    for name in active.registry.list_assistants():
+        spec = active.registry.get_spec(name)
         assistants.append({'name': name, 'description': spec.description, 'model': spec.resolved_model(),
             'tools': list(spec.tool_names), 'tool_groups': list(spec.tool_group_keys), 'handoffs': list(spec.handoff_names),
             'eval_suites': suites.get(name, []), 'sources': [{'document_id': hashlib.sha256(f'spec\0{name}\0{filename}'.encode()).hexdigest()[:24],

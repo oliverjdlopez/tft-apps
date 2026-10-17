@@ -52,7 +52,9 @@ bytes before replacing files. Directory and file writes are fsynced. Only
 A complete registry snapshot is installed for new invocations. Previously
 constructed graphs keep their captured definitions and callbacks.
 
-Interrupted writes recover before specification discovery. Uncommitted operations
+Backend initialization recovers interrupted writes before the development
+workspace validates and publishes repository definitions. Plain runtime discovery
+does not inspect workspace storage, locks, or journals. Uncommitted operations
 roll back all journaled files; committed operations finish draft/history updates.
 Recovery first checks every journaled file. An external edit conflicting with both
 original and replacement bytes stops recovery and retains the journal for manual
@@ -148,8 +150,9 @@ are `draft`, `validate`, `apply`, `discard`, `restore`, `trials`, `experiments`,
 `datasets`, and `prompts` are reads. `/api/specs/refresh` takes expected source and
 active identities. `/api/specs/runs/{id}` refreshes saved results without changing
 the editor's files. See the generated FastAPI `/docs` for typed request/response
-schemas. Store ownership is `services/assistant_workspace/`; development graph
-capture is `devtools/assistants/` and execution is `evals/assistant_execution.py`.
+schemas. Workspace storage, recovery, graph capture, and publication live under
+`devtools/assistants/`; service and route modules are application adapters, while
+captured execution remains in `evals/assistant_execution.py`.
 
 Run focused offline checks from the ChatTFT root:
 

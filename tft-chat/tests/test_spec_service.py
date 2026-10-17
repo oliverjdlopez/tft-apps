@@ -9,7 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from devtools.assistants import capture, registry_from_files
-from services.assistant_workspace.workspace import ConflictError, Workspace
+from devtools.assistants.workspace.workspace import ConflictError, Workspace
 from services import spec_service
 
 
@@ -47,7 +47,11 @@ def test_save_does_not_write_source_and_revisions_survive_restart(workspace):
     first = save(workspace, **{'system.md': 'Changed instructions', 'agent.json': '[]'})
     assert first['validation']['valid'] is False
     assert workspace.source_files() == original
-    restarted = Workspace(workspace.root, workspace.specs, workspace.registry)
+    restarted = Workspace(
+        workspace.root,
+        workspace.specs,
+        publisher=workspace.publisher,
+    )
     assert restarted.state('fixture')['draft']['id'] == first['draft']['id']
     fixed = save(restarted, **{'agent.json': '{}'})
     assert fixed['validation']['valid']
@@ -60,7 +64,7 @@ def test_save_does_not_write_source_and_revisions_survive_restart(workspace):
 def test_apply_complete_optional_files_and_existing_graph_remains_captured(workspace):
     """Apply changes all editable files, retains unrelated files and old agents."""
     from domain.assistants import Assistant
-    old = Assistant('fixture', registry=workspace.active()).build_agent()
+    old = Assistant('fixture', registry=workspace.active().registry).build_agent()
     state = save(workspace, **{'system.md': 'New prompt', 'agent.json': '{"handoffs":["target"],"skills":[]}', 'task.md': 'Task wrapper'})
     before = workspace.state('fixture')['active']['hash']
     applied = workspace.apply('fixture', **expected(state))
@@ -71,6 +75,8 @@ def test_apply_complete_optional_files_and_existing_graph_remains_captured(works
     from agents import RunContextWrapper
     assert 'Original prompt.' in old.instructions(RunContextWrapper(None), old)
     assert old.handoffs == []
+    current = Assistant('fixture', registry=workspace.active().registry).build_agent()
+    assert current.handoffs[0].name == 'target'
     assert (workspace.specs / 'fixture' / 'notes.md').read_text() == 'Unrelated user notes\n'
     assert applied['history']['events'][0]['action'] == 'applied'
     files = {'system.md': 'Third prompt'}
@@ -78,6 +84,35 @@ def test_apply_complete_optional_files_and_existing_graph_remains_captured(works
     workspace.apply('fixture', **expected(saved))
     assert not (workspace.specs / 'fixture' / 'agent.json').exists()
     assert not (workspace.specs / 'fixture' / 'task.md').exists()
+
+
+def test_publication_changes_new_runtime_instances_only(workspace):
+    """Publishing a draft leaves existing runtime snapshots unchanged."""
+    from agents import RunContextWrapper
+    from domain.assistants import Assistant
+    from domain.assistants.active import ActiveAssistantRegistry
+    from devtools.assistants.workspace.workspace import DefinitionsPublisher
+
+    runtime = ActiveAssistantRegistry()
+    publisher = DefinitionsPublisher(runtime=runtime)
+    publisher.publish(registry_from_files(workspace.source_files()))
+    connected = Workspace(
+        workspace.root,
+        workspace.specs,
+        publisher=publisher,
+    )
+    old = Assistant('fixture', registry=runtime.current()).build_agent()
+    state = connected.state('fixture')
+    saved = connected.save(
+        'fixture',
+        {**state['active']['files'], 'system.md': 'Published prompt'},
+        **expected(state),
+    )
+    connected.apply('fixture', **expected(saved))
+    new = Assistant('fixture', registry=runtime.current()).build_agent()
+
+    assert 'Original prompt.' in old.instructions(RunContextWrapper(None), old)
+    assert new.instructions(RunContextWrapper(None), new) == 'Published prompt'
 
 
 def test_source_and_runtime_conflicts_keep_draft_and_user_edits(workspace):
@@ -129,7 +164,7 @@ def test_invalid_graph_saved_but_cannot_apply_or_test(workspace, config, error):
 
 def test_write_failure_rolls_back_complete_source_and_keeps_draft(workspace, monkeypatch):
     """A failure between editable file writes restores original bytes."""
-    from services.assistant_workspace import workspace as module
+    from devtools.assistants.workspace import workspace as module
     original = workspace.source_files()
     state = save(workspace, **{'system.md': 'Updated', 'task.md': 'New task'})
     real = module.atomic_bytes
@@ -148,7 +183,7 @@ def test_write_failure_rolls_back_complete_source_and_keeps_draft(workspace, mon
 
 def test_restart_recovers_journal_before_discovery_and_preserves_external_edits(workspace):
     """Recovery checks all bytes before rollback and refuses unrelated edits."""
-    from common.assistant_workspace import recover
+    from devtools.assistants.workspace.io import recover
     path = workspace.specs / 'fixture' / 'system.md'
     old = path.read_bytes()
     journal = {'assistant': 'fixture', 'changes': {'system.md': [base64.b64encode(old).decode(), base64.b64encode(b'Partial write').decode()]}}
@@ -181,7 +216,7 @@ def test_routes_retire_direct_writes_and_support_full_lifecycle(workspace, monke
 
 def test_committed_restart_finishes_history_and_closes_draft_once(workspace):
     """A crash after source commit can finish store updates without reapplying files."""
-    from common.assistant_workspace import recover
+    from devtools.assistants.workspace.io import recover
     state = save(workspace, **{'system.md': 'Committed source'})
     path = workspace.specs / 'fixture' / 'system.md'
     path.write_text('Committed source')

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, replace
+from dataclasses import asdict, dataclass, field, replace
 import hashlib
 import json
 from pathlib import Path
@@ -14,6 +14,26 @@ from domain.assistants.specs import AssistantSpec, load_assistant_spec
 from domain.assistants.utils import configure_tools
 
 EDITABLE_FILES = ("system.md", "agent.json", "task.md")
+
+
+@dataclass(frozen=True)
+class AssistantDefinitions:
+    """Pair runtime definitions with development-owned source and model state."""
+
+    registry: AssistantRegistry
+    source_files: dict[str, dict[str, str]] = field(default_factory=dict)
+    resolved_models: dict[str, str] = field(default_factory=dict)
+
+    def snapshot(self) -> AssistantDefinitions:
+        """Return an isolated copy for conflict checks and runtime construction."""
+        return AssistantDefinitions(
+            registry=self.registry.snapshot(),
+            source_files={
+                name: dict(documents)
+                for name, documents in self.source_files.items()
+            },
+            resolved_models=dict(self.resolved_models),
+        )
 
 
 def digest(value: Any) -> str:
@@ -28,14 +48,14 @@ def digest(value: Any) -> str:
     ).hexdigest()
 
 
-def registry_from_files(files: dict[str, dict[str, str]]) -> AssistantRegistry:
+def registry_from_files(files: dict[str, dict[str, str]]) -> AssistantDefinitions:
     """Parse and validate editable definitions in an isolated staging tree.
 
     Args:
         files: Complete editable file inventory keyed by assistant name.
 
     Returns:
-        A validated runtime registry whose paths refer to repository locations.
+        Validated runtime definitions paired with their source inventory.
     """
     specs = []
     with tempfile.TemporaryDirectory(prefix="assistant-specs-") as temporary:
@@ -115,19 +135,34 @@ def registry_from_files(files: dict[str, dict[str, str]]) -> AssistantRegistry:
     registry = AssistantRegistry(specs)
     configure_tools(registry)
     registry.validate()
-    registry.source_files = {
-        name: dict(documents) for name, documents in files.items()
-    }
-    return registry
+    return AssistantDefinitions(
+        registry=registry,
+        source_files={name: dict(documents) for name, documents in files.items()},
+    )
 
 
-def capture(registry: AssistantRegistry, names: list[str] | None = None) -> dict:
+def capture(
+    definitions: AssistantDefinitions | AssistantRegistry,
+    names: list[str] | None = None,
+) -> dict:
     """Freeze definitions and resolved model defaults independently of source."""
+    registry = (
+        definitions.registry
+        if isinstance(definitions, AssistantDefinitions)
+        else definitions
+    )
+    resolved_models = (
+        definitions.resolved_models
+        if isinstance(definitions, AssistantDefinitions)
+        else {}
+    )
     selected = names or registry.list_assistants()
     specs = {
         name: {
             **asdict(registry.get_spec(name)),
-            "resolved_model": registry.get_spec(name).resolved_model(),
+            "resolved_model": resolved_models.get(
+                name, registry.get_spec(name).resolved_model()
+            ),
         }
         for name in selected
     }
@@ -135,7 +170,7 @@ def capture(registry: AssistantRegistry, names: list[str] | None = None) -> dict
     return {**value, "hash": digest(value)}
 
 
-def registry_from_capture(graph: dict) -> AssistantRegistry:
+def registry_from_capture(graph: dict) -> AssistantDefinitions:
     """Restore a versioned graph and normalize historical capture fields."""
     if graph.get("version") != 1 or digest(
         {key: graph[key] for key in ("version", "specs")}
@@ -163,10 +198,12 @@ def registry_from_capture(graph: dict) -> AssistantRegistry:
         specs.append(spec)
     registry = AssistantRegistry(specs)
     configure_tools(registry)
-    registry.resolved_models = {
-        name: definition["resolved_model"]
-        for name, definition in graph["specs"].items()
-    }
     registry.validate()
-    return registry
+    return AssistantDefinitions(
+        registry=registry,
+        resolved_models={
+            name: definition["resolved_model"]
+            for name, definition in graph["specs"].items()
+        },
+    )
 

@@ -4,7 +4,7 @@ from __future__ import annotations
 import threading
 import uuid
 
-from common.assistant_workspace import checkout_lock
+from devtools.assistants.workspace.io import checkout_lock
 
 slots = threading.BoundedSemaphore(4)
 

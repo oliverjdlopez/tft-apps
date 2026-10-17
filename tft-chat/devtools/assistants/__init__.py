@@ -1,6 +1,7 @@
 """Development adapters for assistant authoring and captured execution."""
 
 from devtools.assistants.capture import (
+    AssistantDefinitions,
     EDITABLE_FILES,
     capture,
     digest,
@@ -12,6 +13,7 @@ from devtools.assistants.recording import InvocationRecording, record_invocation
 
 __all__ = [
     "EDITABLE_FILES",
+    "AssistantDefinitions",
     "InvocationRecording",
     "assistant_from_capture",
     "assistant_from_registry",

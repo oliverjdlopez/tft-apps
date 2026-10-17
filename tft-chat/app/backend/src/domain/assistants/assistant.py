@@ -12,7 +12,8 @@ from agents import Agent, RunConfig, Runner, RunResult
 
 from core.config import load_config
 from domain.assistants.models import AssistantInvocation
-from domain.assistants.registry import AssistantRegistry, assistant_registry
+from domain.assistants.active import active_assistant_registry
+from domain.assistants.registry import AssistantRegistry
 from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import AssistantSpec
 from domain.assistants.token_logging import log_agent_graph
@@ -37,6 +38,7 @@ class Assistant:
         registry: AssistantRegistry | None = None,
         model: object | None = None,
         output_type: type[Any] | None = None,
+        resolved_models: Mapping[str, str] | None = None,
         set_number: int | None = None,
         surface: str = "assistant",
     ) -> None:
@@ -47,15 +49,12 @@ class Assistant:
             registry: Optional isolated registry, including captured definitions.
             model: Optional request model propagated through all handoffs.
             output_type: Optional structured output contract for the root.
+            resolved_models: Optional frozen model identifiers keyed by assistant.
             set_number: TFT set override; omission uses application configuration.
             surface: Execution surface recorded in the invocation context.
         """
         if registry is None:
-            # Tool imports remain deferred until an execution consumer needs them.
-            from domain.assistants.utils import configure_tools
-
-            configure_tools(assistant_registry)
-            registry = assistant_registry
+            registry = active_assistant_registry.current()
         self._registry = registry.snapshot()
         self.name = name
         self.spec = self._registry.get_spec(name)
@@ -63,23 +62,18 @@ class Assistant:
         self.output_type = output_type
         self.surface = surface
         self.set_number = load_config().chat.set_number if set_number is None else set_number
+        frozen_models = dict(resolved_models or {})
         self._resolved_models = {
-            key: self._registry.resolved_models[key]
-            if key in self._registry.resolved_models
+            key: frozen_models[key]
+            if key in frozen_models
             else self._registry.get_spec(key).resolved_model()
             for key in self._registry.list_assistants()
         }
-        self._registry.resolved_models = dict(self._resolved_models)
 
     @classmethod
     def names(cls) -> list[str]:
         """Return active repository assistant names sorted alphabetically."""
-        return assistant_registry.list_assistants()
-
-    @classmethod
-    def reload(cls) -> None:
-        """Reload the active registry from repository specifications."""
-        assistant_registry.reload()
+        return active_assistant_registry.current().list_assistants()
 
     @property
     def handoff_names(self) -> list[str]:

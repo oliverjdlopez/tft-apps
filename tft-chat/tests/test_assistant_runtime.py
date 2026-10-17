@@ -72,6 +72,14 @@ def registry(*, resources=True, root_name='root', root_skill_names=()):
     return result
 
 
+def configured_registry(specs):
+    """Build a test registry with the same tool wiring as application loading."""
+    result = AssistantRegistry(list(specs))
+    from domain.assistants.utils import configure_tools
+    configure_tools(result)
+    return result
+
+
 def instructions(agent, invocation):
     """Exercise the same dynamic instruction callback used by the SDK."""
     return agent.instructions(RunContextWrapper(invocation.context), agent)
@@ -153,11 +161,11 @@ def test_chat_and_transcript_boundaries():
 def test_context_disabled_and_empty_allowlists_deny_reads():
     """Explicit workflow permission can stand alone; empty access stays closed."""
     source = registry()
-    source.install(AssistantRegistry([
+    source = configured_registry([
         replace(source.get_spec('root'), repository_context=False, skill_names=('allowed',)),
         replace(source.get_spec('child'), repository_context=False, skill_names=(), playbook_names=()),
         source.get_spec('leaf'),
-    ]))
+    ])
     invocation = asyncio.run(Assistant('root', registry=source, set_number=18).prepare('Question'))
     assert read(invocation, invocation.agent, 'skill:allowed')['found']
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
@@ -173,8 +181,10 @@ def test_capture_and_run_state_are_isolated():
         prompt_candidates={'child': 'CANDIDATE'},
     )
     first = asyncio.run(instance.prepare('Question'))
-    source.install(AssistantRegistry([replace(source.get_spec(name), system_prompt='CHANGED', skill_names=())
-                                      for name in source.list_assistants()]))
+    source = configured_registry([
+        replace(source.get_spec(name), system_prompt='CHANGED', skill_names=())
+        for name in source.list_assistants()
+    ])
     second = asyncio.run(instance.prepare('Another question'))
     child = first.agent.handoffs[0]
     assert instructions(child, first).startswith('CANDIDATE')
@@ -199,8 +209,10 @@ def test_explicit_empty_captured_prompt_keeps_only_metadata():
 def test_tool_access_is_required_in_addition_to_resource_flags():
     """A saved graph with no read tool does not gain resource access implicitly."""
     source = registry()
-    source.install(AssistantRegistry([replace(source.get_spec(name), tool_group_keys=())
-                                      for name in source.list_assistants()]))
+    source = configured_registry([
+        replace(source.get_spec(name), tool_group_keys=())
+        for name in source.list_assistants()
+    ])
     invocation = asyncio.run(Assistant('root', registry=source, set_number=18).prepare('Question'))
     assert instructions(invocation.agent, invocation) == 'ROOT'
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
@@ -265,8 +277,10 @@ def test_playbook_handoff_catalogues_and_reads_enforce_frozen_permissions():
     assert 'playbook:other' in instructions(leaf, invocation)
     assert not read(invocation, invocation.agent, 'playbook:allowed')['found']
     assert not read(invocation, child, 'playbook:other')['found']
-    source.install(AssistantRegistry([replace(source.get_spec(name), playbook_names=())
-                                      for name in source.list_assistants()]))
+    source = configured_registry([
+        replace(source.get_spec(name), playbook_names=())
+        for name in source.list_assistants()
+    ])
     result = read(invocation, child, 'playbook:allowed')
     assert result['content'] == 'PLAYBOOK ALLOWED' and result['complete']
     assert invocation.context.resources.reads['playbook:allowed'].sha256 == result['sha256']
@@ -275,18 +289,18 @@ def test_playbook_handoff_catalogues_and_reads_enforce_frozen_permissions():
 def test_explicit_playbook_access_without_references_or_skills():
     """Specific guides can be granted independently while chat remains restricted."""
     source = registry()
-    source.install(AssistantRegistry([
+    source = configured_registry([
         replace(source.get_spec(name), repository_context=False, skill_names=(), playbook_names=('allowed',))
         for name in source.list_assistants()
-    ]))
+    ])
     invocation = asyncio.run(Assistant('root', registry=source).prepare('Guide question'))
     assert read(invocation, invocation.agent, 'playbook:allowed')['found']
     assert not read(invocation, invocation.agent, 'skill:allowed')['found']
     assert not read(invocation, invocation.agent, 'set18')['found']
     chat_source = registry(root_name='chat')
-    chat_source.install(AssistantRegistry([
+    chat_source = configured_registry([
         replace(chat_source.get_spec(name), playbook_names=('allowed',)) for name in chat_source.list_assistants()
-    ]))
+    ])
     chat = asyncio.run(Assistant('chat', registry=chat_source).prepare('Guide question'))
     assert 'playbook:allowed' not in instructions(chat.agent, chat)
     assert not read(chat, chat.agent, 'playbook:allowed')['found']

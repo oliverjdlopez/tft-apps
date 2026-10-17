@@ -7,11 +7,22 @@ import json
 from pathlib import Path
 import time
 import uuid
+from threading import RLock
 
-from common.assistant_workspace import atomic_bytes, checkout_lock, recover_locked
-from domain.assistants.registry import assistant_registry
-from domain.assistants.utils import configure_tools
-from devtools.assistants import EDITABLE_FILES, capture, digest, registry_from_files
+from domain.assistants.active import ActiveAssistantRegistry, active_assistant_registry
+from devtools.assistants import (
+    AssistantDefinitions,
+    EDITABLE_FILES,
+    capture,
+    digest,
+    registry_from_files,
+)
+from devtools.assistants.workspace.io import (
+    atomic_bytes,
+    checkout_lock,
+    recover,
+    recover_locked,
+)
 from .store import Store
 
 
@@ -19,43 +30,100 @@ class ConflictError(ValueError):
     """Signal a stale source, runtime, or draft revision without overwriting it."""
 
 
+def read_source_files(specs: Path) -> dict[str, dict[str, str]]:
+    """Read editable definitions while refusing symlink and identity escapes."""
+    result = {}
+    for directory in sorted(specs.iterdir()):
+        if not directory.is_dir() or not (directory / "system.md").exists():
+            continue
+        if directory.is_symlink():
+            raise ValueError("Symlinked assistant directories cannot be edited")
+        documents = {}
+        for filename in EDITABLE_FILES:
+            path = directory / filename
+            if path.is_symlink():
+                raise ValueError("Symlinked assistant files cannot be edited")
+            if path.exists():
+                documents[filename] = path.read_bytes().decode("utf-8")
+        result[directory.name] = documents
+    return result
+
+
+class DefinitionsPublisher:
+    """Pair development source state with optional live runtime publication."""
+
+    def __init__(
+        self,
+        definitions: AssistantDefinitions | None = None,
+        runtime: ActiveAssistantRegistry | None = None,
+    ) -> None:
+        """Create an isolated or application-connected publication point."""
+        self._lock = RLock()
+        self._definitions = definitions.snapshot() if definitions else None
+        self._runtime = runtime
+
+    def current(self, specs: Path) -> AssistantDefinitions:
+        """Return the published development definitions, initializing lazily."""
+        with self._lock:
+            if self._definitions is None:
+                self.publish(registry_from_files(read_source_files(specs)))
+            assert self._definitions is not None
+            return self._definitions.snapshot()
+
+    def publish(self, definitions: AssistantDefinitions) -> None:
+        """Publish complete development and runtime snapshots atomically."""
+        candidate = definitions.snapshot()
+        candidate.registry.validate()
+        if self._runtime is not None:
+            self._runtime.publish(candidate.registry)
+        with self._lock:
+            self._definitions = candidate
+
+
+published_assistant_definitions = DefinitionsPublisher(
+    runtime=active_assistant_registry
+)
+
+
 class Workspace:
     """Own one checkout's editable drafts independently of active definitions."""
-    def __init__(self, root: Path, specs: Path, registry=None):
-        """Bind checkout paths and the active registry; initialize runtime storage."""
+
+    def __init__(
+        self,
+        root: Path,
+        specs: Path,
+        definitions: AssistantDefinitions | None = None,
+        *,
+        publisher: DefinitionsPublisher | None = None,
+    ) -> None:
+        """Bind checkout paths, definition publication, and runtime storage."""
         self.root = root
         self.specs = specs
-        self.registry = registry if registry is not None else assistant_registry
+        self.publisher = publisher or (
+            DefinitionsPublisher(definitions)
+            if definitions is not None
+            else published_assistant_definitions
+        )
         self.store = Store(root / '.runtime' / 'assistant-workspace')
 
     def source_files(self) -> dict[str, dict[str, str]]:
         """Read only editable files, refusing symlink and identity escapes."""
-        result = {}
-        for directory in sorted(self.specs.iterdir()):
-            if not directory.is_dir() or not (directory / 'system.md').exists():
-                continue
-            if directory.is_symlink():
-                raise ValueError('Symlinked assistant directories cannot be edited')
-            documents = {}
-            for filename in EDITABLE_FILES:
-                path = directory / filename
-                if path.is_symlink():
-                    raise ValueError('Symlinked assistant files cannot be edited')
-                if path.exists():
-                    documents[filename] = path.read_bytes().decode('utf-8')
-            result[directory.name] = documents
-        return result
+        return read_source_files(self.specs)
 
-    def active(self):
-        """Capture the cached registry before inspecting a mutable source tree."""
-        registry = self.registry.snapshot()
-        configure_tools(registry)
-        return registry
+    def initialize(self) -> None:
+        """Recover interrupted writes before publishing repository definitions."""
+        recover(self.store.root, self.specs)
+        self.publisher.publish(registry_from_files(self.source_files()))
+        self.store.interrupt_trials()
+
+    def active(self) -> AssistantDefinitions:
+        """Capture published definitions before inspecting mutable source files."""
+        return self.publisher.current(self.specs)
 
     def state(self, name: str) -> dict:
         """Describe active instructions, editable head, source drift, and saved runs."""
         active = self.active()
-        spec = active.get_spec(name)
+        spec = active.registry.get_spec(name)
         source = self.source_files()
         graph = capture(active)
         draft = self.store.head(name)
@@ -76,7 +144,7 @@ class Workspace:
     def check(self, name: str, expected_draft: str | None, expected_active: str, expected_source: str) -> tuple:
         """Reject intervening edits across draft, source, and loaded registry."""
         active = self.active()
-        active.get_spec(name)
+        active.registry.get_spec(name)
         head = self.store.head(name)
         source = self.source_files()
         if (head['id'] if head else None) != expected_draft:
@@ -92,10 +160,10 @@ class Workspace:
         active = active or self.active()
         inventory = {**active.source_files, name: files}
         try:
-            registry = registry_from_files(inventory)
-            spec = registry.get_spec(name)
-            return {'valid': True, 'errors': [], 'graph_hash': capture(registry)['hash'],
-                    'configuration': capture(registry)['specs'][spec.name]}
+            definitions = registry_from_files(inventory)
+            spec = definitions.registry.get_spec(name)
+            return {'valid': True, 'errors': [], 'graph_hash': capture(definitions)['hash'],
+                    'configuration': capture(definitions)['specs'][spec.name]}
         except (ValueError, KeyError, TypeError, OSError) as exc:
             return {'valid': False, 'errors': [str(exc)], 'configuration': None}
 
@@ -141,8 +209,8 @@ class Workspace:
             raise ValueError('Save a draft before testing or applying')
         draft = registry_from_files({**active.source_files, name: head['files']})
         names = sorted(
-            set(active.list_reachable_assistant_names(entry))
-            | set(draft.list_reachable_assistant_names(entry))
+            set(active.registry.list_reachable_assistant_names(entry))
+            | set(draft.registry.list_reachable_assistant_names(entry))
         )
         if name not in names:
             raise ValueError('The edited assistant is not reachable from this workflow')
@@ -177,11 +245,11 @@ class Workspace:
                 for filename in changes:
                     content = head['files'].get(filename)
                     atomic_bytes(self.specs / name / filename, content.encode() if content is not None else None)
-                self.registry.install(candidate)
+                self.publisher.publish(candidate)
                 atomic_bytes(path, json.dumps({**journal, 'committed': True}).encode())
             except BaseException:
                 recover_locked(self.store.root, self.specs)
-                self.registry.install(active)
+                self.publisher.publish(active)
                 raise
             recover_locked(self.store.root, self.specs)
         return self.state(name)
@@ -196,5 +264,5 @@ class Workspace:
             candidate = registry_from_files(source)
             if self.source_files() != source:
                 raise ConflictError('Repository files changed during refresh')
-            self.registry.install(candidate)
+            self.publisher.publish(candidate)
         return {'active_hash': capture(self.active())['hash'], 'source_hash': digest(source)}

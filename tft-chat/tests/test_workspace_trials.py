@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import time
 
-from services.assistant_workspace import trials, bridge
+from devtools.assistants.workspace import bridge, trials
 from tests.test_spec_service import workspace, expected, save
 
 

@@ -36,10 +36,10 @@ def bundle(execution):
 def test_capture_preserves_models_handoffs_and_hash_independently_of_source():
     """Restored definitions never reread later source instructions or configuration."""
     frozen = graph(handoffs=['target'])
-    registry = registry_from_capture(frozen)
-    assert registry.get_handoff_names('fixture') == ['target']
-    assert registry.get_spec('target').system_prompt == 'Frozen target'
-    assert registry.resolved_models['fixture'] == frozen['specs']['fixture']['resolved_model']
+    definitions = registry_from_capture(frozen)
+    assert definitions.registry.get_handoff_names('fixture') == ['target']
+    assert definitions.registry.get_spec('target').system_prompt == 'Frozen target'
+    assert definitions.resolved_models['fixture'] == frozen['specs']['fixture']['resolved_model']
     broken = deepcopy(frozen)
     broken['specs']['fixture']['system_prompt'] = 'Intervening edit'
     with pytest.raises(ValueError, match='captured'):

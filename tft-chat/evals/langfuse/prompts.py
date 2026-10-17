@@ -22,7 +22,6 @@ def experiment_prompts(suite: dict) -> dict[str, dict]:
     """
     from domain.assistants import Assistant
 
-    Assistant.reload()
     available = repository_prompts()
     if suite.get("execution") == "fixture":
         return {}

@@ -9,7 +9,6 @@ from agents.extensions.models.litellm_model import LitellmModel
 
 from core.config import load_config
 from domain.assistants import Assistant
-from domain.assistants.registry import assistant_registry
 from domain.assistants.specs import AssistantSpec, load_assistant_spec
 from domain.assistants import token_logging
 from domain.assistants.utils import render_instruction_layers, wrap_task_input

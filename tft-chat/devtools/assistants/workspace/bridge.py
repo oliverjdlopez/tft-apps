@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import httpx
-from common.assistant_workspace import checkout_lock
+from devtools.assistants.workspace.io import checkout_lock
 
 
 class UnavailableError(ValueError):
@@ -39,8 +39,8 @@ def datasets(workspace, name: str) -> dict:
     result['datasets'] = [
         row for row in result['datasets']
         if name in (
-            set(active.list_reachable_assistant_names(row['assistant']))
-            | set(draft.list_reachable_assistant_names(row['assistant']))
+            set(active.registry.list_reachable_assistant_names(row['assistant']))
+            | set(draft.registry.list_reachable_assistant_names(row['assistant']))
         )
     ]
     return result

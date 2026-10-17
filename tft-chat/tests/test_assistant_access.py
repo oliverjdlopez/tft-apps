@@ -77,5 +77,5 @@ def test_workspace_configuration_accepts_and_captures_playbooks():
     }})
     graph = capture(source)
     assert graph['specs']['fixture']['playbook_names'] == ['specific-guide']
-    restored = registry_from_capture(graph).get_spec('fixture')
+    restored = registry_from_capture(graph).registry.get_spec('fixture')
     assert restored.playbook_names == ('specific-guide',) and restored.skill_names == ()

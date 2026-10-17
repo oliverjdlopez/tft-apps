@@ -10,7 +10,7 @@ invocation, and specification types. It does not maintain a parallel function
 facade for specifications, tools, handoffs, discovery, or reloads. Named runtime
 metadata comes from an `Assistant` instance (`spec`, `tools`, `tool_names`,
 `handoff_names`, `reachable_assistant_names`, and `reachable_tool_names`), while
-`Assistant.names()` and `Assistant.reload()` own active-registry discovery.
+`Assistant.names()` reads the lazily published live registry.
 Invocation construction imports implementation dependencies directly, without
 importing the package facade. `domain.assistants.utils.configure_tools(registry)`
 wires isolated registries to the tool catalogue, and `AssistantRegistry` owns
@@ -245,10 +245,12 @@ local catalog and works when Langfuse is stopped. See
 ## Captured definitions and Specs drafts
 
 The [assistant workspace](../development/assistant-workspace.md) separates saved
-drafts from active repository behavior. `AssistantRegistry` can be constructed from
-immutable specs, captured per invocation, and installed as a complete snapshot.
-`devtools/assistants/capture.py` validates full graphs and freezes model defaults.
+drafts from active repository behavior. `AssistantRegistry` contains immutable
+runtime definitions and graph operations. `devtools.assistants` pairs registries
+with source inventories, validates full graphs, and freezes model defaults.
 Captured worker execution threads this isolated registry through graph building,
 task wrapping, resource discovery and reads, and instruction callbacks. Typed invocation
 context, per-assistant access policy, activity, and evidence handling use the normal
-application pipeline. Draft execution never substitutes the global registry.
+application pipeline. Applying a validated draft publishes a replacement live
+registry for newly created assistants; existing assistant instances retain their
+captured registry snapshot.

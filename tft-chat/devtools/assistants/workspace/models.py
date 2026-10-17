@@ -1,4 +1,4 @@
-"""Typed browser contracts for the assistant draft lifecycle."""
+"""Typed browser contracts for the development assistant draft lifecycle."""
 from __future__ import annotations
 from typing import Any
 from pydantic import BaseModel, ConfigDict, Field

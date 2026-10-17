@@ -1,4 +1,4 @@
-"""Checkout-owned immutable draft revisions and durable run receipts."""
+"""Persist development draft revisions and durable run receipts."""
 from __future__ import annotations
 import json
 from contextlib import contextmanager

@@ -110,8 +110,10 @@ def validate_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
         captured_names = set()
         entry = config.get('assistant') or suite['assistant']
         for graph in execution['graphs'].values():
-            registry = registry_from_capture(graph)
-            captured_names.update(registry.list_reachable_assistant_names(entry))
+            definitions = registry_from_capture(graph)
+            captured_names.update(
+                definitions.registry.list_reachable_assistant_names(entry)
+            )
     validate_frozen_config(config, suite, captured_names)
     return value
 

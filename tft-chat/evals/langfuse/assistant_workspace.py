@@ -7,7 +7,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
-from common.assistant_workspace import checkout_lock
+from devtools.assistants.workspace.io import checkout_lock
 from devtools.assistants import digest, registry_from_capture
 from evals.assistant_execution import current_execution
 from .prompts import publish_graph_prompts
@@ -78,8 +78,8 @@ def submit_comparison(service, body: ComparisonRequest) -> dict:
             selected = next((row for row in registered_datasets(service, live=False) if row['name'] == body.dataset), None)
             if selected is None:
                 raise ValueError('Unknown registered live assistant dataset')
-            active = registry_from_capture(body.active_graph)
-            draft = registry_from_capture(body.draft_graph)
+            active = registry_from_capture(body.active_graph).registry
+            draft = registry_from_capture(body.draft_graph).registry
             name = body.lineage.get('assistant')
             if body.lineage.get('active_graph_hash') != body.active_graph['hash'] or body.lineage.get('draft_graph_hash') != body.draft_graph['hash']:
                 raise ValueError('Graph lineage does not match captured definitions')

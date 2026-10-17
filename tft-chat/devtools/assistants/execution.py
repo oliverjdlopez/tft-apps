@@ -9,14 +9,15 @@ from typing import Any
 from domain.assistants import Assistant
 from domain.assistants.registry import AssistantRegistry
 from domain.assistants.utils import configure_tools
-from devtools.assistants.capture import registry_from_capture
+from devtools.assistants.capture import AssistantDefinitions, registry_from_capture
 
 
 def _replace_instructions(
-    registry: AssistantRegistry,
+    definitions: AssistantDefinitions,
     replacements: Mapping[str, str],
-) -> AssistantRegistry:
+) -> AssistantDefinitions:
     """Return a registry with development prompt candidates applied."""
+    registry = definitions.registry
     for name in replacements:
         registry.get_spec(name)
     candidate = AssistantRegistry(
@@ -30,28 +31,40 @@ def _replace_instructions(
         ]
     )
     configure_tools(candidate)
-    candidate.resolved_models = dict(registry.resolved_models)
-    candidate.source_files = {
-        name: dict(files)
-        for name, files in getattr(registry, "source_files", {}).items()
-    }
-    return candidate
+    return AssistantDefinitions(
+        registry=candidate,
+        source_files={
+            name: dict(files)
+            for name, files in definitions.source_files.items()
+        },
+        resolved_models=dict(definitions.resolved_models),
+    )
 
 
 def assistant_from_registry(
-    registry: AssistantRegistry,
+    registry: AssistantRegistry | AssistantDefinitions,
     name: str,
     *,
     prompt_candidates: Mapping[str, str] | None = None,
     **kwargs: Any,
 ) -> Assistant:
     """Build an assistant from isolated definitions and prompt candidates."""
-    candidate = (
-        _replace_instructions(registry, prompt_candidates)
-        if prompt_candidates is not None
-        else registry
+    definitions = (
+        registry
+        if isinstance(registry, AssistantDefinitions)
+        else AssistantDefinitions(registry=registry)
     )
-    return Assistant(name, registry=candidate, **kwargs)
+    candidate = (
+        _replace_instructions(definitions, prompt_candidates)
+        if prompt_candidates is not None
+        else definitions
+    )
+    return Assistant(
+        name,
+        registry=candidate.registry,
+        resolved_models=candidate.resolved_models,
+        **kwargs,
+    )
 
 
 def assistant_from_capture(

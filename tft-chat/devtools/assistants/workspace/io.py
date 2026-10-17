@@ -1,4 +1,4 @@
-"""Crash recovery primitives usable before assistant specification discovery."""
+"""Crash recovery primitives for the development assistant workspace."""
 from __future__ import annotations
 
 from contextlib import contextmanager
