@@ -103,6 +103,7 @@ packages = [
     "app/backend/src/common",
     "scripts",
     "evals",
+    "devtools",
 ]
 dev-mode-dirs = [".", "app/backend", "app/backend/src"]
 

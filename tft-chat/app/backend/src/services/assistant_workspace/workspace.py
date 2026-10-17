@@ -9,9 +9,9 @@ import time
 import uuid
 
 from common.assistant_workspace import atomic_bytes, checkout_lock, recover_locked
-from domain.assistants.capture import EDITABLE_FILES, capture, digest, registry_from_files
 from domain.assistants.registry import assistant_registry
 from domain.assistants.utils import configure_tools
+from devtools.assistants import EDITABLE_FILES, capture, digest, registry_from_files
 from .store import Store
 
 

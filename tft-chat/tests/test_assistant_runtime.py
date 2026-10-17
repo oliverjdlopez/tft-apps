@@ -11,12 +11,12 @@ from agents import RunContextWrapper
 from agents.tool_context import ToolContext
 
 from domain.assistants import Assistant, AssistantRegistry
-from domain.assistants.capture import capture
 from domain.assistants.specs import AssistantSpec
 from domain.assistants.resources import resource_entries
 from domain.resources.library import build_library
 from domain.runtime.models import ToolActivity
 from domain.tools import get_tool
+from devtools.assistants import assistant_from_capture, capture, digest, record_invocation
 
 
 @pytest.fixture(autouse=True)
@@ -92,7 +92,8 @@ def test_preparation_exposes_metadata_without_bodies_or_selection():
                 {'role': 'user', 'content': 'What about her items?'}]
     timing = {}
     invocation = asyncio.run(Assistant('root', registry=registry(), set_number=18).prepare(
-        messages, system='PREFIX', record=True, timing=timing))
+        messages, system='PREFIX', timing=timing))
+    recording = record_invocation(invocation)
     assert invocation.input[-1]['content'] == 'TASK\n\n## Input\n\nWhat about her items?'
     assert messages[-1]['content'] == 'What about her items?'
     root, child = invocation.agent, invocation.agent.handoffs[0]
@@ -110,7 +111,7 @@ def test_preparation_exposes_metadata_without_bodies_or_selection():
     assert not invocation.context.resources.reads
     assert 'resource_catalogue_ms' in timing
     assert 'context_selection_ms' not in timing and 'skill_selection_ms' not in timing
-    assert invocation.instructions['root'] == instructions(root, invocation)
+    assert recording.instructions['root'] == instructions(root, invocation)
 
 
 def test_reads_return_complete_contents_and_track_only_actual_reads():
@@ -167,8 +168,10 @@ def test_capture_and_run_state_are_isolated():
     """Registry reloads and subsequent reads cannot mutate existing policy or state."""
     source = registry()
     graph = capture(source)
-    instance = Assistant.from_capture(graph, 'root', set_number=18,
-                                      base_instructions_by_name={'child': 'CANDIDATE'})
+    instance = assistant_from_capture(
+        graph, 'root', set_number=18,
+        prompt_candidates={'child': 'CANDIDATE'},
+    )
     first = asyncio.run(instance.prepare('Question'))
     source.install(AssistantRegistry([replace(source.get_spec(name), system_prompt='CHANGED', skill_names=())
                                       for name in source.list_assistants()]))
@@ -185,8 +188,10 @@ def test_capture_and_run_state_are_isolated():
 
 def test_explicit_empty_captured_prompt_keeps_only_metadata():
     """An empty prompt replacement must not restore the captured durable prompt."""
-    invocation = asyncio.run(Assistant.from_capture(capture(registry()), 'root', set_number=18,
-                        base_instructions_by_name={'child': ''}).prepare('Question'))
+    invocation = asyncio.run(assistant_from_capture(
+        capture(registry()), 'root', set_number=18,
+        prompt_candidates={'child': ''},
+    ).prepare('Question'))
     text = instructions(invocation.agent.handoffs[0], invocation)
     assert text.startswith('## Available resources') and 'CHILD' not in text and 'PRIVATE' not in text
 
@@ -250,7 +255,7 @@ def test_failed_execution_finalizes_pending_activity(monkeypatch):
 def test_playbook_handoff_catalogues_and_reads_enforce_frozen_permissions():
     """Captured handoffs expose guide metadata and load bodies only on request."""
     source = registry()
-    instance = Assistant.from_capture(capture(source), 'root', set_number=18)
+    instance = assistant_from_capture(capture(source), 'root', set_number=18)
     invocation = asyncio.run(instance.prepare('Specific question'))
     child = invocation.agent.handoffs[0]
     leaf = child.handoffs[0]
@@ -289,12 +294,11 @@ def test_explicit_playbook_access_without_references_or_skills():
 
 def test_historical_captures_do_not_gain_playbook_permissions():
     """Graphs captured before guides existed retain their original access boundary."""
-    from domain.assistants.capture import digest
     graph = capture(registry())
     for definition in graph['specs'].values():
         definition.pop('playbook_names')
     graph['hash'] = digest({key: graph[key] for key in ('version', 'specs')})
-    invocation = asyncio.run(Assistant.from_capture(graph, 'root').prepare('Question'))
+    invocation = asyncio.run(assistant_from_capture(graph, 'root').prepare('Question'))
     child = invocation.agent.handoffs[0]
     assert 'playbook:' not in instructions(child, invocation)
     assert not read(invocation, child, 'playbook:allowed')['found']

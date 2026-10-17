@@ -78,8 +78,9 @@ normal trial execution may make paid calls when the operator chooses Try.
 Each run captures active and draft definitions from the same runtime snapshot.
 Only the edited assistant differs. Both captures include the union of reachable
 handoff targets. Resource permissions come from those captured specifications. Configuration, task
-wrappers, instructions, and resolved model defaults are frozen. Captured runs use `Assistant.from_capture(...).prepare(..., record=True)`, the
-same preparation entry point as chat and ordinary assistant consumers. Resource
+wrappers, instructions, and resolved model defaults are frozen. Development
+adapters restore the capture and attach instruction recording around the same
+`Assistant.prepare()` entry point used by chat and ordinary consumers. Resource
 discovery and exact reads, request-specific instruction callbacks, typed invocation context,
 activity hooks, and evidence retention follow the application pipeline. Each assistant's configured
 context and skill access applies to both catalogue metadata and exact reads. Draft registries never replace the
@@ -147,8 +148,8 @@ are `draft`, `validate`, `apply`, `discard`, `restore`, `trials`, `experiments`,
 `datasets`, and `prompts` are reads. `/api/specs/refresh` takes expected source and
 active identities. `/api/specs/runs/{id}` refreshes saved results without changing
 the editor's files. See the generated FastAPI `/docs` for typed request/response
-schemas. Store ownership is `services/assistant_workspace/`; graph capture and
-execution are `domain/assistants/capture.py` and `evals/assistant_execution.py`.
+schemas. Store ownership is `services/assistant_workspace/`; development graph
+capture is `devtools/assistants/` and execution is `evals/assistant_execution.py`.
 
 Run focused offline checks from the ChatTFT root:
 

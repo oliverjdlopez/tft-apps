@@ -16,11 +16,7 @@ from domain.assistants.registry import AssistantRegistry, assistant_registry
 from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import AssistantSpec
 from domain.assistants.token_logging import log_agent_graph
-from domain.assistants.utils import (
-    instruction_callback,
-    invocation_input,
-    record_instructions,
-)
+from domain.assistants.utils import instruction_callback, invocation_input
 from domain.runtime.activity import ActivityRunHooks, finalize_activity
 from domain.runtime.models import AssistantRunContext, RuntimeSettings
 from domain.tools.evidence.models import EvidenceStore
@@ -41,7 +37,6 @@ class Assistant:
         registry: AssistantRegistry | None = None,
         model: object | None = None,
         output_type: type[Any] | None = None,
-        base_instructions_by_name: Mapping[str, str] | None = None,
         set_number: int | None = None,
         surface: str = "assistant",
     ) -> None:
@@ -52,8 +47,6 @@ class Assistant:
             registry: Optional isolated registry, including captured definitions.
             model: Optional request model propagated through all handoffs.
             output_type: Optional structured output contract for the root.
-            base_instructions_by_name: Durable prompt replacements; callbacks,
-                access rules, task wrappers, and model settings remain active.
             set_number: TFT set override; omission uses application configuration.
             surface: Execution surface recorded in the invocation context.
         """
@@ -63,9 +56,7 @@ class Assistant:
 
             configure_tools(assistant_registry)
             registry = assistant_registry
-        self._registry = registry.snapshot(
-            base_instructions_by_name=base_instructions_by_name
-        )
+        self._registry = registry.snapshot()
         self.name = name
         self.spec = self._registry.get_spec(name)
         self.model = model
@@ -79,22 +70,6 @@ class Assistant:
             for key in self._registry.list_assistants()
         }
         self._registry.resolved_models = dict(self._resolved_models)
-
-    @classmethod
-    def from_capture(cls, graph: dict[str, Any], name: str, **kwargs: Any) -> Assistant:
-        """Restore a verified graph for draft trials or frozen experiments.
-
-        Args:
-            graph: Versioned captured definitions and their immutable hash.
-            name: Root assistant in the capture.
-            **kwargs: Instance settings accepted by the constructor.
-
-        Returns:
-            An assistant isolated from the application's active definitions.
-        """
-        from domain.assistants.capture import registry_from_capture
-
-        return cls(name, registry=registry_from_capture(graph), **kwargs)
 
     @classmethod
     def names(cls) -> list[str]:
@@ -183,7 +158,6 @@ class Assistant:
         system: str | None = None,
         request_id: str | None = None,
         timing: dict[str, Any] | None = None,
-        record: bool = False,
     ) -> AssistantInvocation:
         """Load the resource catalogue and create an independent SDK invocation.
 
@@ -192,7 +166,6 @@ class Assistant:
             system: Optional caller prefix rendered only for the root.
             request_id: Optional caller identity; omission generates a fresh ID.
             timing: Optional request timing record shared with callbacks.
-            record: Whether to retain actual instructions and model settings.
 
         Returns:
             Agent, wrapped input, typed context, hooks, and optional provenance.
@@ -218,10 +191,7 @@ class Assistant:
             ),
             resources=resources, evidence=EvidenceStore(), timing=timing,
         )
-        invocation = AssistantInvocation(agent, run_input, context, ActivityRunHooks())
-        if record:
-            record_instructions(invocation)
-        return invocation
+        return AssistantInvocation(agent, run_input, context, ActivityRunHooks())
 
     async def run(
         self,

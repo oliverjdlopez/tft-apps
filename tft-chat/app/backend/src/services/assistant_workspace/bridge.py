@@ -31,7 +31,7 @@ def request(workspace, method: str, path: str, payload: dict | None = None) -> d
 
 def datasets(workspace, name: str) -> dict:
     """Offer only registered live workflows reachable in the active/draft graph."""
-    from domain.assistants.capture import registry_from_files
+    from devtools.assistants import registry_from_files
     active = workspace.active()
     head = workspace.store.head(name)
     draft = registry_from_files({**active.source_files, name: head['files']}) if head and workspace.validate(name, head['files'])['valid'] else active

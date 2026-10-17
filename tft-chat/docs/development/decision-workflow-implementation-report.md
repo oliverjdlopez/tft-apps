@@ -86,7 +86,7 @@ The final version uses the `Assistant` execution architecture introduced by the 
 ```mermaid
 flowchart TD
     C[Chat service] --> A[Assistant.prepare]
-    E[Captured evaluation] --> F[Assistant.from_capture]
+    E[Captured evaluation] --> F[Development capture adapter]
     F --> A
     A --> G[Build graph from captured definitions]
     G --> U[Find eligible recipients and union their skill permissions]
@@ -98,7 +98,7 @@ flowchart TD
     M --> I
 ```
 
-In chat, `services/chat_service.py::stream_chat` constructs `Assistant`, calls `prepare`, emits the selected resources, and passes the invocation's context and hooks to `Runner.run_streamed`. In evaluations, `evals/worker.py::run_assistant` dispatches through `run_captured`; `evals/assistant_execution.py::execute_captured` restores the captured graph, applies candidate prompts, calls `Assistant.prepare(record=True)`, and executes with the prepared state. The integration does not replace either service path with a separate assembler.
+In chat, `services/chat_service.py::stream_chat` constructs `Assistant`, calls `prepare`, emits the selected resources, and passes the invocation's context and hooks to `Runner.run_streamed`. In evaluations, `evals/worker.py::run_assistant` dispatches through `run_captured`; `evals/assistant_execution.py::execute_captured` uses `devtools.assistants` to restore the graph, apply prompt candidates, attach recording, and then execute through ordinary `Assistant.prepare()`. The integration does not replace the application runtime with a separate assembler.
 
 `Assistant.prepare` traverses the graph it has actually built from its private definition snapshot. It selects skills from the union of reachable eligible recipients' allowlists. If any eligible recipient has unrestricted access, the discoverable pool remains available. Otherwise the provider receives the bounded name union, preventing unreachable or disallowed skills from taking selector slots. Each assistant's rendering boundary applies its own permissions again.
 

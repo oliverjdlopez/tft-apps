@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from domain.assistants.capture import capture, registry_from_files
+from devtools.assistants import capture, registry_from_files
 from services.assistant_workspace.workspace import ConflictError, Workspace
 from services import spec_service
 

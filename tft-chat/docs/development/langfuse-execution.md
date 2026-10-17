@@ -33,8 +33,8 @@ The [Specs workspace](assistant-workspace.md) owns edit/save/try/compare/apply.
 Fresh assistant experiments capture current repository definitions for every
 dataset schema. Each variant retains prompts, model defaults, handoffs, tool
 access, and resource permissions. Specs comparisons supply their exact Active and
-Draft captures. Execution verifies captures before dispatch and uses
-`Assistant.from_capture(...).prepare(..., record=True)` through
+Draft captures. Execution verifies captures before dispatch, adapts them through
+`devtools.assistants`, and uses the ordinary runtime preparation path through
 `evals/assistant_execution.py`; there is no static prompt-only worker path.
 
 `evals.assistant_execution.current_execution` freezes repository graphs for

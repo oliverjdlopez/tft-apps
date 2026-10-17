@@ -20,27 +20,28 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
         SDK run result and actual instruction/resource provenance.
     """
     from agents import ModelSettings, RunConfig, Runner
-    from domain.assistants import Assistant
     from domain.runtime.activity import finalize_activity
+    from devtools.assistants import assistant_from_capture, record_invocation
 
     require_capture(config)
     lineage = config.get('workspace_lineage') or {}
     workspace_run = config.get('workspace_trial') or 'draft_revision' in lineage
     surface = config.get('surface') or ('specs' if workspace_run else 'eval')
     graph = config['captured_graph']
-    assistant = Assistant.from_capture(
+    assistant = assistant_from_capture(
         graph, config['assistant'], model=config.get('model'), surface=surface,
-        base_instructions_by_name={
+        prompt_candidates={
             name: candidate['text']
             for name, candidate in config.get('prompt_candidates', {}).items()
         },
     )
-    invocation = await assistant.prepare(config.get('messages') or prompt, record=True)
+    invocation = await assistant.prepare(config.get('messages') or prompt)
+    recording = record_invocation(invocation)
     context = invocation.context
     resources = context.resources
     agent = invocation.agent
-    instructions = invocation.instructions
-    model_settings = invocation.model_settings
+    instructions = recording.instructions
+    model_settings = recording.model_settings
     metadata = {'assembled_instructions': instructions, 'captured_graph_hash': graph['hash'],
         'model_settings': model_settings, 'resources': {},
         'runtime': {'set_number': context.runtime.set_number, 'root_assistant': assistant.name, 'surface': surface},
@@ -84,7 +85,7 @@ def require_capture(config: dict[str, Any]) -> AssistantRegistry:
     Raises:
         ValueError: If the graph is absent or candidate targets are invalid.
     """
-    from domain.assistants.capture import registry_from_capture
+    from devtools.assistants import registry_from_capture
 
     if not config.get('captured_graph'):
         raise ValueError('Live assistant execution requires a captured graph; export a fresh bundle before running it.')
@@ -128,8 +129,8 @@ def current_execution(suite: dict, variants: list[dict]) -> dict:
         Versioned execution graphs and repository lineage metadata.
     """
     from copy import deepcopy
-    from domain.assistants.capture import capture, registry_from_files
     from domain.assistants.specs import ASSISTANT_SPECS_DIR, ROOT_DIR
+    from devtools.assistants import capture, registry_from_files
     from services.assistant_workspace.workspace import Workspace
     workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)
     registry = registry_from_files(workspace.source_files())

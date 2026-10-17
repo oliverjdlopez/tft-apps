@@ -14,8 +14,9 @@ metadata comes from an `Assistant` instance (`spec`, `tools`, `tool_names`,
 Invocation construction imports implementation dependencies directly, without
 importing the package facade. `domain.assistants.utils.configure_tools(registry)`
 wires isolated registries to the tool catalogue, and `AssistantRegistry` owns
-handoff traversal and validation. Captured code that needs a registry uses the
-explicit `registry_from_capture` loader; execution uses `Assistant.from_capture`.
+handoff traversal and validation. `devtools.assistants` owns captured definitions,
+prompt candidates, and instruction recording; it constructs an ordinary runtime
+`Assistant` after adapting those development inputs.
 
 ## Assistant specifications
 
@@ -167,17 +168,14 @@ caller-owned messages. `run_sync` rejects active event loops with guidance to
 await `run`. Completed or failed ordinary runs finalize unfinished activity;
 streaming consumers retain cancellation and cleanup ownership.
 
-`Assistant.from_capture(graph, name)` verifies a captured graph and retains
-its model defaults independently of active repository definitions. Optional
-`base_instructions_by_name` replaces durable prompt text in the private snapshot
-while preserving task wrappers, models, handoffs, tools, context policy, and
-skill access. Resource access uses that same snapshot.
-`prepare(record=True)` retains actual model-facing instructions and model settings
-in the returned `AssistantInvocation`, including evidence from failed execution.
-Chat does not enable instruction recording.
+`devtools.assistants.assistant_from_capture` verifies a captured graph, applies
+optional prompt candidates to immutable specifications, and constructs a normal
+runtime `Assistant`. `record_invocation` transparently records actual model-facing
+instructions and model settings in a development-owned record. The runtime
+`AssistantInvocation` contains only execution state.
 
 Live assistant evaluations and Playground requests require captured graphs and use
-`Assistant.from_capture(...).prepare(..., record=True)`. Fresh exports capture
+the development adapter followed by ordinary `Assistant.prepare()`. Fresh exports capture
 repository definitions for every live assistant dataset format. Historical bundles
 without captures remain readable; execution rejects them before dispatch and asks
 for a fresh export. Historical selector benchmarks remain available offline; their live model
@@ -194,9 +192,9 @@ Fresh handoff agents retain the request's model choice, preventing an
 Anthropic-backed chat request from silently switching providers during a
 handoff.
 
-Prompt candidates use `base_instructions_by_name`, replacing durable text while
-retaining callbacks and access policy. Raw instruction overrides are no longer
-part of graph construction. Construction-time token diagnostics
+Prompt candidates are applied by `devtools.assistants` before runtime construction,
+retaining callbacks and access policy. Raw instruction overrides are not part of
+the runtime graph API. Construction-time token diagnostics
 mark dynamic instruction counts and their combined static total as unresolved
 (`null`), rather than counting a callback representation. Static counts remain
 unchanged.
@@ -236,8 +234,8 @@ uv run --extra evals chat-tft-evals validate
 Live evals additionally require model credentials and, for data-backed cases,
 an evaluation database. Langfuse owns evaluation datasets, prompt candidates,
 experiment comparisons, and annotations. Captured experiments and Specs trials
-execute through `Assistant.from_capture`
-and `prepare(record=True)`, preserving dynamic context and skill restrictions.
+adapt frozen definitions through `devtools.assistants`, then use ordinary runtime
+preparation while preserving dynamic context and skill restrictions.
 Historical bundles without captured execution remain readable but cannot run;
 export a fresh captured bundle to execute their dataset.
 Candidates never change normal conversations. Suite discovery reads the exported
@@ -249,7 +247,7 @@ local catalog and works when Langfuse is stopped. See
 The [assistant workspace](../development/assistant-workspace.md) separates saved
 drafts from active repository behavior. `AssistantRegistry` can be constructed from
 immutable specs, captured per invocation, and installed as a complete snapshot.
-`domain/assistants/capture.py` validates full graphs and freezes model defaults.
+`devtools/assistants/capture.py` validates full graphs and freezes model defaults.
 Captured worker execution threads this isolated registry through graph building,
 task wrapping, resource discovery and reads, and instruction callbacks. Typed invocation
 context, per-assistant access policy, activity, and evidence handling use the normal

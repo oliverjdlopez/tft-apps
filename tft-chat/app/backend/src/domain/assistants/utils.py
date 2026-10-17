@@ -13,7 +13,6 @@ if TYPE_CHECKING:
     from agents import Agent, RunContextWrapper
 
     from domain.assistants.specs import AssistantSpec
-    from domain.assistants.models import AssistantInvocation
 
 
 # ---------------------------------------------------------------------------
@@ -122,8 +121,7 @@ def instruction_callback(
 # ---------------------------------------------------------------------------
 # Assistant consumer preparation
 #
-# Conversation copying and provenance recording belong to the prepared run,
-# independent of HTTP transports and evaluation result serialization.
+# Conversation copying belongs to the prepared run independently of transports.
 # ---------------------------------------------------------------------------
 
 
@@ -165,52 +163,6 @@ def wrap_task_input(input_text: str, task_prompt: str) -> str:
     if not task_prompt.strip():
         return input_text
     return f"{task_prompt.strip()}\n\n## Input\n\n{input_text}".strip()
-
-
-def record_instructions(invocation: AssistantInvocation) -> None:
-    """Record actual model-facing instructions on one prepared graph.
-
-    Args:
-        invocation: Fresh invocation receiving instruction and model provenance.
-    """
-    from domain.assistants.token_logging import agent_model_name
-
-    seen: set[int] = set()
-
-    def visit(agent: Agent[Any]) -> None:
-        """Wrap each graph object once, retaining its own bound callback.
-
-        Args:
-            agent: Root or handoff whose model calls should be recorded.
-        """
-        if id(agent) in seen:
-            return
-        seen.add(id(agent))
-        invocation.model_settings[agent.name] = {
-            "model": agent_model_name(agent),
-            "settings": agent.model_settings.to_json_dict(),
-        }
-        callback = agent.instructions
-
-        def render(wrapper: RunContextWrapper[Any], target: Agent[Any]) -> str:
-            """Capture text after this target's dynamic rendering policy.
-
-            Args:
-                wrapper: SDK wrapper containing the invocation context.
-                target: Agent requesting model instructions.
-
-            Returns:
-                The original rendered text, unchanged for model execution.
-            """
-            text = callback(wrapper, target) if callable(callback) else callback
-            invocation.instructions[target.name] = text
-            return text
-
-        agent.instructions = render
-        for child in agent.handoffs:
-            visit(child)
-
-    visit(invocation.agent)
 
 
 # ---------------------------------------------------------------------------

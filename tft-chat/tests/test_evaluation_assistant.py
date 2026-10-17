@@ -5,8 +5,8 @@ from types import SimpleNamespace
 import pytest
 from agents import RunContextWrapper
 
-from domain.assistants.capture import capture, registry_from_files
 from domain.runtime.models import AssistantRunContext, ToolActivity
+from devtools.assistants import capture, registry_from_files
 from evals.assistant_execution import execute_captured
 
 

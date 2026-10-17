@@ -117,9 +117,17 @@ def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
 
 def test_durable_overrides_retain_dynamic_callbacks() -> None:
     """Replacing prompts preserves runtime instruction policy on every agent."""
-    agent = Assistant('chat', base_instructions_by_name={
-        'chat': 'ROOT INSTRUCTIONS', 'data_analyst': 'ANALYST INSTRUCTIONS',
-    }).build_agent()
+    from devtools.assistants import assistant_from_registry
+
+    source = Assistant('chat')._registry
+    agent = assistant_from_registry(
+        source,
+        'chat',
+        prompt_candidates={
+            'chat': 'ROOT INSTRUCTIONS',
+            'data_analyst': 'ANALYST INSTRUCTIONS',
+        },
+    ).build_agent()
     from agents import RunContextWrapper
     assert callable(agent.instructions)
     assert agent.instructions(RunContextWrapper(None), agent) == 'ROOT INSTRUCTIONS'

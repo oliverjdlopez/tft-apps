@@ -33,7 +33,7 @@ def app_rds(monkeypatch):
 def test_captured_worker_uses_resolved_eval_fallback(app_rds, mode):
     """Captured executions inherit missing fields and preserve explicit values."""
     import evals.assistant_execution as captured_execution
-    from domain.assistants.capture import capture, registry_from_files
+    from devtools.assistants import capture, registry_from_files
 
     if mode == "blank":
         for name in ("HOST", "PORT", "ADMIN", "DB", "PASSWORD", "INSTANCE_ID"):

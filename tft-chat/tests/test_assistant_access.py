@@ -69,7 +69,7 @@ def test_playbook_access_is_independent_of_skills(tmp_path):
 
 def test_workspace_configuration_accepts_and_captures_playbooks():
     """Draft validation and graph serialization retain independent guide access."""
-    from domain.assistants.capture import capture, registry_from_capture, registry_from_files
+    from devtools.assistants import capture, registry_from_capture, registry_from_files
     source = registry_from_files({'fixture': {
         'system.md': 'Use the specific guide when relevant.',
         'agent.json': json.dumps({'tools': {'groups': ['context']},

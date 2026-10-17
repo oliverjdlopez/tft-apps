@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
-from dataclasses import replace
+from collections.abc import Callable
 from typing import Any
 import threading
 
@@ -29,30 +28,15 @@ class AssistantRegistry:
         if specs is not None:
             self.source_files: dict[str, dict[str, str]] = {}
 
-    def snapshot(
-        self, *, base_instructions_by_name: Mapping[str, str] | None = None
-    ) -> AssistantRegistry:
-        """Capture definitions and optional durable prompt replacements.
-
-        Args:
-            base_instructions_by_name: Prompt text overrides that retain each
-                specification's configuration and dynamic rendering policy.
+    def snapshot(self) -> AssistantRegistry:
+        """Capture definitions and configured runtime dependencies.
 
         Returns:
             An independent registry retaining tools and captured model defaults.
 
-        Raises:
-            KeyError: If a prompt override names an unregistered assistant.
         """
-        overrides = dict(base_instructions_by_name or {})
         with self._snapshot_lock:
-            for name in overrides:
-                self.get_spec(name)
-            registry = AssistantRegistry([
-                replace(spec, system_prompt=overrides[spec.name])
-                if spec.name in overrides else spec
-                for spec in self._specs.values()
-            ])
+            registry = AssistantRegistry(list(self._specs.values()))
             registry.source_files = {name: dict(files) for name, files in self.source_files.items()}
             registry.resolved_models = dict(self.resolved_models)
         registry._get_tool = self._get_tool

@@ -140,7 +140,7 @@ def publish_graph_prompts(client, graph: dict) -> dict:
     Returns:
         Prompt text and exact remote version for every captured assistant.
     """
-    from domain.assistants.capture import digest
+    from devtools.assistants import digest
     from .utils import is_not_found, resolved_prompt
 
     result = {}
