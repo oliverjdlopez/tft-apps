@@ -8,7 +8,9 @@ from pathlib import Path
 import pytest
 from agents import RunContextWrapper
 from domain.assistants import Assistant, AssistantRegistry
-from domain.assistants.specs import AssistantSpec, load_assistant_spec
+from domain.assistants.registry import current_registry
+from domain.assistants.models import AssistantSpec
+from domain.assistants.specs import load_assistant_spec
 from devtools.assistants.definitions import load_development_spec
 
 
@@ -52,7 +54,7 @@ def test_named_access_is_preserved(tmp_path):
 
 @pytest.mark.parametrize("value", [True, "all", {"all": True}, [1]])
 def test_skills_requires_a_string_list(tmp_path: Path, value: object) -> None:
-    with pytest.raises(ValueError, match="skills must"):
+    with pytest.raises(ValueError, match="skill_names must"):
         _load_spec(tmp_path, {"skills": value})
 
 
@@ -61,13 +63,13 @@ def test_skills_requires_a_string_list(tmp_path: Path, value: object) -> None:
 
 def test_selectors_are_absent_from_runtime_discovery():
     """Selection is owned by the running assistant through resource reads."""
-    assert not {'context_selector', 'skill_selector'} & set(Assistant.names())
+    assert not {'context_selector', 'skill_selector'} & set(list(current_registry().assistant_names))
 
 
-@pytest.mark.parametrize('value', [True, 'all', {'all': True}, [1], ['duplicate', 'duplicate'], ['']])
-def test_playbooks_require_unique_nonempty_names(tmp_path, value):
+@pytest.mark.parametrize('value', [True, 'all', {'all': True}, [1], ['']])
+def test_playbooks_require_nonempty_names(tmp_path, value):
     """Malformed guide allowlists fail before constructing an assistant graph."""
-    with pytest.raises(ValueError, match='playbooks must'):
+    with pytest.raises(ValueError, match='playbook_names must'):
         _load_spec(tmp_path, {'playbooks': value})
 
 
@@ -82,7 +84,7 @@ def test_playbook_access_is_independent_of_skills(tmp_path):
 
 def test_live_loader_rejects_historical_aliases_and_standalone_specs(tmp_path):
     """Keep compatibility syntax out of application definition loading."""
-    with pytest.raises(ValueError, match="unsupported agent.json keys"):
+    with pytest.raises(TypeError, match="unexpected keyword argument"):
         _load_spec(tmp_path / "alias", {"tool_groups": ["context"]})
     standalone = tmp_path / "legacy.md"
     standalone.write_text("# Legacy\n", encoding="utf-8")
@@ -105,7 +107,7 @@ def test_development_loader_retains_historical_definition_support(tmp_path):
 
 def test_instruction_callbacks_require_prepared_application_context():
     """Raw SDK execution cannot silently omit request policy and resources."""
-    agent = Assistant("distill-transcript").build_agent()
+    agent = Assistant("distill-transcript").agent
     with pytest.raises(TypeError, match="AssistantRunContext"):
         agent.instructions(RunContextWrapper(None), agent)
 

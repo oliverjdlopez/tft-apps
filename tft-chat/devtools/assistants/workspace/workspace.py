@@ -9,7 +9,7 @@ import time
 import uuid
 from threading import RLock
 
-from domain.assistants.active import ActiveAssistantRegistry, active_assistant_registry
+from domain.assistants import registry as runtime
 from devtools.assistants import (
     AssistantDefinitions,
     EDITABLE_FILES,
@@ -55,12 +55,12 @@ class DefinitionsPublisher:
     def __init__(
         self,
         definitions: AssistantDefinitions | None = None,
-        runtime: ActiveAssistantRegistry | None = None,
+        publish_runtime: bool = False,
     ) -> None:
         """Create an isolated or application-connected publication point."""
         self._lock = RLock()
         self._definitions = definitions.snapshot() if definitions else None
-        self._runtime = runtime
+        self._publish_runtime = publish_runtime
 
     def current(self, specs: Path) -> AssistantDefinitions:
         """Return the published development definitions, initializing lazily."""
@@ -73,15 +73,16 @@ class DefinitionsPublisher:
     def publish(self, definitions: AssistantDefinitions) -> None:
         """Publish complete development and runtime snapshots atomically."""
         candidate = definitions.snapshot()
-        candidate.registry.validate()
-        if self._runtime is not None:
-            self._runtime.publish(candidate.registry)
         with self._lock:
+            # Construction already validated the whole graph. Replace one reference
+            # so requests that captured the old registry retain consistent metadata.
+            if self._publish_runtime:
+                runtime.registry = candidate.registry
             self._definitions = candidate
 
 
 published_assistant_definitions = DefinitionsPublisher(
-    runtime=active_assistant_registry
+    publish_runtime=True
 )
 
 
@@ -209,8 +210,8 @@ class Workspace:
             raise ValueError('Save a draft before testing or applying')
         draft = registry_from_files({**active.source_files, name: head['files']})
         names = sorted(
-            set(active.registry.list_reachable_assistant_names(entry))
-            | set(draft.registry.list_reachable_assistant_names(entry))
+            set(active.registry.reachable_assistant_names[entry])
+            | set(draft.registry.reachable_assistant_names[entry])
         )
         if name not in names:
             raise ValueError('The edited assistant is not reachable from this workflow')

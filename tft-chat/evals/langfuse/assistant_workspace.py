@@ -84,8 +84,8 @@ def submit_comparison(service, body: ComparisonRequest) -> dict:
             if body.lineage.get('active_graph_hash') != body.active_graph['hash'] or body.lineage.get('draft_graph_hash') != body.draft_graph['hash']:
                 raise ValueError('Graph lineage does not match captured definitions')
             if name not in (
-                set(active.list_reachable_assistant_names(selected['assistant']))
-                | set(draft.list_reachable_assistant_names(selected['assistant']))
+                set(active.reachable_assistant_names[selected['assistant']])
+                | set(draft.reachable_assistant_names[selected['assistant']])
             ):
                 raise ValueError('Edited assistant is unreachable from this workflow')
             if set(body.active_graph['specs']) != set(body.draft_graph['specs']) or any(

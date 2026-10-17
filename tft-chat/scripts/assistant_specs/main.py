@@ -25,8 +25,7 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
     Returns:
         Created identity and source path.
     """
-    from domain.assistants import AssistantRegistry
-    from domain.assistants.utils import configure_tools
+    from domain.assistants.utils import resolve_tools
     from devtools.assistants.definitions import load_development_spec
 
     validate_name(name)
@@ -82,9 +81,7 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
         missing = set(spec.handoff_names) - set(specs)
         if missing:
             raise ValueError(f"Unknown handoff targets: {sorted(missing)}")
-        registry = AssistantRegistry([spec])
-        configure_tools(registry)
-        registry.resolve_tools(spec)
+        resolve_tools(spec)
         candidate.rename(destination)
     return {"created": name, "path": str(destination)}
 

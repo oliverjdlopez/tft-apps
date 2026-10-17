@@ -10,8 +10,7 @@ import tempfile
 from typing import Any
 
 from domain.assistants.registry import AssistantRegistry
-from domain.assistants.specs import AssistantSpec
-from domain.assistants.utils import configure_tools
+from domain.assistants.models import AssistantSpec
 from devtools.assistants.definitions import load_development_spec
 
 EDITABLE_FILES = ("system.md", "agent.json", "task.md")
@@ -28,7 +27,7 @@ class AssistantDefinitions:
     def snapshot(self) -> AssistantDefinitions:
         """Return an isolated copy for conflict checks and runtime construction."""
         return AssistantDefinitions(
-            registry=self.registry.snapshot(),
+            registry=self.registry,
             source_files={
                 name: dict(documents)
                 for name, documents in self.source_files.items()
@@ -134,8 +133,6 @@ def registry_from_files(files: dict[str, dict[str, str]]) -> AssistantDefinition
                 )
             )
     registry = AssistantRegistry(specs)
-    configure_tools(registry)
-    registry.validate()
     return AssistantDefinitions(
         registry=registry,
         source_files={name: dict(documents) for name, documents in files.items()},
@@ -157,7 +154,7 @@ def capture(
         if isinstance(definitions, AssistantDefinitions)
         else {}
     )
-    selected = names or registry.list_assistants()
+    selected = names or list(registry.assistant_names)
     specs = {
         name: {
             **asdict(registry.get_spec(name)),
@@ -184,22 +181,11 @@ def registry_from_capture(graph: dict) -> AssistantDefinitions:
         }
         # Captures created before playbooks must not gain a new capability.
         config.setdefault("playbook_names", ())
-        for key in (
-            "tool_group_keys",
-            "tool_names",
-            "handoff_names",
-            "skill_names",
-            "playbook_names",
-        ):
-            if config.get(key) is not None:
-                config[key] = tuple(config[key])
         spec = AssistantSpec(**config)
         if name != spec.name or not definition.get("resolved_model"):
             raise ValueError("Invalid captured assistant identity or model")
         specs.append(spec)
     registry = AssistantRegistry(specs)
-    configure_tools(registry)
-    registry.validate()
     return AssistantDefinitions(
         registry=registry,
         resolved_models={

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from domain.assistants import Assistant
+from domain.assistants import BaseAssistant
 from domain.assistants.constants import AssistantName
 
 
@@ -21,7 +21,7 @@ def run_transcription_pipeline(input_text: str = "") -> str:
     Returns:
         Compact Markdown reference notes grounded in the supplied source.
     """
-    result = Assistant(AssistantName.DISTILL_TRANSCRIPT, surface="task").run_sync(input_text)
+    result = BaseAssistant(AssistantName.DISTILL_TRANSCRIPT, surface="task").run_sync(input_text)
     return str(result.final_output)
 
 

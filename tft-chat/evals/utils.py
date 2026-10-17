@@ -633,16 +633,17 @@ def isolated_operation(payload: dict[str, Any], timeout: float) -> dict[str, Any
 
 def validate_registry_references(assistant: str, cases: list[dict[str, Any]]) -> None:
     """Check positive assertions against the current registered assistant graph."""
-    from domain.assistants import Assistant
+    from domain.assistants.registry import current_registry
 
+    registry = current_registry()
     try:
-        root = Assistant(assistant)
+        registry.get_spec(assistant)
     except KeyError:
         raise ValueError(f"live eval targets unknown assistant {assistant!r}") from None
 
-    reachable_assistants = set(root.reachable_assistant_names)
+    reachable_assistants = set(registry.reachable_assistant_names[assistant])
     handoff_targets = reachable_assistants - {assistant}
-    reachable_tools = set(root.reachable_tool_names)
+    reachable_tools = set(registry.reachable_tool_names[assistant])
     for case in cases:
         for check in [a["check"] for a in case["expected_output"]["assertions"] if a["kind"] == "trace"]:
             check_type = str(check["type"])

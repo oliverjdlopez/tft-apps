@@ -20,6 +20,7 @@ from domain.assistants import (
     Assistant,
 )
 from domain.assistants.constants import AssistantName
+from domain.assistants.registry import current_registry
 from domain.runtime.activity import finalize_activity
 from domain.model_catalog import chat_model_specs
 from domain.tools import list_tool_group_metadata, list_tool_metadata
@@ -69,15 +70,18 @@ async def stream_chat(
     """
     config = load_config()
     request_label = request_id or "unknown"
+    # Use one definition snapshot for execution and its UI/trace metadata.
+    registry = current_registry()
     assistant = Assistant(
-        assistant_name, model=model, set_number=config.chat.set_number, surface="chat",
+        assistant_name, registry=registry, model=model,
+        set_number=config.chat.set_number, surface="chat",
     )
     invocation = await assistant.prepare(
         messages, system=system, request_id=request_label, timing=timing,
     )
     run_context = invocation.context
     resources = run_context.resources
-    reachable_tool_names = assistant.reachable_tool_names
+    reachable_tool_names = list(registry.reachable_tool_names[assistant_name])
     setup_started = time.perf_counter()
     tools_by_name = {
         tool["name"]: tool for tool in list_tool_metadata(reachable_tool_names)
@@ -91,7 +95,7 @@ async def stream_chat(
             "model": model_name,
             "message_count": str(len(messages)),
             "direct_tool_names": ",".join(
-                assistant.tool_names
+                registry.tool_names[assistant_name]
             ),
             "tool_names": ",".join(reachable_tool_names),
             "tool_group_names": ",".join(
@@ -227,7 +231,7 @@ def resolve_chat_assistant(header_value: str | None) -> str:
     if not assistant_name:
         raise LookupError("X-Chat-Assistant must name a registered assistant.")
     try:
-        Assistant(assistant_name)
+        current_registry().get_spec(assistant_name)
     except KeyError:
         raise LookupError(
             f"Unknown chat assistant {assistant_name!r}."
@@ -248,14 +252,14 @@ def chat_config(
     """
     config = load_config()
     model_specs = chat_model_specs(config)
-    assistant = Assistant(CHAT_ASSISTANT_NAME)
-    tool_names = assistant.reachable_tool_names
+    registry = current_registry()
+    tool_names = list(registry.reachable_tool_names[CHAT_ASSISTANT_NAME])
     tools = list_tool_metadata(tool_names)
     return {
         "composition_workbench": config.chat.composition_workbench,
         "flowchart_source": config.chat.flowchart_source,
         "default_assistant": CHAT_ASSISTANT_NAME,
-        "assistants": Assistant.names(),
+        "assistants": list(registry.assistant_names),
         "default_model": config.models.openai_model,
         "models": [
             {

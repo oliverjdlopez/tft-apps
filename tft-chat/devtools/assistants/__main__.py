@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 
 from domain.assistants import Assistant
+from domain.assistants.registry import current_registry
 from domain.assistants.constants import AssistantName
 
 
@@ -17,7 +18,7 @@ def main() -> None:
         "assistant",
         nargs="?",
         default=AssistantName.DISTILL_TRANSCRIPT,
-        choices=Assistant.names(),
+        choices=list(current_registry().assistant_names),
         help="Assistant to run.",
     )
     input_group = parser.add_mutually_exclusive_group()

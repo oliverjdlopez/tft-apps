@@ -168,8 +168,8 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captur
         if candidates - captured_names:
             raise ValueError('Prompt candidates target uncaptured assistants')
         return
-    from domain.assistants.active import active_assistant_registry
-    registry = active_assistant_registry.current()
+    from domain.assistants.registry import current_registry
+    registry = current_registry()
     reachable = set()
     pending = [assistant]
     while pending:
@@ -177,7 +177,7 @@ def validate_frozen_config(config: dict[str, Any], suite: dict[str, Any], captur
         if current in reachable:
             continue
         reachable.add(current)
-        pending.extend(registry.get_handoff_names(current))
+        pending.extend(registry.handoff_names[current])
     if candidates - reachable:
         raise ValueError(f"Prompt candidates target unreachable assistants: {sorted(candidates - reachable)}")
 
@@ -333,13 +333,10 @@ def host_runner_ready(root: Path) -> bool:
 
 
 def playground_assistants() -> list[str]:
-    """List runnable Playground targets, excluding legacy-discovered router docs."""
-    from domain.assistants import Assistant
+    """List Playground targets from loaded definitions without building agents."""
+    from domain.assistants.registry import current_registry
 
-    # The legacy markdown discoverer also sees AGENTS.md; it is repository
-    # guidance, never an executable prompt or a useful default for the editor.
-    names = [name for name in Assistant.names()
-             if Path(Assistant(name).spec.path).name.lower() != "agents.md"]
+    names = list(current_registry().assistant_names)
     return sorted(names, key=lambda name: (name != AssistantName.CHAT, name))
 
 

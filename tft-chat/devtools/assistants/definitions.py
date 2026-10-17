@@ -8,7 +8,7 @@ from typing import Any
 
 from common.parsers import first_markdown_heading, parse_frontmatter, parse_string_list
 from common.paths import find_repo_root
-from domain.assistants.specs import AssistantSpec
+from domain.assistants.models import AssistantSpec
 
 
 ROOT_DIR = find_repo_root()
@@ -96,23 +96,6 @@ def _read_context_policy(config: dict[str, Any]) -> bool:
     return bool(context.get("repository"))
 
 
-def _read_instruction_access(
-    config: dict[str, Any], key: str,
-) -> tuple[str, ...] | None:
-    """Read an optional package allowlist from saved definitions."""
-    if key not in config:
-        return None
-    raw_names = config[key]
-    if not isinstance(raw_names, list) or any(
-        not isinstance(name, str) or not name.strip() for name in raw_names
-    ):
-        raise ValueError(f"{key} must be a list of non-empty strings")
-    names = tuple(name.strip() for name in raw_names)
-    if len(names) != len(set(names)):
-        raise ValueError(f"{key} must not contain duplicate names")
-    return names
-
-
 def load_development_spec(
     path: Path, *, root_dir: Path = ROOT_DIR,
 ) -> AssistantSpec:
@@ -167,8 +150,8 @@ def load_development_spec(
         "tool_names": tool_names,
         "handoff_names": _read_handoffs(config, metadata),
         "repository_context": _read_context_policy(config),
-        "skill_names": _read_instruction_access(config, "skills"),
-        "playbook_names": _read_instruction_access(config, "playbooks"),
+        "skill_names": config.get("skills"),
+        "playbook_names": config.get("playbooks"),
     }
     model = config.get("model") or metadata.get("model")
     reasoning = config.get("reasoning") or metadata.get("reasoning")

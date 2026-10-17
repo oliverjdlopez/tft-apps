@@ -1,135 +1,24 @@
-"""Implementation helpers for assistant invocation assembly."""
+"""Implementation helpers for assistant execution and tool resolution."""
 
 from __future__ import annotations
 
-import time
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from domain.assistants.constants import AssistantName
-from domain.runtime.models import AssistantRunContext, PreparedResources
 
 if TYPE_CHECKING:
-    from agents import Agent, RunContextWrapper
-
-    from domain.assistants.specs import AssistantSpec
+    from domain.assistants.models import AssistantSpec
 
 
-# ---------------------------------------------------------------------------
-# Runtime resource preparation and instruction rendering
+# -----------------------------------------------------------------------------
+# Assistant execution
 #
-# Descriptions support discovery; complete bodies remain in read tool results.
-# Instruction rendering never selects or injects resource contents.
-# ---------------------------------------------------------------------------
-
-def render_instruction_layers(
-    spec: AssistantSpec,
-    *,
-    resources: PreparedResources | None = None,
-    base_instructions: str | None = None,
-) -> str:
-    """Append only resource descriptions; full bodies require a read tool call.
-
-    Args:
-        spec: Target specification whose frozen resource access applies.
-        resources: Invocation-local resource catalogue and permissions.
-        base_instructions: Optional durable prompt replacement.
-
-    Returns:
-        Durable instructions followed by the permitted resource catalogue.
-    """
-    from domain.assistants.resources import render_resource_directory
-
-    parts = [spec.system_prompt if base_instructions is None else base_instructions]
-    if resources is not None:
-        parts.append(render_resource_directory(resources, spec.name))
-    return "\n\n".join(part.strip() for part in parts if part.strip())
-
-
-def can_receive_instruction_resources(
-    spec: AssistantSpec,
-    configured_names: tuple[str, ...] | None,
-) -> bool:
-    """Apply graph-level eligibility before an instruction-resource allowlist.
-
-    Args:
-        spec: Assistant whose instructions are being rendered.
-        configured_names: Skill or playbook allowlist from the specification.
-
-    Returns:
-        Whether the assistant may receive that resource kind in this graph.
-    """
-    # `None` means unrestricted; an empty tuple explicitly denies this category.
-    # Chat remains a router even if its spec declares a broader allowlist.
-    return (
-        spec.name != AssistantName.CHAT
-        and configured_names != ()
-        and (spec.repository_context or bool(configured_names))
-    )
-
-
-def instruction_callback(
-    spec: AssistantSpec, *, root: bool
-) -> Callable[[RunContextWrapper[Any], Agent[Any]], str]:
-    """Bind an agent's specification without capturing invocation state.
-
-    Args:
-        spec: Specification snapshot belonging to this constructed agent.
-        root: Whether to apply the root-only caller system prefix.
-
-    Returns:
-        A synchronous SDK callback that renders only resource metadata.
-
-    Raises:
-        TypeError: If a caller bypasses application invocation preparation.
-    """
-    def render(
-        ctx: RunContextWrapper[Any],
-        agent: Agent[Any],
-    ) -> str:
-        """Render this target's instructions from its shared invocation context.
-
-        Args:
-            ctx: SDK wrapper around the application's explicit run context.
-            agent: SDK agent requesting instructions for its next model turn.
-
-        Returns:
-            Durable policy joined with this target's permitted request layers.
-        """
-        del agent
-        context = ctx.context
-        if not isinstance(context, AssistantRunContext):
-            raise TypeError("assistant instructions require AssistantRunContext")
-        started = time.perf_counter()
-        base_instructions = spec.system_prompt
-        if root and context.runtime.system:
-            base_instructions = f"{context.runtime.system}\n\n{base_instructions}"
-        instructions = render_instruction_layers(
-            spec, resources=context.resources, base_instructions=base_instructions,
-        )
-        if context.timing is not None:
-            # SDK callbacks can run on every model step, so this metric includes
-            # each render while catalogue loading happens once per invocation.
-            context.timing["instruction_assembly_ms"] = round(
-                context.timing.get("instruction_assembly_ms", 0.0)
-                + (time.perf_counter() - started) * 1000,
-                3,
-            )
-        return instructions
-
-    return render
-
-
-# ---------------------------------------------------------------------------
-# Assistant consumer preparation
-#
-# Conversation copying belongs to the prepared run independently of transports.
-# ---------------------------------------------------------------------------
-
+# Input assembly for an individual invocation.
+# -----------------------------------------------------------------------------
 
 def invocation_input(
     input: str | Sequence[Mapping[str, str]], task_prompt: str,
-) -> tuple[list[dict[str, str]], str | list[dict[str, str]]]:
+) -> str | list[dict[str, str]]:
     """Copy conversation history and prepare SDK input without modifying caller messages.
 
     Args:
@@ -137,19 +26,19 @@ def invocation_input(
         task_prompt: Root task wrapper, applied only to the latest user message.
 
     Returns:
-        Original copied messages and wrapped SDK input, respectively.
+        Wrapped text or a copied conversation with only its last user input wrapped.
     """
-    messages = ([{"role": "user", "content": input}] if isinstance(input, str) else [
+    if isinstance(input, str):
+        return wrap_task_input(input, task_prompt)
+    messages = [
         {"role": message["role"], "content": message["content"]}
         for message in input if message["role"] in {"user", "assistant"}
-    ])
-    run_messages = [dict(message) for message in messages]
-    if task_prompt.strip():
-        for message in reversed(run_messages):
-            if message["role"] == "user":
-                message["content"] = wrap_task_input(message["content"], task_prompt)
-                break
-    return messages, run_messages[0]["content"] if isinstance(input, str) else run_messages
+    ]
+    for message in reversed(messages):
+        if message["role"] == "user":
+            message["content"] = wrap_task_input(message["content"], task_prompt)
+            break
+    return messages
 
 
 def wrap_task_input(input_text: str, task_prompt: str) -> str:
@@ -167,25 +56,41 @@ def wrap_task_input(input_text: str, task_prompt: str) -> str:
     return f"{task_prompt.strip()}\n\n## Input\n\n{input_text}".strip()
 
 
-# ---------------------------------------------------------------------------
-# Assistant registry tool wiring
+# -----------------------------------------------------------------------------
+# Registry construction
 #
-# Callers provide the registry so invocation construction never imports its
-# public package facade, which re-exports the Assistant class.
-# ---------------------------------------------------------------------------
+# Resolve declared tool access once for each registered definition.
+# -----------------------------------------------------------------------------
 
-
-def configure_tools(registry) -> None:
-    """Connect an assistant registry to the public tool registry API.
+def resolve_tools(spec: AssistantSpec) -> list[Any]:
+    """Resolve an assistant specification to registered SDK tools.
 
     Args:
-        registry: Registry receiving the tool lookup operations.
+        spec: Assistant specification declaring tool names and groups.
+
+    Returns:
+        Deduplicated SDK tools in declared group and name order.
+
+    Raises:
+        KeyError: If a declared tool or tool group is not registered.
     """
+    # Import at use time: the context tool imports assistant resource reads.
     from domain.tools import get_tool, get_tool_group, list_tools, tool_name
 
-    registry.configure_tools(
-        get_tool=get_tool,
-        get_tool_group=get_tool_group,
-        list_tools=list_tools,
-        tool_name=tool_name,
-    )
+    if spec.include_all_tools:
+        return list_tools()
+
+    resolved: list[Any] = []
+    seen: set[str] = set()
+    for group_key in spec.tool_group_keys:
+        for grouped_tool in get_tool_group(group_key).list_tools():
+            name = tool_name(grouped_tool)
+            if name not in seen:
+                resolved.append(get_tool(name))
+                seen.add(name)
+    for name in spec.tool_names:
+        tool = get_tool(name)
+        if name not in seen:
+            resolved.append(tool)
+            seen.add(name)
+    return resolved

@@ -49,7 +49,10 @@ settings, context policy, and skill access. A checkout file lock serializes
 workspace writes. The durable `apply-journal.json` records original and replacement
 bytes before replacing files. Directory and file writes are fsynced. Only
 `system.md`, `agent.json`, and `task.md` are replaced; additional files survive.
-A complete registry snapshot is installed for new invocations. Previously
+The devtools-owned `DefinitionsPublisher` installs a complete registry for new
+invocations by replacing the runtime module's registry reference under the
+publisher lock. The registry constructor validates the graph and precomputes
+metadata; runtime assistants have no publication or reload API. Previously
 constructed graphs keep their captured definitions and callbacks.
 
 Workspace parsing is development-owned and can still normalize historical saved

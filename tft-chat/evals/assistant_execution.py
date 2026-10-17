@@ -91,7 +91,7 @@ def require_capture(config: dict[str, Any]) -> AssistantRegistry:
         raise ValueError('Live assistant execution requires a captured graph; export a fresh bundle before running it.')
     definitions = registry_from_capture(config['captured_graph'])
     names = set(
-        definitions.registry.list_reachable_assistant_names(config['assistant'])
+        definitions.registry.reachable_assistant_names[config['assistant']]
     )
     if set(config.get('prompt_candidates', {})) - names:
         raise ValueError('Prompt candidates target assistants outside the captured execution graph')
@@ -136,7 +136,7 @@ def current_execution(suite: dict, variants: list[dict]) -> dict:
     from devtools.assistants.workspace.workspace import Workspace
     workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)
     definitions = registry_from_files(workspace.source_files())
-    names = definitions.registry.list_reachable_assistant_names(suite['assistant'])
+    names = list(definitions.registry.reachable_assistant_names[suite['assistant']])
     graph = capture(definitions, names)
     return {'version': 1, 'graphs': {variant['name']: deepcopy(graph) for variant in variants},
             'lineage': {'origin': 'repository', 'active_graph_hash': graph['hash']}}

@@ -41,3 +41,5 @@ Most of the time, a "high" placement should be interpreted as a good palcement, 
 However, qualitative descriptors (good/bad, strong/weak, etc) will always assign a positive connotation 
 
 Confirm / decide on what we want to go with for relative delta definition. Should it be `placement(entity within cohort) - placement (entity outside of the cohort)` or `placement(entity within cohort) - placement(entity)` 
+
+Clarify that "builds" means loadouts, generically referring to best "items" means they want a list of top individual items.

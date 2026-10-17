@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 
 from domain.tasks import transcript
-from domain.assistants import Assistant
+from domain.assistants.registry import current_registry
 from domain.assistants.constants import AssistantName
 from domain.assistants.utils import wrap_task_input
 from services import task_service
@@ -21,7 +21,7 @@ def test_transcription_pipeline_distills_original_source_once(monkeypatch, origi
     calls = []
     output = "# Economy reference\n\n## Reference notes\n- Conditional advice."
 
-    async def fake_run(agent, *, input, context, hooks, **kwargs):
+    def fake_run(agent, *, input, context, hooks, **kwargs):
         """Inspect the real prepared invocation without executing a model."""
         from domain.runtime import AssistantRunContext
         assert isinstance(context, AssistantRunContext)
@@ -35,11 +35,11 @@ def test_transcription_pipeline_distills_original_source_once(monkeypatch, origi
         calls.append((agent.name, input))
         return SimpleNamespace(final_output=output)
 
-    monkeypatch.setattr("domain.assistants.assistant.Runner.run", fake_run)
+    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fake_run)
     assert transcript.run_transcription_pipeline(original) == output
     assert calls == [
         (AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
-            original, Assistant(AssistantName.DISTILL_TRANSCRIPT).spec.task_prompt,
+            original, current_registry().get_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,
         )),
     ]
 
@@ -63,11 +63,11 @@ def test_task_service_exposes_the_same_catalog_and_response_contract(monkeypatch
 
 def test_distillation_failure_uses_existing_task_error_contract(monkeypatch) -> None:
     """Surface failed distillation instead of reporting undistilled input as success."""
-    async def fail(*args, **kwargs):
+    def fail(*args, **kwargs):
         """Fail at the SDK boundary without external requests."""
         raise RuntimeError("distillation failed")
 
-    monkeypatch.setattr("domain.assistants.assistant.Runner.run", fail)
+    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fail)
     assert task_service.run_task("transcription_pipeline", input_text="source") == {
         "ok": False, "task": "transcription_pipeline",
         "error": "RuntimeError: distillation failed",
@@ -85,14 +85,14 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
     source = 'Source metadata:\n{"name": "Transcript.txt"}\n\nSource text:\n[00:12] Conditional advice.'
     calls = []
 
-    async def fake_run(agent, *, input, context, **kwargs):
+    def fake_run(agent, *, input, context, **kwargs):
         """Capture the model boundary reached by the normal task endpoint."""
         calls.append((agent.name, input))
         assert not context.resources.reads and context.resources.library is None
         assert not context.resources.reads
         return SimpleNamespace(final_output="# Distilled reference\n\nSource-grounded notes.")
 
-    monkeypatch.setattr("domain.assistants.assistant.Runner.run", fake_run)
+    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fake_run)
     with TestClient(app) as client:
         response = client.post("/api/assistants/tasks/transcription_pipeline/run", json={"input": source})
     assert response.status_code == 200
@@ -101,7 +101,7 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
         "result": "# Distilled reference\n\nSource-grounded notes.",
     }
     assert calls == [(AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
-        source, Assistant(AssistantName.DISTILL_TRANSCRIPT).spec.task_prompt,
+        source, current_registry().get_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,
     ))]
 
 
@@ -113,16 +113,16 @@ def test_assistant_cli_distills_file_with_default_or_explicit_name(monkeypatch, 
     source.write_text("[00:12] Supplied source", encoding="utf-8")
     calls = []
 
-    async def fake_run(agent, *, input, context, **kwargs):
+    def fake_run(agent, *, input, context, **kwargs):
         """Observe the CLI's real prepared invocation without a paid model call."""
         calls.append((agent.name, input, context.runtime.surface))
         return SimpleNamespace(final_output="# Distilled reference")
 
     args = ["assistants"] + (["distill-transcript"] if explicit else [])
     monkeypatch.setattr("sys.argv", args + ["--input-file", str(source)])
-    monkeypatch.setattr("domain.assistants.assistant.Runner.run", fake_run)
+    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fake_run)
     main()
     assert calls == [(AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
-        source.read_text(), Assistant(AssistantName.DISTILL_TRANSCRIPT).spec.task_prompt,
+        source.read_text(), current_registry().get_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,
     ), "cli")]
     assert capsys.readouterr().out == "# Distilled reference\n"

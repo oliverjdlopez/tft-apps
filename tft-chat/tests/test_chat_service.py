@@ -7,7 +7,7 @@ from contextlib import AbstractContextManager
 from types import SimpleNamespace
 
 import pytest
-from agents import MaxTurnsExceeded, ModelSettings
+from agents import MaxTurnsExceeded
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from api.routes.chat import ChatMessage, ChatRequest, router as chat_router
@@ -19,7 +19,7 @@ from services.chat_service import (
     stream_chat,
 )
 from domain.tools import get_tool
-from domain.assistants import Assistant
+from domain.assistants.registry import current_registry
 from domain.runtime import AssistantRunContext, PreparedResources, ToolActivity
 from domain.runtime.activity import ActivityRunHooks
 from domain.tools.evidence import EvidenceStore
@@ -47,6 +47,34 @@ def test_resolve_chat_assistant_defaults_and_validates_header() -> None:
         resolve_chat_assistant("missing")
 
 
+def test_discovery_routes_and_name_validation_do_not_build_agents(monkeypatch) -> None:
+    """Browsing assistant metadata must work without constructing an SDK graph."""
+    from api.routes.assistants import router as assistants_router
+
+    registry = current_registry()
+
+    def forbidden(*args, **kwargs):
+        """Fail if a metadata operation crosses the execution boundary."""
+        pytest.fail("Metadata lookup constructed an SDK agent")
+
+    monkeypatch.setattr("domain.assistants.base.Agent", forbidden)
+    app = FastAPI()
+    app.include_router(chat_router)
+    app.include_router(assistants_router)
+    client = TestClient(app)
+    config = client.get("/api/config")
+    catalogue = client.get("/api/assistants")
+    assert config.status_code == catalogue.status_code == 200
+    assert config.json()["assistants"] == list(registry.assistant_names)
+    rows = {row["name"]: row for row in catalogue.json()["assistants"]}
+    assert rows["chat"]["description"] == registry.get_spec("chat").description
+    assert rows["chat"]["tools"] == list(registry.tool_names["chat"])
+    assert rows["chat"]["handoffs"] == ["data_analyst", "final_responder"]
+    assert resolve_chat_assistant(" meta_expert ") == "meta_expert"
+    with pytest.raises(LookupError, match="Unknown chat assistant"):
+        resolve_chat_assistant("missing")
+
+
 def test_chat_route_rejects_unknown_assistant_header_before_streaming() -> None:
     """Reject an unknown routed root at the HTTP boundary."""
     app = FastAPI()
@@ -66,7 +94,7 @@ def test_chat_config_includes_models_and_tools() -> None:
     config = chat_config()
 
     assert config["default_assistant"] == "chat"
-    assert config["assistants"] == Assistant.names()
+    assert config["assistants"] == list(current_registry().assistant_names)
     assert config["default_model"] == load_config().models.openai_model
     assert [tool["name"] for tool in config["tools"]] == [
         *[tool.name for tool in CONTEXT_TOOL_GROUP.tools],
@@ -279,21 +307,13 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
 
     monkeypatch.setattr("services.chat_service.trace", fake_trace)
 
-    async def selected_resources(**kwargs):
+    def selected_resources(**kwargs):
         """Provide an empty catalogue without model calls."""
         return PreparedResources()
 
     monkeypatch.setattr(
-        "domain.assistants.assistant.prepare_resources", selected_resources
+        "domain.assistants.base.prepare_resources", selected_resources
     )
-
-    def fake_build_agent(assistant):
-        """Capture class configuration without constructing a model graph."""
-        captured["agent_name"] = assistant.name
-        captured["create_kwargs"] = {"model": assistant.model}
-        return SimpleNamespace(name=assistant.name, handoffs=[])
-
-    monkeypatch.setattr("services.chat_service.Assistant.build_agent", fake_build_agent)
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks):
         assert isinstance(context, AssistantRunContext)
@@ -326,7 +346,6 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         ]
 
     chunks = asyncio.run(collect())
-    assert captured["agent_name"] == "meta_expert"
     assert captured["run_agent"].name == "meta_expert"
     assert len(chunks) == 1
     payload = chunks[0].strip().removeprefix(STREAM_EVENT_PREFIX).removesuffix(STREAM_EVENT_SUFFIX)
@@ -340,11 +359,11 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
     assert metadata["model"] == "openai-latest"
     assert metadata["message_count"] == "1"
     assert metadata["direct_tool_names"] == ",".join(
-        Assistant("meta_expert").tool_names
+        list(current_registry().tool_names["meta_expert"])
     )
     assert metadata["context_sources"] == ""
-    create_kwargs = captured["create_kwargs"]
-    assert create_kwargs == {"model": "gpt-5"}
+    assert captured["run_agent"].model == "gpt-5"
+    assert captured["run_agent"].handoffs[0].model == "gpt-5"
     assert captured["context"].runtime.root_assistant == "meta_expert"
     assert captured["context"].resources.reads == {}
     assert captured["stream_input"] == [
@@ -388,9 +407,12 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
             )
 
     monkeypatch.setattr("services.chat_service.Agent", FakeAgent)
-    main_agent = SimpleNamespace(name=assistant_name, instructions=object(), model_settings=object(), handoffs=[])
+    main_agent = None
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks):
+        nonlocal main_agent
+        if main_agent is None:
+            main_agent = agent
         captured.setdefault("contexts", []).append(context)
         captured.setdefault("hooks", []).append(hooks)
         captured["max_turns"].append(max_turns)
@@ -400,17 +422,13 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         "services.chat_service.Runner.run_streamed",
         fake_run_streamed,
     )
-    monkeypatch.setattr(
-        "services.chat_service.Assistant.build_agent",
-        lambda _name, **_kwargs: main_agent,
-    )
 
-    async def selected_resources(**_kwargs):
+    def selected_resources(**_kwargs):
         """Provide prepared resources without invoking resource selectors."""
         return PreparedResources()
 
     monkeypatch.setattr(
-        "domain.assistants.assistant.prepare_resources", selected_resources
+        "domain.assistants.base.prepare_resources", selected_resources
     )
 
     request = ChatRequest(
@@ -446,17 +464,16 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
     """HTTP consumer closure reaches the active main or fallback stream adapter."""
     contexts = []
     closed = []
-    main_agent = SimpleNamespace(name="chat", instructions="DURABLE ROOT", model_settings=ModelSettings(), handoffs=[])
     main_result, final_result = object(), object()
 
-    async def prepared(**_kwargs):
+    def prepared(**_kwargs):
         """Provide resources without invoking a selector or external model."""
         return PreparedResources()
 
     def run_streamed(agent, *, context, **_kwargs):
         """Capture the shared context for both runner entry points."""
         contexts.append(context)
-        return main_result if agent is main_agent else final_result
+        return main_result if len(contexts) == 1 else final_result
 
     async def events(result, *, run_context, **_kwargs):
         """Model an adapter suspended while the consumer processes a delta."""
@@ -469,8 +486,7 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
         finally:
             closed.append(result)
 
-    monkeypatch.setattr("domain.assistants.assistant.prepare_resources", prepared)
-    monkeypatch.setattr("services.chat_service.Assistant.build_agent", lambda *args, **kwargs: main_agent)
+    monkeypatch.setattr("domain.assistants.base.prepare_resources", prepared)
     monkeypatch.setattr("services.chat_service.Runner.run_streamed", run_streamed)
     monkeypatch.setattr("services.chat_service.stream_agent_events", events)
 

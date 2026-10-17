@@ -168,9 +168,9 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
         def flush(self):
             """Provide the SDK flushing contract."""
 
-    from domain.assistants import Assistant
+    from domain.assistants.registry import current_registry
     from devtools.assistants import capture
-    frozen = capture(Assistant("chat")._registry)
+    frozen = capture(current_registry())
     bundle["execution"] = {"version": 1, "graphs": {"baseline": frozen}}
     report = run_bundle(bundle, Client())
     assert report["passed"] and report.get("state") is None
@@ -303,9 +303,9 @@ def test_native_generation_links_frozen_prompt_without_fetch(monkeypatch):
 @pytest.mark.parametrize("natural", [False, True])
 def test_case_databases_reach_isolated_workers_without_leaking(monkeypatch, natural):
     """Mixed-set cases keep their own target across attempts and preserve defaults."""
-    from domain.assistants import Assistant
+    from domain.assistants.registry import current_registry
     from devtools.assistants import capture
-    graph = capture(Assistant("chat")._registry)
+    graph = capture(current_registry())
     suite = {"name": "chat", "assistant": "chat", "family": "assistant", "execution": "live", "database": "suite_db",
              "captured_graphs": {"baseline": graph, "candidate": graph}}
     calls = []

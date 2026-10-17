@@ -127,7 +127,7 @@
       "managed_workflow": true,
       "max_turns": 40,
       "name": "unit-expert",
-      "snapshot": "cce632111f3b07bbde1aa1cfe3ff1b50fdf4ce3e89ee19f3a58342c02fc58882"
+      "snapshot": "996d4220d2f77a43c98dd0a59d6c609d6dce4eba80555cbca7c71ab29fb24f83"
     }
   ]
 }

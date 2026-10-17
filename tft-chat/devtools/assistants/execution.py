@@ -6,9 +6,8 @@ from collections.abc import Mapping
 from dataclasses import replace
 from typing import Any
 
-from domain.assistants import Assistant
+from domain.assistants import Assistant, BaseAssistant
 from domain.assistants.registry import AssistantRegistry
-from domain.assistants.utils import configure_tools
 from devtools.assistants.capture import AssistantDefinitions, registry_from_capture
 
 
@@ -26,11 +25,10 @@ def _replace_instructions(
             if spec.name in replacements
             else spec
             for spec in (
-                registry.get_spec(name) for name in registry.list_assistants()
+                registry.get_spec(name) for name in registry.assistant_names
             )
         ]
     )
-    configure_tools(candidate)
     return AssistantDefinitions(
         registry=candidate,
         source_files={
@@ -47,7 +45,7 @@ def assistant_from_registry(
     *,
     prompt_candidates: Mapping[str, str] | None = None,
     **kwargs: Any,
-) -> Assistant:
+) -> BaseAssistant:
     """Build an assistant from isolated definitions and prompt candidates."""
     definitions = (
         registry
@@ -73,7 +71,7 @@ def assistant_from_capture(
     *,
     prompt_candidates: Mapping[str, str] | None = None,
     **kwargs: Any,
-) -> Assistant:
+) -> BaseAssistant:
     """Build an ordinary runtime assistant from a verified captured graph."""
     return assistant_from_registry(
         registry_from_capture(graph),

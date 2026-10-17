@@ -39,8 +39,8 @@ def datasets(workspace, name: str) -> dict:
     result['datasets'] = [
         row for row in result['datasets']
         if name in (
-            set(active.registry.list_reachable_assistant_names(row['assistant']))
-            | set(draft.registry.list_reachable_assistant_names(row['assistant']))
+            set(active.registry.reachable_assistant_names[row['assistant']])
+            | set(draft.registry.reachable_assistant_names[row['assistant']])
         )
     ]
     return result

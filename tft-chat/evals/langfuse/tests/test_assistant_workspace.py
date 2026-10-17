@@ -37,7 +37,7 @@ def test_capture_preserves_models_handoffs_and_hash_independently_of_source():
     """Restored definitions never reread later source instructions or configuration."""
     frozen = graph(handoffs=['target'])
     definitions = registry_from_capture(frozen)
-    assert definitions.registry.get_handoff_names('fixture') == ['target']
+    assert list(definitions.registry.handoff_names['fixture']) == ['target']
     assert definitions.registry.get_spec('target').system_prompt == 'Frozen target'
     assert definitions.resolved_models['fixture'] == frozen['specs']['fixture']['resolved_model']
     broken = deepcopy(frozen)
@@ -161,6 +161,7 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
             call, arguments = 'transfer_to_target', '{}'
         elif 'read_resource' in tools:
             import ast
+            import re
             results = []
             for item in body.get('input', []):
                 if not isinstance(item, dict) or item.get('type') != 'function_call_output':
@@ -177,7 +178,8 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
                 results.append(parsed)
             resource_results = [result for result in results if result.get('found') and 'children' in result]
             choices = (resource_results[-1]['children'] if resource_results
-                       else json.loads(body['instructions'].split('\n')[-1]))
+                       else [{'id': resource_id} for resource_id in re.findall(
+                           r'^- `([^`]+)`', body['instructions'], re.MULTILINE)])
             if choices:
                 selected = next((entry for entry in choices if entry['id'] == 'set18/units'), choices[0])
                 call, arguments = 'read_resource', json.dumps({'resource_id': selected['id']})

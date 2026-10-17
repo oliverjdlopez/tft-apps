@@ -5,21 +5,65 @@ fresh OpenAI Agents SDK graphs for each logical invocation. Assistant behavior,
 tool access, handoffs, request-specific context, and synchronous task pipelines
 remain separate concerns.
 
-The public `domain.assistants` package exposes `Assistant` plus its registry,
-invocation, and specification types. It does not maintain a parallel function
-facade for specifications, tools, handoffs, discovery, or reloads. Named runtime
-metadata comes from an `Assistant` instance (`spec`, `tool_names`,
-`handoff_names`, `reachable_assistant_names`, and `reachable_tool_names`), while
-`Assistant.names()` reads the lazily published live registry. SDK tool objects
-remain internal to graph construction; consumers use stable tool names.
-Invocation construction imports implementation dependencies directly, without
-importing the package facade. `domain.assistants.utils.configure_tools(registry)`
-wires isolated registries to the tool catalogue, and `AssistantRegistry` owns
-handoff traversal and validation. `devtools.assistants` owns captured definitions,
-prompt candidates, and instruction recording; it constructs an ordinary runtime
-`Assistant` after adapting those development inputs. Token diagnostics and the
-manual assistant command also live in that development package and are never
-imported while building an application graph.
+The public construction entry point is `Assistant(name, ...)`. It selects
+`ChatAssistant` for `chat` and `BaseAssistant` for other registered names through
+an explicit `ASSISTANT_CLASSES` mapping. `Assistant` is a constructor wrapper:
+it returns the concrete object directly, with no proxy or delegated methods.
+Consumers that need the implementation class import `BaseAssistant` or
+`ChatAssistant` directly. `assistant.py` selects classes, `base.py` owns shared
+execution, and `chat.py` owns chat prompt rendering. There is no separate factory
+function, automatic registration, or plugin discovery.
+Execution follows one path:
+
+1. Construct an assistant from the current registry or supplied frozen definitions.
+   Its constructor immediately builds the root SDK agent and handoffs, available
+   as `assistant.agent`.
+2. `prepare_sync()` wraps the input, prepares resource access, and creates the
+   run context and activity hooks for that already constructed graph. Async
+   `prepare()` runs that local preparation in a worker thread.
+3. `run()` awaits preparation and calls `Runner.run()`; `run_sync()` prepares
+   synchronously and calls `Runner.run_sync()`. Both finalize activity on exit.
+   Streaming consumers call `prepare()` and own execution and cleanup themselves.
+
+The source follows those responsibilities:
+
+- `assistant.py` installs the explicit class mapping and selects a concrete class.
+- `base.py` owns graph construction, default rendering, preparation, and execution;
+  `chat.py` owns the chat rendering override.
+- `registry.py` validates definitions and precomputes tool and handoff lookup
+  tables once in `AssistantRegistry.__init__`. `current_registry()` only loads
+  repository definitions on first runtime use; it does not publish or reload them.
+- `specs.py` reads repository files and maps JSON fields into `AssistantSpec`.
+- `resources.py` prepares permissions, filters discovery metadata, and handles
+  exact resource reads and their provenance.
+- `utils.py` wraps caller input and resolves declared tools; `models.py` holds
+  `AssistantSpec` and the prepared invocation record. The spec constructor calls
+  `validate_invariants()` for all loading paths.
+
+Registries hold frozen specifications and read-only mappings of tuple-valued
+metadata. `assistant_names`, `specs`, `tools`, `tool_names`, `handoff_names`,
+`reachable_assistant_names`, and `reachable_tool_names` are computed once during
+construction. Invalid definitions cannot become a usable registry. Each SDK
+agent receives its own tools list from the resolved registry tools.
+
+The domain module holds one runtime `registry` reference. Publication, locking,
+and replacement for Specs Apply/Refresh belong to
+`devtools.assistants.workspace.workspace.DefinitionsPublisher`. It replaces that
+reference only after constructing a validated candidate. Assistants retain only
+their reachable specifications and constructed SDK graph; replacement affects
+only new instances. Runtime code never imports the publisher or devtools.
+Repository loading remains lazy so imports cannot read partially written files
+before application startup recovers a development workspace journal. Tool imports
+are also deferred because the context tool uses assistant resource reads.
+
+Discovery reads the current registry's precomputed attributes; `get_spec(name)`
+provides a named lookup error for unknown assistants. UI catalogues and request name validation
+do not construct executable assistants. `Assistant` has no discovery class method,
+metadata forwarding properties, or separate graph-building method. Its `spec`
+retains the root definition needed for task input preparation.
+`devtools.assistants` adapts captures and prompt candidates into ordinary runtime
+assistants and owns instruction recording, token diagnostics,
+and manual commands. Application graph construction does not import it.
 
 ## Assistant specifications
 
@@ -37,18 +81,30 @@ Each assistant lives under `app/backend/src/domain/assistant_specs/<name>/`:
 All current assistant definitions use this same layout. The `distill-transcript`
 assistant keeps its source-input wrapper in `task.md` and its distillation policy
 in `system.md`; names, descriptions, and access policy live in `agent.json`. The
-application loader accepts only this directory format and fails the complete
-registry load when a definition is malformed. The development loader retains
+application loader accepts this directory format and passes values to the model.
+`AssistantSpec.validate_invariants()` enforces nonempty assistant names, text
+fields, boolean permissions, name sequences, and model/reasoning enums.
+It freezes name lists as tuples and removes duplicates in declaration order;
+omitted and empty permission lists remain distinct. Empty descriptions and prompt
+text are valid, including explicitly cleared experimental instructions. These invariants also apply to direct construction, `dataclasses.replace`,
+and captured definitions. Registry construction separately checks tool references
+and handoff graphs. The loader has no field-validation helper chain or parallel
+key allowlist; remaining JSON fields are checked by the model constructor's
+signature. Nested tool/context objects are read for their supported fields, and
+Markdown is read as instruction text without frontmatter interpretation.
+The development loader retains
 legacy frontmatter and field aliases for saved drafts, captures, and migration
 commands without exposing those formats to live discovery.
 
-`domain.assistants.active` discovers and publishes immutable specifications.
-`Assistant.build_agent()` resolves the declared graph and constructs
-fresh SDK `Agent` objects. Tool access is additive across the groups and names
+`domain.assistants.registry` loads immutable specifications for runtime use.
+Registry construction rejects missing tools, handoff targets, and cycles.
+`Assistant(...)` constructs the selected assistant class and fresh SDK
+`Agent` objects immediately, before request preparation. Handoffs use the same
+constructor, so each graph node owns its class-specific rendering behavior. Tool access is additive across the groups and names
 declared in `agent.json`; registration alone does not grant an assistant access.
 Python callers use `AssistantName` from `domain.assistants.constants` for
 assistant API names; assistant specs retain their names as declarative strings.
-Instruction callbacks require the typed context created by `Assistant.prepare()`;
+Instruction callbacks require the typed context created by `BaseAssistant.prepare()`;
 direct SDK execution that bypasses preparation fails instead of silently omitting
 request policy and resource permissions.
 
@@ -82,7 +138,10 @@ copies of the package and split registry state between them.
 
 The direct tool set and reachable tool set are intentionally different. A
 top-level assistant may reach tools only through a handoff, so UI discovery
-uses `Assistant.reachable_tool_names` rather than only `Assistant.tool_names`.
+uses the registry's `reachable_tool_names[name]` rather than only
+`tool_names[name]`. Chat retains one registry reference for both graph
+construction and request metadata, so a reload cannot mix definitions within a
+request.
 The `chat` assistant directly owns context retrieval, bounded rankings,
 and rolldown probability estimation. Multi-step investigations can still follow
 the `chat` to `data_analyst` to `final_responder` path: the analyst runs bounded
@@ -118,13 +177,16 @@ prompts used by normal application runs.
 
 ## Runtime instructions
 
-Chat, direct assistant API, CLI, transcript distillation, and captured evaluations
-use `domain.assistants.Assistant` to prepare each invocation. Preparation loads a
+Chat, the direct assistant API, CLI, and captured evaluations select named classes
+through `domain.assistants.Assistant`. The fixed transcript task constructs
+`BaseAssistant` directly. Both paths use the same preparation and execution methods.
+Preparation loads
 cached, validated resource metadata without selecting prompt material or calling
 models. Bodies are loaded only by reads.
-`domain.assistants.resources` owns resource presentation and assistant access
-checks: it renders the initial directory, filters children and links, formats
-read-tool responses, and records read provenance. `domain.resources` supplies
+`domain.assistants.resources` owns assistant access checks: it returns permitted
+metadata, filters children and links, formats read-tool responses, and records
+read provenance. The assistant's `render_prompt(context)` owns all prompt text,
+including how that metadata appears in its resource directory. `domain.resources` supplies
 the validated library and complete content loading without depending on
 assistant or invocation state.
 Each target initially receives only root reference and permitted skill and playbook
@@ -138,12 +200,19 @@ permissions, actual-read ID and hash provenance, evidence, activity, and optiona
 Each invocation receives fresh state shared across its handoffs. The SDK context
 is internal; instruction callbacks and tools expose only intended fields.
 
-`Assistant.build_agent()` installs callbacks bound to each target specification.
-Callbacks render durable policy and permitted metadata on every model step;
-only the root receives the caller's system prefix. Chat cannot read skills.
+Each SDK agent uses a callback bound to its own assistant instance. The `BaseAssistant`
+`instructions(wrapper, agent)` adapter validates the prepared context, calls
+`self.render_prompt(context)`, and accumulates rendering time. Its bound signature
+has exactly the two arguments required by the SDK. The rendering override receives
+`AssistantRunContext` and can read its own frozen `self.spec` and prepared resources.
+It owns the complete prompt; the default and chat implementations include the
+caller's system prefix only when their identity matches the invocation root.
+Fallback SDK agents reuse the bound callback, retaining the original assistant's
+identity even when the fallback agent has a different name. Chat cannot read skills.
 Read results never become instruction layers. Later registry reloads cannot
-change permissions or models in an existing graph. Reusing an `Assistant`
-retains definitions while creating fresh run-local state for each execution.
+change permissions or models in an existing graph. Use `Assistant` for
+each independent execution. `prepare()` creates fresh context and hooks but
+returns the same graph owned by its instance; it never rebuilds SDK agents.
 
 ```python
 from domain.assistants import Assistant
@@ -172,9 +241,13 @@ result = Runner.run_streamed(
 `prepare` accepts user text or user/assistant conversation history. The SDK
 receives the root's task
 wrapper applied to the latest user message, preserving previous history and
-caller-owned messages. `run_sync` rejects active event loops with guidance to
-await `run`. Completed or failed ordinary runs finalize unfinished activity;
-streaming consumers retain cancellation and cleanup ownership.
+caller-owned messages. `prepare_sync()` performs the same preparation on the
+calling thread; it does not create or replace an event loop. `run_sync()` delegates
+execution to the SDK's synchronous runner, preserving its default-loop reuse and
+cancellation behavior. It rejects active event loops with guidance to await `run()`.
+Both ordinary execution paths finalize unfinished activity on success or failure;
+synchronous interrupts mark pending calls as cancelled. Streaming consumers retain
+cancellation and cleanup ownership.
 
 `devtools.assistants.assistant_from_capture` verifies a captured graph, applies
 optional prompt candidates to immutable specifications, and constructs a normal
@@ -183,15 +256,23 @@ instructions and model settings in a development-owned record. The runtime
 `AssistantInvocation` contains only execution state.
 
 Live assistant evaluations and Playground requests require captured graphs and use
-the development adapter followed by ordinary `Assistant.prepare()`. Fresh exports capture
+the development adapter followed by ordinary `BaseAssistant.prepare()`. Fresh exports capture
 repository definitions for every live assistant dataset format. Historical bundles
 without captures remain readable; execution rejects them before dispatch and asks
 for a fresh export. Historical selector benchmarks remain available offline; their live model
-execution is retired. Static instruction assembly, the `create_assistant` factory, and the
-`render_assistant_input` wrapper have been removed.
+execution is retired.
 
-Dynamic callbacks use `render_instruction_layers` to combine the stable prompt
-with the target's permitted discovery catalogue. Chat sees reference metadata;
+Prompt customization has one extension point: subclass `BaseAssistant`, override
+`render_prompt(context) -> str`, and add an explicit name-to-class entry to
+`ASSISTANT_CLASSES`. Run preparation, tool access, and execution remain shared.
+The constructor also handles captured execution after prompt replacements have been
+applied, without saving Python class identities in captures.
+
+The default renderer uses an **Available resources** section; `ChatAssistant`
+uses **Available TFT references**. Both present Markdown bullets with exact IDs,
+titles, kinds, descriptions, and optional patch labels, plus a short `read_resource`
+usage instruction. Empty catalogues add no section. The former global policy
+paragraph and JSON dump are removed. Chat sees reference metadata;
 eligible specialists see permitted reference, skill, and playbook metadata. Transcript
 assistants see neither. Exact reads enforce the same permissions independently
 of the instructions, and return bodies only as tool results.
@@ -211,7 +292,7 @@ unchanged.
 
 Callers execute assistants through `Runner.run`, `Runner.run_sync`, or
 `Runner.run_streamed`. `services/chat_service.py` obtains an `AssistantInvocation` through
-`Assistant.prepare`, then owns tracing, streamed execution, and the maximum-turn
+`BaseAssistant.prepare`, then owns tracing, streamed execution, and the maximum-turn
 fallback using the prepared context and hooks. The `Assistant` class owns
 definition snapshots, resource catalogues and read permissions, task input
 wrapping, invocation state, and prompt policy; tools own evidence operations.
@@ -254,11 +335,12 @@ local catalog and works when Langfuse is stopped. See
 
 The [assistant workspace](../development/assistant-workspace.md) separates saved
 drafts from active repository behavior. `AssistantRegistry` contains immutable
-runtime definitions and graph operations. `devtools.assistants` pairs registries
-with source inventories, validates full graphs, and freezes model defaults.
+runtime definitions and precomputed graph metadata. `devtools.assistants` pairs
+validated registries with source inventories, freezes model defaults, and owns
+publication to the live runtime.
 Captured worker execution threads this isolated registry through graph building,
 task wrapping, resource discovery and reads, and instruction callbacks. Typed invocation
 context, per-assistant access policy, activity, and evidence handling use the normal
 application pipeline. Applying a validated draft publishes a replacement live
 registry for newly created assistants; existing assistant instances retain their
-captured registry snapshot.
+constructed graph and captured specifications.

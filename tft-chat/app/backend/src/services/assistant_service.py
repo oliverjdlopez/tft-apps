@@ -8,20 +8,22 @@ from typing import Any
 from agents.tracing import trace
 
 from domain.assistants import Assistant
+from domain.assistants.registry import current_registry
 from services.task_service import task_catalog
 from services.tracing_service import ensure_local_trace_processor, trace_file_path
 
 
 def assistant_catalog() -> dict[str, Any]:
+    registry = current_registry()
     assistants = []
-    for name in Assistant.names():
-        assistant = Assistant(name)
+    for name in registry.assistant_names:
+        spec = registry.get_spec(name)
         assistants.append(
             {
                 "name": name,
-                "description": assistant.spec.description,
-                "tools": assistant.tool_names,
-                "handoffs": assistant.handoff_names,
+                "description": spec.description,
+                "tools": list(registry.tool_names[name]),
+                "handoffs": list(registry.handoff_names[name]),
             }
         )
 

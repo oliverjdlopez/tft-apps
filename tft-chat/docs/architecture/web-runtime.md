@@ -38,6 +38,12 @@ inputs and delegate to `services/`:
   include the exact model ID and are derived from it, so they cannot advertise a
   different model version than the submitted value. The latest-model option uses
   the current `OpenAIModels.LATEST` ID alongside the curated model choices.
+- Assistant and tool discovery in `/api/config` and `/api/assistants`, plus
+  `X-Chat-Assistant` validation, read loaded definitions directly. They do not
+  construct executable agents. Each chat request creates its own `Assistant`,
+  whose constructor builds the SDK graph before `prepare()` attaches input,
+  resource permissions, evidence, and activity state. `agent_setup_ms` includes
+  that constructor work as well as the streaming adapter's setup.
 - `display_service.py` supplies explorer views for models, databases, tools,
   and upstream APIs.
 - `/api/shared-media` exposes immutable shared file publication, discovery,
@@ -104,11 +110,15 @@ boundaries.
 Chat Activity trace links open the encoded trace-detail URL rather than the
 dashboard index.
 
-Chat obtains a fresh `AssistantInvocation` through `Assistant.prepare`, then
+Chat calls `Assistant` for the selected name (`ChatAssistant` for `chat`),
+then obtains a fresh `AssistantInvocation` through async `prepare()` (local
+preparation runs in a worker thread) and
 supplies its typed `AssistantRunContext` and activity hooks to the runner and
-stream adapter. The instance owns a registry snapshot and invocation-local
-resource library. Instructions expose only permitted root descriptions; index reads reveal
-children.
+stream adapter. The instance retains its constructed graph and invocation-local
+resource library. Each assistant's `render_prompt(context)` presents permitted
+root metadata as a readable resource list; index reads reveal children. The
+same class selection applies to handoffs. The tool-limit fallback reuses the
+root assistant's bound instruction callback.
 `read_resource` returns exact complete reference or skill bodies on demand.
 Metadata and reads enforce set scope and each assistant's permissions. Chat
 cannot read skills. Source Activity events occur after successful read calls.
@@ -410,6 +420,9 @@ Edit the `skills` and `playbooks` arrays in `agent.json` to configure them;
 omitted arrays display as all. Saving never writes application source. Document reads remain available; legacy
 direct document writes return 410. SQLite and recovery journals are checkout-owned
 under ignored `.runtime/assistant-workspace/`. Apply/refresh install complete
-validated registries; constructed SDK graphs retain their previous definitions.
+validated registries through the devtools-owned `DefinitionsPublisher`. Runtime
+assistants contain no publication API or publication locks; their registry
+precomputes metadata during construction. Constructed SDK graphs retain their
+previous definitions.
 Optional experiments use the authenticated checkout host runner Unix socket;
 backend credentials never enter browser requests or results.

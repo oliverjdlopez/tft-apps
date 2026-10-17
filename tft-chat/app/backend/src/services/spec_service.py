@@ -33,7 +33,7 @@ def workspace() -> dict:
         suites.setdefault(suite.assistant, []).append(suite.name)
     active = service.active()
     assistants = []
-    for name in active.registry.list_assistants():
+    for name in active.registry.assistant_names:
         spec = active.registry.get_spec(name)
         assistants.append({'name': name, 'description': spec.description, 'model': spec.resolved_model(),
             'tools': list(spec.tool_names), 'tool_groups': list(spec.tool_group_keys), 'handoffs': list(spec.handoff_names),

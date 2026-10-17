@@ -168,25 +168,17 @@ def test_natural_seed_uses_current_specs_not_snapshot_prompts(monkeypatch, tmp_p
 
 def test_experiment_prompts_follow_current_graph(monkeypatch):
     """Freeze new handoff targets without retaining unrelated retired prompts."""
-    import domain.assistants
+    from dataclasses import replace
+    from domain.assistants import AssistantRegistry
+    from domain.assistants import registry as runtime
 
-    class FakeAssistant:
-        """Expose the class-level discovery used by prompt selection."""
-
-        def __init__(self, name):
-            """Retain the selected root name."""
-            self.name = name
-
-        @classmethod
-        def reload(cls):
-            """Avoid touching repository definitions in this focused test."""
-
-        @property
-        def reachable_assistant_names(self):
-            """Return the fixture graph in traversal order."""
-            return [self.name, "new"] if self.name == "active" else [self.name]
-
-    monkeypatch.setattr(domain.assistants, "Assistant", FakeAssistant)
+    base = runtime.current_registry().get_spec("distill-transcript")
+    definitions = AssistantRegistry([
+        replace(base, name="active", handoff_names=("new",)),
+        replace(base, name="new"),
+        replace(base, name="unrelated"),
+    ])
+    monkeypatch.setattr(runtime, "registry", definitions)
     monkeypatch.setattr(prompts, "repository_prompts", lambda: {
         name: {"name": f"chattft/assistants/{name}"} for name in ("active", "new", "unrelated")})
     assert set(prompts.experiment_prompts({"assistant": "active", "execution": "live"})) == {"active", "new"}

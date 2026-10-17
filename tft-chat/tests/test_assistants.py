@@ -1,5 +1,6 @@
 from __future__ import annotations
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -9,9 +10,11 @@ from agents.extensions.models.litellm_model import LitellmModel
 
 from core.config import load_config
 from domain.assistants import Assistant
-from domain.assistants.specs import AssistantSpec, load_assistant_spec
+from domain.assistants.registry import current_registry
+from domain.assistants.models import AssistantSpec
+from domain.assistants.specs import load_assistant_spec
 from devtools.assistants import diagnostics
-from domain.assistants.utils import render_instruction_layers, wrap_task_input
+from domain.assistants.utils import wrap_task_input
 from domain.constants import OpenAIModels, ReasoningEfforts
 from domain.tools.db_tools.cohort_tools import COHORT_TOOL_GROUP
 from domain.tools.db_tools.deltas import DELTA_TOOL_GROUP
@@ -38,8 +41,38 @@ def test_assistant_spec_coerces_model_and_reasoning_enums() -> None:
     assert spec.model_settings().reasoning.effort == "high"
 
 
+
+@pytest.mark.parametrize("changes, field", [
+    ({"name": " "}, "name"),
+    ({"system_prompt": None}, "system_prompt"),
+    ({"repository_context": "false"}, "repository_context"),
+    ({"include_all_tools": 1}, "include_all_tools"),
+    ({"tool_names": "read_resource"}, "tool_names"),
+    ({"handoff_names": [None]}, "handoff_names"),
+    ({"skill_names": [""]}, "skill_names"),
+    ({"playbook_names": True}, "playbook_names"),
+    ({"model": "unknown"}, "model"),
+    ({"reasoning": "unknown"}, "reasoning"),
+])
+def test_spec_invariants_apply_to_direct_replacements(changes, field):
+    """Changing a definition cannot bypass checks by skipping the file loader."""
+    with pytest.raises(ValueError, match=field):
+        replace(current_registry().get_spec("chat"), **changes)
+
+
+def test_spec_normalizes_lists_without_sharing_mutable_inputs():
+    """Repeated names are harmless; captured access cannot change with input lists."""
+    names = [" read_resource ", "read_resource"]
+    spec = replace(current_registry().get_spec("chat"), tool_names=names,
+                   skill_names=None, playbook_names=[], description="", handoff_description="")
+    names.append("present_evidence")
+    assert spec.tool_names == ("read_resource",)
+    assert spec.skill_names is None
+    assert spec.playbook_names == ()
+    assert spec.description == spec.handoff_description == ""
+
 def test_loaded_assistant_specs_include_model_and_reasoning() -> None:
-    spec = Assistant("chat").spec
+    spec = current_registry().get_spec("chat")
 
     assert spec.model is None
     assert spec.resolved_model() == load_config().models.openai_model
@@ -78,8 +111,8 @@ def test_skill_allowlist_defaults_to_all_and_loads_named_entries(tmp_path: Path)
 
 
 def test_assistant_specs_declare_prompt_context_policy() -> None:
-    assert Assistant("chat").spec.repository_context is True
-    assert Assistant("data_analyst").spec.repository_context is True
+    assert current_registry().get_spec("chat").repository_context is True
+    assert current_registry().get_spec("data_analyst").repository_context is True
     for name in (
         "comp_expert",
         "item_expert",
@@ -87,12 +120,12 @@ def test_assistant_specs_declare_prompt_context_policy() -> None:
         "theorizer",
         "unit_expert",
     ):
-        assert Assistant(name).spec.repository_context is True
-    assert Assistant("distill-transcript").spec.repository_context is False
+        assert current_registry().get_spec(name).repository_context is True
+    assert current_registry().get_spec("distill-transcript").repository_context is False
 
 
-def test_factory_builds_sdk_agent_with_spec_model_settings() -> None:
-    agent = Assistant("chat").build_agent()
+def test_constructor_builds_sdk_agent_with_spec_model_settings() -> None:
+    agent = Assistant("chat").agent
 
     assert isinstance(agent, Agent)
     assert agent.model == load_config().models.openai_model
@@ -115,8 +148,8 @@ def test_task_input_uses_spec_task_prompt() -> None:
 
 
 def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
-    first = Assistant("chat").build_agent()
-    second = Assistant("chat").build_agent()
+    first = Assistant("chat").agent
+    second = Assistant("chat").agent
     first_handoffs = {agent.name: agent for agent in first.handoffs}
     second_handoffs = {agent.name: agent for agent in second.handoffs}
 
@@ -129,7 +162,7 @@ def test_durable_overrides_retain_dynamic_callbacks() -> None:
     """Replacing prompts preserves runtime instruction policy on every agent."""
     from devtools.assistants import assistant_from_registry
 
-    source = Assistant('chat')._registry
+    source = current_registry()
     agent = assistant_from_registry(
         source,
         'chat',
@@ -137,7 +170,7 @@ def test_durable_overrides_retain_dynamic_callbacks() -> None:
             'chat': 'ROOT INSTRUCTIONS',
             'data_analyst': 'ANALYST INSTRUCTIONS',
         },
-    ).build_agent()
+    ).agent
     from agents import RunContextWrapper
     from domain.runtime import AssistantRunContext, PreparedResources, RuntimeSettings
     context = AssistantRunContext(
@@ -160,7 +193,7 @@ def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
 
     assistant = Assistant("chat")
     diagnostics.log_agent_graph(
-        assistant.build_agent(), task_prompt=assistant.spec.task_prompt,
+        assistant.agent, task_prompt=assistant.spec.task_prompt,
     )
 
     payload = json.loads(records[0])
@@ -180,19 +213,19 @@ def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
 
 
 def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
-    assistant = Assistant("data_analyst")
-    spec = assistant.spec
+    registry = current_registry()
+    spec = registry.get_spec("data_analyst")
     ranking_names = [tool.name for tool in RANKING_TOOL_GROUP.tools]
     cohort_names = [tool.name for tool in COHORT_TOOL_GROUP.tools]
     delta_names = [tool.name for tool in DELTA_TOOL_GROUP.tools]
     context_names = [tool.name for tool in CONTEXT_TOOL_GROUP.tools]
 
-    assert "data_analyst" in Assistant.names()
+    assert "data_analyst" in list(current_registry().assistant_names)
     assert spec.tool_group_keys == ("ranking", "query_cohorts", "deltas", "context")
-    assert assistant.tool_names == (
+    assert list(registry.tool_names[spec.name]) == (
         ranking_names + cohort_names + delta_names + context_names
     )
-    assert assistant.handoff_names == ["final_responder"]
+    assert list(registry.handoff_names[spec.name]) == ["final_responder"]
     assert spec.task_prompt == ""
     assert wrap_task_input("Which carry is better?", spec.task_prompt) == (
         "Which carry is better?"
@@ -215,7 +248,7 @@ def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
 
 def test_item_and_unit_experts_receive_an_unfiltered_data_view() -> None:
     for name in ("item_expert", "unit_expert"):
-        prompt = Assistant(name).spec.system_prompt
+        prompt = current_registry().get_spec(name).system_prompt
         assert "aggregate" in prompt
 
 
@@ -230,7 +263,7 @@ def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> N
     """
     from domain.tools.db_tools.models import ItemCondition
 
-    prompt = Assistant(name).spec.system_prompt
+    prompt = current_registry().get_spec(name).system_prompt
     fields = ItemCondition.model_fields
     assert {"holder", "holder_star_level", "min_copies", "max_copies"} <= fields.keys()
     assert "name-only item" in prompt
@@ -246,9 +279,9 @@ def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> N
 
 def test_prompt_evidence_guidance_matches_assistant_ownership() -> None:
     """Reserve display policy for the responder and histogram retrieval for the analyst."""
-    chat = Assistant("chat").spec.system_prompt
-    analyst = Assistant("data_analyst").spec.system_prompt
-    responder = Assistant("final_responder").spec.system_prompt
+    chat = current_registry().get_spec("chat").system_prompt
+    analyst = current_registry().get_spec("data_analyst").system_prompt
+    responder = current_registry().get_spec("final_responder").system_prompt
     assert "## Evidence displays" not in chat
     assert "no direct match-data tools" not in chat
     assert "A direct lookup or ranking is sufficient when its result answers the actual question" in chat
@@ -259,9 +292,9 @@ def test_prompt_evidence_guidance_matches_assistant_ownership() -> None:
 
 
 def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
-    assistant = Assistant("chat")
-    spec = assistant.spec
-    tool_names = assistant.tool_names
+    registry = current_registry()
+    spec = registry.get_spec("chat")
+    tool_names = list(registry.tool_names[spec.name])
 
     context_names = [tool.name for tool in CONTEXT_TOOL_GROUP.tools]
     ranking_names = [tool.name for tool in RANKING_TOOL_GROUP.tools]
@@ -270,7 +303,7 @@ def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
     delta_names = [tool.name for tool in DELTA_TOOL_GROUP.tools]
     assert spec.tool_group_keys == ("context", "ranking", "probability")
     assert tool_names == context_names + ranking_names + probability_names
-    assert assistant.reachable_tool_names == (
+    assert list(registry.reachable_tool_names[spec.name]) == (
         context_names
         + ranking_names
         + probability_names
@@ -281,51 +314,51 @@ def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
 
 def test_final_responder_owns_evidence_presentation() -> None:
     """Keep numerical presentation grounded in evidence references."""
-    assistant = Assistant("final_responder")
-    spec = assistant.spec
+    registry = current_registry()
+    spec = registry.get_spec("final_responder")
 
     assert spec.repository_context is True
     assert "Markdown table" in spec.system_prompt
     assert spec.skill_names == ("tft-statistical-interpretation",)
     assert spec.tool_group_keys == ("evidence", "context")
-    assert assistant.tool_names == ["present_evidence", "read_resource"]
-    assert assistant.handoff_names == []
-    assert assistant.reachable_tool_names == ["present_evidence", "read_resource"]
+    assert list(registry.tool_names[spec.name]) == ["present_evidence", "read_resource"]
+    assert list(registry.handoff_names[spec.name]) == []
+    assert list(registry.reachable_tool_names[spec.name]) == ["present_evidence", "read_resource"]
 
 
 def test_chat_hands_off_to_data_analyst() -> None:
-    assert Assistant("chat").handoff_names == ["data_analyst", "final_responder"]
+    assert list(current_registry().handoff_names["chat"]) == ["data_analyst", "final_responder"]
 
-    agents = Assistant("chat").build_agent().handoffs
+    agents = Assistant("chat").agent.handoffs
     assert [agent.name for agent in agents] == ["data_analyst", "final_responder"]
 
 
 def test_chat_handoff_preserves_request_model_provider() -> None:
     request_model = LitellmModel(model="anthropic/test-model", api_key="test-key")
 
-    analyst = Assistant("chat", model=request_model).build_agent().handoffs[0]
+    analyst = Assistant("chat", model=request_model).agent.handoffs[0]
 
     assert analyst.model is request_model
     assert [handoff.name for handoff in analyst.handoffs] == ["final_responder"]
     assert analyst.handoffs[0].model is request_model
-    assert [tool.name for tool in analyst.tools] == Assistant("data_analyst").tool_names
-    assert Assistant("data_analyst").build_agent().model == load_config().models.openai_model
+    assert [tool.name for tool in analyst.tools] == list(current_registry().tool_names["data_analyst"])
+    assert Assistant("data_analyst").agent.model == load_config().models.openai_model
 
 
 def test_specialists_hand_off_to_data_analyst() -> None:
-    assert Assistant("meta_expert").handoff_names == ["data_analyst"]
-    assert Assistant("theorizer").handoff_names == ["data_analyst"]
+    assert list(current_registry().handoff_names["meta_expert"]) == ["data_analyst"]
+    assert list(current_registry().handoff_names["theorizer"]) == ["data_analyst"]
     # The analyst gathers evidence, then transfers to the terminal synthesizer.
-    assert Assistant("data_analyst").handoff_names == ["final_responder"]
+    assert list(current_registry().handoff_names["data_analyst"]) == ["final_responder"]
 
 
 def test_distillation_replaces_all_legacy_transcript_assistants() -> None:
     """Discovery exposes one source-only transcript assistant without legacy aliases."""
-    names = set(Assistant.names())
+    names = set(list(current_registry().assistant_names))
     assert "distill-transcript" in names
     assert names.isdisjoint({"clean_transcript", "compact_transcript", "analyze_transcript"})
-    assistant = Assistant("distill-transcript")
-    spec = assistant.spec
+    registry = current_registry()
+    spec = registry.get_spec("distill-transcript")
     assert spec.skill_names == ()
-    assert assistant.tool_names == []
-    assert assistant.handoff_names == []
+    assert list(registry.tool_names[spec.name]) == []
+    assert list(registry.handoff_names[spec.name]) == []
