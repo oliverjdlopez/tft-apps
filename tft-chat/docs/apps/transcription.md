@@ -51,8 +51,8 @@ its result is now the distilled Markdown reference. The assistant CLI also
 defaults to `distill-transcript`:
 
 ```bash
-uv run python -m domain.assistants distill-transcript --input-file /path/to/source.txt
-uv run python -m domain.assistants --input "Source: guide excerpt. Supplied TFT text..."
+uv run python -m devtools.assistants distill-transcript --input-file /path/to/source.txt
+uv run python -m devtools.assistants --input "Source: guide excerpt. Supplied TFT text..."
 ```
 
 The input can be plain text, articles, notes, or timestamped transcript segments

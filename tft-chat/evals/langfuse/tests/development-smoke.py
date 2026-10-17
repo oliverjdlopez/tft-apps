@@ -24,9 +24,7 @@ async def main():
         raise RuntimeError('Development acceptance requires the isolated local mock deployment')
     config = chat_service.load_config()
     from agents import set_trace_processors
-    from domain.assistants.token_logging import prompt_token_logger
     set_trace_processors([])
-    prompt_token_logger.disabled = True
     # Exercise the same typed opt-in that the INI loader supplies in development.
     chat_service.load_config = lambda: replace(config, chat=replace(config.chat, langfuse_tracing=True))
     model = OpenAIResponsesModel('mock-judge', AsyncOpenAI(api_key='mock-key', base_url=os.environ['OPENAI_BASE_URL']))

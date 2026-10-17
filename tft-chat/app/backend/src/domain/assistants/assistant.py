@@ -16,7 +16,6 @@ from domain.assistants.active import active_assistant_registry
 from domain.assistants.registry import AssistantRegistry
 from domain.assistants.runtime import prepare_resources
 from domain.assistants.specs import AssistantSpec
-from domain.assistants.token_logging import log_agent_graph
 from domain.assistants.utils import instruction_callback, invocation_input
 from domain.runtime.activity import ActivityRunHooks, finalize_activity
 from domain.runtime.models import AssistantRunContext, RuntimeSettings
@@ -81,11 +80,6 @@ class Assistant:
         return self._registry.get_handoff_names(self.name)
 
     @property
-    def tools(self) -> list[Any]:
-        """Return direct SDK tools from this instance's definition snapshot."""
-        return self._registry.get_tools(self.name)
-
-    @property
     def tool_names(self) -> list[str]:
         """Return direct tool names from this instance's definition snapshot."""
         return self._registry.list_tool_names(self.name)
@@ -141,9 +135,7 @@ class Assistant:
                 output_type=self.output_type if candidate == self.name else None,
             )
 
-        agent = build(self.name, ())
-        log_agent_graph(agent, task_prompt=self.spec.task_prompt)
-        return agent
+        return build(self.name, ())
 
     async def prepare(
         self,

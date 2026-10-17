@@ -8,7 +8,7 @@ from typing import Any
 from agents import Agent, RunContextWrapper
 
 from domain.assistants.models import AssistantInvocation
-from domain.assistants.token_logging import agent_model_name
+from devtools.assistants.diagnostics import agent_model_name
 
 
 @dataclass

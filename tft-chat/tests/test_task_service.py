@@ -108,7 +108,7 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
 @pytest.mark.parametrize("explicit", [False, True])
 def test_assistant_cli_distills_file_with_default_or_explicit_name(monkeypatch, tmp_path, capsys, explicit) -> None:
     """Exercise the script entry point with the requested assistant identity."""
-    from domain.assistants.__main__ import main
+    from devtools.assistants.__main__ import main
     source = tmp_path / "source.txt"
     source.write_text("[00:12] Supplied source", encoding="utf-8")
     calls = []

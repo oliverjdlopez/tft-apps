@@ -242,6 +242,60 @@ def test_resource_library_has_no_assistant_dependencies() -> None:
     assert not violations, '\n'.join(violations)
 
 
+def test_live_assistant_domain_has_no_development_dependencies() -> None:
+    """Keep authoring, evaluation, diagnostics, and manual commands out of domain."""
+    root = ROOT / "app/backend/src/domain/assistants"
+    forbidden = ("devtools", "evals")
+    violations = []
+    for path in root.glob("*.py"):
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            modules = (
+                [alias.name for alias in node.names]
+                if isinstance(node, ast.Import)
+                else [node.module or ""]
+                if isinstance(node, ast.ImportFrom)
+                else []
+            )
+            for module in modules:
+                if any(
+                    module == prefix or module.startswith(prefix + ".")
+                    for prefix in forbidden
+                ):
+                    violations.append(f"{path.name}:{node.lineno}: {module}")
+    retired_runtime_modules = {
+        name for name in ("__main__.py", "token_logging.py") if (root / name).exists()
+    }
+    violations.extend(sorted(retired_runtime_modules))
+    assert not violations, "\n".join(violations)
+
+
+def test_prepared_live_assistant_does_not_load_development_packages(tmp_path: Path) -> None:
+    """Exercise live preparation in a fresh process and inspect imported owners."""
+    environment = {**os.environ, "PYTHONPATH": os.pathsep.join(str(path) for path in (
+        ROOT, ROOT / "app/backend", ROOT / "app/backend/src",
+    ))}
+    code = """
+import asyncio
+import sys
+from domain.assistants import Assistant
+
+asyncio.run(Assistant('distill-transcript').prepare('source'))
+forbidden = sorted(
+    name for name in sys.modules
+    if name == 'devtools' or name.startswith('devtools.')
+    or name == 'evals' or name.startswith('evals.')
+    or name in {'domain.assistants.token_logging', 'domain.assistants.__main__'}
+)
+if forbidden:
+    raise RuntimeError(', '.join(forbidden))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code], cwd=tmp_path, env=environment,
+        capture_output=True, text=True, timeout=20,
+    )
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize("module", [
     "domain.resources.library", "domain.assistants.resources",
     "domain.assistants", "domain.assistants.assistant",

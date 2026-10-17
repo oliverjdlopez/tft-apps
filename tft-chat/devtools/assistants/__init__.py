@@ -9,6 +9,7 @@ from devtools.assistants.capture import (
     registry_from_files,
 )
 from devtools.assistants.execution import assistant_from_capture, assistant_from_registry
+from devtools.assistants.definitions import load_development_spec
 from devtools.assistants.recording import InvocationRecording, record_invocation
 
 __all__ = [
@@ -19,6 +20,7 @@ __all__ = [
     "assistant_from_registry",
     "capture",
     "digest",
+    "load_development_spec",
     "record_invocation",
     "registry_from_capture",
     "registry_from_files",

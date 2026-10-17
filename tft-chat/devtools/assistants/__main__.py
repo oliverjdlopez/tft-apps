@@ -1,4 +1,4 @@
-"""Run assistants with ``python -m domain.assistants``."""
+"""Run assistants manually with ``python -m devtools.assistants``."""
 
 from __future__ import annotations
 

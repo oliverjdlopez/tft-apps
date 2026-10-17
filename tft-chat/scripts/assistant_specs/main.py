@@ -25,8 +25,9 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
     Returns:
         Created identity and source path.
     """
-    from domain.assistants import AssistantRegistry, load_assistant_spec
+    from domain.assistants import AssistantRegistry
     from domain.assistants.utils import configure_tools
+    from devtools.assistants.definitions import load_development_spec
 
     validate_name(name)
     specs = spec_inventory(root)
@@ -75,7 +76,7 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
         (candidate / "agent.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
         if prompt is not None:
             (candidate / "system.md").write_text(prompt, encoding="utf-8")
-        spec = load_assistant_spec(candidate, root_dir=candidate.parent)
+        spec = load_development_spec(candidate, root_dir=candidate.parent)
         if spec.name != name or not spec.system_prompt.strip():
             raise ValueError("The created spec must retain its requested name and a nonempty prompt.")
         missing = set(spec.handoff_names) - set(specs)

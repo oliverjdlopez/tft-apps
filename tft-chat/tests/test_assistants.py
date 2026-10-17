@@ -10,7 +10,7 @@ from agents.extensions.models.litellm_model import LitellmModel
 from core.config import load_config
 from domain.assistants import Assistant
 from domain.assistants.specs import AssistantSpec, load_assistant_spec
-from domain.assistants import token_logging
+from devtools.assistants import diagnostics
 from domain.assistants.utils import render_instruction_layers, wrap_task_input
 from domain.constants import OpenAIModels, ReasoningEfforts
 from domain.tools.db_tools.cohort_tools import COHORT_TOOL_GROUP
@@ -51,11 +51,22 @@ def test_skill_allowlist_defaults_to_all_and_loads_named_entries(tmp_path: Path)
     unrestricted_dir = tmp_path / "unrestricted"
     unrestricted_dir.mkdir()
     (unrestricted_dir / "system.md").write_text("# Unrestricted\n", encoding="utf-8")
+    base = {
+        "description": "Fixture",
+        "handoff_description": "Fixture handoff",
+        "tools": [],
+        "context": {"repository": False},
+        "handoffs": [],
+    }
+    (unrestricted_dir / "agent.json").write_text(
+        json.dumps({**base, "name": "unrestricted"}), encoding="utf-8"
+    )
     restricted_dir = tmp_path / "restricted"
     restricted_dir.mkdir()
     (restricted_dir / "system.md").write_text("# Restricted\n", encoding="utf-8")
     (restricted_dir / "agent.json").write_text(
-        json.dumps({"skills": ["comparison"]}), encoding="utf-8"
+        json.dumps({**base, "name": "restricted", "skills": ["comparison"]}),
+        encoding="utf-8",
     )
 
     assert load_assistant_spec(unrestricted_dir, root_dir=tmp_path).skill_names is None
@@ -128,18 +139,29 @@ def test_durable_overrides_retain_dynamic_callbacks() -> None:
         },
     ).build_agent()
     from agents import RunContextWrapper
+    from domain.runtime import AssistantRunContext, PreparedResources, RuntimeSettings
+    context = AssistantRunContext(
+        runtime=RuntimeSettings(
+            request_id="test", set_number=18, root_assistant="chat",
+        ),
+        resources=PreparedResources(),
+        evidence=None,
+    )
     assert callable(agent.instructions)
-    assert agent.instructions(RunContextWrapper(None), agent) == 'ROOT INSTRUCTIONS'
+    assert agent.instructions(RunContextWrapper(context), agent) == 'ROOT INSTRUCTIONS'
     analyst = next(child for child in agent.handoffs if child.name == 'data_analyst')
-    assert analyst.instructions(RunContextWrapper(None), analyst) == 'ANALYST INSTRUCTIONS'
+    assert analyst.instructions(RunContextWrapper(context), analyst) == 'ANALYST INSTRUCTIONS'
 
 
 def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
     """Agent graph diagnostics include tool and handoff token totals."""
     records: list[str] = []
-    monkeypatch.setattr(token_logging.prompt_token_logger, "info", records.append)
+    monkeypatch.setattr(diagnostics.prompt_token_logger, "info", records.append)
 
-    Assistant("chat").build_agent()
+    assistant = Assistant("chat")
+    diagnostics.log_agent_graph(
+        assistant.build_agent(), task_prompt=assistant.spec.task_prompt,
+    )
 
     payload = json.loads(records[0])
     root = payload["agents"][0]

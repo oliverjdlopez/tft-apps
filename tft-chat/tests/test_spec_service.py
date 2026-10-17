@@ -13,6 +13,21 @@ from devtools.assistants.workspace.workspace import ConflictError, Workspace
 from services import spec_service
 
 
+def render(agent) -> str:
+    """Render instructions with the typed context required by application runs."""
+    from agents import RunContextWrapper
+    from domain.runtime import AssistantRunContext, PreparedResources, RuntimeSettings
+
+    context = AssistantRunContext(
+        runtime=RuntimeSettings(
+            request_id="test", set_number=18, root_assistant=agent.name,
+        ),
+        resources=PreparedResources(),
+        evidence=None,
+    )
+    return agent.instructions(RunContextWrapper(context), agent)
+
+
 @pytest.fixture
 def workspace(tmp_path: Path) -> Workspace:
     """Use a separate specification tree, registry, and ignored SQLite store."""
@@ -72,8 +87,7 @@ def test_apply_complete_optional_files_and_existing_graph_remains_captured(works
     assert applied['active']['hash'] != before
     assert applied['active']['configuration']['handoff_names'] == ['target']
     assert applied['active']['configuration']['task_prompt'] == 'Task wrapper'
-    from agents import RunContextWrapper
-    assert 'Original prompt.' in old.instructions(RunContextWrapper(None), old)
+    assert 'Original prompt.' in render(old)
     assert old.handoffs == []
     current = Assistant('fixture', registry=workspace.active().registry).build_agent()
     assert current.handoffs[0].name == 'target'
@@ -88,7 +102,6 @@ def test_apply_complete_optional_files_and_existing_graph_remains_captured(works
 
 def test_publication_changes_new_runtime_instances_only(workspace):
     """Publishing a draft leaves existing runtime snapshots unchanged."""
-    from agents import RunContextWrapper
     from domain.assistants import Assistant
     from domain.assistants.active import ActiveAssistantRegistry
     from devtools.assistants.workspace.workspace import DefinitionsPublisher
@@ -111,8 +124,8 @@ def test_publication_changes_new_runtime_instances_only(workspace):
     connected.apply('fixture', **expected(saved))
     new = Assistant('fixture', registry=runtime.current()).build_agent()
 
-    assert 'Original prompt.' in old.instructions(RunContextWrapper(None), old)
-    assert new.instructions(RunContextWrapper(None), new) == 'Published prompt'
+    assert 'Original prompt.' in render(old)
+    assert render(new) == 'Published prompt'
 
 
 def test_source_and_runtime_conflicts_keep_draft_and_user_edits(workspace):

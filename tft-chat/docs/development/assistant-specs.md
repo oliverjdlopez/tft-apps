@@ -10,8 +10,9 @@ Save draft never changes application behavior; Apply validates and installs it.
 Repository assistant instructions belong in plain `system.md` without frontmatter.
 Put names, descriptions, model settings, tools, and handoffs in `agent.json`;
 put an actual input wrapper in `task.md`. The `distill-transcript` assistant uses
-this same format. Legacy frontmatter loading remains available for older saved
-drafts; skill and context formats are independent of assistant specifications.
+this same format. Live discovery accepts only complete directory definitions.
+The development compatibility loader handles older saved drafts and imported
+artifacts; skill and context formats are independent of assistant specifications.
 
 ## Create or copy
 

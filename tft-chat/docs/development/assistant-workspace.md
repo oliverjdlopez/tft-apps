@@ -52,6 +52,11 @@ bytes before replacing files. Directory and file writes are fsynced. Only
 A complete registry snapshot is installed for new invocations. Previously
 constructed graphs keep their captured definitions and callbacks.
 
+Workspace parsing is development-owned and can still normalize historical saved
+revisions. Publishing converts them into the same immutable `AssistantSpec`
+contract used by application graphs; historical syntax is never part of live
+repository discovery.
+
 Backend initialization recovers interrupted writes before the development
 workspace validates and publishes repository definitions. Plain runtime discovery
 does not inspect workspace storage, locks, or journals. Uncommitted operations

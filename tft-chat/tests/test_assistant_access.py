@@ -9,6 +9,20 @@ import pytest
 from agents import RunContextWrapper
 from domain.assistants import Assistant, AssistantRegistry
 from domain.assistants.specs import AssistantSpec, load_assistant_spec
+from devtools.assistants.definitions import load_development_spec
+
+
+def _current_config(**changes) -> dict:
+    """Return a complete current-format fixture configuration."""
+    return {
+        "name": "fixture",
+        "description": "Fixture",
+        "handoff_description": "Fixture handoff",
+        "tools": [],
+        "context": {"repository": False},
+        "handoffs": [],
+        **changes,
+    }
 
 
 def _load_spec(tmp_path: Path, config: dict) -> AssistantSpec:
@@ -16,7 +30,7 @@ def _load_spec(tmp_path: Path, config: dict) -> AssistantSpec:
     spec_dir = tmp_path / 'fixture'
     spec_dir.mkdir(parents=True)
     (spec_dir / 'system.md').write_text('BASE')
-    (spec_dir / 'agent.json').write_text(json.dumps(config))
+    (spec_dir / 'agent.json').write_text(json.dumps(_current_config(**config)))
     return load_assistant_spec(spec_dir, root_dir=tmp_path)
 
 
@@ -64,6 +78,36 @@ def test_playbook_access_is_independent_of_skills(tmp_path):
     assert spec.playbook_names == ('specific-guide',) and spec.skill_names == ()
     spec = _load_spec(tmp_path / 'empty', {'playbooks': [], 'skills': ['general-guidance']})
     assert spec.playbook_names == () and spec.skill_names == ('general-guidance',)
+
+
+def test_live_loader_rejects_historical_aliases_and_standalone_specs(tmp_path):
+    """Keep compatibility syntax out of application definition loading."""
+    with pytest.raises(ValueError, match="unsupported agent.json keys"):
+        _load_spec(tmp_path / "alias", {"tool_groups": ["context"]})
+    standalone = tmp_path / "legacy.md"
+    standalone.write_text("# Legacy\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="system.md"):
+        load_assistant_spec(standalone, root_dir=tmp_path)
+
+
+def test_development_loader_retains_historical_definition_support(tmp_path):
+    """Older authored artifacts remain readable only through devtools."""
+    legacy = tmp_path / "legacy.md"
+    legacy.write_text(
+        "---\nname: legacy\ntool_groups: context\n---\n# Legacy instructions\n",
+        encoding="utf-8",
+    )
+    spec = load_development_spec(legacy, root_dir=tmp_path)
+    assert spec.name == "legacy"
+    assert spec.tool_group_keys == ("context",)
+    assert spec.system_prompt == "# Legacy instructions"
+
+
+def test_instruction_callbacks_require_prepared_application_context():
+    """Raw SDK execution cannot silently omit request policy and resources."""
+    agent = Assistant("distill-transcript").build_agent()
+    with pytest.raises(TypeError, match="AssistantRunContext"):
+        agent.instructions(RunContextWrapper(None), agent)
 
 
 

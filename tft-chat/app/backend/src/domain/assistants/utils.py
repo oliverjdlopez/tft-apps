@@ -79,7 +79,9 @@ def instruction_callback(
 
     Returns:
         A synchronous SDK callback that renders only resource metadata.
-        Legacy callers without typed context receive the durable prompt.
+
+    Raises:
+        TypeError: If a caller bypasses application invocation preparation.
     """
     def render(
         ctx: RunContextWrapper[Any],
@@ -97,7 +99,7 @@ def instruction_callback(
         del agent
         context = ctx.context
         if not isinstance(context, AssistantRunContext):
-            return spec.system_prompt
+            raise TypeError("assistant instructions require AssistantRunContext")
         started = time.perf_counter()
         base_instructions = spec.system_prompt
         if root and context.runtime.system:

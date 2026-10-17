@@ -10,8 +10,9 @@ import tempfile
 from typing import Any
 
 from domain.assistants.registry import AssistantRegistry
-from domain.assistants.specs import AssistantSpec, load_assistant_spec
+from domain.assistants.specs import AssistantSpec
 from domain.assistants.utils import configure_tools
+from devtools.assistants.definitions import load_development_spec
 
 EDITABLE_FILES = ("system.md", "agent.json", "task.md")
 
@@ -121,7 +122,7 @@ def registry_from_files(files: dict[str, dict[str, str]]) -> AssistantDefinition
                     "all",
                 }:
                     raise ValueError("Unsupported tools configuration")
-            spec = load_assistant_spec(directory, root_dir=root)
+            spec = load_development_spec(directory, root_dir=root)
             if spec.name != name:
                 raise ValueError(
                     "Assistant identity changes require the lifecycle CLI"

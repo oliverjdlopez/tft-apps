@@ -8,15 +8,18 @@ remain separate concerns.
 The public `domain.assistants` package exposes `Assistant` plus its registry,
 invocation, and specification types. It does not maintain a parallel function
 facade for specifications, tools, handoffs, discovery, or reloads. Named runtime
-metadata comes from an `Assistant` instance (`spec`, `tools`, `tool_names`,
+metadata comes from an `Assistant` instance (`spec`, `tool_names`,
 `handoff_names`, `reachable_assistant_names`, and `reachable_tool_names`), while
-`Assistant.names()` reads the lazily published live registry.
+`Assistant.names()` reads the lazily published live registry. SDK tool objects
+remain internal to graph construction; consumers use stable tool names.
 Invocation construction imports implementation dependencies directly, without
 importing the package facade. `domain.assistants.utils.configure_tools(registry)`
 wires isolated registries to the tool catalogue, and `AssistantRegistry` owns
 handoff traversal and validation. `devtools.assistants` owns captured definitions,
 prompt candidates, and instruction recording; it constructs an ordinary runtime
-`Assistant` after adapting those development inputs.
+`Assistant` after adapting those development inputs. Token diagnostics and the
+manual assistant command also live in that development package and are never
+imported while building an application graph.
 
 ## Assistant specifications
 
@@ -27,22 +30,27 @@ to create, copy, or remove specs and synchronize their Langfuse prompts.
 Each assistant lives under `app/backend/src/domain/assistant_specs/<name>/`:
 
 - `system.md` contains plain Markdown instructions without frontmatter.
-- `agent.json` optionally declares the description, model and reasoning
-  overrides, tool groups, individual tools, skill and playbook access, and handoffs.
+- `agent.json` optionally declares the name, descriptions, tool access, context
+  policy, handoffs, model, reasoning, skill, and playbook overrides.
 - `task.md` optionally wraps task-style input. Most assistants do not need one.
 
 All current assistant definitions use this same layout. The `distill-transcript`
 assistant keeps its source-input wrapper in `task.md` and its distillation policy
-in `system.md`; names, descriptions, and access policy live in `agent.json`. The loader
-retains legacy frontmatter compatibility for older saved drafts and imported
-definitions, but new repository definitions should use these explicit files.
+in `system.md`; names, descriptions, and access policy live in `agent.json`. The
+application loader accepts only this directory format and fails the complete
+registry load when a definition is malformed. The development loader retains
+legacy frontmatter and field aliases for saved drafts, captures, and migration
+commands without exposing those formats to live discovery.
 
-`domain.assistants.registry` discovers and caches immutable specifications.
+`domain.assistants.active` discovers and publishes immutable specifications.
 `Assistant.build_agent()` resolves the declared graph and constructs
 fresh SDK `Agent` objects. Tool access is additive across the groups and names
 declared in `agent.json`; registration alone does not grant an assistant access.
 Python callers use `AssistantName` from `domain.assistants.constants` for
 assistant API names; assistant specs retain their names as declarative strings.
+Instruction callbacks require the typed context created by `Assistant.prepare()`;
+direct SDK execution that bypasses preparation fails instead of silently omitting
+request policy and resource permissions.
 
 The streaming `/api/chat` boundary uses `chat` as its default root. API callers
 can select another registered root with the `X-Chat-Assistant` header. The

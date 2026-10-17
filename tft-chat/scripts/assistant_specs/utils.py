@@ -24,7 +24,7 @@ def validate_name(name: str) -> str:
 
 def spec_inventory(root: Path) -> dict:
     """Load directory specs strictly so malformed sources cannot masquerade as retired."""
-    from domain.assistants.specs import load_assistant_spec
+    from devtools.assistants.definitions import load_development_spec
 
     result = {}
     for directory in sorted(root.iterdir()):
@@ -32,7 +32,7 @@ def spec_inventory(root: Path) -> dict:
             continue
         if directory.is_symlink() or any(path.is_symlink() for path in directory.rglob("*")):
             raise ValueError(f"Spec contains a symbolic link: {directory.name}")
-        spec = load_assistant_spec(directory, root_dir=root.parent)
+        spec = load_development_spec(directory, root_dir=root.parent)
         if spec.name.casefold() in {name.casefold() for name in result}:
             raise ValueError(f"Duplicate assistant name: {spec.name}")
         result[spec.name] = (directory, spec)
@@ -41,7 +41,7 @@ def spec_inventory(root: Path) -> dict:
     for path in sorted(root.glob("*.md")):
         if path.name.lower() in {"readme.md", "agents.md"}:
             continue
-        spec = load_assistant_spec(path, root_dir=root.parent)
+        spec = load_development_spec(path, root_dir=root.parent)
         if spec.name in result:
             raise ValueError(f"Duplicate assistant name: {spec.name}")
         result[spec.name] = (path, spec)
