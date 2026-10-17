@@ -9,7 +9,7 @@ from collections.abc import AsyncIterator, Mapping, Sequence
 from contextlib import aclosing
 from typing import Any
 
-from agents import Agent, MaxTurnsExceeded, Runner
+from agents import MaxTurnsExceeded
 from agents.run_internal.items import run_items_to_input_items
 from agents.tracing import trace
 
@@ -21,7 +21,8 @@ from domain.assistants import (
 )
 from domain.assistants.constants import AssistantName
 from domain.assistants.registry import current_registry
-from domain.runtime.activity import finalize_activity
+from domain.runtime.utils import invocation_input
+from domain.runtime.execution import create_context, run_streamed
 from domain.model_catalog import chat_model_specs
 from domain.tools import list_tool_group_metadata, list_tool_metadata
 from services.streaming import stream_agent_events, stream_event
@@ -72,14 +73,17 @@ async def stream_chat(
     request_label = request_id or "unknown"
     # Use one definition snapshot for execution and its UI/trace metadata.
     registry = current_registry()
-    assistant = Assistant(
-        assistant_name, registry=registry, model=model,
-        set_number=config.chat.set_number, surface="chat",
+    setup_started = time.perf_counter()
+    assistant = await asyncio.to_thread(
+        Assistant.from_name, assistant_name, registry=registry, model=model,
     )
-    invocation = await assistant.prepare(
-        messages, system=system, request_id=request_label, timing=timing,
+    run_input = invocation_input(messages, assistant.spec.task_prompt)
+    run_context = await asyncio.to_thread(
+        create_context, assistant, set_number=config.chat.set_number,
+        surface="chat", request_id=request_label, system=system, timing=timing,
     )
-    run_context = invocation.context
+    if timing is not None:
+        timing['agent_setup_ms'] = round((time.perf_counter() - setup_started) * 1000, 3)
     resources = run_context.resources
     reachable_tool_names = list(registry.reachable_tool_names[assistant_name])
     setup_started = time.perf_counter()
@@ -111,15 +115,7 @@ async def stream_chat(
         yield stream_event(
             {"type": "trace", "name": chat_trace.name, "trace_id": trace_label}
         )
-        agent = invocation.agent
-        hooks = invocation.hooks
-        result = Runner.run_streamed(
-            agent,
-            input=invocation.input,
-            context=run_context,
-            hooks=hooks,
-            max_turns=max_tool_rounds + 1,
-        )
+        agent = assistant
         if timing is not None:
             timing["agent_setup_ms"] = round(
                 timing.get("agent_setup_ms", 0)
@@ -141,7 +137,10 @@ async def stream_chat(
                     (time.perf_counter() - timing["started_at"]) * 1000, 3
                 )
         try:
-            try:
+            async with run_streamed(
+                agent, run_input, context=run_context,
+                max_turns=max_tool_rounds + 1, input_prepared=True,
+            ) as result:
                 async with aclosing(stream_agent_events(
                     result,
                     tools_by_name=tools_by_name,
@@ -153,42 +152,41 @@ async def stream_chat(
                 )) as events:
                     async for chunk in events:
                         yield chunk
-            except MaxTurnsExceeded as e:
-                logger.warning(
-                    "chat tool limit reached; generating tool-free response request_id=%s trace_id=%s elapsed_ms=%.1f",
-                    request_label,
-                    trace_label,
-                    (time.perf_counter() - started_at) * 1000,
-                )
-                final_agent = Agent(
-                    name=(
-                        "chat_tft_final_response"
-                        if assistant_name == CHAT_ASSISTANT_NAME
-                        else f"{assistant_name}_final_response"
-                    ),
-                    instructions=agent.instructions,
-                    model=model,
-                    model_settings=agent.model_settings,
-                    tools=[],
-                    handoffs=[],
-                )
-                run_data = getattr(e, "run_data", None)
-                new_items = getattr(run_data, "new_items", None)
-                replay_items = run_items_to_input_items(new_items) if new_items else []
-                stop_prompt = (
-                    SPECS_DIR / CHAT_ASSISTANT_NAME / "tool-loop-stop.md"
-                ).read_text(encoding="utf-8").strip()
-                final_result = Runner.run_streamed(
-                    final_agent,
-                    input=[
-                        *invocation.input,
-                        *replay_items,
-                        {"role": "user", "content": stop_prompt},
-                    ],
-                    max_turns=1,
-                    context=run_context,
-                    hooks=hooks,
-                )
+        except MaxTurnsExceeded as e:
+            logger.warning(
+                "chat tool limit reached; generating tool-free response request_id=%s trace_id=%s elapsed_ms=%.1f",
+                request_label,
+                trace_label,
+                (time.perf_counter() - started_at) * 1000,
+            )
+            final_agent = agent.clone(
+                name=(
+                    "chat_tft_final_response"
+                    if assistant_name == CHAT_ASSISTANT_NAME
+                    else f"{assistant_name}_final_response"
+                ),
+                model=model,
+                model_settings=agent.model_settings,
+                tools=[],
+                handoffs=[],
+            )
+            run_data = getattr(e, "run_data", None)
+            new_items = getattr(run_data, "new_items", None)
+            replay_items = run_items_to_input_items(new_items) if new_items else []
+            stop_prompt = (
+                SPECS_DIR / CHAT_ASSISTANT_NAME / "tool-loop-stop.md"
+            ).read_text(encoding="utf-8").strip()
+            async with run_streamed(
+                final_agent,
+                input=[
+                    *run_input,
+                    *replay_items,
+                    {"role": "user", "content": stop_prompt},
+                ],
+                max_turns=1,
+                context=run_context,
+                input_prepared=True,
+            ) as final_result:
                 async with aclosing(stream_agent_events(
                     final_result,
                     tools_by_name={},
@@ -200,12 +198,6 @@ async def stream_chat(
                 )) as events:
                     async for chunk in events:
                         yield chunk
-        except (asyncio.CancelledError, GeneratorExit):
-            finalize_activity(run_context, cancelled=True)
-            raise
-        except BaseException:
-            finalize_activity(run_context, cancelled=False)
-            raise
         if development is not None:
             try:
                 development.update(output=str((final_result if 'final_result' in locals() else result).final_output))

@@ -79,7 +79,7 @@ def test_save_does_not_write_source_and_revisions_survive_restart(workspace):
 def test_apply_complete_optional_files_and_existing_graph_remains_captured(workspace):
     """Apply changes all editable files, retains unrelated files and old agents."""
     from domain.assistants import Assistant
-    old = Assistant('fixture', registry=workspace.active().registry).agent
+    old = Assistant.from_name('fixture', registry=workspace.active().registry)
     state = save(workspace, **{'system.md': 'New prompt', 'agent.json': '{"handoffs":["target"],"skills":[]}', 'task.md': 'Task wrapper'})
     before = workspace.state('fixture')['active']['hash']
     applied = workspace.apply('fixture', **expected(state))
@@ -89,7 +89,7 @@ def test_apply_complete_optional_files_and_existing_graph_remains_captured(works
     assert applied['active']['configuration']['task_prompt'] == 'Task wrapper'
     assert 'Original prompt.' in render(old)
     assert old.handoffs == []
-    current = Assistant('fixture', registry=workspace.active().registry).agent
+    current = Assistant.from_name('fixture', registry=workspace.active().registry)
     assert current.handoffs[0].name == 'target'
     assert (workspace.specs / 'fixture' / 'notes.md').read_text() == 'Unrelated user notes\n'
     assert applied['history']['events'][0]['action'] == 'applied'
@@ -114,8 +114,8 @@ def test_publication_changes_new_runtime_instances_only(workspace, monkeypatch):
         workspace.specs,
         publisher=publisher,
     )
-    existing = Assistant('fixture')
-    old = existing.agent
+    existing = Assistant.from_name('fixture')
+    old = existing
     state = connected.state('fixture')
     saved = connected.save(
         'fixture',
@@ -123,7 +123,7 @@ def test_publication_changes_new_runtime_instances_only(workspace, monkeypatch):
         **expected(state),
     )
     connected.apply('fixture', **expected(saved))
-    new = Assistant('fixture').agent
+    new = Assistant.from_name('fixture')
 
     assert 'Original prompt.' in render(old)
     assert render(new) == 'Published prompt'
@@ -142,7 +142,7 @@ def test_invalid_publication_keeps_current_definitions(workspace, monkeypatch):
             replace(original.get_spec('fixture'), tool_names=('missing-tool',)),
         ])
     assert runtime.current_registry() is original
-    assert 'Original prompt.' in render(Assistant('fixture').agent)
+    assert 'Original prompt.' in render(Assistant.from_name('fixture'))
 
 
 def test_source_and_runtime_conflicts_keep_draft_and_user_edits(workspace):

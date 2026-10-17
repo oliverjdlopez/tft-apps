@@ -72,12 +72,12 @@ the existing overlap report remains authoritative. See
 
 ## Integration and evaluation
 
-All application execution surfaces retain `domain.assistants.Assistant` from
-`origin/asst-runtime`: chat, direct API and CLI, transcript stages, Specs drafts,
-and captured evaluations. `Assistant.prepare()` selects resources once using
-its private definition snapshot. SDK callbacks render permitted resources at
-every model step and handoff depth. There is no second preparation or factory
-path for this feature.
+Chat, direct API and CLI, Specs drafts, and captured evaluations construct
+SDK-compatible `domain.assistants.Assistant` subclasses, as does transcription.
+Runtime gathers the resource catalogue and computes access once per invocation.
+Each subclass owns `render_instructions(wrapper, agent)`, bound to the SDK's
+instructions field, which renders permitted metadata at every model step and
+handoff depth. Runtime owns Runner dispatch and stream cancellation.
 
 Eligible recipients are assistants other than `chat` that use repository
 context or explicitly name one or more skills, including an analytical
@@ -91,9 +91,9 @@ skip reference and workflow selection.
 
 Captured eval candidates replace only durable prompts in the isolated registry.
 Explicit empty overrides remain empty. Task wrappers, frozen model settings,
-activity hooks, invocation-local evidence, and execution provenance use the
-existing `AssistantInvocation`. Resource selection and model execution share
-one event loop. Historical bundles without captured graphs remain readable but
+activity hooks, request-local evidence, and execution provenance use ordinary
+SDK input, context, and hooks arguments. Async adapters construct the assistant
+in a worker thread and run the SDK on their event loop. Historical bundles without captured graphs remain readable but
 need a fresh export and an explicit database target before live execution.
 Do not compare historical scores that omitted selected workflows directly
 with new scores; rerun both candidates through the same path and data scope.

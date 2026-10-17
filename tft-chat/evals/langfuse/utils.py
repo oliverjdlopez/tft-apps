@@ -492,7 +492,7 @@ def legacy_execution_item(item: dict) -> dict:
 
 def repository_prompts() -> dict[str, dict]:
     """Return current spec instructions for seeding and live experiment discovery."""
-    from domain.assistants.specs import ASSISTANT_SPECS_DIR
+    from domain.assistants.constants import ASSISTANT_SPECS_DIR
     from scripts.assistant_specs.utils import spec_inventory
 
     return {name: {"name": f"chattft/assistants/{name}", "text": spec.system_prompt}

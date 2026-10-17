@@ -269,8 +269,8 @@ def test_live_assistant_domain_has_no_development_dependencies() -> None:
     assert not violations, "\n".join(violations)
 
 
-def test_prepared_live_assistant_does_not_load_development_packages(tmp_path: Path) -> None:
-    """Exercise live preparation in a fresh process and inspect imported owners."""
+def test_live_assistant_does_not_load_development_packages(tmp_path: Path) -> None:
+    """Exercise live construction in a fresh process and inspect imported owners."""
     environment = {**os.environ, "PYTHONPATH": os.pathsep.join(str(path) for path in (
         ROOT, ROOT / "app/backend", ROOT / "app/backend/src",
     ))}
@@ -279,7 +279,7 @@ import asyncio
 import sys
 from domain.assistants import Assistant
 
-asyncio.run(Assistant('distill-transcript').prepare('source'))
+Assistant.from_name('distill-transcript')
 forbidden = sorted(
     name for name in sys.modules
     if name == 'devtools' or name.startswith('devtools.')
@@ -316,3 +316,17 @@ def test_runtime_entry_imports_in_fresh_process(module: str, tmp_path: Path) -> 
         cwd=tmp_path, env=environment, capture_output=True, text=True, timeout=20,
     )
     assert result.returncode == 0, result.stderr
+
+
+def test_assistants_define_agents_without_gathering_or_running_context() -> None:
+    """Keep execution and context assembly out of assistant configuration modules."""
+    root = ROOT / 'app/backend/src/domain/assistants'
+    violations = []
+    for path in root.glob('*.py'):
+        for node in ast.walk(ast.parse(path.read_text(encoding='utf-8'))):
+            if isinstance(node, ast.ImportFrom):
+                if node.module == 'agents' and any(alias.name == 'Runner' for alias in node.names):
+                    violations.append(f'{path.name}:{node.lineno}: Runner')
+                if node.module in {'domain.runtime.execution', 'domain.runtime.resources'}:
+                    violations.append(f'{path.name}:{node.lineno}: {node.module}')
+    assert not violations, '\n'.join(violations)

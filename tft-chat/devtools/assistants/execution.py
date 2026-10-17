@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from dataclasses import replace
 from typing import Any
 
-from domain.assistants import Assistant, BaseAssistant
+from domain.assistants import Assistant
 from domain.assistants.registry import AssistantRegistry
 from devtools.assistants.capture import AssistantDefinitions, registry_from_capture
 
@@ -45,7 +45,7 @@ def assistant_from_registry(
     *,
     prompt_candidates: Mapping[str, str] | None = None,
     **kwargs: Any,
-) -> BaseAssistant:
+) -> Assistant:
     """Build an assistant from isolated definitions and prompt candidates."""
     definitions = (
         registry
@@ -57,12 +57,15 @@ def assistant_from_registry(
         if prompt_candidates is not None
         else definitions
     )
-    return Assistant(
-        name,
-        registry=candidate.registry,
-        resolved_models=candidate.resolved_models,
-        **kwargs,
-    )
+    assistant = Assistant.from_name(name, registry=candidate.registry, **kwargs)
+    if kwargs.get('model') is None:
+        pending = [assistant]
+        while pending:
+            node = pending.pop()
+            if node.spec.name in candidate.resolved_models:
+                node.model = candidate.resolved_models[node.spec.name]
+            pending.extend(node.handoffs)
+    return assistant
 
 
 def assistant_from_capture(
@@ -71,7 +74,7 @@ def assistant_from_capture(
     *,
     prompt_candidates: Mapping[str, str] | None = None,
     **kwargs: Any,
-) -> BaseAssistant:
+) -> Assistant:
     """Build an ordinary runtime assistant from a verified captured graph."""
     return assistant_from_registry(
         registry_from_capture(graph),

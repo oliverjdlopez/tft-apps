@@ -125,7 +125,7 @@ def remove_spec(root: Path, repo: Path, name: str, *, apply: bool = False,
 
 def main(argv: list[str] | None = None) -> int:
     """Dispatch terminal management commands independently of assistant execution."""
-    from domain.assistants.specs import ASSISTANT_SPECS_DIR, ROOT_DIR
+    from domain.assistants.constants import ASSISTANT_SPECS_DIR, ROOT_DIR
 
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)

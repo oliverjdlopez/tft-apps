@@ -10,7 +10,7 @@ from agents import RunContextWrapper
 from domain.assistants import Assistant, AssistantRegistry
 from domain.assistants.registry import current_registry
 from domain.assistants.models import AssistantSpec
-from domain.assistants.specs import load_assistant_spec
+from domain.assistants.utils import load_assistant_spec
 from devtools.assistants.definitions import load_development_spec
 
 
@@ -107,7 +107,7 @@ def test_development_loader_retains_historical_definition_support(tmp_path):
 
 def test_instruction_callbacks_require_prepared_application_context():
     """Raw SDK execution cannot silently omit request policy and resources."""
-    agent = Assistant("distill-transcript").agent
+    agent = Assistant.from_name("distill-transcript")
     with pytest.raises(TypeError, match="AssistantRunContext"):
         agent.instructions(RunContextWrapper(None), agent)
 

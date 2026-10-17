@@ -10,11 +10,12 @@ import pytest
 from agents import Agent, RunContextWrapper
 from agents.tool_context import ToolContext
 
-from domain.assistants import Assistant, BaseAssistant, ChatAssistant, AssistantRegistry
+from domain.assistants import Assistant, ChatAssistant, AssistantRegistry
 from domain.assistants.models import AssistantSpec
 from domain.assistants.resources import resource_entries
 from domain.resources.library import build_library
 from domain.runtime.models import ToolActivity
+from domain.runtime import execution
 from domain.tools import get_tool
 from devtools.assistants import assistant_from_capture, capture, digest, record_invocation
 
@@ -46,13 +47,13 @@ def resources(monkeypatch, tmp_path):
         package = playbooks / name
         package.mkdir(parents=True)
         (package / 'PLAYBOOK.md').write_text(f'---\nname: {name}\ndescription: Specific {name} guide\n---\nPLAYBOOK {name.upper()}')
-    monkeypatch.setattr('domain.assistants.resources.get_library', lambda: build_library(references, skills, playbooks))
+    monkeypatch.setattr('domain.runtime.resources.get_library', lambda: build_library(references, skills, playbooks))
 
     async def forbidden(*args, **kwargs):
         """Fail if preparation or a resource read invokes another model."""
         pytest.fail('Resource preparation/read made a model call')
 
-    monkeypatch.setattr('domain.assistants.base.Runner.run', forbidden)
+    monkeypatch.setattr('domain.runtime.execution.Runner.run', forbidden)
     return references, skills
 
 
@@ -67,6 +68,18 @@ def registry(*, resources=True, root_name='root', root_skill_names=()):
                     handoff_names=('leaf',), skill_names=('allowed',), playbook_names=('allowed',))
     leaf = replace(child, name='leaf', system_prompt='LEAF', handoff_names=(), skill_names=('other',), playbook_names=('other',))
     return AssistantRegistry([root, child, leaf])
+
+
+def run_offline(assistant, input, *, system=None, timing=None):
+    """Capture actual runner arguments through normal execution without a model."""
+    def capture_run(agent, **kwargs):
+        """Return the execution state for prompt and tool assertions."""
+        kwargs['context'].timing = timing
+        return SimpleNamespace(agent=agent, **kwargs)
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr('domain.runtime.execution.Runner.run_sync', capture_run)
+        return execution.run_sync(assistant, input, system=system, set_number=18)
 
 
 def instructions(agent, invocation):
@@ -92,8 +105,8 @@ def test_registry_metadata_is_precomputed_and_execution_lists_are_independent(mo
         pytest.fail("Execution resolved tools again")
 
     monkeypatch.setattr('domain.assistants.registry.resolve_tools', unexpected_resolution)
-    first = Assistant('root', registry=source, set_number=18).agent
-    second = Assistant('root', registry=source, set_number=18).agent
+    first = Assistant.from_name('root', registry=source)
+    second = Assistant.from_name('root', registry=source)
     assert source.reachable_assistant_names['root'] == ('root', 'child', 'leaf')
     assert source.reachable_tool_names['root'] == ('read_resource',)
     assert tuple(tool.name for tool in first.tools) == source.tool_names['root']
@@ -112,18 +125,17 @@ def test_constructor_rejects_invalid_execution_graph(changes, error, message):
     """Bad handoffs and tools fail at construction, before preparing a request."""
     spec = replace(registry(resources=False).get_spec("root"), **changes)
     with pytest.raises(error, match=message):
-        Assistant("root", registry=AssistantRegistry([spec]), set_number=18)
+        Assistant.from_name("root", registry=AssistantRegistry([spec]))
 
 
-def test_preparation_exposes_metadata_without_bodies_or_selection():
+def test_execution_exposes_metadata_without_bodies_or_selection():
     """Every handoff sees a permitted catalogue without any initial injection."""
     messages = [{'role': 'user', 'content': 'Tell me about Riven'},
                 {'role': 'assistant', 'content': 'A bruiser'},
                 {'role': 'user', 'content': 'What about her items?'}]
     timing = {}
-    invocation = asyncio.run(Assistant('root', registry=registry(), set_number=18).prepare(
-        messages, system='PREFIX', timing=timing))
-    recording = record_invocation(invocation)
+    invocation = run_offline(Assistant.from_name('root', registry=registry()), messages, system='PREFIX', timing=timing)
+    recording = record_invocation(invocation.agent)
     assert invocation.input[-1]['content'] == 'TASK\n\n## Input\n\nWhat about her items?'
     assert messages[-1]['content'] == 'What about her items?'
     root, child = invocation.agent, invocation.agent.handoffs[0]
@@ -139,14 +151,13 @@ def test_preparation_exposes_metadata_without_bodies_or_selection():
     assert 'skill:other' not in instructions(child, invocation)
     assert 'skill:other' in instructions(leaf, invocation)
     assert not invocation.context.resources.reads
-    assert 'resource_catalogue_ms' in timing
     assert 'context_selection_ms' not in timing and 'skill_selection_ms' not in timing
     assert recording.instructions['root'] == instructions(root, invocation)
 
 
 def test_reads_return_complete_contents_and_track_only_actual_reads():
     """A read produces tool output without adding resource bodies to instructions."""
-    invocation = asyncio.run(Assistant('root', registry=registry(), set_number=18).prepare('Question'))
+    invocation = run_offline(Assistant.from_name('root', registry=registry()), 'Question')
     child = invocation.agent.handoffs[0]
     before = instructions(child, invocation)
     reference = read(invocation, child, 'set18/units/roster')
@@ -163,7 +174,7 @@ def test_reads_return_complete_contents_and_track_only_actual_reads():
                                          '../private.ini', 'reference:/etc/passwd', 'missing'])
 def test_read_denies_unknown_paths_sets_and_disallowed_skills(resource_id):
     """Exact catalogue membership enforces references and skills alike."""
-    invocation = asyncio.run(Assistant('root', registry=registry(), set_number=18).prepare('Question'))
+    invocation = run_offline(Assistant.from_name('root', registry=registry()), 'Question')
     result = read(invocation, invocation.agent.handoffs[0], resource_id)
     assert result['found'] is False and 'content' not in result
     assert not invocation.context.resources.reads
@@ -171,11 +182,10 @@ def test_read_denies_unknown_paths_sets_and_disallowed_skills(resource_id):
 
 def test_chat_and_transcript_boundaries():
     """Chat cannot read skills and transcript-only invocations have no resources."""
-    invocation = asyncio.run(Assistant('chat', registry=registry(root_name='chat', root_skill_names=('allowed',)),
-                                       set_number=18).prepare('Question'))
+    invocation = run_offline(Assistant.from_name('chat', registry=registry(root_name='chat', root_skill_names=('allowed',))), 'Question')
     assert 'skill:allowed' not in instructions(invocation.agent, invocation)
     assert read(invocation, invocation.agent, 'skill:allowed')['found'] is False
-    transcript = asyncio.run(Assistant('root', registry=registry(resources=False), set_number=18).prepare('Transcript'))
+    transcript = run_offline(Assistant.from_name('root', registry=registry(resources=False)), 'Transcript')
     assert instructions(transcript.agent, transcript) == 'ROOT'
     assert resource_entries(transcript.context.resources, 'root') == []
 
@@ -188,7 +198,7 @@ def test_context_disabled_and_empty_allowlists_deny_reads():
         replace(source.get_spec('child'), repository_context=False, skill_names=(), playbook_names=()),
         source.get_spec('leaf'),
     ])
-    invocation = asyncio.run(Assistant('root', registry=source, set_number=18).prepare('Question'))
+    invocation = run_offline(Assistant.from_name('root', registry=source), 'Question')
     assert read(invocation, invocation.agent, 'skill:allowed')['found']
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
     assert resource_entries(invocation.context.resources, 'child') == []
@@ -199,36 +209,63 @@ def test_capture_and_run_state_are_isolated():
     source = registry()
     graph = capture(source)
     instance = assistant_from_capture(
-        graph, 'root', set_number=18,
+        graph, 'root',
         prompt_candidates={'child': 'CANDIDATE'},
     )
-    first = asyncio.run(instance.prepare('Question'))
+    first = run_offline(instance, 'Question')
     source = AssistantRegistry([
         replace(source.get_spec(name), system_prompt='CHANGED', skill_names=())
         for name in list(source.assistant_names)
     ])
     second_instance = assistant_from_capture(
-        graph, 'root', set_number=18, prompt_candidates={'child': 'CANDIDATE'},
+        graph, 'root',  prompt_candidates={'child': 'CANDIDATE'},
     )
-    second = asyncio.run(second_instance.prepare('Another question'))
+    second = run_offline(second_instance, 'Another question')
     child = first.agent.handoffs[0]
     assert instructions(child, first).startswith('CANDIDATE')
     assert read(first, child, 'skill:allowed')['found']
     assert not second.context.resources.reads
-    assert first.agent is instance.agent
-    assert second.agent is second_instance.agent
+    assert first.agent is instance
+    assert second.agent is second_instance
     assert first.agent is not second.agent
     assert first.context.evidence is not second.context.evidence
     assert first.context.activity is not second.context.activity
     assert child.model == graph['specs']['child']['resolved_model']
 
 
+def test_graph_shares_catalogue_and_repeated_runs_isolate_state(monkeypatch):
+    """Load graph resources once while giving each execution independent state."""
+    from domain.runtime import resources as resource_module
+
+    original = resource_module.get_library
+    loads = []
+
+    def load():
+        """Count catalogue requests without replacing real permission behavior."""
+        loads.append(True)
+        return original()
+
+    monkeypatch.setattr(resource_module, 'get_library', load)
+    instance = Assistant.from_name('root', registry=registry())
+    first = run_offline(instance, 'First')
+    child = instance.handoffs[0]
+    assert not hasattr(instance, "resources")
+    assert read(first, child, 'skill:allowed')['found']
+    first.context.activity.calls['pending'] = ToolActivity('pending', 'lookup')
+    second = run_offline(instance, 'Second')
+    assert loads == [True, True]
+    assert not second.context.resources.reads
+    assert not second.context.activity.calls
+    assert first.context.evidence is not second.context.evidence
+    assert first.context.runtime.request_id != second.context.runtime.request_id
+
+
 def test_explicit_empty_captured_prompt_keeps_only_metadata():
     """An empty prompt replacement must not restore the captured durable prompt."""
-    invocation = asyncio.run(assistant_from_capture(
-        capture(registry()), 'root', set_number=18,
+    invocation = run_offline(assistant_from_capture(
+        capture(registry()), 'root',
         prompt_candidates={'child': ''},
-    ).prepare('Question'))
+    ), 'Question')
     text = instructions(invocation.agent.handoffs[0], invocation)
     assert text.startswith('## Available resources') and 'CHILD' not in text and 'PRIVATE' not in text
 
@@ -240,7 +277,7 @@ def test_tool_access_is_required_in_addition_to_resource_flags():
         replace(source.get_spec(name), tool_group_keys=())
         for name in list(source.assistant_names)
     ])
-    invocation = asyncio.run(Assistant('root', registry=source, set_number=18).prepare('Question'))
+    invocation = run_offline(Assistant.from_name('root', registry=source), 'Question')
     assert instructions(invocation.agent, invocation) == 'ROOT'
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
 
@@ -249,7 +286,7 @@ def test_sync_and_async_entry_points_supply_same_contract(monkeypatch):
     """Each API calls the matching SDK entry point with the same prepared contract."""
     from agents import RunConfig
 
-    instance = Assistant('root', registry=registry(resources=False), set_number=18)
+    instance = Assistant.from_name('root', registry=registry(resources=False))
     contexts, entrypoints = [], []
     config = RunConfig(workflow_name='fixture')
 
@@ -271,23 +308,23 @@ def test_sync_and_async_entry_points_supply_same_contract(monkeypatch):
         entrypoints.append('sync')
         return inspect(*args, **kwargs)
 
-    monkeypatch.setattr('domain.assistants.base.Runner.run', run)
-    monkeypatch.setattr('domain.assistants.base.Runner.run_sync', run_sync)
+    monkeypatch.setattr('domain.runtime.execution.Runner.run', run)
+    monkeypatch.setattr('domain.runtime.execution.Runner.run_sync', run_sync)
     options = dict(max_turns=4, run_config=config, system='PREFIX')
-    assert instance.run_sync('Question', **options).final_output == 'Answer'
-    assert asyncio.run(instance.run('Question', **options)).final_output == 'Answer'
+    assert execution.run_sync(instance, 'Question', **options).final_output == 'Answer'
+    assert asyncio.run(execution.run(instance, 'Question', **options)).final_output == 'Answer'
     assert entrypoints == ['sync', 'async']
     assert contexts[0] is not contexts[1]
 
 
 def test_run_sync_inside_event_loop_fails_cleanly():
     """Async consumers get clear guidance without leaking a coroutine."""
-    instance = Assistant('root', registry=registry(resources=False), set_number=18)
+    instance = Assistant.from_name('root', registry=registry(resources=False))
 
     async def run():
         """Exercise the synchronous boundary inside a running loop."""
         with pytest.raises(RuntimeError, match='await run'):
-            instance.run_sync('Question')
+            execution.run_sync(instance, 'Question')
 
     asyncio.run(run())
 
@@ -295,7 +332,7 @@ def test_run_sync_inside_event_loop_fails_cleanly():
 @pytest.mark.parametrize('sync', [True, False])
 def test_failed_execution_finalizes_pending_activity(monkeypatch, sync):
     """Failed runs finalize unfinished tool calls through either SDK entry point."""
-    instance = Assistant('root', registry=registry(resources=False), set_number=18)
+    instance = Assistant.from_name('root', registry=registry(resources=False))
     contexts = []
 
     def fail(agent, *, context, **kwargs):
@@ -308,20 +345,20 @@ def test_failed_execution_finalizes_pending_activity(monkeypatch, sync):
         """Use the same failure through the asynchronous SDK boundary."""
         return fail(*args, **kwargs)
 
-    monkeypatch.setattr('domain.assistants.base.Runner.run', fail_async)
-    monkeypatch.setattr('domain.assistants.base.Runner.run_sync', fail)
+    monkeypatch.setattr('domain.runtime.execution.Runner.run', fail_async)
+    monkeypatch.setattr('domain.runtime.execution.Runner.run_sync', fail)
     with pytest.raises(ValueError, match='Mock failure'):
         if sync:
-            instance.run_sync('Question')
+            execution.run_sync(instance, 'Question')
         else:
-            asyncio.run(instance.run('Question'))
+            asyncio.run(execution.run(instance, 'Question'))
     assert contexts[0].activity.calls['pending'].status == 'failed'
 
 
 @pytest.mark.parametrize('error', [KeyboardInterrupt, asyncio.CancelledError])
 def test_sync_interruption_finalizes_pending_activity(monkeypatch, error):
     """Interrupted synchronous runs mark unfinished calls as cancelled."""
-    instance = Assistant('root', registry=registry(resources=False), set_number=18)
+    instance = Assistant.from_name('root', registry=registry(resources=False))
     contexts = []
 
     def interrupt(agent, *, context, **kwargs):
@@ -330,9 +367,9 @@ def test_sync_interruption_finalizes_pending_activity(monkeypatch, error):
         context.activity.calls['pending'] = ToolActivity('pending', 'lookup')
         raise error()
 
-    monkeypatch.setattr('domain.assistants.base.Runner.run_sync', interrupt)
+    monkeypatch.setattr('domain.runtime.execution.Runner.run_sync', interrupt)
     with pytest.raises(error):
-        instance.run_sync('Question')
+        execution.run_sync(instance, 'Question')
     assert contexts[0].activity.calls['pending'].status == 'cancelled'
 
 
@@ -355,9 +392,9 @@ def test_sync_execution_preserves_sdk_default_event_loop(monkeypatch):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:
-        instance = Assistant('root', registry=registry(), set_number=18)
-        assert instance.run_sync('First').final_output == 'Answer'
-        assert instance.run_sync('Second').final_output == 'Answer'
+        instance = Assistant.from_name('root', registry=registry())
+        assert execution.run_sync(instance, 'First').final_output == 'Answer'
+        assert execution.run_sync(instance, 'Second').final_output == 'Answer'
         assert loops == [loop, loop]
         assert asyncio.get_event_loop() is loop and not loop.is_closed()
     finally:
@@ -368,8 +405,8 @@ def test_sync_execution_preserves_sdk_default_event_loop(monkeypatch):
 def test_playbook_handoff_catalogues_and_reads_enforce_frozen_permissions():
     """Captured handoffs expose guide metadata and load bodies only on request."""
     source = registry()
-    instance = assistant_from_capture(capture(source), 'root', set_number=18)
-    invocation = asyncio.run(instance.prepare('Specific question'))
+    instance = assistant_from_capture(capture(source), 'root')
+    invocation = run_offline(instance, 'Specific question')
     child = invocation.agent.handoffs[0]
     leaf = child.handoffs[0]
     assert 'playbook:allowed' in instructions(child, invocation)
@@ -394,7 +431,7 @@ def test_explicit_playbook_access_without_references_or_skills():
         replace(source.get_spec(name), repository_context=False, skill_names=(), playbook_names=('allowed',))
         for name in list(source.assistant_names)
     ])
-    invocation = asyncio.run(Assistant('root', registry=source).prepare('Guide question'))
+    invocation = run_offline(Assistant.from_name('root', registry=source), 'Guide question')
     assert read(invocation, invocation.agent, 'playbook:allowed')['found']
     assert not read(invocation, invocation.agent, 'skill:allowed')['found']
     assert not read(invocation, invocation.agent, 'set18')['found']
@@ -402,7 +439,7 @@ def test_explicit_playbook_access_without_references_or_skills():
     chat_source = AssistantRegistry([
         replace(chat_source.get_spec(name), playbook_names=('allowed',)) for name in list(chat_source.assistant_names)
     ])
-    chat = asyncio.run(Assistant('chat', registry=chat_source).prepare('Guide question'))
+    chat = run_offline(Assistant.from_name('chat', registry=chat_source), 'Guide question')
     assert 'playbook:allowed' not in instructions(chat.agent, chat)
     assert not read(chat, chat.agent, 'playbook:allowed')['found']
 
@@ -413,7 +450,7 @@ def test_historical_captures_do_not_gain_playbook_permissions():
     for definition in graph['specs'].values():
         definition.pop('playbook_names')
     graph['hash'] = digest({key: graph[key] for key in ('version', 'specs')})
-    invocation = asyncio.run(assistant_from_capture(graph, 'root').prepare('Question'))
+    invocation = run_offline(assistant_from_capture(graph, 'root'), 'Question')
     child = invocation.agent.handoffs[0]
     assert 'playbook:' not in instructions(child, invocation)
     assert not read(invocation, child, 'playbook:allowed')['found']
@@ -430,14 +467,14 @@ def test_captured_values_pass_through_model_invariants(field, value):
     graph['specs']['root'][field] = value
     graph['hash'] = digest({key: graph[key] for key in ('version', 'specs')})
     with pytest.raises(ValueError, match=field):
-        assistant_from_capture(graph, 'root', set_number=18)
+        assistant_from_capture(graph, 'root')
 
 
 def test_chat_class_owns_readable_prompt_and_fallback_identity():
     """Chat rendering remains bound to its instance when the SDK renames a fallback."""
-    instance = Assistant('chat', registry=registry(root_name='chat'), set_number=18)
+    instance = Assistant.from_name('chat', registry=registry(root_name='chat'))
     assert isinstance(instance, ChatAssistant)
-    invocation = asyncio.run(instance.prepare('Question', system='PREFIX', timing={}))
+    invocation = run_offline(instance, 'Question', system='PREFIX', timing={})
     prompt = instructions(invocation.agent, invocation)
     assert prompt.startswith('PREFIX\n\nROOT')
     assert '## Available TFT references' in prompt
@@ -457,18 +494,19 @@ def test_handoff_uses_registered_subclass_and_root_only_output_type(monkeypatch)
     """The same class dispatch applies to every graph node without sharing behavior."""
     from domain.assistants.assistant import ASSISTANT_CLASSES
 
-    class CustomAssistant(BaseAssistant):
+    class CustomAssistant(Assistant):
         """Demonstrate a complete high-level prompt override."""
 
-        def render_prompt(self, context):
+        def render_instructions(self, wrapper, agent):
             """Render a custom prompt from the node's own spec and prepared resources."""
+            context = wrapper.context
             ids = [entry['id'] for entry in resource_entries(context.resources, self.name)]
             return self.spec.system_prompt + ' CUSTOM: ' + ', '.join(ids)
 
     monkeypatch.setitem(ASSISTANT_CLASSES, 'child', CustomAssistant)
-    instance = Assistant('root', registry=registry(), output_type=str, set_number=18)
-    assert type(instance) is BaseAssistant
-    invocation = asyncio.run(instance.prepare('Question', system='PREFIX'))
+    instance = Assistant.from_name('root', registry=registry(), output_type=str)
+    assert type(instance) is Assistant
+    invocation = run_offline(instance, 'Question', system='PREFIX')
     child = invocation.agent.handoffs[0]
     assert isinstance(child.instructions.__self__, CustomAssistant)
     assert 'CHILD CUSTOM: set18' in instructions(child, invocation)
@@ -487,9 +525,9 @@ def test_chat_subclass_dispatches_inside_captured_handoffs():
         replace(source.get_spec('child'), name='chat'),
         source.get_spec('leaf'),
     ])
-    instance = assistant_from_capture(capture(source), 'root', set_number=18,
+    instance = assistant_from_capture(capture(source), 'root',
                                       prompt_candidates={'chat': 'CAPTURED CHAT'})
-    invocation = asyncio.run(instance.prepare('Question', system='PREFIX'))
+    invocation = run_offline(instance, 'Question', system='PREFIX')
     chat = invocation.agent.handoffs[0]
     assert isinstance(chat.instructions.__self__, ChatAssistant)
     text = instructions(chat, invocation)

@@ -14,14 +14,13 @@ captures Python site-process access, including static asset reads, but does not
 measure database storage I/O, browser filesystem activity, or operations hidden
 inside external subprocesses. Profiling output is diagnostic and best-effort.
 Chat request stage timings are appended as JSONL records to
-`profiles/chat_timing.jsonl`. Each record separates context selection, skill
-selection, instruction assembly, agent setup, first stream chunk, first model
+`profiles/chat_timing.jsonl`. Each record includes instruction assembly, agent setup, first stream chunk, first model
 event, first text delta, and total request time. Missing stage values mean the
 request ended before that stage completed; interrupted streams are recorded as
 such. The output is local diagnostic data and is ignored by Git.
 Instruction assembly is the cumulative time spent rendering dynamic instruction
-callbacks across model steps, including fallback; resource-selection timings
-still measure the single preparation pass.
+callbacks across model steps, including fallback. Agent setup includes graph construction and the shared
+resource catalogue/access snapshot; resource loading has no separate timing field.
 
 ## Backend composition
 
@@ -40,10 +39,10 @@ inputs and delegate to `services/`:
   the current `OpenAIModels.LATEST` ID alongside the curated model choices.
 - Assistant and tool discovery in `/api/config` and `/api/assistants`, plus
   `X-Chat-Assistant` validation, read loaded definitions directly. They do not
-  construct executable agents. Each chat request creates its own `Assistant`,
-  whose constructor builds the SDK graph before `prepare()` attaches input,
-  resource permissions, evidence, and activity state. `agent_setup_ms` includes
-  that constructor work as well as the streaming adapter's setup.
+  construct executable agents. Each chat request uses `Assistant.from_name` to
+  build a fresh SDK subclass graph. Runtime then gathers resource permissions and
+  creates request-local evidence and activity. `agent_setup_ms` includes graph
+  construction, context gathering, and streaming-adapter setup.
 - `display_service.py` supplies explorer views for models, databases, tools,
   and upstream APIs.
 - `/api/shared-media` exposes immutable shared file publication, discovery,
@@ -110,19 +109,18 @@ boundaries.
 Chat Activity trace links open the encoded trace-detail URL rather than the
 dashboard index.
 
-Chat calls `Assistant` for the selected name (`ChatAssistant` for `chat`),
-then obtains a fresh `AssistantInvocation` through async `prepare()` (local
-preparation runs in a worker thread) and
-supplies its typed `AssistantRunContext` and activity hooks to the runner and
-stream adapter. The instance retains its constructed graph and invocation-local
-resource library. Each assistant's `render_prompt(context)` presents permitted
-root metadata as a readable resource list; index reads reveal children. The
-same class selection applies to handoffs. The tool-limit fallback reuses the
-root assistant's bound instruction callback.
+Chat constructs the selected SDK subclass through `Assistant.from_name`
+(`ChatAssistant` for `chat`). Runtime gathers context in a worker thread and owns
+Runner dispatch, activity cleanup, and cancellation/draining of SDK streams.
+Each assistant's `render_instructions(wrapper, agent)` callback presents permitted
+metadata as a readable resource list; index reads reveal children. The same class
+selection applies to handoffs. The service's tool-limit fallback clones the root
+without tools/handoffs and reuses its specification and invocation context.
 `read_resource` returns exact complete reference or skill bodies on demand.
 Metadata and reads enforce set scope and each assistant's permissions. Chat
 cannot read skills. Source Activity events occur after successful read calls.
-Tracing and stream cleanup remain service-owned.
+Tracing and browser-event formatting remain service-owned; the adapter closes
+runtime's event iterator so early browser closure cancels background execution.
 `domain.runtime.activity.ActivityRunHooks` records tool-call IDs, owning agent,
 arguments, actual execution timestamps, and handoffs in that context. These
 records remain internal: SDK stream events still determine browser ordering,

@@ -98,7 +98,7 @@ flowchart TD
     M --> I
 ```
 
-In chat, `services/chat_service.py::stream_chat` constructs `Assistant`, calls `prepare`, emits the selected resources, and passes the invocation's context and hooks to `Runner.run_streamed`. In evaluations, `evals/worker.py::run_assistant` dispatches through `run_captured`; `evals/assistant_execution.py::execute_captured` uses `devtools.assistants` to restore the graph, apply prompt candidates, attach recording, and then execute through ordinary `Assistant.prepare()`. The integration does not replace the application runtime with a separate assembler.
+In chat, `services/chat_service.py::stream_chat` constructs the SDK `Assistant` subclass through `from_name`; `domain.runtime.execution` gathers context and owns Runner dispatch and stream cleanup. The service retains browser formatting and fallback policy. In evaluations, `evals/worker.py::run_assistant` dispatches through `run_captured`; `evals/assistant_execution.py::execute_captured` uses `devtools.assistants` to restore the graph, apply prompt candidates, and attach recording to the SDK agent before execution with fresh context. Both use the same assistant classes and resource policy.
 
 `Assistant.prepare` traverses the graph it has actually built from its private definition snapshot. It selects skills from the union of reachable eligible recipients' allowlists. If any eligible recipient has unrestricted access, the discoverable pool remains available. Otherwise the provider receives the bounded name union, preventing unreachable or disallowed skills from taking selector slots. Each assistant's rendering boundary applies its own permissions again.
 

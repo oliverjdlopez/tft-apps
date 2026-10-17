@@ -12,9 +12,9 @@ from core.config import load_config
 from domain.assistants import Assistant
 from domain.assistants.registry import current_registry
 from domain.assistants.models import AssistantSpec
-from domain.assistants.specs import load_assistant_spec
 from devtools.assistants import diagnostics
-from domain.assistants.utils import wrap_task_input
+from domain.assistants.utils import load_assistant_spec
+from domain.runtime.utils import wrap_task_input
 from domain.constants import OpenAIModels, ReasoningEfforts
 from domain.tools.db_tools.cohort_tools import COHORT_TOOL_GROUP
 from domain.tools.db_tools.deltas import DELTA_TOOL_GROUP
@@ -125,7 +125,7 @@ def test_assistant_specs_declare_prompt_context_policy() -> None:
 
 
 def test_constructor_builds_sdk_agent_with_spec_model_settings() -> None:
-    agent = Assistant("chat").agent
+    agent = Assistant.from_name("chat")
 
     assert isinstance(agent, Agent)
     assert agent.model == load_config().models.openai_model
@@ -148,8 +148,8 @@ def test_task_input_uses_spec_task_prompt() -> None:
 
 
 def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
-    first = Assistant("chat").agent
-    second = Assistant("chat").agent
+    first = Assistant.from_name("chat")
+    second = Assistant.from_name("chat")
     first_handoffs = {agent.name: agent for agent in first.handoffs}
     second_handoffs = {agent.name: agent for agent in second.handoffs}
 
@@ -170,7 +170,7 @@ def test_durable_overrides_retain_dynamic_callbacks() -> None:
             'chat': 'ROOT INSTRUCTIONS',
             'data_analyst': 'ANALYST INSTRUCTIONS',
         },
-    ).agent
+    )
     from agents import RunContextWrapper
     from domain.runtime import AssistantRunContext, PreparedResources, RuntimeSettings
     context = AssistantRunContext(
@@ -191,9 +191,9 @@ def test_agent_graph_token_log_includes_tool_definitions(monkeypatch) -> None:
     records: list[str] = []
     monkeypatch.setattr(diagnostics.prompt_token_logger, "info", records.append)
 
-    assistant = Assistant("chat")
+    assistant = Assistant.from_name("chat")
     diagnostics.log_agent_graph(
-        assistant.agent, task_prompt=assistant.spec.task_prompt,
+        assistant, task_prompt=assistant.spec.task_prompt,
     )
 
     payload = json.loads(records[0])
@@ -329,20 +329,20 @@ def test_final_responder_owns_evidence_presentation() -> None:
 def test_chat_hands_off_to_data_analyst() -> None:
     assert list(current_registry().handoff_names["chat"]) == ["data_analyst", "final_responder"]
 
-    agents = Assistant("chat").agent.handoffs
+    agents = Assistant.from_name("chat").handoffs
     assert [agent.name for agent in agents] == ["data_analyst", "final_responder"]
 
 
 def test_chat_handoff_preserves_request_model_provider() -> None:
     request_model = LitellmModel(model="anthropic/test-model", api_key="test-key")
 
-    analyst = Assistant("chat", model=request_model).agent.handoffs[0]
+    analyst = Assistant.from_name("chat", model=request_model).handoffs[0]
 
     assert analyst.model is request_model
     assert [handoff.name for handoff in analyst.handoffs] == ["final_responder"]
     assert analyst.handoffs[0].model is request_model
     assert [tool.name for tool in analyst.tools] == list(current_registry().tool_names["data_analyst"])
-    assert Assistant("data_analyst").agent.model == load_config().models.openai_model
+    assert Assistant.from_name("data_analyst").model == load_config().models.openai_model
 
 
 def test_specialists_hand_off_to_data_analyst() -> None:

@@ -1,59 +1,14 @@
-"""Implementation helpers for assistant execution and tool resolution."""
+"""Load assistant specifications and resolve their declared tools."""
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any
+import json
+from pathlib import Path
+from typing import Any
 
-
-if TYPE_CHECKING:
-    from domain.assistants.models import AssistantSpec
-
-
-# -----------------------------------------------------------------------------
-# Assistant execution
-#
-# Input assembly for an individual invocation.
-# -----------------------------------------------------------------------------
-
-def invocation_input(
-    input: str | Sequence[Mapping[str, str]], task_prompt: str,
-) -> str | list[dict[str, str]]:
-    """Copy conversation history and prepare SDK input without modifying caller messages.
-
-    Args:
-        input: User text or conversation history.
-        task_prompt: Root task wrapper, applied only to the latest user message.
-
-    Returns:
-        Wrapped text or a copied conversation with only its last user input wrapped.
-    """
-    if isinstance(input, str):
-        return wrap_task_input(input, task_prompt)
-    messages = [
-        {"role": message["role"], "content": message["content"]}
-        for message in input if message["role"] in {"user", "assistant"}
-    ]
-    for message in reversed(messages):
-        if message["role"] == "user":
-            message["content"] = wrap_task_input(message["content"], task_prompt)
-            break
-    return messages
-
-
-def wrap_task_input(input_text: str, task_prompt: str) -> str:
-    """Apply a task wrapper consistently for prepared and legacy consumers.
-
-    Args:
-        input_text: Original user input.
-        task_prompt: Optional task instructions belonging to the root.
-
-    Returns:
-        Wrapped input, or the original text when the wrapper is empty.
-    """
-    if not task_prompt.strip():
-        return input_text
-    return f"{task_prompt.strip()}\n\n## Input\n\n{input_text}".strip()
+from common.parsers import first_markdown_heading
+from domain.assistants.constants import ROOT_DIR
+from domain.assistants.models import AssistantSpec
 
 
 # -----------------------------------------------------------------------------
@@ -94,3 +49,67 @@ def resolve_tools(spec: AssistantSpec) -> list[Any]:
             resolved.append(tool)
             seen.add(name)
     return resolved
+
+
+# -----------------------------------------------------------------------------
+# Assistant specification loading
+#
+# Translate repository files into validated runtime definitions.
+# -----------------------------------------------------------------------------
+
+def load_assistant_spec(path: Path, *, root_dir: Path = ROOT_DIR) -> AssistantSpec:
+    """Read one assistant directory and translate its JSON fields into the model.
+
+    Args:
+        path: Assistant directory or its ``system.md`` path.
+        root_dir: Root used to retain a repository-relative source path.
+
+    Returns:
+        An immutable definition validated by AssistantSpec.
+    """
+    system_path = path / "system.md" if path.is_dir() else path
+    if system_path.name != "system.md":
+        raise ValueError("assistant specifications require a system.md file")
+    spec_dir = system_path.parent
+    system_prompt = system_path.read_text(encoding="utf-8").strip()
+    config_path = spec_dir / "agent.json"
+    config = (
+        json.loads(config_path.read_text(encoding="utf-8"))
+        if config_path.exists()
+        else {}
+    )
+    if not isinstance(config, dict):
+        raise ValueError("agent.json must contain a JSON object")
+    tools = config.pop("tools", [])
+    if not isinstance(tools, dict):
+        tools = {"names": tools}
+    context = config.pop("context", {})
+    if not isinstance(context, dict):
+        raise ValueError("context must be an object")
+    name = config.pop("name", spec_dir.name)
+    if name != spec_dir.name:
+        raise ValueError(
+            f"assistant name {name!r} must match its directory {spec_dir.name!r}"
+        )
+    description = config.pop(
+        "description", first_markdown_heading(system_prompt) or name
+    )
+    task_path = spec_dir / "task.md"
+    return AssistantSpec(
+        name=name,
+        description=description,
+        handoff_description=config.pop("handoff_description", description),
+        system_prompt=system_prompt,
+        task_prompt=(
+            task_path.read_text(encoding="utf-8").strip() if task_path.exists() else ""
+        ),
+        path=str(system_path.relative_to(root_dir)),
+        include_all_tools=tools.get("include_all", False),
+        tool_group_keys=tools.get("groups", ()),
+        tool_names=tools.get("names", ()),
+        handoff_names=config.pop("handoffs", ()),
+        repository_context=context.get("repository", False),
+        skill_names=config.pop("skills", None),
+        playbook_names=config.pop("playbooks", None),
+        **config,
+    )

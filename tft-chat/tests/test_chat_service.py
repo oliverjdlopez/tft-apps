@@ -57,7 +57,7 @@ def test_discovery_routes_and_name_validation_do_not_build_agents(monkeypatch) -
         """Fail if a metadata operation crosses the execution boundary."""
         pytest.fail("Metadata lookup constructed an SDK agent")
 
-    monkeypatch.setattr("domain.assistants.base.Agent", forbidden)
+    monkeypatch.setattr("domain.assistants.Assistant.from_name", forbidden)
     app = FastAPI()
     app.include_router(chat_router)
     app.include_router(assistants_router)
@@ -312,10 +312,10 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         return PreparedResources()
 
     monkeypatch.setattr(
-        "domain.assistants.base.prepare_resources", selected_resources
+        "domain.runtime.execution.prepare_resources", selected_resources
     )
 
-    def fake_run_streamed(agent, *, input, max_turns, context, hooks):
+    def fake_run_streamed(agent, *, input, max_turns, context, hooks, run_config):
         assert isinstance(context, AssistantRunContext)
         assert isinstance(context.evidence, EvidenceStore)
         assert isinstance(hooks, ActivityRunHooks)
@@ -325,7 +325,7 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         captured["max_turns"] = max_turns
         return FakeResult()
 
-    monkeypatch.setattr("services.chat_service.Runner.run_streamed", fake_run_streamed)
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_streamed", fake_run_streamed)
 
     body = ChatRequest(
         model="openai-latest",
@@ -382,14 +382,6 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         "max_turns": [],
     }
 
-    class FakeAgent:
-        def __init__(self, **kwargs):
-            self.name = kwargs["name"]
-            captured["agent_names"].append(self.name)
-            assert kwargs["tools"] == [] and kwargs["handoffs"] == []
-            assert kwargs["instructions"] is main_agent.instructions
-            assert kwargs["model_settings"] is main_agent.model_settings
-
     class FailingResult:
         async def stream_events(self):
             if False:
@@ -406,20 +398,25 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
                 ),
             )
 
-    monkeypatch.setattr("services.chat_service.Agent", FakeAgent)
     main_agent = None
 
-    def fake_run_streamed(agent, *, input, max_turns, context, hooks):
+    def fake_run_streamed(agent, *, input, max_turns, context, hooks, run_config):
         nonlocal main_agent
         if main_agent is None:
             main_agent = agent
+        else:
+            captured["agent_names"].append(agent.name)
+            assert agent.tools == [] and agent.handoffs == []
+            assert agent.spec is main_agent.spec
+            assert agent.instructions.__self__ is agent
+            assert agent.model_settings is main_agent.model_settings
         captured.setdefault("contexts", []).append(context)
         captured.setdefault("hooks", []).append(hooks)
         captured["max_turns"].append(max_turns)
         return FailingResult() if agent is main_agent else FinalResult()
 
     monkeypatch.setattr(
-        "services.chat_service.Runner.run_streamed",
+        "domain.runtime.execution.Runner.run_streamed",
         fake_run_streamed,
     )
 
@@ -428,7 +425,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         return PreparedResources()
 
     monkeypatch.setattr(
-        "domain.assistants.base.prepare_resources", selected_resources
+        "domain.runtime.execution.prepare_resources", selected_resources
     )
 
     request = ChatRequest(
@@ -455,7 +452,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
     assert captured["max_turns"] == [3, 1]
     assert isinstance(captured["contexts"][0], AssistantRunContext)
     assert isinstance(captured["contexts"][0].evidence, EvidenceStore)
-    assert captured["hooks"][0] is captured["hooks"][1]
+    assert all(isinstance(hook, ActivityRunHooks) for hook in captured["hooks"])
     assert captured["contexts"][0] is captured["contexts"][1]
 
 
@@ -486,8 +483,8 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
         finally:
             closed.append(result)
 
-    monkeypatch.setattr("domain.assistants.base.prepare_resources", prepared)
-    monkeypatch.setattr("services.chat_service.Runner.run_streamed", run_streamed)
+    monkeypatch.setattr("domain.runtime.execution.prepare_resources", prepared)
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_streamed", run_streamed)
     monkeypatch.setattr("services.chat_service.stream_agent_events", events)
 
     async def run():

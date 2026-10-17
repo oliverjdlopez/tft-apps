@@ -19,8 +19,8 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
     Returns:
         SDK run result and actual instruction/resource provenance.
     """
-    from agents import ModelSettings, RunConfig, Runner
-    from domain.runtime.activity import finalize_activity
+    from agents import ModelSettings, RunConfig
+    from domain.runtime.execution import create_context, run
     from devtools.assistants import assistant_from_capture, record_invocation
 
     require_capture(config)
@@ -28,18 +28,17 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
     workspace_run = config.get('workspace_trial') or 'draft_revision' in lineage
     surface = config.get('surface') or ('specs' if workspace_run else 'eval')
     graph = config['captured_graph']
-    assistant = assistant_from_capture(
-        graph, config['assistant'], model=config.get('model'), surface=surface,
+    assistant = await asyncio.to_thread(
+        assistant_from_capture, graph, config['assistant'], model=config.get('model'),
         prompt_candidates={
             name: candidate['text']
             for name, candidate in config.get('prompt_candidates', {}).items()
         },
     )
-    invocation = await assistant.prepare(config.get('messages') or prompt)
-    recording = record_invocation(invocation)
-    context = invocation.context
+    agent = assistant
+    recording = record_invocation(agent)
+    context = await asyncio.to_thread(create_context, assistant, surface=surface)
     resources = context.resources
-    agent = invocation.agent
     instructions = recording.instructions
     model_settings = recording.model_settings
     metadata = {'assembled_instructions': instructions, 'captured_graph_hash': graph['hash'],
@@ -48,15 +47,13 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
         'model': str(agent.model), 'run_model_settings': config.get('model_settings', {})}
     result = None
     try:
-        result = await Runner.run(agent, input=invocation.input, context=context, hooks=invocation.hooks,
+        result = await run(agent, config.get('messages') or prompt, context=context,
             max_turns=config.get('max_turns') or 10, run_config=RunConfig(tracing_disabled=bool(config.get('workspace_trial')),
                 model_settings=ModelSettings(**config['model_settings']) if config.get('model_settings') else None))
     except Exception as exc:
         # A failed generation still has useful assembled policy and tool activity.
         # Return that evidence instead of losing it at the outer JSON boundary.
         metadata['execution_error'] = f'{type(exc).__name__}: {exc}'
-    finally:
-        finalize_activity(context, cancelled=bool(asyncio.current_task() and asyncio.current_task().cancelling()))
     from dataclasses import asdict
     metadata['resources'] = {
         'reads': [{'id': read.id, 'path': read.path, 'kind': read.kind, 'sha256': read.sha256,
@@ -131,7 +128,7 @@ def current_execution(suite: dict, variants: list[dict]) -> dict:
         Versioned execution graphs and repository lineage metadata.
     """
     from copy import deepcopy
-    from domain.assistants.specs import ASSISTANT_SPECS_DIR, ROOT_DIR
+    from domain.assistants.constants import ASSISTANT_SPECS_DIR, ROOT_DIR
     from devtools.assistants import capture, registry_from_files
     from devtools.assistants.workspace.workspace import Workspace
     workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)

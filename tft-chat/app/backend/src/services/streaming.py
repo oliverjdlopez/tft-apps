@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import base64
 import json
 import logging
@@ -11,9 +10,8 @@ from collections.abc import AsyncIterator, Callable, Mapping
 from typing import Any
 
 from common.serialization import model_jsonable, render_json_preview
-from domain.runtime.activity import finalize_activity
+from domain.runtime.execution import stream_events
 from domain.runtime.models import ActivityState, AssistantRunContext, ToolActivity
-from domain.runtime.utils import cancel_streamed_result
 from domain.tools.evidence import EvidenceStore, presentation_event
 
 STREAM_EVENT_PREFIX = "[[chat_tft_event:"
@@ -97,7 +95,7 @@ async def stream_agent_events(
         on_text_delta: Called when the first nonempty text delta arrives.
     """
     activity = run_context.activity if run_context is not None else ActivityState()
-    events = result.stream_events()
+    events = stream_events(result)
     try:
         async for event in events:
             if event.type == "raw_response_event":
@@ -222,11 +220,7 @@ async def stream_agent_events(
                             "error": None,
                         }
                     )
-    except BaseException as error:
-        cancelled = isinstance(error, (asyncio.CancelledError, GeneratorExit))
-        try:
-            await cancel_streamed_result(result, events)
-        finally:
-            if run_context is not None:
-                finalize_activity(run_context, cancelled=cancelled)
-        raise
+    finally:
+        close = getattr(events, 'aclose', None)
+        if close is not None:
+            await close()

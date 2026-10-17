@@ -8,7 +8,7 @@ import pytest
 from domain.tasks import transcript
 from domain.assistants.registry import current_registry
 from domain.assistants.constants import AssistantName
-from domain.assistants.utils import wrap_task_input
+from domain.runtime.utils import wrap_task_input
 from services import task_service
 
 
@@ -35,7 +35,7 @@ def test_transcription_pipeline_distills_original_source_once(monkeypatch, origi
         calls.append((agent.name, input))
         return SimpleNamespace(final_output=output)
 
-    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fake_run)
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_sync", fake_run)
     assert transcript.run_transcription_pipeline(original) == output
     assert calls == [
         (AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
@@ -67,7 +67,7 @@ def test_distillation_failure_uses_existing_task_error_contract(monkeypatch) -> 
         """Fail at the SDK boundary without external requests."""
         raise RuntimeError("distillation failed")
 
-    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fail)
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_sync", fail)
     assert task_service.run_task("transcription_pipeline", input_text="source") == {
         "ok": False, "task": "transcription_pipeline",
         "error": "RuntimeError: distillation failed",
@@ -92,7 +92,7 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
         assert not context.resources.reads
         return SimpleNamespace(final_output="# Distilled reference\n\nSource-grounded notes.")
 
-    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fake_run)
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_sync", fake_run)
     with TestClient(app) as client:
         response = client.post("/api/assistants/tasks/transcription_pipeline/run", json={"input": source})
     assert response.status_code == 200
@@ -120,7 +120,7 @@ def test_assistant_cli_distills_file_with_default_or_explicit_name(monkeypatch, 
 
     args = ["assistants"] + (["distill-transcript"] if explicit else [])
     monkeypatch.setattr("sys.argv", args + ["--input-file", str(source)])
-    monkeypatch.setattr("domain.assistants.base.Runner.run_sync", fake_run)
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_sync", fake_run)
     main()
     assert calls == [(AssistantName.DISTILL_TRANSCRIPT, wrap_task_input(
         source.read_text(), current_registry().get_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,

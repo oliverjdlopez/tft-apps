@@ -1,17 +1,11 @@
-"""Assistant definitions and prepared invocation state."""
+"""Assistant definitions."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, TYPE_CHECKING
+from typing import Any
 
 from domain.constants import OpenAIModels, ReasoningEfforts
-
-
-if TYPE_CHECKING:
-    from agents import Agent
-    from domain.runtime.models import AssistantRunContext
-    from domain.runtime.activity import ActivityRunHooks
 
 
 @dataclass(frozen=True)
@@ -94,17 +88,4 @@ class AssistantSpec:
         return ModelSettings(reasoning=reasoning)
 
 
-@dataclass
-class AssistantInvocation:
-    """Hold a fresh prepared run for consumers that own SDK execution.
-
-    Consumers pass agent, input, context, and hooks to the SDK runner.
-    """
-
-    agent: Agent[Any]
-    input: str | list[dict[str, str]]
-    context: AssistantRunContext
-    hooks: ActivityRunHooks
-
-
-__all__ = ["AssistantSpec", "AssistantInvocation"]
+__all__ = ["AssistantSpec"]

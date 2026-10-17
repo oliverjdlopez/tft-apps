@@ -48,7 +48,7 @@ def sync_prompts(*, remove: list[str], apply: bool = False,
         Planned identities and completed operations, including a recovery directory.
     """
     import httpx
-    from domain.assistants.specs import ASSISTANT_SPECS_DIR, ROOT_DIR
+    from domain.assistants.constants import ASSISTANT_SPECS_DIR, ROOT_DIR
     from scripts.assistant_specs.utils import removal_dependencies, spec_inventory, validate_name
 
     desired = repository_prompts()

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from typing import Any
+from collections.abc import Mapping, Sequence
 
 
 # ---------------------------------------------------------------------------
@@ -56,3 +57,49 @@ async def cancel_streamed_result(result: Any, events: Any) -> None:
         with suppress(Exception, asyncio.CancelledError):
             async for _event in result.stream_events():
                 pass
+
+
+# -----------------------------------------------------------------------------
+# Assistant execution
+#
+# Input assembly for an individual invocation.
+# -----------------------------------------------------------------------------
+
+def invocation_input(
+    input: str | Sequence[Mapping[str, str]], task_prompt: str,
+) -> str | list[dict[str, str]]:
+    """Copy conversation history and prepare SDK input without modifying caller messages.
+
+    Args:
+        input: User text or conversation history.
+        task_prompt: Root task wrapper, applied only to the latest user message.
+
+    Returns:
+        Wrapped text or a copied conversation with only its last user input wrapped.
+    """
+    if isinstance(input, str):
+        return wrap_task_input(input, task_prompt)
+    messages = [
+        {"role": message["role"], "content": message["content"]}
+        for message in input if message["role"] in {"user", "assistant"}
+    ]
+    for message in reversed(messages):
+        if message["role"] == "user":
+            message["content"] = wrap_task_input(message["content"], task_prompt)
+            break
+    return messages
+
+
+def wrap_task_input(input_text: str, task_prompt: str) -> str:
+    """Apply a task wrapper consistently for prepared and legacy consumers.
+
+    Args:
+        input_text: Original user input.
+        task_prompt: Optional task instructions belonging to the root.
+
+    Returns:
+        Wrapped input, or the original text when the wrapper is empty.
+    """
+    if not task_prompt.strip():
+        return input_text
+    return f"{task_prompt.strip()}\n\n## Input\n\n{input_text}".strip()

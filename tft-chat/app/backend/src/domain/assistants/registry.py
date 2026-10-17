@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from types import MappingProxyType
 
+from common.discoverers import discover_files
+from domain.assistants.constants import ASSISTANT_SPECS_DIR
 from domain.assistants.models import AssistantSpec
-from domain.assistants.specs import discover_assistants_specs
-from domain.assistants.utils import resolve_tools
+from domain.assistants.utils import load_assistant_spec, resolve_tools
 
 
 class AssistantRegistry:
@@ -92,5 +93,8 @@ def current_registry() -> AssistantRegistry:
     """
     global registry
     if registry is None:
-        registry = AssistantRegistry(discover_assistants_specs())
+        registry = AssistantRegistry([
+            load_assistant_spec(path)
+            for path in discover_files(ASSISTANT_SPECS_DIR, ["*/system.md"])
+        ])
     return registry

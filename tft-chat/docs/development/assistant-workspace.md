@@ -89,8 +89,8 @@ Each run captures active and draft definitions from the same runtime snapshot.
 Only the edited assistant differs. Both captures include the union of reachable
 handoff targets. Resource permissions come from those captured specifications. Configuration, task
 wrappers, instructions, and resolved model defaults are frozen. Development
-adapters restore the capture and attach instruction recording around the same
-`Assistant.prepare()` entry point used by chat and ordinary consumers. Resource
+adapters restore the capture as an ordinary assistant, attach instruction
+recording to its SDK graph, and pass fresh application context to the SDK runner. Resource
 discovery and exact reads, request-specific instruction callbacks, typed invocation context,
 activity hooks, and evidence retention follow the application pipeline. Each assistant's configured
 context and skill access applies to both catalogue metadata and exact reads. Draft registries never replace the
@@ -198,3 +198,8 @@ missing-corpus-gold failure. A separate historical migration test still fails on
 its `comp-expert` dataset mapping; the other 18 natural-workspace checks passed.
 No live Langfuse grading, real PostgreSQL tool execution, paid evaluations,
 ingestion, or projection rebuilds were used for these checks.
+
+Captured execution constructs SDK `Assistant` subclasses through the development
+adapter. Captured model identifiers are applied there, with request overrides
+taking precedence. `domain.runtime.execution` gathers invocation context and
+executes the graph; captures and recording remain development-owned.

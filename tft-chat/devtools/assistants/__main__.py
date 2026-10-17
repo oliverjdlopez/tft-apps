@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 
 from domain.assistants import Assistant
+from domain.runtime.execution import run_sync
 from domain.assistants.registry import current_registry
 from domain.assistants.constants import AssistantName
 
@@ -37,7 +38,7 @@ def main() -> None:
         input_text = sys.stdin.read()
     else:
         input_text = ""
-    print(Assistant(args.assistant, surface="cli").run_sync(input_text).final_output)
+    print(run_sync(Assistant.from_name(args.assistant), input_text, surface="cli").final_output)
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@ from typing import Any
 from agents.tracing import trace
 
 from domain.assistants import Assistant
+from domain.runtime.execution import run_sync
 from domain.assistants.registry import current_registry
 from services.task_service import task_catalog
 from services.tracing_service import ensure_local_trace_processor, trace_file_path
@@ -37,7 +38,7 @@ def assistant_catalog() -> dict[str, Any]:
 
 def run_assistant(name: str, *, input_text: str = "") -> dict[str, Any]:
     try:
-        assistant = Assistant(name, surface="api")
+        assistant = Assistant.from_name(name)
     except KeyError:
         raise LookupError(f"Unknown assistant: {name}") from None
 
@@ -51,7 +52,7 @@ def run_assistant(name: str, *, input_text: str = "") -> dict[str, Any]:
     current_trace = None
     try:
         with trace("tft-assistant", group_id=run_id, metadata=metadata) as current_trace:
-            result = assistant.run_sync(input_text).final_output
+            result = run_sync(assistant, input_text, surface="api", request_id=run_id).final_output
     except Exception as e:  # noqa: BLE001 - API should show assistant failures.
         trace_id = getattr(current_trace, "trace_id", None)
         return {

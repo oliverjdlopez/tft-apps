@@ -7,7 +7,6 @@ from typing import Any
 
 from agents import Agent, RunContextWrapper
 
-from domain.assistants.models import AssistantInvocation
 from devtools.assistants.diagnostics import agent_model_name
 
 
@@ -19,8 +18,8 @@ class InvocationRecording:
     model_settings: dict[str, dict[str, Any]] = field(default_factory=dict)
 
 
-def record_invocation(invocation: AssistantInvocation) -> InvocationRecording:
-    """Attach transparent instruction recording to a prepared assistant graph."""
+def record_invocation(agent: Agent[Any]) -> InvocationRecording:
+    """Attach transparent instruction recording to an SDK assistant graph."""
     recording = InvocationRecording()
     seen: set[int] = set()
 
@@ -45,6 +44,6 @@ def record_invocation(invocation: AssistantInvocation) -> InvocationRecording:
         for child in agent.handoffs:
             visit(child)
 
-    visit(invocation.agent)
+    visit(agent)
     return recording
 

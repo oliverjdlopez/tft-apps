@@ -1,5 +1,12 @@
 from enum import StrEnum
 
+from common.paths import find_repo_root
+
+
+ROOT_DIR = find_repo_root()
+SPECS_DIR = ROOT_DIR / "app" / "backend" / "src" / "domain" / "assistant_specs"
+ASSISTANT_SPECS_DIR = SPECS_DIR
+
 
 class AssistantName(StrEnum):
     CHAT = "chat"
