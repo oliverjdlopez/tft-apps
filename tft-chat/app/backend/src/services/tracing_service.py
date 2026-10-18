@@ -24,7 +24,7 @@ def local_tracing_enabled() -> bool:
 
 def trace_dir() -> Path:
     configured = load_config().chat.trace_dir
-    return configured if configured else find_repo_root() / "data" / "traces"
+    return configured if configured else find_repo_root() / "dev" / "traces"
 
 
 def trace_file_path(trace_id: str) -> Path:

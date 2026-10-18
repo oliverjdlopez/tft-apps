@@ -194,7 +194,13 @@ def _save_profile(run_id, boards, eligible, parameters, seed, discovery, labels,
         f"Frozen families: {len(families)}",
         f"Retained native references: {sum(len(cluster.references) for cluster in clusters)}",
     ]
-    profile_dir = Path(__file__).resolve().parents[7] / "profiles" / "compositions" / "hdbscan"
+    profile_dir = (
+        Path(__file__).resolve().parents[7]
+        / "dev"
+        / "profiles"
+        / "compositions"
+        / "hdbscan"
+    )
     profile_dir.mkdir(parents=True, exist_ok=True)
     # Keep partial reports out of the completed-profile namespace if later
     # classification or persistence fails.
@@ -205,7 +211,13 @@ def _save_profile(run_id, boards, eligible, parameters, seed, discovery, labels,
 
 def append_execution_profile(run_id, report):
     """Append composition pipeline stages after a successful HDBSCAN execution."""
-    directory = Path(__file__).resolve().parents[7] / "profiles" / "compositions" / "hdbscan"
+    directory = (
+        Path(__file__).resolve().parents[7]
+        / "dev"
+        / "profiles"
+        / "compositions"
+        / "hdbscan"
+    )
     pending = directory / f"{run_id}.pending"
     try:
         with pending.open("a", encoding="utf-8") as profile:

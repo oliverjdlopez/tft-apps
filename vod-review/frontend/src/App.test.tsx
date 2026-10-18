@@ -157,16 +157,21 @@ describe("VOD download range", () => {
 
 describe("transcription only URL import", () => {
   it("ignores hidden video settings and opens the automatic transcript only on request", async () => {
+    let downloadPolls = 0;
     const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
       const url = String(input);
       const task = {
         task_id: "audio-1", media_type: "audio", progress: 100,
         status: "completed", video: null,
-        transcription: { task_id: "transcript-1", video_id: null, status: "completed", transcript: "Recognized speech from the URL.", language: "en", error: null },
+        transcription: { task_id: "transcript-1", video_id: null, status: "completed", progress: 100, transcript: "Recognized speech from the URL.", language: "en", error: null },
       };
       if (url.endsWith("/api/resumable-download")) return { ok: true, json: async () => null } as Response;
       if (url.endsWith("/api/videos/from-url")) return { ok: true, json: async () => ({ ...task, status: "queued", transcription: null }) } as Response;
-      if (url.endsWith("/api/downloads/audio-1")) return { ok: true, json: async () => task } as Response;
+      if (url.endsWith("/api/downloads/audio-1")) {
+        downloadPolls += 1;
+        const running = { ...task, status: "running", progress: 65, transcription: { ...task.transcription, status: "running", progress: 30 } };
+        return { ok: true, json: async () => downloadPolls === 1 ? running : task } as Response;
+      }
       return { ok: true, json: async () => [] } as Response;
     });
     render(<App />);
@@ -187,6 +192,9 @@ describe("transcription only URL import", () => {
     fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
     fireEvent.click(screen.getByRole("button", { name: "Download and transcribe audio from link" }));
     await waitFor(() => expect(toggle).toBeDisabled());
+    expect(await screen.findByText("Transcribing audio…")).toBeInTheDocument();
+    expect(screen.getByText("65%")).toBeInTheDocument();
+    expect(screen.getByRole("progressbar", { name: "Download and transcription progress" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Pause" })).not.toBeInTheDocument();
     const viewTranscript = await screen.findByRole("button", { name: "View transcript" });
     expect(screen.queryByLabelText("Transcript text")).not.toBeInTheDocument();
@@ -424,7 +432,7 @@ it("reads an automatic transcript when reopening its library video", async () =>
   const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
     const url = String(input);
     const payload = url.endsWith("/videos") ? [video] : url.endsWith("/videos/automatic") ? video : url.endsWith("/videos/automatic/transcription") ? {
-      task_id: "automatic-text", video_id: video.id, status: "completed", transcript: "Saved automatic transcript", language: "en", error: null,
+      task_id: "automatic-text", video_id: video.id, status: "completed", progress: 100, transcript: "Saved automatic transcript", language: "en", error: null,
     } : url.endsWith("/replay-automation") ? {
       settings: { enabled: true, sources: ["https://www.twitch.tv/example"], daily_time: "09:00", timezone: "UTC", window_hours: 24, quality: "720p", transcribe: true }, next_run_at: null, runs: [], imports: [],
     } : url.endsWith("/playback") ? { status: "failed", error: "Test playback unavailable" } : null;

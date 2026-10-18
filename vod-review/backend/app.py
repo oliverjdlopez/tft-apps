@@ -714,7 +714,7 @@ def download_audio_url(url: str, task_id: str, progress_callback: Callable[[floa
     return path
 
 
-def _transcribe_audio_file(path: str) -> AudioTranscription:
+def _transcribe_audio_file(path: str, progress_callback: Callable[[float], None] | None = None) -> AudioTranscription:
     """Recognize audio once, retaining text and media-relative segment timings."""
     try:
         from faster_whisper import WhisperModel
@@ -722,17 +722,21 @@ def _transcribe_audio_file(path: str) -> AudioTranscription:
         raise HTTPException(status_code=503, detail="Transcription requires the optional faster-whisper dependency. Install it with `uv sync --extra transcription`.") from exc
     model = WhisperModel(os.environ.get("VOD_WHISPER_MODEL", "large-v3"), device=os.environ.get("VOD_WHISPER_DEVICE", "cuda"), compute_type=os.environ.get("VOD_WHISPER_COMPUTE_TYPE", "float16"))
     segments, info = model.transcribe(path, beam_size=5, vad_filter=True)
-    timed_segments = [
-        TranscriptionSegment(start=segment.start, end=segment.end, text=segment.text)
-        for segment in segments
-    ]
+    duration = getattr(info, "duration", None)
+    timed_segments = []
+    for segment in segments:
+        timed_segments.append(TranscriptionSegment(start=segment.start, end=segment.end, text=segment.text))
+        if progress_callback and duration and duration > 0:
+            progress_callback(min(99.0, max(0.0, float(segment.end) / float(duration) * 100.0)))
+    if progress_callback:
+        progress_callback(99.0)
     return AudioTranscription(
         transcript="".join(segment.text for segment in timed_segments).strip(),
         language=getattr(info, "language", None), segments=timed_segments,
     )
 
 
-async def _run_transcription_task(task_id: str) -> None:
+async def _run_transcription_task(task_id: str, progress_callback: Callable[[float], None] | None = None) -> None:
     """Persist recognized text/timing, then attempt recoverable shared publication."""
     db.update_transcription_task(task_id, status="running")
     try:
@@ -741,7 +745,12 @@ async def _run_transcription_task(task_id: str) -> None:
         connection.close()
         if row is None:
             return
-        result = await asyncio.to_thread(_transcribe_audio_file, row["media_path"])
+        def report_progress(percent: float) -> None:
+            db.update_transcription_task(task_id, progress=percent)
+            if progress_callback:
+                progress_callback(percent)
+
+        result = await asyncio.to_thread(_transcribe_audio_file, row["media_path"], report_progress)
         db.update_transcription_task(
             task_id, status="completed", transcript=result.transcript,
             language=result.language, segments=[segment.model_dump() for segment in result.segments],
@@ -1331,9 +1340,14 @@ async def _run_download_task(task_id: str, request: VideoUrlRequest) -> None:
 
     def report_progress(percent: float) -> None:
         nonlocal last_persisted
-        if percent >= last_persisted + 0.25 or percent >= 99:
-            db.update_download_task(task_id, progress=percent)
-            last_persisted = percent
+        # Reserve 100 for a successful task even if a downloader reports it before
+        # postprocessing, FPS conversion, or persistence finishes.
+        bounded = min(99.0, max(0.0, percent))
+        # Audio imports reserve the second half of the bar for recognition.
+        displayed = bounded * 0.5 if request.media_type == "audio" and request.transcribe else bounded
+        if displayed >= last_persisted + 0.25 or displayed >= 99:
+            db.update_download_task(task_id, progress=displayed)
+            last_persisted = displayed
 
     try:
         if request.media_type == "audio":
@@ -1343,7 +1357,11 @@ async def _run_download_task(task_id: str, request: VideoUrlRequest) -> None:
                 transcription_task_id = uuid.uuid4().hex
                 db.create_transcription_task(transcription_task_id, str(media_path))
                 db.update_download_task(task_id, media_path=str(media_path), transcription_task_id=transcription_task_id)
-                await _run_transcription_task(transcription_task_id)
+                db.update_download_task(task_id, progress=50)
+                await _run_transcription_task(
+                    transcription_task_id,
+                    lambda progress: db.update_download_task(task_id, progress=50 + progress * 0.49),
+                )
                 transcription = db.get_transcription_task(transcription_task_id)
                 if transcription["status"] == "failed":
                     raise RuntimeError(transcription["error"] or "Transcription failed")

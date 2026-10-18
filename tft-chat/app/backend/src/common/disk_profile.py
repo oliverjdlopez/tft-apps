@@ -216,7 +216,7 @@ def install_disk_profiler(repo_root):
     global _installed, _log_path
     if _installed:
         return _log_path
-    _log_path = Path(repo_root) / "profiles" / "disk_usage.txt"
+    _log_path = Path(repo_root) / "dev" / "profiles" / "disk_usage.txt"
     _log_path.parent.mkdir(parents=True, exist_ok=True)
     with _native_open(_log_path, "a", encoding="utf-8") as log:
         log.write(f"\nDisk profile started {time.strftime('%Y-%m-%dT%H:%M:%S%z')}\n")

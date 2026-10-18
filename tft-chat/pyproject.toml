@@ -10,6 +10,7 @@ keywords = ["tft", "teamfight-tactics", "riot", "league-of-legends", "chat", "op
 dependencies = [
     "openai>=2.39.0",
     "openai-agents[litellm]>=0.4.0",
+    "tiktoken>=0.13.0",
     "httpx>=0.27.0",
     "pulsefire>=2.0.30",
     "psycopg[binary]>=3.2",

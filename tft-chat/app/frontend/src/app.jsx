@@ -953,7 +953,7 @@ function ChatMessage({ message, streaming }) {
             thinking
           </p>
         ) : null}
-        {(message.presentations || []).map((presentation) => <EvidenceDisplay key={presentation.id} presentation={presentation} />)}
+        {(message.presentations || []).map((presentation) => <EvidenceDisplay key={presentation.id} presentation={presentation} assetContext={config?.asset_context} />)}
         {message.presentationError ? <p role="status">{message.presentationError}</p> : null}
         {error ? (
           <div className="statusline bad">

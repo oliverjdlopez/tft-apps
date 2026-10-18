@@ -5,6 +5,7 @@ import {
   render,
   screen,
   within,
+  waitFor,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { EvidenceDisplay } from "./display.jsx";
@@ -29,6 +30,45 @@ describe("Evidence displays", () => {
     expect(screen.queryAllByRole("combobox")).toHaveLength(0);
     expect(screen.queryByLabelText("Rows to show")).not.toBeInTheDocument();
     expect(screen.getByText("Top 4")).toHaveClass("evidence-primary");
+  });
+  it("resolves all loaded unit images locally and keeps text labels while they load", async () => {
+    const calls = [];
+    vi.stubGlobal("fetch", vi.fn(async (url, options) => {
+      expect(url).toBe("/api/assets/resolve");
+      const body = JSON.parse(options.body);
+      calls.push(body);
+      return new Response(JSON.stringify({
+        results: body.entities.map((entity) => ({
+          status: "resolved",
+          api_name: `TFT17_${entity.name_or_id}`,
+          src: `/media/tft/set-17/${entity.name_or_id}.png`,
+          asset_patch: "14.1",
+          fallback: true,
+        })),
+      }));
+    }));
+    render(
+      <EvidenceDisplay
+        presentation={rankingPresentation("interactive_table")}
+        assetContext={{ patch: "latest", set_number: 17 }}
+      />,
+    );
+    expect(screen.getAllByText("Jinx")).toHaveLength(2);
+    await waitFor(() => expect(
+      document.querySelectorAll(".entity-icon-unit:not(.entity-icon-placeholder)"),
+    ).toHaveLength(3));
+    expect(calls).toHaveLength(1);
+    expect(calls[0]).toMatchObject({ patch: "latest", set_number: 17 });
+    expect(calls[0].entities).toEqual(expect.arrayContaining([
+      { kind: "unit", name_or_id: "Jinx", role: "portrait" },
+      { kind: "unit", name_or_id: "Annie", role: "portrait" },
+    ]));
+    expect(document.querySelectorAll(".evidence-entity")).toHaveLength(3);
+    expect(screen.queryByText(/Images use same-set patch/)).not.toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Sort by"), {
+      target: { value: "games" },
+    });
+    expect(calls).toHaveLength(1);
   });
   it("sorts, groups, searches, limits rows and resets without requests or mutation", () => {
     const fetch = vi.fn();

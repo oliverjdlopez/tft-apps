@@ -27,10 +27,16 @@ desktop port 5174 and exposes the actual preview-frame timestamp. No renderer
 privileges or top-level navigation exceptions are added. Live embedding requires
 internet access; see [online review](../vod-review/docs/online-review.md).
 
+Application diagnostics stay within each app checkout: ChatTFT writes logs,
+traces, and profiling output under `tft-chat/dev/{logs,traces,profiles}/`; VOD
+trace and benchmark output uses `vod-review/dev/{traces,profiles}/` when enabled.
+These ignored directories are separate from Electron's application-data profile.
+
 The **Media** tab (Ctrl/Cmd+9) browses the suite-owned shared media
 catalogue through ChatTFT's owned backend, in both production and development
 modes. Browse video, audio, images, text/transcripts and data; select a resource
-to preview it and copy its portable reference. Refresh
+to preview it and copy its portable reference. Text previews show a token count
+for the original decoded source using the named `o200k_base` encoding. Refresh
 reloads the catalogue and Load more retrieves further pages. For text/transcripts
 and recognized textual data, **Distill transcript** runs ChatTFT's
 `distill-transcript` assistant and displays its reference notes above the source.

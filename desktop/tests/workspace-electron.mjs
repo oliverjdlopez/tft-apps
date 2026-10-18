@@ -66,6 +66,10 @@ async function run() {
       let body = "";
       request.on("data", (chunk) => { body += chunk; });
       request.on("end", () => distillations.push({ input: JSON.parse(body).input, response }));
+    } else if (url.pathname === "/api/media/token-count" && request.method === "POST") {
+      let body = "";
+      request.on("data", (chunk) => { body += chunk; });
+      request.on("end", () => response.end(JSON.stringify({ token_count: JSON.parse(body).text.length, tokenizer: "o200k_base" })));
     } else if (url.pathname === "/api/shared-media") {
       response.end(JSON.stringify(allMedia));
     } else if (url.pathname.endsWith("/content")) {
@@ -106,6 +110,7 @@ async function run() {
     assert.equal(await window.webContents.executeJavaScript("document.querySelector('#media-list img') === null"), true);
     await window.webContents.executeJavaScript("document.querySelectorAll('#media-list button')[0].click(); document.querySelectorAll('#media-list button')[1].click()");
     await until(() => window.webContents.executeJavaScript("document.getElementById('media-content').textContent.includes('Second transcript')"));
+    await until(() => window.webContents.executeJavaScript("document.getElementById('media-details').textContent.includes('tokens (o200k_base)')"));
     await delay(250);
     assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-content').textContent.includes('First transcript')"), false);
     assert.equal(await window.webContents.executeJavaScript("document.getElementById('media-distillation').hidden"), false);

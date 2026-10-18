@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { EntityAssetProvider, EntityLabel } from "../assets/EntityImages.jsx";
 import { formatValue, readPresentation, visibleRows } from "./utils.js";
 
 /** Isolate a malformed display so the accompanying answer remains readable. */
@@ -19,18 +20,19 @@ class DisplayBoundary extends React.Component {
 }
 
 /** Render one isolated backend-resolved presentation. */
-export function EvidenceDisplay({ presentation }) {
+export function EvidenceDisplay({ presentation, assetContext }) {
   return (
     <DisplayBoundary key={presentation.id}>
-      <EvidenceCard presentation={presentation} />
+      <EvidenceCard presentation={presentation} assetContext={assetContext} />
     </DisplayBoundary>
   );
 }
 
 /** Connect source context to a table or distribution and its local controls. */
-function EvidenceCard({ presentation }) {
+function EvidenceCard({ presentation, assetContext }) {
   const { bundle, dataset, display } = readPresentation(presentation);
-  return (
+  const entities = evidenceImageRequests(dataset);
+  const card = (
     <section className="evidence-card" aria-label={display.title}>
       <header>
         <span className="evidence-eyebrow">Retrieved evidence</span>
@@ -67,6 +69,66 @@ function EvidenceCard({ presentation }) {
       )}
     </section>
   );
+
+  // Unknown set context stays text-only; asset names must never cross sets.
+  if (!assetContext?.set_number || !entities.length) return card;
+  return (
+    <EntityAssetProvider
+      context={{ patch: "latest", set_number: assetContext.set_number }}
+      entities={entities}
+      showPatchFallback={false}
+    >
+      {card}
+    </EntityAssetProvider>
+  );
+}
+
+/** Build safe image requests for every public entity in the loaded evidence. */
+function evidenceImageRequests(dataset) {
+  if (dataset.kind !== "ranking") return [];
+  const requests = [];
+  const kinds = {
+    unit_name: "unit",
+    item_name: "item",
+    trait_name: "trait",
+    item_1: "item",
+    item_2: "item",
+    item_3: "item",
+  };
+  for (const row of dataset.rows) {
+    for (const [field, kind] of Object.entries(kinds)) {
+      const name = row.values[field];
+      if (typeof name === "string" && name.trim()) {
+        requests.push({
+          kind,
+          name_or_id: name,
+          role: kind === "unit" ? "portrait" : "icon",
+        });
+      }
+    }
+  }
+  return requests;
+}
+
+/** Keep the text value readable while attaching any resolved local entity icon. */
+function EvidenceValue({ field, value }) {
+  const kind = {
+    unit_name: "unit",
+    item_name: "item",
+    trait_name: "trait",
+    item_1: "item",
+    item_2: "item",
+    item_3: "item",
+  }[field.key];
+  if (kind && typeof value === "string" && value.trim()) {
+    const entity = { key: value, name: value };
+    return (
+      <span className="evidence-entity" title={value} tabIndex={0}>
+        <EntityLabel kind={kind} entity={entity} size={22} />
+      </span>
+    );
+  }
+  return formatValue(value, field.unit);
 }
 
 /** Explore a loaded ranking slice without changing its evidence or population. */
@@ -261,7 +323,7 @@ function EvidenceTable({ dataset, display }) {
                         key={field.key}
                         className={`${field.unit === "text" ? "" : "evidence-number"} ${field.key === display.primary_metric ? "evidence-primary" : ""}`}
                       >
-                        {formatValue(row.values[field.key], field.unit)}
+                        <EvidenceValue field={field} value={row.values[field.key]} />
                       </td>
                     ))}
                   </tr>

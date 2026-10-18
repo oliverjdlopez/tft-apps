@@ -249,6 +249,11 @@ def chat_config(
     return {
         "composition_workbench": config.chat.composition_workbench,
         "flowchart_source": config.chat.flowchart_source,
+        # Browser asset lookup uses the configured set without exposing any
+        # database scope or player-specific identifiers.
+        "asset_context": {
+            "set_number": config.chat.set_number,
+        },
         "default_assistant": CHAT_ASSISTANT_NAME,
         "assistants": list(registry.assistant_names),
         "default_model": config.models.openai_model,

@@ -116,7 +116,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("config", type=Path, help="TOML run definition")
     parser.add_argument(
-        "--output", type=Path, default=Path("profiles/composition-benchmarks")
+        "--output", type=Path, default=Path("dev/profiles/composition-benchmarks")
     )
     parser.add_argument(
         "--list",

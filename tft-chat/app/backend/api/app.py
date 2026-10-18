@@ -46,6 +46,7 @@ from api.routes import (
     display,
     flowchart,
     ingest,
+    media,
     response_tuning,
     rolldown,
     shared_media,
@@ -243,6 +244,7 @@ def create_app() -> FastAPI:
     app.include_router(ingest.router)
     app.include_router(specs.router)
     app.include_router(shared_media.router)
+    app.include_router(media.router)
 
     @app.get("/")
     def index() -> Response:

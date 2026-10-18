@@ -10,6 +10,9 @@
 **/.env.*.local
 .migration/
 profiles/
+**/dev/logs/
+**/dev/traces/
+**/dev/profiles/
 *.log
 **/.venv/
 **/profiles/

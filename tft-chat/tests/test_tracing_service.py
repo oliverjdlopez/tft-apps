@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
+from services import tracing_service
 from services.tracing_service import LocalTraceRecorder
+from services.utils import write_chat_timing
 
 
 class FakeTrace:
@@ -59,3 +62,29 @@ def test_local_trace_recorder_writes_trace_and_span_events(tmp_path: Path) -> No
         "trace_end",
     ]
     assert events[1]["span"]["span_data"]["name"] == "example"
+
+
+def test_default_trace_directory_is_dev_traces(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(tracing_service, "find_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(
+        tracing_service,
+        "load_config",
+        lambda: SimpleNamespace(chat=SimpleNamespace(trace_dir=None)),
+    )
+
+    assert tracing_service.trace_dir() == tmp_path / "dev" / "traces"
+
+
+def test_chat_timings_write_under_dev_profiles(tmp_path: Path, monkeypatch) -> None:
+    captured: dict[str, object] = {}
+    monkeypatch.setattr("services.utils.find_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(
+        "services.utils.write_json_lines",
+        lambda path, records, **kwargs: captured.update(
+            path=path, records=records, options=kwargs
+        ),
+    )
+
+    write_chat_timing({"request_id": "request-1"})
+
+    assert captured["path"] == tmp_path / "dev" / "profiles" / "chat_timing.jsonl"

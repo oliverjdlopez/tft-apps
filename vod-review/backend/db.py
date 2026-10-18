@@ -512,7 +512,7 @@ def create_transcription_task(task_id: str, media_path: str, video_id: str | Non
     return get_transcription_task(task_id)
 
 
-def update_transcription_task(task_id: str, *, status: str | None = None, transcript: str | None = None, language: str | None = None, error: str | None = None, segments: list[dict[str, Any]] | None = None) -> None:
+def update_transcription_task(task_id: str, *, status: str | None = None, progress: float | None = None, transcript: str | None = None, language: str | None = None, error: str | None = None, segments: list[dict[str, Any]] | None = None) -> None:
     """Persist recognition text and optional timing together before sharing.
 
     Args:
@@ -522,6 +522,7 @@ def update_transcription_task(task_id: str, *, status: str | None = None, transc
         language: Detected language, when available.
         error: Failure detail, when supplied.
         segments: Timed speech segments; None preserves legacy text-only data.
+        progress: Recognition progress percentage, kept monotonic and below 100 until completion.
     """
     assignments = ["updated_at=?"]
     values: list[Any] = [utc_now()]
@@ -529,6 +530,11 @@ def update_transcription_task(task_id: str, *, status: str | None = None, transc
         if value is not None:
             assignments.append(f"{column}=?")
             values.append(value)
+    if progress is not None:
+        assignments.append("progress=MAX(progress, ?)")
+        values.append(min(99.0, max(0.0, float(progress))))
+    if status == "completed":
+        assignments.append("progress=100")
     if segments is not None:
         assignments.append("segments_json=?")
         values.append(json.dumps(segments, ensure_ascii=False, allow_nan=False))
@@ -557,7 +563,7 @@ def get_transcription_task(task_id: str, connection: sqlite3.Connection | None =
         connection.close()
     if row is None:
         raise HTTPException(status_code=404, detail="Transcription task not found")
-    task = {"task_id": row["id"], "video_id": row["video_id"], "status": row["status"], "transcript": row["transcript"], "language": row["language"], "error": row["error"]}
+    task = {"task_id": row["id"], "video_id": row["video_id"], "status": row["status"], "progress": float(row["progress"]), "transcript": row["transcript"], "language": row["language"], "error": row["error"]}
     if include_segments:
         task["segments"] = json.loads(row["segments_json"]) if row["segments_json"] is not None else None
     return task

@@ -6,7 +6,7 @@ import "./images.css";
 const Images = createContext({ results: new Map(), reportBroken: () => {} });
 
 /** Load a view's images without blocking its data or applying stale responses. */
-export function EntityAssetProvider({ context, entities, children }) {
+export function EntityAssetProvider({ context, entities, children, showPatchFallback = true }) {
   const { patch, set_number: setNumber } = context;
   const load = useMemo(() => createAssetLoader(patch, setNumber), [patch, setNumber]);
   const signature = JSON.stringify(uniqueImages(entities));
@@ -29,8 +29,8 @@ export function EntityAssetProvider({ context, entities, children }) {
     .map((value) => value.asset_patch))];
   return <Images.Provider value={{ results, reportBroken }}>
     {children}
-    {current && (unavailable > 0 || patches.length > 0) && <p className="entity-asset-status" role="status">
-      {patches.length > 0 && `Images use same-set patch ${patches.join(", ")}. `}
+    {current && (unavailable > 0 || (showPatchFallback && patches.length > 0)) && <p className="entity-asset-status" role="status">
+      {showPatchFallback && patches.length > 0 && `Images use same-set patch ${patches.join(", ")}. `}
       {unavailable > 0 && `${unavailable} entity image${unavailable === 1 ? " is" : "s are"} unavailable; names remain visible.`}
     </p>}
   </Images.Provider>;

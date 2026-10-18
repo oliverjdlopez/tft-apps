@@ -29,7 +29,7 @@ def test_transcription_completion_publishes_exact_readable_text(local_transcript
     text = "  First round. Café ☕\nNext round.  "
     segments = [{"start": 1.25, "end": 3.75, "text": text}]
     db.create_transcription_task("recognition", "/fixture/vod.mp4")
-    monkeypatch.setattr(app, "_transcribe_audio_file", lambda _: app.AudioTranscription(transcript=text, language="en", segments=segments))
+    monkeypatch.setattr(app, "_transcribe_audio_file", lambda _path, progress_callback=None: app.AudioTranscription(transcript=text, language="en", segments=segments))
     asyncio.run(app._run_transcription_task("recognition"))
     assert db.get_transcription_task("recognition")["status"] == "completed"
     client = TestClient(app.app)
@@ -52,11 +52,11 @@ def test_transcription_completion_publishes_exact_readable_text(local_transcript
     }
     assert client.get("/api/transcriptions/recognition").json() == {
         "task_id": "recognition", "video_id": None, "status": "completed",
-        "transcript": text, "language": "en", "error": None,
+        "progress": 100.0, "transcript": text, "language": "en", "error": None,
     }
 
 
-def test_whisper_segment_generator_preserves_timing_and_plain_text(monkeypatch):
+def test_whisper_segment_generator_preserves_timing_and_reports_progress(monkeypatch):
     """Consume Whisper's lazy segments once without losing offsets or text order."""
     calls = []
 
@@ -73,10 +73,11 @@ def test_whisper_segment_generator_preserves_timing_and_plain_text(monkeypatch):
                 SimpleNamespace(start=1.25, end=2.5, text=" First."),
                 SimpleNamespace(start=9.0, end=10.75, text=" Café ☕."),
             ])
-            return segments, SimpleNamespace(language="en")
+            return segments, SimpleNamespace(language="en", duration=20.0)
 
     monkeypatch.setitem(sys.modules, "faster_whisper", SimpleNamespace(WhisperModel=FakeWhisperModel))
-    result = app._transcribe_audio_file("/fixture/audio.m4a")
+    progress = []
+    result = app._transcribe_audio_file("/fixture/audio.m4a", progress.append)
     assert result.transcript == "First. Café ☕."
     assert result.language == "en"
     assert [segment.model_dump() for segment in result.segments] == [
@@ -84,6 +85,28 @@ def test_whisper_segment_generator_preserves_timing_and_plain_text(monkeypatch):
         {"start": 9.0, "end": 10.75, "text": " Café ☕."},
     ]
     assert calls == [("/fixture/audio.m4a", {"beam_size": 5, "vad_filter": True})]
+    assert progress == pytest.approx([12.5, 53.75, 99.0])
+
+
+def test_transcription_task_persists_monotonic_progress(local_transcripts, monkeypatch):
+    """Persist recognition updates for status polling and clamp completion to saved output."""
+    db.create_transcription_task("progress", "/fixture/audio.m4a")
+
+    def recognize(_path, progress_callback):
+        progress_callback(40)
+        progress_callback(20)
+        return app.AudioTranscription(transcript="Speech", language="en")
+
+    async def direct_to_thread(function, *args):
+        return function(*args)
+
+    monkeypatch.setattr(app, "_transcribe_audio_file", recognize)
+    monkeypatch.setattr(app.asyncio, "to_thread", direct_to_thread)
+    monkeypatch.setattr(app, "publish_completed_transcripts", lambda _task_id: None)
+    asyncio.run(app._run_transcription_task("progress"))
+    task = db.get_transcription_task("progress")
+    assert task["progress"] == 100
+    assert task["status"] == "completed"
 
 
 def test_existing_completed_transcripts_recover_once_on_startup(local_transcripts, monkeypatch):
@@ -121,7 +144,7 @@ def test_timing_publication_failure_is_recoverable_without_recognition(local_tra
     """Retry a failed JSON publication from persisted timing while retaining text."""
     segments = [{"start": 4.5, "end": 6.25, "text": " Recoverable."}]
     db.create_transcription_task("timed", "/fixture/vod.mp4")
-    monkeypatch.setattr(app, "_transcribe_audio_file", lambda _: app.AudioTranscription(
+    monkeypatch.setattr(app, "_transcribe_audio_file", lambda _path, progress_callback=None: app.AudioTranscription(
         transcript="Recoverable.", language="en", segments=segments,
     ))
     publish = ResourceStore.publish
@@ -172,7 +195,7 @@ def test_silent_transcription_shares_empty_timing(local_transcripts):
 def test_disabled_or_unavailable_sharing_preserves_completed_tasks(local_transcripts, monkeypatch, caplog):
     """Storage errors never discard or relabel already recognized text."""
     db.create_transcription_task("complete", "/fixture/audio.m4a")
-    monkeypatch.setattr(app, "_transcribe_audio_file", lambda _: app.AudioTranscription(transcript="Saved transcript", language="en"))
+    monkeypatch.setattr(app, "_transcribe_audio_file", lambda _path, progress_callback=None: app.AudioTranscription(transcript="Saved transcript", language="en"))
 
     def unavailable(*args, **kwargs):
         """Simulate a failed catalogue publication after successful recognition."""

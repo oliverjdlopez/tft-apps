@@ -65,7 +65,10 @@ video** in the library panel, or enable **Transcription only** beside the URL
 field, paste a URL, and start the download. This downloads the full audio and
 automatically transcribes it; video range, quality, FPS, and checkpoint controls
 are hidden. Sources must offer an audio-only stream; this mode reports a download
-failure if one is unavailable. Install the optional dependency with `uv sync --extra
+failure if one is unavailable. Its progress bar allocates the first half to audio
+transfer and the second half to recognition. Recognition advances from the speech
+timestamps emitted by Whisper and stays below completion until the transcript is
+saved. Install the optional dependency with `uv sync --extra
 transcription`. The default model is `large-v3` on CUDA with float16; configure
 `VOD_WHISPER_MODEL`, `VOD_WHISPER_DEVICE`, and `VOD_WHISPER_COMPUTE_TYPE` to
 choose another faster-whisper model/device/compute type. Once transcription
@@ -86,10 +89,10 @@ Install the CUDA-enabled PyTorch build appropriate for the host when a CUDA GPU 
 ## Profile and benchmark the round pipeline
 
 Performance events are always written to the backend log with the `VOD_TRACE`
-marker. Persist the same events as structured JSON Lines with:
+marker. Persist the same events as structured JSON Lines under `dev/traces/` with:
 
 ```bash
-uv run start --trace-jsonl data/traces/round-pipeline.jsonl
+uv run start --trace-jsonl dev/traces/round-pipeline.jsonl
 ```
 
 Each inference-stage event carries the job ID, video ID, batch index, configured
@@ -103,7 +106,7 @@ transfer/extraction timings, OCR timings, and end-to-end job/database timings.
 For synchronized stage timings, enable detailed profiling:
 
 ```bash
-uv run start --trace-jsonl data/traces/round-pipeline.jsonl --detailed-profiling
+uv run start --trace-jsonl dev/traces/round-pipeline.jsonl --detailed-profiling
 ```
 
 Detailed mode splits detector and OCR work into CPU preprocessing, host-to-device
@@ -117,8 +120,8 @@ Run repeatable fixed-frame benchmarks against the production processing path wit
 uv run python scripts/benchmark_round_pipeline.py path/to/video.mp4 \
   --box 0.75 0.02 0.20 0.10 \
   --batch-sizes 64 256 --frame-stride 30 --warmups 1 --runs 3 \
-  --output data/traces/benchmark.jsonl \
-  --trace-output data/traces/benchmark-events.jsonl
+  --output dev/profiles/benchmark.jsonl \
+  --trace-output dev/traces/benchmark-events.jsonl
 ```
 
 The runner uses the same video, crop, selected-frame stride, and warmed model for
@@ -175,8 +178,9 @@ Open http://localhost:5173. Uploads and analysis metadata are stored under `data
 The import form's **Saved video FPS** control defaults to **Native**. Selecting
 10, 15, 24, 30, or 60 FPS transcodes the saved video with FFmpeg after transfer;
 it does not reduce network transfer size. Quality selection still chooses source
-resolution. Conversion can add time, and progress may remain near completion while
-it runs. Both completed downloads and published partial checkpoints use the chosen
+resolution. Conversion can add time; progress remains below 100 and reports that
+the video is being prepared until conversion and persistence finish. Both completed
+downloads and published partial checkpoints use the chosen
 FPS, which is persisted for resume and server restarts. Native leaves cadence alone.
 
 Round analysis accepts **Interval (s)**: `0` analyzes every frame, `0.1`

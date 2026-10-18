@@ -51,6 +51,18 @@ test("reading text inspects metadata then uses the fixed verified-content route"
   assert.equal(paths.length, 2);
 });
 
+test("text token counts use the ChatTFT tokenizer endpoint and identify the encoding", async () => {
+  const reader = createMediaReader(() => "http://127.0.0.1:9999", async (url, options) => {
+    assert.equal(url.pathname, "/api/media/token-count");
+    assert.equal(options.method, "POST");
+    assert.equal(options.headers["Content-Type"], "application/json");
+    assert.deepEqual(JSON.parse(options.body), { text: "Hello 世界" });
+    return Response.json({ token_count: 3, tokenizer: "o200k_base" });
+  });
+  assert.deepEqual(await reader("count", "Hello 世界"), { token_count: 3, tokenizer: "o200k_base" });
+  await assert.rejects(reader("count", "x".repeat(10_000_001)), /limited to 10 MB/);
+});
+
 test("binary media uses fixed streaming URLs and arbitrary data remains referenceable", async () => {
   for (const kind of ["audio", "video", "image", "data"]) {
     let requests = 0;

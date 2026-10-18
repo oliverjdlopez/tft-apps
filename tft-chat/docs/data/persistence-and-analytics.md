@@ -273,7 +273,7 @@ timed calls per case (default `1`, sequential), and `--no-profile` to skip the
 separate worker-thread cProfile pass. `--list` prints workload definitions
 without connecting to the database. Each run writes `summary.json`,
 `events.jsonl`, and optional worker-thread profiles under the ignored
-`profiles/benchmarks/<run-id>/` directory. The summary records the revision and
+`dev/profiles/benchmarks/<run-id>/` directory. The summary records the revision and
 dirty state, effective workload arguments and prerequisites, attempted,
 successful, and failed call counts, and database-boundary acquisition,
 execution, and total timings. Timing summaries use successful timed samples

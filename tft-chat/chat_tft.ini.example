@@ -25,7 +25,7 @@ rebuild_query_tables_on_startup = false
 # Opt-in Langfuse conversation export; requires evals dependencies and LANGFUSE_* credentials.
 langfuse_tracing = false
 local_tracing = true
-# trace_dir = data/traces
+# trace_dir = dev/traces
 
 [rds-upgrade]
 # RDS DB instance identifier used when --rds-instance-id is omitted.

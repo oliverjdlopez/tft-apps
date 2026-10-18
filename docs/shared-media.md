@@ -122,7 +122,14 @@ first. Search loaded entries by name, source or reference, and filter by type.
 library. Selection and filters remain when switching tabs.
 
 Select a resource to see its name, source, kind, format, byte size and portable
-`tft-resource:ID`. **Copy reference** copies that identifier for use in either
+`tft-resource:ID`. Text previews also show the token count for the original
+decoded source text using OpenAI's `o200k_base` encoding. This counts the text
+only; it excludes chat message framing and may differ from a model that uses
+another tokenizer. Structured JSON may be pretty-printed for preview, while its
+token count remains based on the stored source. If the count cannot be produced,
+the text preview remains available and the details show that token counting is
+unavailable, such as when ChatTFT cannot load the tokenizer assets. **Copy
+reference** copies that identifier for use in either
 backend's API or CLI; the selectable reference remains available even when a
 preview fails or its format is unsupported.
 

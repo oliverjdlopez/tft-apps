@@ -811,7 +811,9 @@ def entity_delta_page(
 MIN_PUBLIC_BOARDS = 50
 TOOL_TIMEOUT_SECONDS = 30.0
 ANALYSIS_STATEMENT_TIMEOUT_MS = 40_000
-RANKING_LOG_PATH = Path(__file__).with_name("ranking_tools.log")
+RANKING_LOG_PATH = (
+    Path(__file__).resolve().parents[6] / "dev" / "logs" / "ranking_tools.log"
+)
 _DB_TOOL_EXECUTOR = ThreadPoolExecutor(thread_name_prefix="tft-db-tool")
 db_logger = logging.getLogger("tft.analysis.db")
 ranking_logger = logging.getLogger("tft.analysis.ranking_tools")
@@ -1336,6 +1338,10 @@ def debug_ranking_event(event: str, **details: Any) -> None:
         "call_id": state.call_id if state is not None else None,
         **details,
     }
+    try:
+        RANKING_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return
     ranking_logger.debug(json.dumps(payload, default=str, sort_keys=True))
 
 

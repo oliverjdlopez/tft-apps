@@ -6,7 +6,7 @@ adapt domain behavior for routes.
 
 At backend import, `common.disk_profile` instruments Python file opens and common
 path-based filesystem operations. It appends request-correlated records to
-`profiles/disk_usage.txt` at the repository root. File-session records summarize
+`dev/profiles/disk_usage.txt` at the repository root. File-session records summarize
 read/write call counts, binary byte counts or encoded-text byte estimates, I/O
 time, and total open-to-close time;
 metadata, directory, and mutation operations are logged individually. This
@@ -14,13 +14,14 @@ captures Python site-process access, including static asset reads, but does not
 measure database storage I/O, browser filesystem activity, or operations hidden
 inside external subprocesses. Profiling output is diagnostic and best-effort.
 Chat request stage timings are appended as JSONL records to
-`profiles/chat_timing.jsonl`. Each record includes instruction assembly, agent setup, first stream chunk, first model
+`dev/profiles/chat_timing.jsonl`. Each record includes instruction assembly, agent setup, first stream chunk, first model
 event, first text delta, and total request time. Missing stage values mean the
 request ended before that stage completed; interrupted streams are recorded as
 such. The output is local diagnostic data and is ignored by Git.
 Instruction assembly is the cumulative time spent rendering dynamic instruction
 callbacks across model steps, including fallback. Agent setup includes graph construction and the shared
 repository resource library snapshot; resource loading has no separate timing field.
+Agent SDK traces use `dev/traces/` by default; `chat.trace_dir` can override that directory.
 
 ## Backend composition
 
@@ -382,6 +383,14 @@ and cache lookup results for a mounted view's patch/set. Navigating between
 entities reuses those lookups; switching context disposes stale requests. Reload
 the page after downloading or replacing a bundle to refresh browser lookup state.
 Image transfer failures preserve labels and show the same unavailable-image note.
+Evidence tables use this resolver for loaded unit, item, and trait names. They
+request images using the configured set number returned by `/api/config`, with
+`latest` asset lookup scoped to that set; if no set is configured, the table
+remains text-only. These decorative images do not alter evidence values or claim
+that the selected set-level images represent the historical patch of the query.
+The requests contain public entity names only and never include evidence scope or
+player identifiers. Evidence cards omit patch-fallback notices because these
+assets are treated as set-level imagery.
 
 
 ## Flowchart document and worker ownership

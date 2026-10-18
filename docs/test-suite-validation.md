@@ -70,10 +70,16 @@ developer environment, set `UV_PROJECT_ENVIRONMENT` to a new temporary directory
 when syncing, then supply that interpreter as `CHAT_TEST_PYTHON` to the runner.
 Use `uv sync --inexact` when adding dependencies to a shared developer environment.
 
-Each run writes `.runtime/validation/<tier>-<component>/<run>/report.json` and logs.
-Python JUnit inventories and XML coverage live beside it; frontend coverage remains
-in each frontend's `coverage/`. Browser screenshots and Playwright traces are retained
-even when assertions fail. `--list` is a read-only command inventory.
+Each run writes its `report.json`, Python JUnit inventories, XML coverage, and
+screenshots under `.runtime/validation/<tier>-<component>/<run>/`. Captured process
+and fixture-server logs are stored in the suite `dev/logs/validation/` tree; VOD
+JSONL traces and Playwright trace archives are stored in `dev/traces/validation/`.
+The report links each command log and records the diagnostics directories, while
+screenshots and coverage remain beside the report or in each frontend's `coverage/`.
+The PostgreSQL helper's container log is also under `dev/logs/validation/` and its
+path is recorded in the tier report. CI uploads reports and the suite/app `dev/`
+diagnostic directories together. These ignored diagnostic directories retain
+outputs even when assertions fail. `--list` is a read-only command inventory.
 
 ## Validation boundaries
 

@@ -10,8 +10,11 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const output = process.env.VALIDATION_ARTIFACTS ?? path.join(root,'.runtime/validation/journeys',`${Date.now()}-${process.pid}`);
-await mkdir(output,{recursive:true});
+const runId=`${Date.now()}-${process.pid}`;
+const output = process.env.VALIDATION_ARTIFACTS ?? path.join(root,'.runtime/validation/journeys',runId);
+const logDirectory = process.env.VALIDATION_LOGS ?? path.join(root,'dev/logs/validation/journeys',runId);
+const traceDirectory = process.env.VALIDATION_TRACES ?? path.join(root,'dev/traces/validation/journeys',runId);
+await Promise.all([mkdir(output,{recursive:true}),mkdir(logDirectory,{recursive:true}),mkdir(traceDirectory,{recursive:true})]);
 const owned = new Set();
 
 /** Poll an observable outcome with a bounded deadline. */
@@ -26,11 +29,11 @@ async function start(app,port) {
   if(!port) { const reservation=createServer(); reservation.listen(0,'127.0.0.1'); await once(reservation,'listening'); port=reservation.address().port; await new Promise(resolve=>reservation.close(resolve)); }
   const url=`http://127.0.0.1:${port}`;
   const interpreter=process.env[app==='chat'?'CHAT_TEST_PYTHON':'VOD_TEST_PYTHON'] ?? path.join(root,app==='chat'?'tft-chat':'vod-review','.venv/bin/python');
-  const log=createWriteStream(path.join(output,`${app}-journey-server.log`),{flags:'a'});
+  const log=createWriteStream(path.join(logDirectory,`${app}-journey-server.log`),{flags:'a'});
   const child=spawn(interpreter,['-m','uvicorn','--app-dir','tests/browser',`${app}_fixture:app`,'--host','127.0.0.1','--port',String(port)],{
     cwd:root,env:{...process.env,JOURNEY_BASE_URL:url,VOD_DATA_DIR:path.join(output,'vod'),TFT_MEDIA_DIR:path.join(output,'media'),
       VOD_GDRIVE_TOKEN_FILE:path.join(output,'vod/gdrive/token.json'),VOD_GDRIVE_CLIENT_FILE:'',
-      VOD_TRACE_JSONL:path.join(output,'vod-trace.jsonl'),VOD_OCR_CACHE_DIR:path.join(output,'vod/ocr_cache'),
+      VOD_TRACE_JSONL:path.join(traceDirectory,'vod-trace.jsonl'),VOD_OCR_CACHE_DIR:path.join(output,'vod/ocr_cache'),
       VOD_FRAMES_DIR:path.join(output,'vod/frames'),VOD_BOXES_DIR:path.join(output,'vod/boxes'),VOD_SAVE_FRAMES:'0',VOD_SAVE_BOXES:'0'},stdio:['ignore','pipe','pipe']});
   child.stdout.pipe(log);child.stderr.pipe(log); owned.add(child);
   child.once('close',()=>{log.end();owned.delete(child);});
@@ -162,7 +165,7 @@ try {
       console.log(JSON.stringify({passed:true,viewport,journeys:['chat-sdk-sql-evidence-cancel','flowchart-persistence-conflict-export','vod-process-seek-transcript-restart']}));
     } finally {
       await page.screenshot({path:path.join(output,`journey-${viewport.width}.png`),fullPage:true}).catch(()=>{});
-      await context.tracing.stop({path:path.join(output,`journey-${viewport.width}.zip`)});
+      await context.tracing.stop({path:path.join(traceDirectory,`journey-${viewport.width}.zip`)});
       await context.close();
     }
   }

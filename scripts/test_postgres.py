@@ -24,6 +24,7 @@ def main():
                "--publish", "127.0.0.1::5432", "--env", "POSTGRES_USER=tft",
                "--env", "POSTGRES_PASSWORD=validation-only", "--env", "POSTGRES_DB=validation_test", "postgres:16"]
     created = False
+    container_log = ROOT / "dev" / "logs" / "validation" / "postgres" / f"{name}.log"
     try:
         subprocess.run(command, check=True, capture_output=True, timeout=120)
         created = True
@@ -38,13 +39,13 @@ def main():
             raise TimeoutError("Isolated PostgreSQL 16 failed to become ready")
         env = {**os.environ, "RDS_TEST_HOST": "127.0.0.1", "RDS_TEST_PORT": port,
                "RDS_TEST_ADMIN": "tft", "RDS_TEST_PASSWORD": "validation-only",
-               "RDS_TEST_DB": "validation_test", "RDS_TEST_SYNC_LOCAL_IP": "0"}
+               "RDS_TEST_DB": "validation_test", "RDS_TEST_SYNC_LOCAL_IP": "0",
+               "VALIDATION_CONTAINER_LOG": str(container_log)}
         return subprocess.call([sys.executable, str(ROOT / "scripts/test_suite.py"), "--tier", "postgres", "--component", "chat", *sys.argv[1:]], env=env, cwd=ROOT)
     finally:
         if created:
-            artifacts = ROOT / ".runtime/validation"
-            artifacts.mkdir(parents=True, exist_ok=True)
-            with (artifacts / f"{name}.log").open("w") as stream:
+            container_log.parent.mkdir(parents=True, exist_ok=True)
+            with container_log.open("w") as stream:
                 subprocess.run(["docker", "logs", name], stdout=stream, stderr=subprocess.STDOUT, timeout=10)
             subprocess.run(["docker", "stop", "--time", "5", name], check=True, capture_output=True, timeout=15)
 

@@ -59,7 +59,7 @@ for a seed and identical across backends. Saved input content is hashed.
 
 ```sh
 uv run --extra compositions python -m scripts.composition_benchmarks \
-  scripts/composition_benchmarks/smoke.toml --output profiles/composition-benchmarks/smoke
+  scripts/composition_benchmarks/smoke.toml --output dev/profiles/composition-benchmarks/smoke
 ```
 
 For actual CUDA measurements, an NVIDIA GPU and compatible CUDA 12 toolkit must be
@@ -68,7 +68,7 @@ available. Add the optional CuPy package for this invocation:
 ```sh
 uv run --extra compositions --extra compositions-gpu \
   python -m scripts.composition_benchmarks \
-  scripts/composition_benchmarks/example.toml --output profiles/composition-benchmarks/scaling
+  scripts/composition_benchmarks/example.toml --output dev/profiles/composition-benchmarks/scaling
 ```
 
 See [CuPy installation](https://docs.cupy.dev/en/stable/install.html) for driver and
@@ -136,12 +136,12 @@ HDBSCAN fit took roughly 3.4 seconds while classification took roughly 99 second
 identifying classification as the target of the subsequent GPU integration. These
 initial measurements predate the accelerated classifiers.
 
-In the benchmark worktree, the saved report is `profiles/composition-benchmarks/saved-sample/index.html`
-and its replay definition is `profiles/composition-benchmarks/inputs/saved-sample.toml`. These local
+In the benchmark worktree, the saved report is `dev/profiles/composition-benchmarks/saved-sample/index.html`
+and its replay definition is `dev/profiles/composition-benchmarks/inputs/saved-sample.toml`. These local
 artifacts and anonymous inputs are Git-ignored. Use a fresh output directory to rerun:
 
 ```sh
 uv run --extra compositions --extra compositions-gpu \
   python -m scripts.composition_benchmarks \
-  profiles/composition-benchmarks/inputs/saved-sample.toml --output profiles/composition-benchmarks/rerun
+  dev/profiles/composition-benchmarks/inputs/saved-sample.toml --output dev/profiles/composition-benchmarks/rerun
 ```

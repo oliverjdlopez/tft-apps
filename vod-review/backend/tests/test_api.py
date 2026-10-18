@@ -132,11 +132,15 @@ def test_audio_url_import_automatically_transcribes_and_persists_result(
         progress_callback(100)
         return audio
 
-    def fake_transcribe(path):
+    def fake_transcribe(path, progress_callback=None):
         calls.append("transcribe")
         assert Path(path) == audio
+        if progress_callback:
+            progress_callback(25)
         if transcription_fails:
             raise RuntimeError("Recognition unavailable")
+        if progress_callback:
+            progress_callback(80)
         return app_module.AudioTranscription(transcript="Recognized speech.", language="en")
 
     def unexpected_video(*args, **kwargs):
@@ -172,6 +176,7 @@ def test_audio_url_import_automatically_transcribes_and_persists_result(
     else:
         assert result["transcription"]["transcript"] == "Recognized speech."
         assert result["transcription"]["language"] == "en"
+        assert result["transcription"]["progress"] == 100
 
 
 def test_video_probe_uses_pyav_without_ffprobe(monkeypatch: pytest.MonkeyPatch):
@@ -366,6 +371,56 @@ def test_download_task_progress_is_persisted_and_monotonic(tmp_path: Path):
     task = db_module.get_download_task("download-id")
     assert task["status"] == "running"
     assert task["progress"] == 42.5
+
+
+def test_download_task_reserves_completion_for_postprocessing_and_persistence(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+):
+    """Keep a raw 100% callback below completion until the download task finishes."""
+    from backend.models import VideoUrlRequest
+
+    db_module.DATA_DIR = tmp_path / "data"
+    db_module.VIDEO_DIR = db_module.DATA_DIR / "videos"
+    db_module.DB_PATH = db_module.DATA_DIR / "vod.sqlite3"
+    db_module.init_db()
+    source = tmp_path / "source.mp4"
+    source.write_bytes(b"prepared video")
+    video = db_module.create_video("video-id", "source.mp4", source, "video/mp4", 60.0, 64, 64)
+    db_module.create_download_task("download-id", url="https://youtu.be/example")
+    callback_reported = asyncio.Event()
+    allow_finish = asyncio.Event()
+
+    def fake_download(_url, _start, _end, progress_callback, _quality, **_kwargs):
+        progress_callback(100)
+        return video
+
+    async def controlled_to_thread(function, *args, **kwargs):
+        result = function(*args, **kwargs)
+        if function is fake_download:
+            callback_reported.set()
+            await allow_finish.wait()
+        return result
+
+    monkeypatch.setattr(app_module, "download_video_url", fake_download)
+    monkeypatch.setattr(app_module.asyncio, "to_thread", controlled_to_thread)
+    monkeypatch.setattr(app_module, "start_playback_preparation", lambda _video_id: None)
+
+    async def exercise():
+        task = asyncio.create_task(app_module._run_download_task(
+            "download-id", VideoUrlRequest(url="https://youtu.be/example"),
+        ))
+        await callback_reported.wait()
+        in_flight = db_module.get_download_task("download-id")
+        allow_finish.set()
+        await task
+        return in_flight, db_module.get_download_task("download-id")
+
+    in_flight, completed = asyncio.run(exercise())
+    assert in_flight["status"] == "running"
+    assert in_flight["progress"] == 99
+    assert completed["status"] == "completed"
+    assert completed["progress"] == 100
 
 
 def test_checkpointed_download_becomes_resumable_after_restart(tmp_path: Path):

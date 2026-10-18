@@ -42,8 +42,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--frame-stride", type=int, default=30)
     parser.add_argument("--warmups", type=int, default=1)
     parser.add_argument("--runs", type=int, default=3)
-    parser.add_argument("--output", type=Path, default=Path("round_pipeline_benchmark.jsonl"))
-    parser.add_argument("--trace-output", type=Path, default=Path("round_pipeline_trace.jsonl"))
+    parser.add_argument(
+        "--output", type=Path,
+        default=REPOSITORY_ROOT / "dev" / "profiles" / "round_pipeline_benchmark.jsonl",
+    )
+    parser.add_argument(
+        "--trace-output", type=Path,
+        default=REPOSITORY_ROOT / "dev" / "traces" / "round_pipeline_trace.jsonl",
+    )
     parser.add_argument(
         "--no-detailed-profiling",
         action="store_true",

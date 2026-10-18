@@ -132,7 +132,7 @@ fallback warning. Once cuML fitting starts, GPU fit errors propagate rather than
 silently triggering a CPU refit.
 
 Every completed standalone HDBSCAN run writes
-`profiles/compositions/hdbscan/<experiment-uuid>.txt` at the repository root.
+`dev/profiles/compositions/hdbscan/<experiment-uuid>.txt` at the repository root.
 The report includes backend, input and eligible counts, density parameters,
 cluster sizes, noise fraction, membership-strength summaries, persistence values,
 retained reference counts, fit duration, and estimated CPU distance-matrix size.

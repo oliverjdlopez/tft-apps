@@ -12,6 +12,27 @@
   let selectedText;
   const distillations = new Map();
 
+  /** Keep the byte count visible while an explicit tokenizer count is pending. */
+  function renderDetails(resource, tokenLabel = "") {
+    const details = `${resource.kind} · ${resource.content_type || "Unknown format"} · ${Number(resource.size).toLocaleString()} bytes`;
+    element("media-details").textContent = tokenLabel ? `${details} · ${tokenLabel}` : details;
+  }
+
+  /** Count decoded source text without letting a slow count replace a new preview. */
+  async function countText(resource, text, current) {
+    try {
+      const result = await bridge.media("count", text);
+      if (result.error || !Number.isSafeInteger(result.token_count) || result.token_count < 0) {
+        throw new Error("Token count is unavailable.");
+      }
+      if (current !== generation || selected?.reference !== resource.reference) return;
+      renderDetails(resource, `${Number(result.token_count).toLocaleString()} source tokens (${result.tokenizer})`);
+    } catch {
+      if (current !== generation || selected?.reference !== resource.reference) return;
+      renderDetails(resource, "token count unavailable");
+    }
+  }
+
   /** Keep each source's in-flight request and result separate from the preview. */
   function renderDistillation() {
     const state = distillations.get(selected?.reference);
@@ -123,7 +144,7 @@
     renderList();
     element("media-title").textContent = resource.name;
     element("media-source").textContent = resource.source;
-    element("media-details").textContent = `${resource.kind} · ${resource.content_type || "Unknown format"} · ${Number(resource.size).toLocaleString()} bytes`;
+    renderDetails(resource);
     element("media-reference").value = resource.reference;
     element("media-reference-controls").hidden = false;
     element("media-copy-status").textContent = "";
@@ -142,6 +163,7 @@
         if (resource.kind === "data") {
           try { text = JSON.stringify(JSON.parse(text), null, 2); } catch { /* Non-JSON text retains its original form. */ }
         }
+        void countText(resource, result.text, current);
         element("media-content").textContent = text;
         element("media-status").textContent = text ? "" : "This file is empty.";
       } else if (result.contentUrl) {

@@ -122,6 +122,29 @@ export function createMediaReader(getOrigin, request = fetch) {
       }
       return result;
     }
+    if (action === "count") {
+      if (typeof value !== "string" || Buffer.byteLength(value, "utf8") > maxBytes) {
+        throw new MediaError("Text token counting is limited to 10 MB.");
+      }
+      try {
+        const response = await request(new URL("/api/media/token-count", origin), {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: value }), redirect: "error",
+          signal: AbortSignal.timeout(30_000),
+        });
+        if (!response.ok) {
+          await response.body?.cancel();
+          throw new MediaError("Could not count tokens for this text.");
+        }
+        const result = JSON.parse(await readBody(response));
+        if (!Number.isSafeInteger(result.token_count) || result.token_count < 0
+          || result.tokenizer !== "o200k_base") throw new MediaError("Could not count tokens for this text.");
+        return result;
+      } catch (error) {
+        if (error instanceof MediaError) throw error;
+        throw new MediaError("Token count is unavailable. The o200k_base tokenizer may need to be cached by ChatTFT.");
+      }
+    }
     throw new MediaError("Unknown media action.");
   };
 }

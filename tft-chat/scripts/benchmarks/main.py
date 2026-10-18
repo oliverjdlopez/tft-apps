@@ -154,7 +154,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="Skip the separate worker-thread cProfile pass.",
     )
     parser.add_argument(
-        "--output-root", type=Path, default=Path("profiles/benchmarks"),
+        "--output-root", type=Path, default=Path("dev/profiles/benchmarks"),
         help="Directory for ignored benchmark artifacts.",
     )
     parser.add_argument(

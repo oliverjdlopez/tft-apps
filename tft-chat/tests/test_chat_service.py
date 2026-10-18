@@ -96,6 +96,9 @@ def test_chat_config_includes_models_and_tools() -> None:
     assert config["default_assistant"] == "chat"
     assert config["assistants"] == list(current_registry().assistant_names)
     assert config["default_model"] == load_config().models.openai_model
+    assert config["asset_context"] == {
+        "set_number": load_config().chat.set_number,
+    }
     assert [tool["name"] for tool in config["tools"]] == [
         *[tool.name for tool in CONTEXT_TOOL_GROUP.tools],
         *[tool.name for tool in RANKING_TOOL_GROUP.tools],

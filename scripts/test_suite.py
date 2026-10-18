@@ -79,7 +79,7 @@ def commands(tier, component, output, coverage=False):
     return jobs
 
 
-def environment(tier, output):
+def environment(tier, output, log_directory, trace_directory):
     """Disable unintended live integrations and isolate generated application state."""
     env = dict(os.environ)
     for name in list(env):
@@ -93,15 +93,31 @@ def environment(tier, output):
     if tier != "postgres":
         env.update(RDS_TEST_HOST="127.0.0.1", RDS_TEST_PORT="1", RDS_TEST_ADMIN="tft",
                    RDS_TEST_PASSWORD="unused", RDS_TEST_DB="validation_test", CI="false")
-    env.update(TFT_MEDIA_DIR=str(output / "media"), VOD_DATA_DIR=str(output / "vod"),
-               VOD_GDRIVE_TOKEN_FILE=str(output / "vod/gdrive/token.json"), VOD_GDRIVE_CLIENT_FILE="",
-               VOD_TRACE_JSONL=str(output / "vod-trace.jsonl"), VOD_OCR_CACHE_DIR=str(output / "vod/ocr_cache"),
-               VOD_FRAMES_DIR=str(output / "vod/frames"), VOD_BOXES_DIR=str(output / "vod/boxes"),
-               VOD_SAVE_FRAMES="0", VOD_SAVE_BOXES="0",
-               OPENAI_API_KEY="", ANTHROPIC_API_KEY="", LANGFUSE_PUBLIC_KEY="", LANGFUSE_SECRET_KEY="", VITE_API_BASE="",
-               LANGFUSE_TRACING_ENABLED="false", LANGFUSE_RUNTIME_DIR=str(output / "eval-runtime"),
-               VALIDATION_ARTIFACTS=str(output), HYPOTHESIS_STORAGE_DIRECTORY=str(output / "hypothesis"),
-               COVERAGE_FILE=str(output / ".coverage"), RDS_TEST_SYNC_LOCAL_IP="0")
+    env.update({
+        "TFT_MEDIA_DIR": str(output / "media"),
+        "VOD_DATA_DIR": str(output / "vod"),
+        "VOD_GDRIVE_TOKEN_FILE": str(output / "vod/gdrive/token.json"),
+        "VOD_GDRIVE_CLIENT_FILE": "",
+        "VOD_TRACE_JSONL": str(trace_directory / "vod-trace.jsonl"),
+        "VOD_OCR_CACHE_DIR": str(output / "vod/ocr_cache"),
+        "VOD_FRAMES_DIR": str(output / "vod/frames"),
+        "VOD_BOXES_DIR": str(output / "vod/boxes"),
+        "VOD_SAVE_FRAMES": "0",
+        "VOD_SAVE_BOXES": "0",
+        "OPENAI_API_KEY": "",
+        "ANTHROPIC_API_KEY": "",
+        "LANGFUSE_PUBLIC_KEY": "",
+        "LANGFUSE_SECRET_KEY": "",
+        "VITE_API_BASE": "",
+        "LANGFUSE_TRACING_ENABLED": "false",
+        "LANGFUSE_RUNTIME_DIR": str(output / "eval-runtime"),
+        "VALIDATION_ARTIFACTS": str(output),
+        "VALIDATION_LOGS": str(log_directory),
+        "VALIDATION_TRACES": str(trace_directory),
+        "HYPOTHESIS_STORAGE_DIRECTORY": str(output / "hypothesis"),
+        "COVERAGE_FILE": str(output / ".coverage"),
+        "RDS_TEST_SYNC_LOCAL_IP": "0",
+    })
     env.pop("ELECTRON_RUN_AS_NODE", None)
     if tier == "gpu":
         env["CHATTFT_HDBSCAN_CUDA_TEST"] = "1"
@@ -128,10 +144,11 @@ def stop(process):
         process.wait(timeout=5)
 
 
-def execute(name, cwd, command, env, output, timeout=600):
+def execute(name, cwd, command, env, log_directory, timeout=600):
     """Capture a bounded command and return a serializable outcome with its log."""
     started = time.monotonic()
-    log = output / (name + ".log")
+    log_directory.mkdir(parents=True, exist_ok=True)
+    log = log_directory / (name + ".log")
     print(f"Running {name}: {' '.join(command)}", flush=True)
     with log.open("w", encoding="utf-8") as stream:
         process = subprocess.Popen(command, cwd=cwd, env=env, stdout=stream, stderr=subprocess.STDOUT,
@@ -149,14 +166,23 @@ def execute(name, cwd, command, env, output, timeout=600):
 
 
 @contextmanager
-def server(module, cwd, interpreter, env, output):
+def server(module, cwd, interpreter, env, log_directory):
     """Own a temporary HTTP fixture server on a kernel-selected loopback port."""
     with socket.socket() as reservation:
         reservation.bind(("127.0.0.1", 0))
         port = reservation.getsockname()[1]
-    with (output / (module.split('.')[-1] + "-server.log")).open("w") as stream:
-        process = subprocess.Popen([interpreter, "-m", "uvicorn", "--app-dir", "tests", module + ":app", "--host", "127.0.0.1", "--port", str(port)],
-                                   cwd=cwd, env=env, stdout=stream, stderr=subprocess.STDOUT, start_new_session=os.name == "posix")
+    log_directory.mkdir(parents=True, exist_ok=True)
+    log = log_directory / (module.split('.')[-1] + "-server.log")
+    with log.open("w") as stream:
+        process = subprocess.Popen(
+            [interpreter, "-m", "uvicorn", "--app-dir", "tests", module + ":app",
+             "--host", "127.0.0.1", "--port", str(port)],
+            cwd=cwd,
+            env=env,
+            stdout=stream,
+            stderr=subprocess.STDOUT,
+            start_new_session=os.name == "posix",
+        )
         try:
             deadline = time.monotonic() + 30
             while time.monotonic() < deadline:
@@ -168,7 +194,7 @@ def server(module, cwd, interpreter, env, output):
                 time.sleep(0.1)
             else:
                 raise TimeoutError(f"Fixture {module} failed to listen")
-            yield f"http://127.0.0.1:{port}"
+            yield f"http://127.0.0.1:{port}", log
         finally:
             stop(process)
 
@@ -215,7 +241,11 @@ def main():
         """Unwind owned-process contexts on cancellation so diagnostics survive."""
         raise KeyboardInterrupt(f"Validation interrupted by signal {signum}")
     signal.signal(signal.SIGTERM, interrupted)
-    output = args.output.resolve() / (args.tier + "-" + args.component) / (time.strftime("%Y%m%dT%H%M%S") + f"-{os.getpid()}")
+    run_id = time.strftime("%Y%m%dT%H%M%S") + f"-{os.getpid()}"
+    run_key = Path(args.tier + "-" + args.component) / run_id
+    output = args.output.resolve() / run_key
+    log_directory = ROOT / "dev" / "logs" / "validation" / run_key
+    trace_directory = ROOT / "dev" / "traces" / "validation" / run_key
     jobs = commands(args.tier, args.component, output, args.coverage)
     if args.list:
         print(json.dumps([{"name": name, "cwd": str(cwd), "command": command} for name, cwd, command in jobs], indent=2))
@@ -223,27 +253,59 @@ def main():
     if not jobs:
         parser.error("No checks exist for this tier/component combination")
     output.mkdir(parents=True, exist_ok=True)
-    env = environment(args.tier, output)
+    log_directory.mkdir(parents=True, exist_ok=True)
+    trace_directory.mkdir(parents=True, exist_ok=True)
+    env = environment(args.tier, output, log_directory, trace_directory)
     env["FLOWCHART_PLAYWRIGHT_MODULE"] = str(ROOT / "tests/browser/node_modules/playwright/index.mjs")
     env["FLOWCHART_SMOKE_SCREENSHOT"] = str(output / "flowchart.png")
+    fixture_server_log = (
+        str(log_directory / "flowchart_smoke_server-server.log")
+        if any(name == "flowchart-browser" for name, _, _ in jobs)
+        else None
+    )
     results, error = [], None
     try:
         if args.tier == "windows" and not os.environ.get("WSL_DISTRO_NAME"):
             raise RuntimeError("Windows/WSL acceptance requires the existing WSL-to-Windows bridge")
         for name, cwd, command in jobs:
             if name == "flowchart-browser":
-                with server("flowchart_smoke_server", CHAT, python(CHAT), env, output) as url:
-                    result = execute(name, cwd, command, {**env, "FLOWCHART_SMOKE_URL": url}, output)
+                with server(
+                    "flowchart_smoke_server", CHAT, python(CHAT), env, log_directory
+                ) as (url, server_log):
+                    result = execute(
+                        name, cwd, command,
+                        {**env, "FLOWCHART_SMOKE_URL": url},
+                        log_directory,
+                    )
+                    result["server_log"] = str(server_log)
             else:
-                result = execute(name, cwd, command, env, output)
+                result = execute(name, cwd, command, env, log_directory)
             results.append(result)
         inventory = junit_summary(output, required=args.tier in ("postgres", "pdf", "gpu"))
     except (OSError, RuntimeError, TimeoutError, KeyboardInterrupt) as exc:
         error, inventory = str(exc), {}
         print(error, file=sys.stderr)
-    report = {"tier": args.tier, "component": args.component, "results": results, "inventory": inventory,
-              "environment": runtime_versions(), "excluded_tiers": [tier for tier in TIERS if tier != args.tier],
-              "error": error, "passed": not error and bool(results) and all(row["exit_code"] == 0 for row in results)}
+    report = {
+        "tier": args.tier,
+        "component": args.component,
+        "results": results,
+        "inventory": inventory,
+        "diagnostics": {
+            "logs": str(log_directory),
+            "traces": str(trace_directory),
+            "trace_files": sorted(
+                str(path) for path in trace_directory.iterdir() if path.is_file()
+            ),
+            "fixture_server_log": fixture_server_log,
+            "container_log": env.get("VALIDATION_CONTAINER_LOG"),
+        },
+        "environment": runtime_versions(),
+        "excluded_tiers": [tier for tier in TIERS if tier != args.tier],
+        "error": error,
+        "passed": not error and bool(results) and all(
+            row["exit_code"] == 0 for row in results
+        ),
+    }
     (output / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     return 0 if report["passed"] else 1
 

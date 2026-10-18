@@ -61,6 +61,14 @@ counts or average rates because cohorts may overlap. Both views show
 loaded-result coverage and retain source context. Placement distributions keep
 count and placement labels at readable text sizes on narrow screens, with a
 table alternative, including explicit zeroes and separate unavailable states.
+For ranking tables, the browser may also resolve loaded unit, item, and trait
+names to local set-level images through the existing `/api/assets/resolve`
+endpoint. It uses the public asset context from `/api/config`; when no set is
+configured the table stays text-only. Images are decorative, the original text
+remains visible during loading and on failure, and local table controls do not
+trigger additional lookups. Lookup stays within the configured set and uses
+set-level imagery; the card does not claim that the assets match the historical
+patch for the evidence population.
 
 Browser display state never changes the evidence or enters chat history. Views
 survive tab navigation for the page lifetime. Conversation reset clears them;

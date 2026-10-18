@@ -33,3 +33,17 @@ def test_resource_snapshot_is_captured_without_optional_cuda_metrics(monkeypatch
     assert snapshot["batch_index"] == 3
     assert snapshot["process_cpu_seconds"] >= 0
     assert snapshot["max_rss_bytes"] > 0
+
+
+def test_trace_file_is_opt_in_when_no_path_is_configured(monkeypatch):
+    monkeypatch.delenv("VOD_TRACE_JSONL", raising=False)
+    tracing.configure_performance_logging()
+
+    assert tracing._JSONL_PATH is None
+
+
+def test_trace_file_configuration_accepts_dev_traces_path(tmp_path):
+    output = tmp_path / "dev" / "traces" / "round-pipeline.jsonl"
+    tracing.configure_performance_logging(output)
+
+    assert tracing._JSONL_PATH == output.resolve()

@@ -18,11 +18,13 @@ Use `uv sync --inexact` when adding tools to an existing environment whose optio
 packages should be retained. Use fresh temporary environments for exact lockfile
 verification. The runner never installs/prunes dependencies. `--component
 chat|vod|desktop` narrows offline runs; `--list` prints commands without execution.
-Every run writes logs, JUnit inventory, coverage and `report.json` beneath a unique
-ignored `.runtime/validation/<tier>-<component>/<run>/` directory. Frontend reports
-are in each frontend's ignored `coverage/`. There is no percentage gate.
-Media, OCR caches, optional frame/box output, tracing and Drive-token coordinates
-are scoped to the run; inherited developer OAuth settings are disabled.
+Every run writes JUnit inventory, coverage, screenshots and `report.json` beneath a
+unique ignored `.runtime/validation/<tier>-<component>/<run>/` directory. Captured
+command and fixture-server logs go to suite `dev/logs/validation/`; VOD and browser
+trace files go to `dev/traces/validation/`. The run report links diagnostic paths.
+Frontend reports are in each frontend's ignored `coverage/`. There is no percentage
+gate. Media, OCR caches, optional frame/box output and Drive-token coordinates stay
+scoped to the run; inherited developer OAuth settings are disabled.
 
 ## Validation tiers
 

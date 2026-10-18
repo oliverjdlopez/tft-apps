@@ -54,6 +54,9 @@ app/static/
 
 # Local profile info
 profiles/
+dev/logs/
+dev/traces/
+dev/profiles/
 
 # Assistant drafts, trial results, and recoverable apply journals
 .runtime/assistant-workspace/

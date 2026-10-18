@@ -20,13 +20,18 @@ def test_offline_environment_cannot_opt_into_configured_services(tmp_path, monke
     for name in ("RDS_HOST", "RDS_EVAL_PASSWORD", "OPENAI_API_KEY", "LANGFUSE_SECRET_KEY"):
         monkeypatch.setenv(name, "private")
     monkeypatch.setenv("CHAT_TFT_RUN_CONFIGURED_DB_SMOKE_TESTS", "1")
-    env = runner.environment("offline", tmp_path)
+    logs = tmp_path / "dev" / "logs"
+    traces = tmp_path / "dev" / "traces"
+    env = runner.environment("offline", tmp_path, logs, traces)
     assert env["RDS_HOST"] == "" and env["RDS_TEST_PORT"] == "1"
     assert env["OPENAI_API_KEY"] == "" and env["LANGFUSE_SECRET_KEY"] == ""
     assert "CHAT_TFT_RUN_CONFIGURED_DB_SMOKE_TESTS" not in env
     assert env["TFT_MEDIA_DIR"] == str(tmp_path / "media")
     assert env["VOD_GDRIVE_TOKEN_FILE"] == str(tmp_path / "vod/gdrive/token.json")
     assert env["VOD_GDRIVE_CLIENT_FILE"] == ""
+    assert env["VOD_TRACE_JSONL"] == str(traces / "vod-trace.jsonl")
+    assert env["VALIDATION_LOGS"] == str(logs)
+    assert env["VALIDATION_TRACES"] == str(traces)
 
 
 @pytest.mark.parametrize("contents", ["<testsuite tests='0'/>", "<testsuite tests='1' skipped='1'/>"])
@@ -39,11 +44,13 @@ def test_required_tier_rejects_empty_or_skipped_inventory(tmp_path, contents):
 
 def test_bounded_failure_preserves_diagnostics_and_reaps_child(tmp_path):
     """Kill only a disposable hung command and retain its failure status and log."""
+    logs = tmp_path / "dev" / "logs"
     result = runner.execute("stall", tmp_path, [sys.executable, "-u", "-c", "import time; print('started'); time.sleep(60)"],
-                            dict(os.environ), tmp_path, timeout=0.3)
+                            dict(os.environ), logs, timeout=0.3)
     assert result["exit_code"] == 124
     assert result["seconds"] < 8
-    assert "started" in (tmp_path / "stall.log").read_text()
+    assert result["log"] == str(logs / "stall.log")
+    assert "started" in (logs / "stall.log").read_text()
 
 
 def test_declared_commands_are_inspectable_without_dependencies(tmp_path):

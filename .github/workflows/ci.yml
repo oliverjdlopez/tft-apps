@@ -58,6 +58,15 @@ jobs:
           name: chattft-validation
           path: |
             .runtime/validation
+            dev/logs
+            dev/traces
+            dev/profiles
+            tft-chat/dev/logs
+            tft-chat/dev/traces
+            tft-chat/dev/profiles
+            vod-review/dev/logs
+            vod-review/dev/traces
+            vod-review/dev/profiles
             tft-chat/app/frontend/coverage
 
   langfuse-browser:
@@ -144,7 +153,17 @@ jobs:
         if: always()
         with:
           name: desktop-validation
-          path: .runtime/validation
+          path: |
+            .runtime/validation
+            dev/logs
+            dev/traces
+            dev/profiles
+            tft-chat/dev/logs
+            tft-chat/dev/traces
+            tft-chat/dev/profiles
+            vod-review/dev/logs
+            vod-review/dev/traces
+            vod-review/dev/profiles
 
   vod-review:
     runs-on: ubuntu-latest
@@ -168,6 +187,15 @@ jobs:
           name: vod-validation
           path: |
             .runtime/validation
+            dev/logs
+            dev/traces
+            dev/profiles
+            tft-chat/dev/logs
+            tft-chat/dev/traces
+            tft-chat/dev/profiles
+            vod-review/dev/logs
+            vod-review/dev/traces
+            vod-review/dev/profiles
             vod-review/frontend/coverage
 
   browser:
@@ -191,7 +219,17 @@ jobs:
         if: always()
         with:
           name: browser-validation
-          path: .runtime/validation
+          path: |
+            .runtime/validation
+            dev/logs
+            dev/traces
+            dev/profiles
+            tft-chat/dev/logs
+            tft-chat/dev/traces
+            tft-chat/dev/profiles
+            vod-review/dev/logs
+            vod-review/dev/traces
+            vod-review/dev/profiles
 
   native:
     runs-on: ubuntu-latest
@@ -213,7 +251,17 @@ jobs:
         if: always()
         with:
           name: native-validation
-          path: .runtime/validation
+          path: |
+            .runtime/validation
+            dev/logs
+            dev/traces
+            dev/profiles
+            tft-chat/dev/logs
+            tft-chat/dev/traces
+            tft-chat/dev/profiles
+            vod-review/dev/logs
+            vod-review/dev/traces
+            vod-review/dev/profiles
 
   pdf:
     runs-on: ubuntu-latest
@@ -228,4 +276,14 @@ jobs:
         if: always()
         with:
           name: pdf-validation
-          path: .runtime/validation
+          path: |
+            .runtime/validation
+            dev/logs
+            dev/traces
+            dev/profiles
+            tft-chat/dev/logs
+            tft-chat/dev/traces
+            tft-chat/dev/profiles
+            vod-review/dev/logs
+            vod-review/dev/traces
+            vod-review/dev/profiles

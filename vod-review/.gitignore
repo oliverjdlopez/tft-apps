@@ -1,4 +1,7 @@
 data/
+dev/logs/
+dev/traces/
+dev/profiles/
 artifacts/
 output/
 frontend/node_modules/

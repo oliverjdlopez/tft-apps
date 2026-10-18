@@ -131,7 +131,7 @@ export async function uploadVideo(file: File): Promise<VideoRecord> {
   return request<VideoRecord>("/api/videos", { method: "POST", body });
 }
 
-export type TranscriptionTask = { task_id: string; video_id: string | null; status: "queued" | "running" | "completed" | "failed"; transcript: string | null; language: string | null; error: string | null };
+export type TranscriptionTask = { task_id: string; video_id: string | null; status: "queued" | "running" | "completed" | "failed"; progress: number; transcript: string | null; language: string | null; error: string | null };
 export type DownloadTask = { task_id: string; target_video_id?: string | null; status: "queued" | "running" | "pausing" | "paused" | "completed" | "failed" | "dismissed"; progress: number; video?: VideoRecord | null; error?: string | null; media_type?: "video" | "audio"; transcription_task_id?: string | null; transcription?: TranscriptionTask | null };
 export type DownloadQuality = "480p" | "720p" | "1080p" | "best";
 export type DownloadMediaType = "video" | "audio";

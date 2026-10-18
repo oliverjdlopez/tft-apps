@@ -450,7 +450,7 @@ def test_scheduled_video_transcription_uses_saved_media_and_publishes_after_retr
         downloaded.append(args[0])
         return add_video("pipeline", local_store)
 
-    def recognize(path):
+    def recognize(path, progress_callback=None):
         recognized.append(path)
         if len(recognized) == 1:
             raise HTTPException(503, "Speech recognition unavailable")
