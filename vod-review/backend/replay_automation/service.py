@@ -17,11 +17,12 @@ logger = logging.getLogger(__name__)
 class ReplayAutomation:
     """Run one persistent schedule with a single active discovery/download batch."""
 
-    def __init__(self, discover, importer, transcriber=None) -> None:
+    def __init__(self, discover, importer, transcriber=None, online_importer=None) -> None:
         """Inject metadata discovery, URL imports, and optional video transcription."""
         self.discover = discover
         self.importer = importer
         self.transcriber = transcriber
+        self.online_importer = online_importer
         self.task = None
         self.active = None
         self.wake = asyncio.Event()
@@ -90,13 +91,24 @@ class ReplayAutomation:
                         video_id = store.imported_video_id(replay["id"])
                     else:
                         try:
-                            request = VideoUrlRequest(url=replay["url"], quality=settings.quality)
+                            request = VideoUrlRequest(
+                                url=replay["url"], quality=settings.quality,
+                                media_type=settings.media_type, transcribe=settings.transcribe,
+                                checkpoint_interval_seconds=settings.checkpoint_interval_seconds,
+                            )
                             # The callback starts an ordinary tracked download and
                             # associates its task before awaiting completion.
-                            video = await self.importer(request, replay["id"])
-                            store.update_import(replay["id"], status="completed", video_id=video["id"])
-                            video_id = video["id"]
+                            if settings.mode == "online":
+                                if self.online_importer is None:
+                                    raise RuntimeError("Online imports are not initialized")
+                                video = await self.online_importer(replay["url"], settings.quality)
+                            else:
+                                video = await self.importer(request, replay["id"])
+                            video_id = video.get("id")
+                            store.update_import(replay["id"], status="completed", task_id=video.get("task_id"), video_id=video_id)
                             imported += 1
+                            if settings.media_type == "audio" and (video.get("transcription") or {}).get("status") == "completed":
+                                transcribed += 1
                         except asyncio.CancelledError:
                             raise
                         except Exception as exc:

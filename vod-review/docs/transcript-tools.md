@@ -12,6 +12,7 @@ only timestamped speech and source metadata. Significance must be established by
 the speaker; the assistant cannot supply its own TFT advice, inferred visual
 facts, or gameplay grades. These actions do not depend on one another.
 
+Audio-only transcript views show a notice that no video is available to play.
 Key moments show source-grounded explanations and expandable original excerpts.
 Every supporting range has a review-relative timestamp and **Show in transcript**
 control. The transcript tab preserves individual segment text, silence gaps,

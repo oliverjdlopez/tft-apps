@@ -5,7 +5,7 @@ import type { ReplayAutomationStatus } from "./api";
 
 /** Provide a persistent schedule response without contacting creator platforms. */
 function status(): ReplayAutomationStatus {
-  return { configured: false, settings: { enabled: false, sources: [], daily_time: "09:00", timezone: "UTC", window_hours: 24, quality: "720p", transcribe: false }, next_run_at: null, runs: [], imports: [] };
+  return { configured: false, settings: { enabled: false, sources: [], daily_time: "09:00", timezone: "UTC", window_hours: 24, quality: "720p", mode: "offline", media_type: "video", transcribe: false, checkpoint_interval_seconds: null }, next_run_at: null, runs: [], imports: [] };
 }
 
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.useRealTimers(); });
@@ -103,7 +103,7 @@ it("saves automatic transcription alongside creator sources and preserves it dur
   expect(saved.settings.transcribe).toBe(true);
   expect(sourcesSaved).toHaveBeenCalledWith(["https://www.twitch.tv/example"]);
   expect(screen.getByText("Creator scan started. Videos and transcripts will appear in the library.")).toBeInTheDocument();
-  saved.imports = [{ media_id: "twitch:one", title: "Saved VOD", source_url: saved.settings.sources[0], url: "https://www.twitch.tv/videos/one", status: "completed", progress: 100, error: null, video_id: "one", transcription_task_id: "text", transcription_status: "running", transcription_error: null }];
+  saved.imports = [{ media_id: "twitch:one", title: "Saved VOD", source_url: saved.settings.sources[0], url: "https://www.twitch.tv/videos/one", status: "completed", media_type: "video", progress: 100, error: null, video_id: "one", transcription_task_id: "text", transcription_status: "running", transcription_error: null }];
   await act(async () => { await vi.advanceTimersByTimeAsync(5000); });
   expect(screen.getByText(/Video ready · Transcribing/)).toBeInTheDocument();
   fireEvent.click(screen.getByRole("checkbox", { name: "Automatically transcribe imported videos" }));

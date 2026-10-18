@@ -201,6 +201,7 @@ describe("transcription only URL import", () => {
     expect(screen.queryByRole("dialog", { name: "Transcript" })).not.toBeInTheDocument();
     fireEvent.click(viewTranscript);
     expect(screen.getByRole("dialog", { name: "Transcript" })).toBeInTheDocument();
+    expect(screen.getByRole("note")).toHaveTextContent("Audio-only download: no video is available to play.");
     expect(screen.getByLabelText("Transcript text")).toHaveValue("Recognized speech from the URL.");
     fireEvent.click(screen.getByRole("button", { name: "Close transcript" }));
     expect(screen.queryByLabelText("Transcript text")).not.toBeInTheDocument();

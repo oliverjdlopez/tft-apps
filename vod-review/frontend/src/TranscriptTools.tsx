@@ -46,6 +46,7 @@ export function TranscriptTools({ title, transcription, videoId, online, transcr
   };
   return <section className="transcript-tools" aria-label="Transcript tools">
     <h3>{videoId ? title : source?.title ?? title}</h3>
+    {transcription && !transcription.video_id && <p className="transcript-audio-notice" role="note">Audio-only download: no video is available to play.</p>}
     <div className="transcript-actions">{actions.map(action => {
       const state = tools.tasks.find(task => task.name === action.name);
       const definition = tools.definitions.find(task => task.name === action.name);

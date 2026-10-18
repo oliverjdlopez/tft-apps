@@ -5,8 +5,9 @@ open the same **Sources and automation** panel. Enter one YouTube
 channel or Twitch creator URL per line, a daily time, an IANA timezone such as
 `America/New_York`, and a lookback window in hours or days. Existing browser-local
 replay sources seed the form when no creator list has been saved. Choose video quality,
-enable daily discovery and downloads, optionally enable **Automatically transcribe
-imported videos**, and save. The creator list and schedule are backend state shared
+online streaming or offline downloads, video or audio-only media, optional speech
+transcription, and a checkpoint interval for resumable offline downloads. Enable daily
+discovery and save. The creator list and schedule are backend state shared
 by manual replay discovery and automatic imports.
 
 Saving sets the next daily time without starting a download. **Run now** saves the
@@ -48,15 +49,15 @@ failed feed remain eligible. Discovery runs
 lazy, full extraction; media transfer starts through the application's ordinary
 URL-import task afterward.
 
-Downloads are serial within a batch, use the selected quality and native FPS,
-and fetch the full video. They reuse the same persistence, video validation,
-optional configured app-local media cache, download progress, and playback
-preparation as a manual URL upload. Each imported VOD appears in the existing
-library, which refreshes every 15 seconds and when the view regains focus.
-With automatic transcription enabled, each imported VOD is transcribed from its
-saved video file before the batch moves on. No second audio download is needed.
-The activity panel shows video and transcription status separately, including
-recognition errors. Select a video in the library to read its saved transcript;
+Imports are serial within a batch. Offline video downloads use the selected quality,
+native FPS, full source, standard validation and playback preparation; an optional
+checkpoint interval enables pause/resume recovery. Online mode creates a source-backed
+library review without downloading video bytes. Audio-only mode downloads audio
+through the ordinary tracked URL-import path. Offline video imports appear in the
+library, while audio imports and their transcripts are available in shared Media.
+With automatic transcription enabled, video speech is recognized from the saved file;
+audio speech is recognized during the audio download. The activity panel reports
+download and recognition state, including errors. Select an imported video in the library to read its saved transcript;
 queued/running recognition is refreshed automatically. Raw text and detected
 language persist in the ordinary transcription tables and publish to shared Media
 using the existing transcript-sharing path.
@@ -101,8 +102,11 @@ The same runtime serves the persistent desktop VOD Review view.
   list) from a new installation that can seed legacy browser-local sources.
 - `PUT /api/replay-automation`: validate and save `enabled`, `sources`,
   `daily_time` (`HH:MM`), `timezone`, `window_hours` (greater than zero, up to 90
-  days), `quality` (`480p`, `720p`, `1080p`, or `best`), and `transcribe`
-  (boolean, default false). Up to 25 unique
+  days), `quality` (`480p`, `720p`, `1080p`, or `best`), `transcribe` (boolean,
+  default false), `mode` (`offline` or `online`, default `offline`), `media_type`
+  (`video` or `audio`, default `video`), and `checkpoint_interval_seconds` (null
+  or 60–21600, default null). Online mode supports source-backed video reviews
+  and cannot be combined with audio, transcription, or checkpoints. Up to 25 unique
   creator URLs are accepted. Unknown fields are rejected.
 - `POST /api/replay-automation/run`: start an explicit run; concurrent runs return
   409 and an empty creator list returns 400.

@@ -57,10 +57,12 @@ it("retains previous Markdown after a failed rerun and disables raw HTML", async
 it("renders audio timestamps as text and legacy transcripts without fabricated playback controls", async () => {
   api([], { ...source, video_id: null });
   const { rerender } = render(<TranscriptTools title="Audio" transcription={{ ...transcription, video_id: null }} />);
+  expect(screen.getByRole("note")).toHaveTextContent("Audio-only download: no video is available to play.");
   await screen.findByText("0:12");
   expect(screen.queryByRole("button", { name: "0:12" })).not.toBeInTheDocument();
   api([], { ...source, task_id: "legacy", segments: null });
   rerender(<TranscriptTools title="Legacy audio" transcription={{ ...transcription, video_id: null, task_id: "legacy" }} />);
+  expect(screen.getByRole("note")).toHaveTextContent("Audio-only download: no video is available to play.");
   await screen.findByText(/Reimport the audio source/);
   expect(screen.getByRole("button", { name: "Find key moments" })).toBeDisabled();
   expect(screen.getByLabelText("Transcript text")).toHaveValue(transcription.transcript);

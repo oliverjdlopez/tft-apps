@@ -7,6 +7,7 @@
 .transcript-tools button:focus-visible, .transcript-content:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .transcript-actions { display: grid; gap: 8px; }
 .transcript-tools p { margin: 7px 0; font-size: 12px; overflow-wrap: anywhere; }
+.transcript-tools .transcript-audio-notice { padding: 9px 11px; border-left: 3px solid var(--ring); border-radius: 4px; background: var(--secondary); }
 .transcript-tools [role=tablist] { display: flex; flex-wrap: wrap; gap: 4px; margin: 14px 0 8px; }
 .transcript-tools [aria-selected=true] { background: var(--secondary); }
 .transcript-content { max-height: min(65vh, 780px); overflow: auto; overflow-wrap: anywhere; }

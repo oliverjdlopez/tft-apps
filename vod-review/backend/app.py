@@ -1236,7 +1236,7 @@ async def lifespan(application: FastAPI):
         except ImportError:  # Support the documented backend-directory launch.
             from replay_automation.discovery import discover_window
             from replay_automation.service import ReplayAutomation
-        automation = ReplayAutomation(discover_window, import_discovered_video, transcribe_imported_video)
+        automation = ReplayAutomation(discover_window, import_discovered_video, transcribe_imported_video, import_discovered_online)
         application.state.replay_automation = automation
         await automation.start()
         yield
@@ -1605,9 +1605,22 @@ async def import_discovered_video(request: VideoUrlRequest, media_id: str) -> di
         # shutdown still owns cancellation of every DOWNLOAD_TASKS entry.
         await asyncio.shield(task)
     completed = db.get_download_task(task_id)
+    if request.media_type == "audio":
+        if completed["status"] != "completed":
+            raise RuntimeError(completed["error"] or "Scheduled audio download did not complete")
+        return completed
     if completed["status"] != "completed" or completed["video"] is None:
         raise RuntimeError(completed["error"] or "Scheduled video download did not complete")
     return completed["video"]
+
+
+async def import_discovered_online(url: str, quality: str) -> dict[str, Any]:
+    """Create a source-backed online review for an automatically discovered VOD."""
+    try:
+        from .models import OnlineVideoRequest
+    except ImportError:
+        from models import OnlineVideoRequest
+    return await import_online_video(OnlineVideoRequest(url=url, quality=quality))
 
 
 @app.post("/api/videos/{video_id}/transcription", status_code=202)

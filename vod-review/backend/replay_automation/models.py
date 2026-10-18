@@ -1,13 +1,14 @@
 """Validated schedule settings persisted by the creator-import service."""
 
+from typing import Literal
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 try:
-    from ..models import DownloadQuality, ReplayDiscoveryRequest
+    from ..models import DownloadMediaType, DownloadQuality, ReplayDiscoveryRequest
 except ImportError:  # Backend-directory uvicorn launch.
-    from models import DownloadQuality, ReplayDiscoveryRequest
+    from models import DownloadMediaType, DownloadQuality, ReplayDiscoveryRequest
 from .utils import is_replay_source_url
 
 
@@ -21,7 +22,10 @@ class ReplaySchedule(BaseModel):
     timezone: str = Field(default="UTC", min_length=1, max_length=100)
     window_hours: float = Field(default=24, gt=0, le=24 * 90, allow_inf_nan=False)
     quality: DownloadQuality = "720p"
+    mode: Literal["online", "offline"] = "offline"
+    media_type: DownloadMediaType = "video"
     transcribe: bool = False
+    checkpoint_interval_seconds: float | None = Field(default=None, ge=60, le=6 * 60 * 60)
 
     @model_validator(mode="after")
     def validate_settings(self) -> "ReplaySchedule":
@@ -35,6 +39,10 @@ class ReplaySchedule(BaseModel):
             self.sources = [source.rstrip("/") for source in self.sources]
             if len(set(self.sources)) != len(self.sources) or any(not is_replay_source_url(source) for source in self.sources):
                 raise ValueError("Use unique YouTube channel or Twitch creator URLs")
-        elif self.enabled:
+        if self.mode == "online" and (self.media_type == "audio" or self.transcribe or self.checkpoint_interval_seconds is not None):
+            raise ValueError("Online mode supports video playback only; audio, transcription, and checkpoints require Offline mode")
+        if self.media_type == "audio" and self.checkpoint_interval_seconds is not None:
+            raise ValueError("Checkpoint downloads are available for video imports only")
+        if not self.sources and self.enabled:
             raise ValueError("Add at least one creator before enabling automatic imports")
         return self

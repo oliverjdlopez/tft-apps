@@ -138,7 +138,8 @@ export type DownloadMediaType = "video" | "audio";
 
 export type ReplaySchedule = {
   enabled: boolean; sources: string[]; daily_time: string; timezone: string;
-  window_hours: number; quality: DownloadQuality; transcribe: boolean;
+  window_hours: number; quality: DownloadQuality; mode: "online" | "offline";
+  media_type: DownloadMediaType; transcribe: boolean; checkpoint_interval_seconds: number | null;
 };
 export type ReplayAutomationRun = {
   id: string; status: string; scheduled_at: string; window_start: string;
@@ -149,7 +150,7 @@ export type ReplayAutomationStatus = {
   configured: boolean;
   settings: ReplaySchedule; next_run_at: string | null; runs: ReplayAutomationRun[];
   imports: { media_id: string; title: string; source_url: string; url: string;
-    status: string; progress: number | null; error: string | null; video_id: string | null;
+    status: string; media_type: DownloadMediaType | null; progress: number | null; error: string | null; video_id: string | null;
     transcription_task_id: string | null; transcription_status: TranscriptionTask["status"] | null;
     transcription_error: string | null }[];
 };

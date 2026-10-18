@@ -114,8 +114,13 @@ def reserve_import(replay: dict, run_id: str) -> bool:
         if row and row["status"] == "downloading":
             return False
         if row and row["status"] == "completed":
-            # Deleting a library video permits importing it again in a later window.
-            if connection.execute("SELECT 1 FROM videos WHERE id=?", (row["video_id"],)).fetchone():
+            # Deleting a library video permits importing it again; completed
+            # audio tasks have no video row and remain associated by task ID.
+            if row["video_id"] and connection.execute("SELECT 1 FROM videos WHERE id=?", (row["video_id"],)).fetchone():
+                return False
+            if row["task_id"] and connection.execute(
+                "SELECT 1 FROM download_tasks WHERE id=? AND media_type='audio' AND status='completed'", (row["task_id"],)
+            ).fetchone():
                 return False
         manual_tasks = connection.execute("""SELECT id,url,status,video_id FROM download_tasks
             WHERE media_type='video' AND start_seconds IS NULL AND end_seconds IS NULL
@@ -173,9 +178,10 @@ def status() -> dict:
         for run in runs:
             run["errors"] = json.loads(run["errors"])
             del run["settings"]
-        items = [dict(row) for row in connection.execute("""SELECT i.*,d.progress,d.error,
+        items = [dict(row) for row in connection.execute("""SELECT i.*,d.progress,d.error,d.media_type,
+            COALESCE(i.transcription_task_id,d.transcription_task_id) AS transcription_task_id,
             t.status AS transcription_status,t.error AS transcription_error
             FROM replay_imports i LEFT JOIN download_tasks d ON d.id=i.task_id
-            LEFT JOIN transcription_tasks t ON t.id=i.transcription_task_id
+            LEFT JOIN transcription_tasks t ON t.id=COALESCE(i.transcription_task_id,d.transcription_task_id)
             ORDER BY i.rowid DESC LIMIT 100""")]
     return {"settings": settings.model_dump(), "next_run_at": next_run, "runs": runs, "imports": items, "configured": configured}

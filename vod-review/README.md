@@ -73,7 +73,8 @@ transcription`. The default model is `large-v3` on CUDA with float16; configure
 `VOD_WHISPER_MODEL`, `VOD_WHISPER_DEVICE`, and `VOD_WHISPER_COMPUTE_TYPE` to
 choose another faster-whisper model/device/compute type. Once transcription
 finishes, click **View transcript** to focus the review panel’s Transcript tab.
-Audio-only imports use the same panel in a modal. **Distill transcript** and
+Audio-only imports use the same panel in a modal, with a notice that no video is
+available to play. **Distill transcript** and
 **Find key moments** run independently on explicit clicks through ChatTFT;
 results persist in VOD Review. Standalone LLM actions require
 `VOD_CHAT_TFT_BASE_URL`. See [transcript tools](docs/transcript-tools.md) for
