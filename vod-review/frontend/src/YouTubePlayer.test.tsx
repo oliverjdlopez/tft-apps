@@ -26,3 +26,17 @@ it("maps review seeks to source time, clamps them, configures the iframe and des
   unmount();
   expect(player.destroy).toHaveBeenCalledOnce();
 });
+
+it("honors the latest seek before readiness and applies source offset once", async () => {
+  const player = { seekTo: vi.fn(), playVideo: vi.fn(), pauseVideo: vi.fn(), getCurrentTime: () => 300, destroy: vi.fn() };
+  let ready: (() => void) | undefined;
+  window.YT = { Player: vi.fn(function(_element, options) { ready = options.events.onReady; return player; }) as unknown as NonNullable<typeof window.YT>["Player"] };
+  const adapter = createRef<PlayerAdapter>();
+  render(<YouTubePlayer ref={adapter} sourceId="example" start={300} duration={120} initialTime={5} onTime={vi.fn()} onError={vi.fn()} />);
+  act(() => adapter.current?.seek(8, true));
+  act(() => adapter.current?.seek(12.25, true));
+  await waitFor(() => expect(ready).toBeDefined());
+  act(() => ready?.());
+  expect(player.seekTo).toHaveBeenLastCalledWith(312.25, true);
+  expect(player.playVideo).toHaveBeenCalledOnce();
+});

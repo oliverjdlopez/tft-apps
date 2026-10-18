@@ -1,0 +1,25 @@
+.transcript-review-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.transcript-review-player { min-width: 0; }
+.transcript-tools { min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); }
+.transcript-tools h3 { overflow-wrap: anywhere; margin-bottom: 12px; font-weight: 600; }
+.transcript-tools button { border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; cursor: pointer; text-align: left; }
+.transcript-tools button:disabled { opacity: .5; cursor: default; }
+.transcript-tools button:focus-visible, .transcript-content:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.transcript-actions { display: grid; gap: 8px; }
+.transcript-tools p { margin: 7px 0; font-size: 12px; overflow-wrap: anywhere; }
+.transcript-tools [role=tablist] { display: flex; flex-wrap: wrap; gap: 4px; margin: 14px 0 8px; }
+.transcript-tools [aria-selected=true] { background: var(--secondary); }
+.transcript-content { max-height: min(65vh, 780px); overflow: auto; overflow-wrap: anywhere; }
+.transcript-content textarea { width: 100%; white-space: pre-wrap; background: var(--background); }
+.transcript-segment { display: flex; align-items: baseline; gap: 10px; padding: 8px 4px; white-space: pre-wrap; }
+.transcript-segment[data-highlighted=true] { background: var(--secondary); box-shadow: inset 3px 0 var(--ring); }
+.transcript-tools .transcript-timestamp { flex-shrink: 0; text-decoration: underline; }
+.moment-card { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.moment-card summary, .transcript-content summary { cursor: pointer; margin: 8px 0; }
+.moment-card blockquote { white-space: pre-wrap; padding: 8px; border-left: 2px solid var(--border); }
+.distilled-markdown { line-height: 1.6; }
+.distilled-markdown ul { list-style: disc; padding-left: 20px; }
+.distilled-markdown ol { list-style: decimal; padding-left: 20px; }
+.distilled-markdown h1, .distilled-markdown h2, .distilled-markdown h3 { font-weight: 600; margin: 12px 0 6px; }
+@media (min-width: 1440px) { .transcript-review-layout { grid-template-columns: minmax(0, 1fr) 340px; align-items: start; } }
+@media (max-width: 600px) { .transcript-content { max-height: 55vh; } }

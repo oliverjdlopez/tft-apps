@@ -11,6 +11,9 @@ sys.path.insert(0, str(ROOT / "vod-review"))
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from backend import app as service
+import httpx
+from backend.transcript_tasks.models import TASKS
+from backend.transcript_tasks.service import TranscriptTaskService
 from backend.models import AudioTranscription, TranscriptionSegment
 
 data = Path(os.environ["VOD_DATA_DIR"])
@@ -32,11 +35,36 @@ class Classifier:
         return [("21", 0.95) for crop in crops]
 
 
-def transcribe(path):
+def transcribe(path, on_progress=None):
     """Replace Whisper inference while retaining real task/publication lifecycles."""
+    if on_progress:
+        on_progress(75)
     return AudioTranscription(transcript="Fixture transcript — Café ☕", language="en",
                               segments=[TranscriptionSegment(start=1.25, end=3.5, text="Fixture transcript — Café ☕")])
 
+
+def upstream(request):
+    """Stub only ChatTFT HTTP/model execution; retain the entire VOD task API."""
+    if request.method == "GET":
+        return httpx.Response(200, json={"tasks": [task.model_dump() for task in TASKS.values()]})
+    name = request.url.path.split("/")[-2]
+    result = "# Fixture notes\n\nSpeaker-grounded reference." if name == "transcription_pipeline" else {
+        "moments": [{"title": "Fixture decision", "explanation": "The speaker explains the reason to wait.",
+                     "evidence": [{"start_segment_id": "s000000", "end_segment_id": "s000000"}]}]}
+    return httpx.Response(200, json={"ok": True, "task": name, "result": result})
+
+
+# Lifecycle still owns the actual service, SQLite history, workers, and HTTP client.
+import backend.transcript_tasks.service as transcript_service
+class FixtureTranscriptService(TranscriptTaskService):
+    """Use a deterministic upstream transport instead of any paid model service."""
+
+    def __init__(self):
+        """Keep the real catalogue fetch and execution response validation paths."""
+        super().__init__("http://fixture-chat", httpx.AsyncClient(transport=httpx.MockTransport(upstream)))
+
+
+transcript_service.TranscriptTaskService = FixtureTranscriptService
 
 service.get_ocr_classifier = lambda labels: Classifier()
 service._transcribe_audio_file = transcribe

@@ -132,12 +132,13 @@ test("Linux guardian forwards the selected application cwd and private environme
   t.after(() => rm(cwd, { recursive: true, force: true }));
   const handle = ownedProcess(process.execPath, [worker], { cwd: root, label: "WSL environment fixture" });
   t.after(() => stopProcess(handle));
-  const script = 'console.log("CHAT_TFT_DESKTOP " + JSON.stringify({type:"context",cwd:process.cwd(),value:process.env.SUITE_FIXTURE_VALUE})); process.stdin.on("end",()=>process.exit(0)); process.stdin.resume();';
+  const script = 'console.log("CHAT_TFT_DESKTOP " + JSON.stringify({type:"context",cwd:process.cwd(),value:process.env.SUITE_FIXTURE_VALUE,chatUrl:process.env.VOD_CHAT_TFT_BASE_URL})); process.stdin.on("end",()=>process.exit(0)); process.stdin.resume();';
   handle.child.stdin.write(`${JSON.stringify({ command: process.execPath, args: ["-e", script], cwd,
-    env: { ...process.env, SUITE_FIXTURE_VALUE: "literal $value ' with spaces" } })}\n`);
+    env: { ...process.env, SUITE_FIXTURE_VALUE: "literal $value ' with spaces", VOD_CHAT_TFT_BASE_URL: "http://127.0.0.1:18379" } })}\n`);
   const context = await waitForRecord(handle, "context", AbortSignal.timeout(5000));
   assert.equal(context.cwd, cwd);
   assert.equal(context.value, "literal $value ' with spaces");
+  assert.equal(context.chatUrl, "http://127.0.0.1:18379");
   handle.child.stdin.end();
   assert.equal((await abortable(handle.finished, AbortSignal.timeout(5000))).code, 0);
 });

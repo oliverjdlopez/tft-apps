@@ -4,7 +4,6 @@ import { Modal } from "@/components/shared/modal";
 import { Button as UiButton } from "@/components/ui/button";
 import { Input as UiInput } from "@/components/ui/input";
 import { Alert as UiAlert } from "@/components/ui/alert";
-import { Textarea as UiTextarea } from "@/components/ui/textarea";
 import { Card as UiCard } from "@/components/ui/card";
 import { Badge as UiBadge } from "@/components/ui/badge";
 import { NativeSelect as UiNativeSelect } from "@/components/ui/native-select";
@@ -13,7 +12,8 @@ import { Switch as UiSwitch } from "@/components/ui/switch";
 import { ChangeEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Activity, Check, CircleHelp, Cpu, Crosshair, Download, Film, FolderOpen, Link2, ListVideo, LoaderCircle, Pause, Play, RefreshCcw, Save, ScanSearch, Settings, SkipBack, SkipForward, Trash2, TriangleAlert, Upload, X } from "lucide-react";
-import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getReplayAutomation, getVideoTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
+import { API_BASE, BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getReplayAutomation, getVideoTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
+import { TranscriptTools } from "./TranscriptTools";
 import { TwitchPlayer } from "./TwitchPlayer";
 import { YouTubePlayer, PlayerAdapter } from "./YouTubePlayer";
 import { importOnlineVideo, setVideoMode, downloadOfflineVideo, getVideoFrame, getOfflineDownload } from "./api";
@@ -207,9 +207,17 @@ function isOnlineUrl(value: string): boolean {
   catch { return false; }
 }
 
+function readSelection(key: string): string | null {
+  try { return localStorage.getItem(key); } catch { return null; }
+}
+
+function saveSelection(key: string, value: string | null) {
+  try { if (value) localStorage.setItem(key, value); else localStorage.removeItem(key); } catch { /* Optional preferences. */ }
+}
+
 function App() {
   const [videos, setVideos] = useState<VideoRecord[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(() => readSelection("vod-selected-video"));
   const [selected, setSelected] = useState<VideoRecord | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<VideoRecord | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -226,6 +234,10 @@ function App() {
   const [downloadMediaType, setDownloadMediaType] = useState<DownloadMediaType>("video");
   const [transcription, setTranscription] = useState<TranscriptionTask | null>(null);
   const [transcriptPreview, setTranscriptPreview] = useState<TranscriptionTask | null>(null);
+  const [transcriptFocus, setTranscriptFocus] = useState(0);
+  const [savedAudio, setSavedAudio] = useState<TranscriptionTask | null>(null);
+  const selectedIdentity = useRef(selectedId);
+  selectedIdentity.current = selectedId;
   const [transcribing, setTranscribing] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -253,6 +265,8 @@ function App() {
   const refreshVideos = useCallback(async () => {
     const records = await listVideos();
     setVideos(records);
+    const saved = readSelection("vod-selected-video");
+    if (saved && !records.some(record => record.id === saved)) setSelectedId(current => current === saved ? null : current);
     return records;
   }, []);
 
@@ -267,6 +281,19 @@ function App() {
     window.addEventListener("focus", refresh);
     return () => { window.clearInterval(timer); window.removeEventListener("focus", refresh); };
   }, [refreshVideos]);
+
+  useEffect(() => { saveSelection("vod-selected-video", selectedId); }, [selectedId]);
+  useEffect(() => {
+    const saved = readSelection("vod-audio-transcript");
+    if (!saved) return;
+    let cancelled = false;
+    void fetch(`${API_BASE}/api/transcriptions/${saved}`).then(response => response.ok ? response.json() : null).then(task => { if (!cancelled && task && !task.video_id) setSavedAudio(task); }).catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
+  useEffect(() => {
+    const task = downloadTask?.media_type === "audio" ? downloadTask.transcription : null;
+    if (task?.status === "completed") { setSavedAudio(task); saveSelection("vod-audio-transcript", task.task_id); }
+  }, [downloadTask]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -289,6 +316,8 @@ function App() {
   useEffect(() => {
     setTranscription(null);
     setTranscriptPreview(null);
+    setTranscriptFocus(0);
+    setTranscribing(false);
   }, [selectedId]);
 
   useEffect(() => {
@@ -431,13 +460,15 @@ function App() {
   const handleTranscribeVideo = async () => {
     if (!selected) return;
     setError(null);
+    const videoId = selected.id;
     setTranscribing(true);
     try {
-      const task = await startTranscription(selected.id);
+      const task = await startTranscription(videoId);
+      if (selectedIdentity.current !== videoId) return;
       setTranscription(task);
       if (task.status === "failed") setError(task.error ?? "Transcription failed");
     } catch (reason: unknown) {
-      setError(reason instanceof Error ? reason.message : "Could not transcribe this video");
+      if (selectedIdentity.current === videoId) setError(reason instanceof Error ? reason.message : "Could not transcribe this video");
     } finally {
       setTranscribing(false);
     }
@@ -556,8 +587,7 @@ function App() {
       {error && <UiAlert variant="destructive" className="toast error-toast"><X size={16} /> {error}<UiButton variant="outline" onClick={() => setError(null)} aria-label="Dismiss error">Dismiss</UiButton></UiAlert>}
       {transcriptPreview && <Modal title="Transcript" onOpenChange={() => setTranscriptPreview(null)}>
         <div className="settings-modal-heading"><h2>Transcript</h2><UiButton variant="outline" type="button" aria-label="Close transcript" onClick={() => setTranscriptPreview(null)}><X size={17} /></UiButton></div>
-        {transcriptPreview.language && <p>Detected language: {transcriptPreview.language}</p>}
-        <UiTextarea aria-label="Transcript text" className="max-h-[60vh]" value={transcriptPreview.transcript ?? ""} placeholder="No speech was detected." readOnly rows={14} />
+        <TranscriptTools key={transcriptPreview.task_id} title="Audio transcript" transcription={transcriptPreview} />
       </Modal>}
       {automationOpen && <ReplayAutomation sources={replaySources} onClose={() => setAutomationOpen(false)} onSourcesSaved={saveReplaySources} onImported={() => { void refreshVideos().catch(() => undefined); }} />}
 
@@ -610,14 +640,15 @@ function App() {
             <label className="url-import-checkpoint">Checkpoint every <span><UiInput aria-label="Download checkpoint interval in minutes" type="number" min="1" max="360" step="1" inputMode="numeric" value={downloadCheckpointMinutes} onChange={(event) => setDownloadCheckpointMinutes(event.target.value)} placeholder="Off" disabled={downloading || downloadTask?.status === "paused"} /> minutes</span></label></>}
             {downloadTask && downloadTask.status !== "completed" && downloadTask.status !== "failed" && downloadTask.status !== "dismissed" && <div className="download-progress" role="status" aria-label={`${downloadTask.transcription?.status === "running" ? "Download and transcription" : "Download"} progress: ${Math.round(downloadProgress)} percent`}><div className="download-progress-copy"><span>{downloadTask.status === "paused" ? "Download paused" : downloadTask.status === "pausing" ? "Pausing after this checkpoint…" : downloadTask.transcription?.status === "running" ? (downloadTask.transcription.progress > 0 ? "Transcribing audio…" : "Preparing speech recognition…") : downloadTask.media_type === "audio" ? "Downloading audio…" : downloadProgress >= 95 ? "Preparing your VOD…" : "Downloading your VOD…"}</span><strong>{Math.round(downloadProgress)}%</strong></div><Progress aria-label={downloadTask.transcription?.status === "running" ? "Download and transcription progress" : "Download progress"} value={downloadProgress} />{downloadTask.status === "paused" ? <div className="download-controls"><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleUsePausedDownload()}><Film size={11} /> Use saved footage</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleResumeDownload()}><Play size={11} /> Resume</UiButton><UiButton variant="outline" className="download-control" type="button" onClick={() => void handleDismissPausedDownload()}><X size={11} /> Dismiss</UiButton></div> : downloadTask.media_type !== "audio" && downloadCheckpointMinutes && <UiButton variant="outline" className="download-control" type="button" disabled={downloadTask.status === "pausing"} onClick={() => void handlePauseDownload()}><Pause size={11} /> {downloadTask.status === "pausing" ? "Pause requested" : "Pause"}</UiButton>}</div>}{downloadMediaType === "video" && <span>{downloading ? "Completed checkpoints are kept if the download is interrupted." : downloadTask?.status === "paused" ? "Use the saved footage now or resume from the last checkpoint." : onlineForm ? "Optional review range · leave blank for the full video" : "Optional range and checkpoints · leave checkpoint blank for a standard download."}</span>}
           </form>
-          {selected && <div className="download-progress"><div className="download-progress-copy"><span>Optional raw speech transcription{selected.mode === "online" ? " · Switch to Offline to transcribe" : ""}</span></div><UiButton variant="outline" className="download-control" type="button" disabled={selected.mode === "online" || transcribing || transcription?.status === "queued" || transcription?.status === "running"} onClick={() => void handleTranscribeVideo()}>{transcribing || transcription?.status === "queued" || transcription?.status === "running" ? <><LoaderCircle className="spin" size={12} /> Transcribing…</> : "Transcribe selected video"}</UiButton>{transcription?.status === "running" && <><div className="download-progress-copy"><span>{transcription.progress > 0 ? "Recognizing speech" : "Loading model and preparing audio…"}</span><strong>{Math.round(transcription.progress)}%</strong></div><Progress aria-label="Transcription progress" value={transcription.progress} /></>}{transcription?.status === "completed" && <UiButton variant="outline" className="download-control" type="button" onClick={() => setTranscriptPreview(transcription)}>View transcript</UiButton>}{transcription?.status === "failed" && <span role="alert">{transcription.error ?? "Transcription failed. Retry this video or run the next automatic scan."}</span>}</div>}
+          {selected && <div className="download-progress"><div className="download-progress-copy"><span>Optional raw speech transcription{selected.mode === "online" ? " · Switch to Offline to transcribe" : ""}</span></div><UiButton variant="outline" className="download-control" type="button" disabled={selected.mode === "online" || transcribing || transcription?.status === "queued" || transcription?.status === "running"} onClick={() => void handleTranscribeVideo()}>{transcribing || transcription?.status === "queued" || transcription?.status === "running" ? <><LoaderCircle className="spin" size={12} /> Transcribing…</> : "Transcribe selected video"}</UiButton>{transcription?.status === "running" && <><div className="download-progress-copy"><span>{transcription.progress > 0 ? "Recognizing speech" : "Loading model and preparing audio…"}</span><strong>{Math.round(transcription.progress)}%</strong></div><Progress aria-label="Transcription progress" value={transcription.progress} /></>}{transcription?.status === "completed" && <UiButton variant="outline" className="download-control" type="button" onClick={() => setTranscriptFocus(value => value + 1)}>View transcript</UiButton>}{transcription?.status === "failed" && <span role="alert">{transcription.error ?? "Transcription failed. Retry this video or run the next automatic scan."}</span>}</div>}
+          {savedAudio && downloadTask?.transcription?.task_id !== savedAudio.task_id && <UiButton variant="outline" type="button" onClick={() => setTranscriptPreview(savedAudio)}>View latest audio transcript</UiButton>}
           {downloadTask?.media_type === "audio" && <div className="download-progress"><div className="download-progress-copy"><span>{downloadTask.status === "failed" ? (downloadTask.transcription?.error ?? downloadTask.error ?? "Audio transcription failed") : downloadTask.transcription?.status === "completed" ? `Transcription complete${downloadTask.transcription.language ? ` · ${downloadTask.transcription.language}` : ""}` : "Downloading and transcribing audio…"}</span></div>{downloadTask.transcription?.status === "completed" && <UiButton variant="outline" className="download-control" type="button" onClick={() => setTranscriptPreview(downloadTask.transcription ?? null)}>View transcript</UiButton>}</div>}
           <div ref={analysisSidebarRef} className="analysis-sidebar-results" />
           <div className="library-footnote"><CircleHelp size={14} /> Your uploads stay on this machine.</div>
         </UiCard>
 
         <UiCard as="section" id="workspace-panel" aria-label="Round analysis" tabIndex={0} className="analysis-panel panel block gap-0 p-4 sm:p-6 shadow-xs">
-          {selected ? <Analyzer key={selected.id} video={selected} sidebarTarget={analysisSidebarRef.current} onUpdate={(record) => { setSelected(record); setVideos((current) => current.map((item) => item.id === record.id ? record : item)); }} onError={setError} /> : (
+          {selected ? <Analyzer key={selected.id} video={selected} transcription={transcription?.video_id === selected.id ? transcription : null} transcribing={transcribing} transcriptFocus={transcriptFocus} onTranscribe={() => void handleTranscribeVideo()} sidebarTarget={analysisSidebarRef.current} onUpdate={(record) => { setSelected(record); setVideos((current) => current.map((item) => item.id === record.id ? record : item)); }} onError={setError} /> : (
             <div className="welcome-state">
               <div className="welcome-icon"><Film size={28} /></div>
               <p className="eyebrow">READY WHEN YOU ARE</p>
@@ -641,9 +672,10 @@ function initialAnalysisInterval(video: VideoRecord): number {
     : fallback;
 }
 
-function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRecord; sidebarTarget: HTMLDivElement | null; onUpdate: (video: VideoRecord) => void; onError: (message: string) => void }) {
+function Analyzer({ video, transcription, transcribing, transcriptFocus, onTranscribe, sidebarTarget, onUpdate, onError }: { video: VideoRecord; transcription: TranscriptionTask | null; transcribing: boolean; transcriptFocus: number; onTranscribe: () => void; sidebarTarget: HTMLDivElement | null; onUpdate: (video: VideoRecord) => void; onError: (message: string) => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const initialSeekPending = useRef(true);
+  const pendingSeek = useRef<{ time: number; play: boolean } | null>(null);
   const online = video.mode === "online";
   const youtubeRef = useRef<PlayerAdapter>(null);
   const OnlinePlayer = video.source_id?.startsWith("twitch:") ? TwitchPlayer : YouTubePlayer;
@@ -878,7 +910,10 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
   const seek = (time: number, play = false) => {
     const clamped = getSeekTimestamp(time, 0, video.duration);
     if (online) youtubeRef.current?.seek(clamped, play);
-    else if (videoRef.current) { videoRef.current.currentTime = clamped; if (play) void videoRef.current.play().catch(() => undefined); }
+    else if (videoRef.current) {
+      if (videoRef.current.readyState === 0) pendingSeek.current = { time: clamped, play };
+      else { initialSeekPending.current = false; videoRef.current.currentTime = clamped; if (play) void videoRef.current.play().catch(() => undefined); }
+    }
     setCurrentTime(clamped);
   };
   const jumpTo = (result: SampleResult) => {
@@ -1014,10 +1049,11 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
     <label className="url-import-quality">Playback mode<UiNativeSelect aria-label="Review playback mode" value={video.mode ?? "offline"} disabled={isProcessing || starting || conversionBusy} onChange={(event) => void changeMode(event.target.value as "online" | "offline")}><option value="offline">Offline</option><option value="online" disabled={!video.source_id}>Online</option></UiNativeSelect></label>
     {switching && <p role="status">{conversion ? `Downloading offline copy… ${Math.round(conversion.progress)}%` : "Switching playback…"} Online playback remains available until the copy is ready.</p>}
     {conversion?.status === "paused" && <div role="status"><p>Offline download paused. Resume or dismiss it before changing modes or analyzing.</p><UiButton disabled={switching} onClick={() => void resumeConversion()}>Resume offline download</UiButton><UiButton disabled={switching} onClick={() => void dismissConversion()}>Dismiss offline download</UiButton></div>}
-    {online && <p className="analysis-note">Switch to Offline for transcription and clip exports. Coarse sampling may miss rounds shorter than the scan interval.</p>}
+    {online && <p className="analysis-note">New speech recognition and clip exports require Offline. Saved transcript tools work Online. Coarse sampling may miss rounds shorter than the scan interval.</p>}
+    <div className="transcript-review-layout"><div className="transcript-review-player">
     <div className="video-stage-wrap">
       <div className="video-stage" ref={overlayRef} style={{ aspectRatio: `${video.width} / ${video.height}` }}>
-        {online && video.source_id ? <OnlinePlayer ref={youtubeRef} sourceId={video.source_id} start={video.source_start_seconds ?? 0} duration={video.duration} initialTime={currentTime} onTime={(time) => { if (!boxEditing) setCurrentTime(time); }} onError={onError} /> : <video ref={videoRef} controls playsInline preload="metadata" onPause={(event) => { setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const initialTime = currentTime; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); }} />}
+        {online && video.source_id ? <OnlinePlayer ref={youtubeRef} sourceId={video.source_id} start={video.source_start_seconds ?? 0} duration={video.duration} initialTime={currentTime} onTime={(time) => { if (!boxEditing) setCurrentTime(time); }} onError={onError} /> : <video ref={videoRef} controls playsInline preload="metadata" onPause={(event) => { setCurrentTime(event.currentTarget.currentTime); }} onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)} onLoadedMetadata={(event) => { if (!initialSeekPending.current) return; initialSeekPending.current = false; const queued = pendingSeek.current; const initialTime = queued?.time ?? currentTime; pendingSeek.current = null; event.currentTarget.currentTime = initialTime; setCurrentTime(initialTime); if (queued?.play) void event.currentTarget.play().catch(() => undefined); }} />}
         {online && boxEditing && preview && <img className="online-frame-preview" src={preview} alt="Still frame for drawing the round crop" />}
         {!online && playback.status === "preparing" && <div className="playback-status"><LoaderCircle className="spin" size={18} /><strong>Preparing fast playback…</strong><span>This one-time step makes startup and scrubbing responsive.</span></div>}
         {!online && playback.status === "failed" && playback.error && <div className="playback-warning"><span>{playback.error ?? "Optimized playback is unavailable."}</span><UiButton variant="outline" type="button" onClick={() => void playback.retry()}>Retry</UiButton></div>}
@@ -1029,6 +1065,7 @@ function Analyzer({ video, sidebarTarget, onUpdate, onError }: { video: VideoRec
       <UiButton variant="outline" type="button" aria-label="Rewind 5 seconds" onClick={() => skipPlayback(-5)}><SkipBack size={16} /> 5 seconds</UiButton>
       <UiButton variant="outline" type="button" aria-label="Skip forward 5 seconds" onClick={() => skipPlayback(5)}>5 seconds <SkipForward size={16} /></UiButton>
     </div>
+    </div><TranscriptTools title={video.original_name} videoId={video.id} transcription={transcription} online={online} transcribing={transcribing} focusTranscript={transcriptFocus} onTranscribe={onTranscribe} onSeek={seek} /></div>
     <div className="workspace-actions"><div className="frame-readout"><span className="status-dot" /> Current frame <strong>{formatDuration(currentTime)}</strong></div><div className="action-buttons"><UiButton variant={boxEditing ? "secondary" : "outline"} aria-pressed={boxEditing} className={`secondary-button ${boxEditing ? "active-tool" : ""}`} disabled={previewLoading || conversionBusy || isProcessing} onClick={() => void toggleDrawing()}><Crosshair size={16} />{boxEditing ? "Exit drawing" : hasBox ? "Edit box" : "Draw box"}</UiButton><UiButton variant="outline" className="secondary-button" disabled={!draftBox || saving || conversionBusy || isProcessing} onClick={saveCurrentBox}>{saving ? <LoaderCircle className="spin" size={16} /> : <Save size={16} />}{saving ? "Saving…" : hasBox ? "Update box" : "Save box"}</UiButton><label className="batch-size-control" title="Elapsed time between analyzed frames. 0 checks every frame."><span>{online ? "Scan interval (s)" : "Interval (s)"}</span><UiInput aria-label="Analysis interval in seconds" type="number" min={online ? "1" : "0"} max="3600" step="any" value={analysisInterval} disabled={isProcessing || starting || conversionBusy} onChange={(event) => setAnalysisInterval(event.target.value)} /></label><label className="batch-size-control"><span>Batch</span><UiInput type="number" min="1" max="256" value={batchSize} disabled={isProcessing || starting || conversionBusy} onChange={(event) => setBatchSize(Math.max(1, Math.min(256, Number(event.target.value) || 1)))} /></label><label className="offset-control"><span>Offset (s)</span><UiInput aria-label="Seek offset in seconds" type="number" step="1" value={offsetSeconds} onChange={(event) => setOffsetSeconds(event.target.value)} /></label>{latestJob?.status === "completed" && <UiButton variant="outline" className="secondary-button" disabled={isProcessing || starting || conversionBusy} onClick={() => process(true)}><RefreshCcw size={16} /> Rerun OCR</UiButton>}<UiButton variant="default" className="primary-button" disabled={!hasBox || isProcessing || starting || conversionBusy} onClick={() => process(false)}>{isProcessing ? <LoaderCircle className="spin" size={16} /> : <Play size={16} />}{isProcessing ? `${activeJob?.phase === "scanning" ? "Scanning" : activeJob?.phase === "refining" ? "Refining" : activeJob?.phase === "preparing" ? "Preparing" : "Analyzing"} ${progress}%` : latestJob?.status === "completed" ? "Analyze again" : latestJob?.status === "failed" ? "Retry analysis" : "Process video"}</UiButton></div></div>
     <p className="analysis-note">Sampled frames are cached for reuse across round-analysis runs. Preparation and analysis show separate progress.</p>
     <p className="analysis-note">{Number(analysisInterval) > 0 ? `About ${Math.ceil(video.duration / Number(analysisInterval)).toLocaleString()} samples for this video, one every ${analysisInterval} seconds.` : "Every-frame mode: all source frames will be prepared and analyzed."}</p>

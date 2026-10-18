@@ -284,7 +284,10 @@ remain readable through repository specs; runtime configuration is invocation-lo
 `transcription_pipeline` task invokes only `distill-transcript`, passing the
 original transcript or other source text and returning compact Markdown reference
 notes. It performs no JSON edit application or follow-up analysis.
-`services/task_service.py` preserves the task catalog and success/error envelope
+`find_key_moments` independently validates a timed source and invokes a tool-free
+`find-key-moments` assistant with `KeyMomentsOutput`; it rejects invalid source
+references after typed SDK execution.
+`services/task_service.py` exposes both versioned definitions and preserves the task catalog and success/error envelope
 over HTTP. The [transcription guide](../apps/transcription.md) documents the
 source contract, CLI, and retired assistant identities.
 

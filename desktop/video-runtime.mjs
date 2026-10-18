@@ -10,8 +10,10 @@ export class VideoRuntime extends DesktopRuntime {
    *   root: Suite root; node: service Node; options: validated launcher options.
    *   wsl: Optional original Linux launch context.
    */
-  constructor(root, node, options, wsl) {
+  constructor(root, node, options, wsl, chatBackendUrl) {
     super(root, node, options, wsl);
+    this.chatBackendUrl = chatBackendUrl;
+    this.childEnvironment = { VOD_CHAT_TFT_BASE_URL: chatBackendUrl ?? "" };
     this.repo = this.roots.vod;
     this.cwd = this.repo;
     this.backendPort = 8000;

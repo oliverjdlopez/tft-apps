@@ -74,6 +74,8 @@ cases; their immutable snapshots remain available as historical definitions.
 The new cases cover conditions, corrections, attribution, uncertainty, source
 metadata, embedded instructions, and irrelevant inputs. See the
 [transcription guide](../docs/apps/transcription.md) for the runtime contract.
+`find-key-moments` adds seven independent speech-significance cases; its
+assistant-only evaluation does not exercise the task’s structured output type.
 No live model quality result is implied by catalog validation. Reviewed regression
 definitions are pinned separately in `baselines.json`; native UI exports remain
 editable. See [validation tiers](../docs/development/testing-and-evals.md).

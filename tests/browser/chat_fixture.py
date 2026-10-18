@@ -52,20 +52,7 @@ with Session(engine) as session:
     session.commit()
 
 registry = registry_from_files({"chat": {"system.md": "Use the fixture ranking and present its evidence.",
-    "agent.json": json.dumps({"tools": {"groups": ["ranking", "evidence"]}, "context": {"repository": False}, "skills": []})}})
-
-
-class FixtureAssistant(Assistant):
-    """Use an isolated specification tree with actual registered application tools."""
-
-    def __init__(self, name, **kwargs):
-        """Freeze the fixture registry while preserving normal invocation setup."""
-        super().__init__(name, registry=registry, **kwargs)
-
-    @staticmethod
-    def names():
-        """Expose only the isolated chat root to the production configuration route."""
-        return ["chat"]
+    "agent.json": json.dumps({"tools": {"groups": ["ranking", "evidence"]}, "resources": {"context": {"repository": False}, "skills": [], "playbooks": []}})}})
 
 
 async def run_database(ctx, operation, **kwargs):
@@ -75,7 +62,7 @@ async def run_database(ctx, operation, **kwargs):
 
 
 ranking_tools.run_db_tool = run_database
-chat_service.Assistant = FixtureAssistant
+chat_service.current_registry = lambda: registry.registry
 config = load_config()
 config = replace(config, secrets=replace(config.secrets, openai_api_key="local-fixture"),
                  chat=replace(config.chat, langfuse_tracing=False))

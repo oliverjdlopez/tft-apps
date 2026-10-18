@@ -1,0 +1,7 @@
+{
+  "name": "find-key-moments",
+  "description": "Locate consequential passages using significance established by the supplied speech.",
+  "tools": [],
+  "handoffs": [],
+  "resources": {"context": {"repository": false}, "skills": [], "playbooks": []}
+}

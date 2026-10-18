@@ -26,6 +26,8 @@ export class DesktopRuntime extends EventEmitter {
     this.children = [];
     this.controller = new AbortController();
     this.state = "idle";
+    this.backendUrl = undefined;
+    this.childEnvironment = {};
   }
 
   /**
@@ -56,6 +58,7 @@ export class DesktopRuntime extends EventEmitter {
       const bound = await waitForRecord(backend, "bound", signal);
       if (!Number.isInteger(bound.port) || bound.port < 1 || bound.port > 65535) throw new Error("Backend reported an invalid port.");
       const backendUrl = `http://127.0.0.1:${bound.port}`;
+      this.backendUrl = backendUrl;
       if (this.wsl) await waitForIdentity(backendUrl, this.identity, signal);
       // The bound event precedes probes so an unrelated server cannot satisfy
       // readiness when the requested backend failed to acquire its socket.
@@ -91,7 +94,7 @@ export class DesktopRuntime extends EventEmitter {
     // Quit may have occurred while the previous readiness response was settling.
     // Never create a child after stop() has snapshotted the owned processes.
     this.controller.signal.throwIfAborted();
-    const service = { command, args, cwd: this.cwd, env: { ...serviceEnvironment(this.wsl?.env ?? process.env, this.roots, this.cwd, this.paths), CHATTFT_DESKTOP_IDENTITY: this.identity } };
+    const service = { command, args, cwd: this.cwd, env: { ...serviceEnvironment(this.wsl?.env ?? process.env, this.roots, this.cwd, this.paths), CHATTFT_DESKTOP_IDENTITY: this.identity, ...this.childEnvironment } };
     const invocation = this.wsl ? wslCommand(this.wsl) : { command, args, cwd: this.cwd };
     // The Windows wrapper needs its native PATH to find wsl.exe; the Linux
     // service environment travels only through the guardian pipe below.

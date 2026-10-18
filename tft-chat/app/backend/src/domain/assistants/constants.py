@@ -13,6 +13,7 @@ class AssistantName(StrEnum):
     COMP_EXPERT = "comp_expert"
     DATA_ANALYST = "data_analyst"
     DISTILL_TRANSCRIPT = "distill-transcript"
+    FIND_KEY_MOMENTS = "find-key-moments"
     DUMMY_ASSISTANT = "dummy_assistant"
     FINAL_RESPONDER = "final_responder"
     ITEM_EXPERT = "item_expert"

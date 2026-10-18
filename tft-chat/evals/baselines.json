@@ -20,6 +20,11 @@
       "snapshot": "e4eaf40dd2d5c5f7ff3cde9cb284c538c8c50d3754f732429be8cacc99ffcf7f",
       "source": null,
       "suite": "dummy_assistant"
+    },
+    {
+      "snapshot": "a90dcd551debad2da4593fdddb53079682febc13de0ab40518c6e4e60ef17580",
+      "source": "datasets/find-key-moments.json",
+      "suite": "find-key-moments"
     }
   ]
 }

@@ -923,7 +923,7 @@ const INITIAL_MESSAGE = {
 // Keep the starter prompt feature available for a future configured list.
 const STARTER_PROMPTS = [];
 
-function ChatMessage({ message, streaming }) {
+function ChatMessage({ message, streaming, assetContext }) {
   if (message.role === "user") {
     return (
       <div className="msg msg-user">
@@ -953,7 +953,7 @@ function ChatMessage({ message, streaming }) {
             thinking
           </p>
         ) : null}
-        {(message.presentations || []).map((presentation) => <EvidenceDisplay key={presentation.id} presentation={presentation} assetContext={config?.asset_context} />)}
+        {(message.presentations || []).map((presentation) => <EvidenceDisplay key={presentation.id} presentation={presentation} assetContext={assetContext} />)}
         {message.presentationError ? <p role="status">{message.presentationError}</p> : null}
         {error ? (
           <div className="statusline bad">
@@ -1259,6 +1259,7 @@ function ChatView({ config, reloadConfig, isActive }) {
           <div className="messages-inner">
             {messages.map((m, i) => (
               <ChatMessage
+                assetContext={config?.asset_context}
                 key={i}
                 message={m}
                 streaming={

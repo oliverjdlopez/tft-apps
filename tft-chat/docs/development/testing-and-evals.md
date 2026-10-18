@@ -168,3 +168,15 @@ PostgreSQL validation. Do not run operational ingestion or projection rebuilds.
 they describe dated checkouts rather than current blockers. See
 [evaluation execution](langfuse-execution.md), [content](langfuse-content.md) and
 [the migration record](../../../docs/migration.md) for runtime ownership.
+
+### Transcript tools journey
+
+The browser journey's VOD fixture stubs Whisper and the upstream ChatTFT HTTP
+model boundary, while exercising real transcription persistence, transcript task
+routes/workers, both explicit actions, fractional timestamp seeking independent
+of the OCR offset, video switching, backend restart, selection restoration, and
+saved outputs at 1440px and 390px. `backend/tests/test_transcript_tasks.py` covers
+race/reuse/failure behavior; panel and adapter tests cover source isolation and
+clicks before playback readiness. Prompt fidelity cases for `find-key-moments`
+remain separate from typed task schema tests. These checks do not invoke paid
+models, GPU inference, hosted writes, or external YouTube/Twitch playback.

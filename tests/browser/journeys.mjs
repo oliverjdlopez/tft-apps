@@ -126,6 +126,7 @@ try {
       await page.getByRole('button',{name:'Draw box',exact:true}).waitFor();
       const video=page.locator('video');await until(()=>video.evaluate(node=>node.readyState>=2 && node.videoWidth===128 && node.videoHeight===96),'Synthetic video frame was not decoded');
       await page.getByRole('button',{name:'Draw box',exact:true}).click();
+      await page.getByLabel('Draw a bounding box on the video').scrollIntoViewIfNeeded();
       const canvas=await page.getByLabel('Draw a bounding box on the video').boundingBox();assert.ok(canvas);
       await page.mouse.move(canvas.x+canvas.width*.1,canvas.y+canvas.height*.1);await page.mouse.down();
       await page.mouse.move(canvas.x+canvas.width*.8,canvas.y+canvas.height*.8,{steps:5});await page.mouse.up();
@@ -139,30 +140,51 @@ try {
       const records=await (await page.request.get(vod.url+'/api/videos')).json();
       const selected=records.find(row=>row.original_name===`fixture-${viewport.width}.mp4`);assert.ok(selected);
       const transcription=await page.request.post(vod.url+`/api/videos/${selected.id}/transcription`);assert.equal(transcription.status(),202);
-      await until(async()=>{const response=await page.request.get(vod.url+`/api/videos/${selected.id}/transcription`);return response.ok()&&(await response.json()).status==='completed';},'Transcript completion timed out');
+      await until(async()=>{const response=await page.request.get(vod.url+`/api/videos/${selected.id}/transcription`);if (!response.ok()) return false; const task=await response.json(); if(task.status==='failed')throw new Error(task.error);return task.status==='completed';},'Transcript completion timed out');
       await until(async()=>{const resources=await (await page.request.get(chat.url+'/api/shared-media?kind=text')).json();return resources.some(row=>row.metadata?.type==='transcript');},'Chat did not discover VOD transcript');
       const resources=await (await page.request.get(chat.url+'/api/shared-media?kind=text')).json();
       const resource=resources.find(row=>row.metadata?.type==='transcript');
       assert.equal(await (await page.request.get(chat.url+resource.content_url)).text(),'Fixture transcript — Café ☕');
+      await page.getByRole('button',{name:'View transcript',exact:true}).waitFor();
+      const toolsBox=await page.getByRole('region',{name:'Transcript tools'}).boundingBox();
+      const playbackBox=await video.boundingBox();assert.ok(toolsBox&&playbackBox);
+      if(viewport.width>=1440) { assert.ok(Math.abs(toolsBox.width-340)<2);assert.ok(toolsBox.x>playbackBox.x); }
+      else assert.ok(toolsBox.y>=playbackBox.y+playbackBox.height);
+      await page.getByRole('button',{name:'Distill transcript',exact:true}).click();
+      await page.getByRole('heading',{name:'Fixture notes',exact:true}).waitFor();
+      await page.getByRole('button',{name:'Find key moments',exact:true}).click();
+      await page.getByRole('button',{name:'0:01 · Fixture decision',exact:true}).click();
+      await until(()=>video.evaluate(node=>node.currentTime>=1.25 && node.currentTime<2),'Transcript seek applied an OCR offset');
+      await page.getByRole('button',{name:'Show in transcript',exact:true}).click();
+      assert.equal(await page.locator('[data-highlighted=true]').count(),1);
+      // Switching sources cannot display the prior transcript's task output.
+      await page.getByLabel('Video file').first().setInputFiles({name:`other-${viewport.width}.mp4`,mimeType:'video/mp4',buffer:await media.body()});
+      await until(async()=>await page.getByLabel('Recent videos').inputValue()!==selected.id,'Video switch did not finish');
+      assert.equal(await page.getByRole('heading',{name:'Fixture notes',exact:true}).count(),0);
+      await page.getByLabel('Recent videos').selectOption(selected.id);
+      await page.getByRole('button',{name:'View transcript',exact:true}).waitFor();
       const port=vod.port;await stop(vod);vod=await start('vod',port);
       await page.reload();
-      // A fresh page deliberately starts without a selected review. Reopen the
-      // persisted library entry through the same control a user would use.
-      await page.getByLabel('Recent videos').selectOption(selected.id);
+      await until(async()=>await page.getByLabel('Recent videos').inputValue()===selected.id,'Reload lost the selected review');
       const restored=await (await page.request.get(vod.url+`/api/videos/${selected.id}`)).json();
       assert.equal(restored.current_job.status,'completed');
       const restoredTranscript=await (await page.request.get(vod.url+`/api/videos/${selected.id}/transcription`)).json();
       assert.equal(restoredTranscript.transcript,'Fixture transcript — Café ☕');
       await page.getByRole('button',{name:/21.*95% confidence/}).waitFor();
       await page.getByRole('button',{name:'View transcript',exact:true}).click();
+      await page.getByText('Original plain transcript',{exact:true}).click();
       assert.equal(await page.getByLabel('Transcript text').inputValue(),'Fixture transcript — Café ☕');
+      await page.getByRole('tab',{name:'Distilled notes',exact:true}).click();
+      await page.getByRole('heading',{name:'Fixture notes',exact:true}).waitFor();
+      await page.getByRole('tab',{name:'Key moments',exact:true}).click();
+      await page.getByRole('button',{name:'0:01 · Fixture decision',exact:true}).waitFor();
       await page.keyboard.press('Escape');
       // Escape must close the source dialog and restore a keyboard focus target.
       const settings=page.getByRole('button',{name:'Replay source settings'});await settings.click();await page.keyboard.press('Escape');
       assert.equal(await page.getByRole('dialog').count(),0);
       assert.equal(await settings.evaluate(node=>node===document.activeElement),true);
       assert.deepEqual(errors,[]);
-      console.log(JSON.stringify({passed:true,viewport,journeys:['chat-sdk-sql-evidence-cancel','flowchart-persistence-conflict-export','vod-process-seek-transcript-restart']}));
+      console.log(JSON.stringify({passed:true,viewport,journeys:['chat-sdk-sql-evidence-cancel','flowchart-persistence-conflict-export','vod-process-transcript-tasks-seek-switch-restart']}));
     } finally {
       await page.screenshot({path:path.join(output,`journey-${viewport.width}.png`),fullPage:true}).catch(()=>{});
       await context.tracing.stop({path:path.join(traceDirectory,`journey-${viewport.width}.zip`)});

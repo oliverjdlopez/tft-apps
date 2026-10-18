@@ -135,3 +135,15 @@ and rejects occupied ports.
 The native Windows wrapper keeps its Windows environment for locating
 `wsl.exe`; the selected Linux application environment is sent exclusively over
 the private worker pipe, including its process working directory.
+
+## VOD transcript actions
+
+`DesktopRuntime.backendUrl` records the actual backend bound-event URL, separate
+from the frontend development-server URL. `main.mjs` passes it to `VideoRuntime`,
+which supplies `VOD_CHAT_TFT_BASE_URL` through per-runtime child-environment
+overrides. The same environment travels in the existing WSL worker pipe. Parent
+`process.env` and renderer privileges are unchanged. After ChatTFT restarts, an
+owned VOD runtime with an older address is stopped and recreated. VOD itself
+owns persisted attempts and restores its saved results after restart. See
+[VOD transcript tools](../vod-review/docs/transcript-tools.md) for standalone
+configuration, independent actions, and review-relative timestamp seeking.

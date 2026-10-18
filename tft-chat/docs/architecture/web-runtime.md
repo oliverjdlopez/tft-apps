@@ -433,3 +433,6 @@ precomputes metadata during construction. Constructed SDK graphs retain their
 previous definitions.
 Optional experiments use the authenticated checkout host runner Unix socket;
 backend credentials never enter browser requests or results.
+
+Chat message evidence receives its asset context explicitly from the chat view;
+message rendering does not access the view's configuration through a free variable.

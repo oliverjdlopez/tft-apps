@@ -5,6 +5,10 @@ const [kind, port] = process.argv.slice(2);
 const server = http.createServer((request, response) => {
   response.setHeader("content-type", "application/json");
   if (request.url === "/__chattft_desktop__/identity") response.setHeader("x-chattft-desktop-identity", process.env.CHATTFT_DESKTOP_IDENTITY);
+  if (request.url === "/__test__/chat-url") {
+    response.end(JSON.stringify({ url: process.env.VOD_CHAT_TFT_BASE_URL }));
+    return;
+  }
   response.end(JSON.stringify(kind === "backend" && request.url === "/openapi.json"
     ? { info: { title: "VOD Review and Round Classification" }, paths: {
       "/api/health": { get: {} }, "/api/videos": { get: {} },

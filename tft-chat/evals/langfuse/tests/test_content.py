@@ -72,10 +72,13 @@ def test_committed_inventory_preserves_authored_checks():
     bundles = [load_snapshot(e["snapshot"], ROOT) for e in entries]
     decision = next(b for b in bundles if b["suite"]["name"] == "decision_workflows")
     distillation = next(b for b in bundles if b["suite"]["name"] == "distill-transcript")
-    historical = [b for b in bundles if b is not decision and b is not distillation]
-    assert len(entries) == 11
+    moments = next(b for b in bundles if b["suite"]["name"] == "find-key-moments")
+    historical = [b for b in bundles if b is not decision and b is not distillation and b is not moments]
+    assert len(entries) == 12
     assert len(historical) == 9
-    assert sum(len(b["items"]) for b in bundles) == 142
+    assert sum(len(b["items"]) for b in bundles) == 149
+    assert len(moments["items"]) == 7
+    assert all(item["expected_output"]["requirements"] for item in moments["items"])
     assert sum(len(b["items"]) for b in historical) == 128
     assert len(distillation["items"]) == 6
     assert len(decision["items"]) == 8

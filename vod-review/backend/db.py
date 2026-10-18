@@ -84,6 +84,11 @@ def init_db() -> None:
         CREATE INDEX IF NOT EXISTS idx_results_job_time ON results(job_id, timestamp_seconds);
         """
     )
+    try:
+        from .transcript_tasks.store import init_schema
+    except ImportError:
+        from transcript_tasks.store import init_schema
+    init_schema(connection)
     _migrate_nullable_video_path(connection)
     transcription_columns = {row["name"] for row in connection.execute("PRAGMA table_info(transcription_tasks)")}
     if "segments_json" not in transcription_columns:

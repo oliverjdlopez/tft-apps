@@ -14,7 +14,7 @@ at the current player position. Round clicks seek the original source video.
 Switch to **Offline** to download a local copy into the same review, preserving
 its crop and round results. Local playback becomes active after preparation
 succeeds; returning to Online retains the saved copy. Uploads and Twitch live channels retain
-the existing Offline workflow. Transcription and clip tools require Offline.
+the existing Offline workflow. New speech recognition and clip tools require Offline. Saved transcripts and transcript tools work in either mode.
 See [online review, transport requirements, and accuracy limits](docs/online-review.md).
 
 The review page opens directly into round analysis. Draw and save a fixed crop,
@@ -72,15 +72,18 @@ saved. Install the optional dependency with `uv sync --extra
 transcription`. The default model is `large-v3` on CUDA with float16; configure
 `VOD_WHISPER_MODEL`, `VOD_WHISPER_DEVICE`, and `VOD_WHISPER_COMPUTE_TYPE` to
 choose another faster-whisper model/device/compute type. Once transcription
-finishes, click **View transcript** to open the raw recognized text and detected
-language in a modal. Transcript text stays hidden until requested; no LLM parsing
-or interpretation is applied.
+finishes, click **View transcript** to focus the review panel’s Transcript tab.
+Audio-only imports use the same panel in a modal. **Distill transcript** and
+**Find key moments** run independently on explicit clicks through ChatTFT;
+results persist in VOD Review. Standalone LLM actions require
+`VOD_CHAT_TFT_BASE_URL`. See [transcript tools](docs/transcript-tools.md) for
+configuration, timing, prerequisites, persistence, and validation.
 Completed transcripts also publish as UTF-8 text in the shared media catalogue,
 available in desktop **Media → Text / transcripts** after Refresh. On backend
 startup, older completed transcripts are shared without rerunning recognition.
 New transcripts also publish a companion JSON resource in **Media → Data**,
 retaining each speech segment's start/end seconds and text relative to the
-transcribed media. The VOD transcript modal continues to display plain text.
+transcribed media. The transcript panel displays timed segments and retains the exact original plain text.
 Storage failures preserve local results and retry sharing on the next startup;
 an empty `TFT_MEDIA_DIR` disables this. See [transcript sharing](docs/shared-media.md#completed-transcript-sharing).
 

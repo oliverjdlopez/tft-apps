@@ -24,11 +24,12 @@ export const YouTubePlayer = forwardRef<PlayerAdapter, { sourceId: string; start
   const host = useRef<HTMLDivElement>(null);
   const player = useRef<Player | null>(null);
   const ready = useRef(false);
+  const pendingSeek = useRef<{ seconds: number; play: boolean } | null>(null);
   const callbacks = useRef({ onTime, onError });
   callbacks.current = { onTime, onError };
   const time = () => Math.max(0, Math.min(duration, (ready.current ? player.current?.getCurrentTime() ?? start : start) - start));
   useImperativeHandle(ref, () => ({
-    seek: (seconds, play = false) => { if (!ready.current) return; player.current?.seekTo(start + Math.max(0, Math.min(duration, seconds)), true); if (play) player.current?.playVideo(); },
+    seek: (seconds, play = false) => { if (!ready.current) { pendingSeek.current = { seconds, play }; return; } player.current?.seekTo(start + Math.max(0, Math.min(duration, seconds)), true); if (play) player.current?.playVideo(); },
     pause: () => { if (ready.current) player.current?.pauseVideo(); }, currentTime: time,
   }), [start, duration]);
   useEffect(() => {
@@ -45,7 +46,7 @@ export const YouTubePlayer = forwardRef<PlayerAdapter, { sourceId: string; start
       player.current = new api.Player(target, {
         videoId: sourceId, width: "100%", height: "100%",
         playerVars: { origin: window.location.origin, start: Math.floor(start + initialTime), end: Math.ceil(start + duration), playsinline: 1, rel: 0 },
-        events: { onReady: () => { host.current?.querySelector("iframe")?.setAttribute("referrerpolicy", "strict-origin-when-cross-origin"); ready.current = true; player.current?.seekTo(start + Math.max(0, Math.min(duration, initialTime)), true); }, onError: () => callbacks.current.onError("This video cannot be embedded or is unavailable. Switch to Offline to try downloading it.") },
+        events: { onReady: () => { host.current?.querySelector("iframe")?.setAttribute("referrerpolicy", "strict-origin-when-cross-origin"); ready.current = true; const pending = pendingSeek.current; pendingSeek.current = null; player.current?.seekTo(start + Math.max(0, Math.min(duration, pending?.seconds ?? initialTime)), true); if (pending?.play) player.current?.playVideo(); }, onError: () => callbacks.current.onError("This video cannot be embedded or is unavailable. Switch to Offline to try downloading it.") },
       });
     }).catch((reason: Error) => { if (!disposed) callbacks.current.onError(reason.message); });
     const timer = window.setInterval(() => {

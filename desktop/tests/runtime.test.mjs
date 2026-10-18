@@ -48,6 +48,8 @@ for (const mode of ["production", "dev"]) {
     const url = await runtime.start();
     assert.equal((await fetch(url)).status, 200);
     assert.equal(runtime.state, "running");
+    assert.match(runtime.backendUrl, /^http:\/\/127\.0\.0\.1:\d+$/);
+    if (mode === "dev") assert.notEqual(runtime.backendUrl, url);
     assert.equal(runtime.children.length, 2);
     await runtime.stop();
     assert(runtime.children.every((child) => child.ended));

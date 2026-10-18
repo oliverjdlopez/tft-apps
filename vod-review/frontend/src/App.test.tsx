@@ -441,9 +441,40 @@ it("reads an automatic transcript when reopening its library video", async () =>
   render(<App />);
   fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: video.id } });
   const viewTranscript = await screen.findByRole("button", { name: "View transcript" });
-  expect(screen.queryByLabelText("Transcript text")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("tab", { name: "Distilled notes" }));
   fireEvent.click(viewTranscript);
-  expect(screen.getByRole("dialog", { name: "Transcript" })).toBeInTheDocument();
+  expect(screen.getByRole("tab", { name: "Transcript" })).toHaveAttribute("aria-selected", "true");
+  expect(screen.queryByRole("dialog", { name: "Transcript" })).not.toBeInTheDocument();
   expect(screen.getByLabelText("Transcript text")).toHaveValue("Saved automatic transcript");
   expect(fetch.mock.calls.some(([, options]) => options?.method === "POST")).toBe(false);
+});
+
+it("queues transcript seeks before local metadata and restores the selected video after reload", async () => {
+  const video: VideoRecord = { id: "timed", original_name: "Timed VOD", mime_type: "video/mp4", duration: 120, width: 1280, height: 720, created_at: "today", box: { x: .1, y: .1, width: .2, height: .1, frame_time: 5 }, current_job: null, active_job: null, latest_job: null };
+  const transcript = { task_id: "timed-text", video_id: "timed", status: "completed", progress: 100, transcript: "Exact source", language: "en", error: null, segments: [{ id: "s000000", start: 12.25, end: 15, text: "Exact source" }] };
+  const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(async input => {
+    const url = String(input);
+    const payload = url.endsWith('/videos') ? [video] : url.endsWith('/videos/timed') ? video : url.endsWith('/transcription') || url.includes('/transcriptions/timed-text?') ? transcript : url.endsWith('/tasks') || url.endsWith('/transcript-tasks') ? { tasks: [] } : url.endsWith('/playback') ? { status: 'failed', error: 'fixture' } : null;
+    return { ok: true, json: async () => payload } as Response;
+  });
+  vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+  const rendered = render(<App />);
+  fireEvent.change(await screen.findByLabelText('Recent videos'), { target: { value: video.id } });
+  const time = await screen.findByRole('button', { name: '0:12' });
+  const player = document.querySelector('video')!;
+  Object.defineProperty(player, 'readyState', { configurable: true, value: 0 });
+  fireEvent.change(screen.getByLabelText('Seek offset in seconds'), { target: { value: '20' } });
+  fireEvent.click(time);
+  expect(player.currentTime).toBe(0);
+  fireEvent.loadedMetadata(player);
+  expect(player.currentTime).toBe(12.25);
+  expect(player.play).toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('tab', { name: 'Distilled notes' }));
+  expect(document.querySelector('video')).toBe(player);
+  rendered.unmount();
+  render(<App />);
+  await waitFor(() => expect(screen.getByLabelText('Recent videos')).toHaveValue(video.id));
+  await screen.findByRole('tab', { name: 'Distilled notes' });
+  expect(screen.getByRole('tab', { name: 'Distilled notes' })).toHaveAttribute('aria-selected', 'true');
+  expect(fetch.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false);
 });

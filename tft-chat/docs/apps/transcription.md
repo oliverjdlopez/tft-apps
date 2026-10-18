@@ -1,7 +1,7 @@
 # Transcription
 
 The repository has two related transcription paths: a media CLI that downloads
-and transcribes VODs, and a single assistant task that distills transcripts or other text into
+and transcribes VODs, and independent assistant tasks that locate consequential speech and distill text into
 source-grounded ChatTFT references.
 
 ## Media CLI
@@ -45,7 +45,7 @@ runtime code or tests reference it, and its original rationale is undocumented.
 ## Assistant transcript task
 
 `domain.tasks.transcript.run_transcription_pipeline` invokes only
-`distill-transcript` through `Assistant.run_sync`. The existing
+`distill-transcript` through `domain.runtime.execution.run_sync`. The existing
 `transcription_pipeline` task name and API result envelope remain compatible;
 its result is now the distilled Markdown reference. The assistant CLI also
 defaults to `distill-transcript`:
@@ -98,8 +98,8 @@ has no captured execution graph; export a fresh capture before a live run.
 No live evaluation was performed for this replacement.
 
 Media downloading and speech-to-text generation in `scripts/transcription/`
-remain separate from this text-processing task. VOD Review does not participate
-in the assistant pipeline.
+remain separate from this text-processing task. VOD Review calls these tasks through HTTP and owns its saved results, UI,
+and playback; see [VOD transcript tools](../../../vod-review/docs/transcript-tools.md).
 
 ## Validation and runtime requirements
 
@@ -111,3 +111,27 @@ uv run python -m evals validate
 Manual transcription requires the optional dependency group and suitable
 CPU/GPU support. Media downloads additionally require network access and can
 create large files.
+
+## Key moments
+
+`find_key_moments` uses the `find-key-moments` spec with no tools, handoffs,
+repository access, skills, playbooks, or model override. It receives versioned
+JSON source metadata and ordered timestamped segments inside the existing
+`{"input": "..."}` request. `Assistant.from_name(..., output_type=KeyMomentsOutput)`
+and `domain.runtime.execution.run_sync(..., surface="task")` perform one typed
+SDK call. Domain validators reject malformed input, missing structured output,
+and unknown/reversed IDs, and sort valid moments chronologically. Timestamps
+and excerpts are resolved by VOD against its own stored source, never by a model.
+
+The task service has an explicit two-task catalogue with labels, versions,
+timestamp prerequisites, and output kinds. Both definitions start at version 1;
+increment the version when changing prompts, input assembly, or output contracts.
+Both HTTP task inputs are limited to 64,000 estimated `o200k_base` tokens and
+10 MiB of UTF-8 bytes before execution. They never silently truncate source.
+Configurable provider context errors are task failures. Distillation's existing
+prompt, wrapper, Markdown result, and single-call behavior are unchanged.
+
+`tests/test_key_moments.py` exercises the real task route through a stubbed SDK.
+`evals/datasets/find-key-moments.json` separately defines seven synthetic prompt
+fidelity cases. Assistant-only evaluation does not test the task's `output_type`.
+No paid model evaluations or hosted dataset mutations are part of offline checks.

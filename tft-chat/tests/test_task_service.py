@@ -51,10 +51,9 @@ def test_task_service_exposes_the_same_catalog_and_response_contract(monkeypatch
         task_service, "run_transcription_pipeline",
         lambda input_text: f"distilled: {input_text}",
     )
-    assert task_service.task_catalog() == {"tasks": [{
-        "name": "transcription_pipeline",
-        "description": "Distill transcripts or other text into source-grounded ChatTFT references.",
-    }]}
+    catalog = task_service.task_catalog()["tasks"]
+    assert [task["name"] for task in catalog] == ["transcription_pipeline", "find_key_moments"]
+    assert [(t["version"], t["requires_timestamps"], t["output_kind"]) for t in catalog] == [(1, False, "markdown"), (1, True, "key_moments")]
     assert task_service.run_task("transcription_pipeline", input_text="sample") == {
         "ok": True, "task": "transcription_pipeline", "result": "distilled: sample",
     }
@@ -127,3 +126,17 @@ def test_assistant_cli_distills_file_with_default_or_explicit_name(monkeypatch, 
         source.read_text(), current_registry().get_spec(AssistantName.DISTILL_TRANSCRIPT).task_prompt,
     ), "cli")]
     assert capsys.readouterr().out == "# Distilled reference\n"
+
+
+@pytest.mark.parametrize("output", [None, "", "   "])
+def test_distillation_missing_output_is_failure(monkeypatch, output):
+    """Missing final output cannot become a successful string such as None."""
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_sync", lambda *a, **k: SimpleNamespace(final_output=output))
+    assert task_service.run_task("transcription_pipeline", input_text="source")["ok"] is False
+
+
+def test_distillation_refusal_is_failure(monkeypatch):
+    """Provider refusal metadata fails the task even with final text present."""
+    result = SimpleNamespace(final_output="Refused", raw_responses=[SimpleNamespace(output=[SimpleNamespace(content=[SimpleNamespace(type="refusal")])])])
+    monkeypatch.setattr("domain.runtime.execution.Runner.run_sync", lambda *a, **k: result)
+    assert task_service.run_task("transcription_pipeline", input_text="source")["ok"] is False

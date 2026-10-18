@@ -137,13 +137,16 @@ async function loadApplicationViews() {
 function ensureVideoWorkspace(tab) {
   if (quitting) return Promise.reject(new Error("Desktop is quitting."));
   const key = "vod";
-  if (videoStarts.has(key)) return videoStarts.get(key);
+  if (videoStarts.has(key)) return videoStarts.get(key).then(() => {
+    // A ChatTFT restart can finish while an earlier VOD startup is settling.
+    if (!quitting && videoRuntimes.get(key)?.chatBackendUrl !== runtime?.backendUrl) return ensureVideoWorkspace(tab);
+  });
   const pending = (async () => {
     const previous = videoRuntimes.get(key);
-    if (previous?.state === "running") return;
+    if (previous?.state === "running" && previous.chatBackendUrl === runtime?.backendUrl) return;
     await previous?.stop();
     if (quitting) return;
-    const service = new VideoRuntime(root, node, options, wsl);
+    const service = new VideoRuntime(root, node, options, wsl, runtime?.backendUrl);
     videoRuntimes.set(key, service);
     service.on("failure", () => { service.state = "failed"; workspace?.fail("vod"); });
     await service.start();
@@ -162,6 +165,12 @@ async function startApplication() {
   runtime.on("failure", handleFailure);
   try {
     frontendUrl = await runtime.start();
+    if (videoRuntimes.size) {
+      const addressChanged = videoRuntimes.get("vod")?.chatBackendUrl !== runtime.backendUrl;
+      void ensureVideoWorkspace("vod").then(() => {
+        if (addressChanged && !quitting && workspace?.active === "vod") workspace.loadExternal("vod");
+      }).catch(() => workspace?.fail("vod"));
+    }
     if (quitting) return;
     if (window) await loadApplicationViews();
   } catch (error) { await handleFailure(error); }

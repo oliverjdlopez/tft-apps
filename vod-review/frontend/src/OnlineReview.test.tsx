@@ -17,7 +17,7 @@ vi.mock("./TwitchPlayer", async () => {
     return <div data-testid="twitch-player">{props.sourceId}</div>;
   }) };
 });
-afterEach(() => { cleanup(); vi.restoreAllMocks(); adapter.seek.mockClear(); adapter.pause.mockClear(); });
+afterEach(() => { cleanup(); localStorage.clear(); vi.restoreAllMocks(); adapter.seek.mockClear(); adapter.pause.mockClear(); });
 const round = { timestamp_seconds: 20, scheduled_timestamp_seconds: 20, timing_error_ms: 0, class_label: "21", confidence: 1 };
 const video: VideoRecord = { id: "online", original_name: "Remote review", mime_type: "video/mp4", duration: 120, width: 1280, height: 720,
   created_at: "2026-10-11", mode: "online", source_id: "example1234", source_url: "https://youtu.be/example1234", source_start_seconds: 600, local_available: false,
@@ -142,4 +142,14 @@ it("imports Twitch VODs online without a download", async () => {
   await screen.findByTestId("twitch-player");
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/videos/online"))).toBe(true);
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/from-url"))).toBe(false);
+});
+
+it("seeks saved Online transcript seconds without source or manual OCR offsets", async () => {
+  const transcript = { task_id: 'saved', video_id: video.id, status: 'completed', progress: 100, transcript: 'Source speech', language: 'en', segments: [{ id: 's000000', start: 12.25, end: 16, text: 'Source speech' }] };
+  mockApi({ ...video, source_start_seconds: 300 }, url => url.endsWith('/transcription') || url.includes('/transcriptions/saved?') ? transcript : url.endsWith('/tasks') || url.endsWith('/transcript-tasks') ? { tasks: [] } : undefined);
+  await selectReview();
+  fireEvent.change(screen.getByLabelText('Seek offset in seconds'), { target: { value: '20' } });
+  fireEvent.click(await screen.findByRole('button', { name: '0:12' }));
+  expect(adapter.seek).toHaveBeenLastCalledWith(12.25, true);
+  expect(screen.getByTestId('youtube-player')).toHaveAttribute('data-start', '300');
 });

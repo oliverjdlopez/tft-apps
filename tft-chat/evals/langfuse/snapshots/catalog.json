@@ -82,6 +82,18 @@
       "snapshot": "e4eaf40dd2d5c5f7ff3cde9cb284c538c8c50d3754f732429be8cacc99ffcf7f"
     },
     {
+      "assistant": "find-key-moments",
+      "case_count": 7,
+      "database": null,
+      "description": "Synthetic speech-significance and source-fidelity cases. Assistant-only evaluation; typed task schema is tested separately.",
+      "execution": "live",
+      "family": "assistant",
+      "managed_workflow": true,
+      "max_turns": 2,
+      "name": "find-key-moments",
+      "snapshot": "a90dcd551debad2da4593fdddb53079682febc13de0ab40518c6e4e60ef17580"
+    },
+    {
       "assistant": "item_expert",
       "case_count": 17,
       "database": null,

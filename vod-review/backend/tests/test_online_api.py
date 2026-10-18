@@ -92,8 +92,9 @@ def test_processing_defaults_and_online_local_tool_guards(isolated, monkeypatch)
             assert online_job.status_code == offline_job.status_code == 202
             assert online_job.json()['sample_interval_seconds'] == 10
             assert offline_job.json()['sample_interval_seconds'] == service.SAMPLE_INTERVAL_SECONDS
+            assert (await api.get('/api/videos/remote/transcription')).status_code == 200
             for method, route, payload in [
-                ('GET', '/content', None), ('GET', '/playback', None), ('GET', '/transcription', None),
+                ('GET', '/content', None), ('GET', '/playback', None),
                 ('POST', '/transcription', None), ('POST', '/share', None),
                 ('POST', '/round-export', {'game_number': 1, 'clips': [{'label': '11', 'start_seconds': 0, 'end_seconds': 10}]}),
             ]:

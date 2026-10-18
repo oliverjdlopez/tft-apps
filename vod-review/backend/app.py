@@ -1223,6 +1223,13 @@ async def lifespan(application: FastAPI):
     startup()
     automation = None
     try:
+        from .transcript_tasks.service import TranscriptTaskService
+    except ImportError:
+        from transcript_tasks.service import TranscriptTaskService
+    transcript_service = TranscriptTaskService()
+    application.state.transcript_tasks = transcript_service
+    await transcript_service.start()
+    try:
         try:
             from .replay_automation.discovery import discover_window
             from .replay_automation.service import ReplayAutomation
@@ -1234,6 +1241,7 @@ async def lifespan(application: FastAPI):
         await automation.start()
         yield
     finally:
+        await transcript_service.stop()
         if automation is not None:
             await automation.stop()
         application.state.replay_automation = None
@@ -1252,6 +1260,11 @@ try:
 except ImportError:  # Support the documented backend-directory launch.
     from gdrive.router import router as gdrive_router
 app.include_router(gdrive_router)
+try:
+    from .transcript_tasks.router import router as transcript_task_router
+except ImportError:
+    from transcript_tasks.router import router as transcript_task_router
+app.include_router(transcript_task_router)
 try:
     from .replay_automation.router import router as replay_automation_router
 except ImportError:
@@ -1606,13 +1619,22 @@ async def start_video_transcription(video_id: str) -> dict[str, Any]:
 @app.get("/api/videos/{video_id}/transcription")
 async def get_video_transcription(video_id: str) -> dict[str, Any] | None:
     """Retrieve saved automatic/manual recognition when reopening a library video."""
-    db.video_path(video_id)
+    db.get_video(video_id)
     return db.find_video_transcription(video_id)
 
 
 @app.get("/api/transcriptions/{task_id}")
-async def get_transcription(task_id: str) -> dict[str, Any]:
-    return db.get_transcription_task(task_id)
+async def get_transcription(task_id: str, include_segments: bool = False) -> dict[str, Any]:
+    """Expose deterministic public IDs only when timing is explicitly requested."""
+    task = db.get_transcription_task(task_id, include_segments=include_segments)
+    if include_segments:
+        try:
+            from .transcript_tasks.utils import public_segments, source_title
+        except ImportError:
+            from transcript_tasks.utils import public_segments, source_title
+        task["segments"] = public_segments(task["segments"])
+        task["title"] = source_title(task)
+    return task
 
 
 @app.get("/api/downloads/{task_id}")

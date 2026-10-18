@@ -39,7 +39,7 @@ async function setup(t, keepBackend, keepFrontend) {
   const frontend = await external(t, { app: "vod", backendPort: 8000 });
   if (!keepBackend) await new Promise((resolve) => backend.server.close(resolve));
   if (!keepFrontend) await new Promise((resolve) => frontend.server.close(resolve));
-  const runtime = new FixtureRuntime(root, process.execPath, { startupTimeout: 5000 }, undefined, "vod");
+  const runtime = new FixtureRuntime(root, process.execPath, { startupTimeout: 5000 }, undefined, "http://127.0.0.1:18379");
   runtime.backendPort = backend.port;
   runtime.frontendPort = frontend.port;
   t.after(() => runtime.stop());
@@ -63,6 +63,8 @@ test("concurrent VOD requests share one owned pair and idempotent shutdown", asy
   assert.equal(vod, secondStart);
   assert.equal(await vod, await secondStart);
   assert.equal(runtime.children.length, 2);
+  assert.equal((await (await fetch(`http://127.0.0.1:${runtime.backendPort}/__test__/chat-url`)).json()).url, "http://127.0.0.1:18379");
+  assert.notEqual(process.env.VOD_CHAT_TFT_BASE_URL, "http://127.0.0.1:18379");
   await Promise.all([runtime.stop(), runtime.stop()]);
   assert(runtime.children.every((child) => child.ended));
   await assert.rejects(fetch(await vod));
