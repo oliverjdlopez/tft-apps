@@ -8,21 +8,21 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from devtools.assistants import capture, registry_from_files
-from devtools.assistants.workspace.workspace import ConflictError, Workspace
+from dev.assistants import capture, registry_from_files
+from dev.assistants.workspace.workspace import ConflictError, Workspace
 from services import spec_service
 
 
 def render(agent) -> str:
     """Render instructions with the typed context required by application runs."""
     from agents import RunContextWrapper
-    from domain.runtime import AssistantRunContext, PreparedResources, RuntimeSettings
+    from domain.runtime import AssistantRunContext, RuntimeSettings
 
     context = AssistantRunContext(
         runtime=RuntimeSettings(
-            request_id="test", set_number=18, root_assistant=agent.name,
+            request_id="test", root_assistant=agent.name,
         ),
-        resources=PreparedResources(),
+        resources=None,
         evidence=None,
     )
     return agent.instructions(RunContextWrapper(context), agent)
@@ -104,7 +104,7 @@ def test_publication_changes_new_runtime_instances_only(workspace, monkeypatch):
     """Publishing a draft leaves existing runtime snapshots unchanged."""
     from domain.assistants import Assistant
     from domain.assistants import registry as runtime
-    from devtools.assistants.workspace.workspace import DefinitionsPublisher
+    from dev.assistants.workspace.workspace import DefinitionsPublisher
 
     monkeypatch.setattr(runtime, "registry", None)
     publisher = DefinitionsPublisher(publish_runtime=True)
@@ -194,7 +194,7 @@ def test_invalid_graph_saved_but_cannot_apply_or_test(workspace, config, error):
 
 def test_write_failure_rolls_back_complete_source_and_keeps_draft(workspace, monkeypatch):
     """A failure between editable file writes restores original bytes."""
-    from devtools.assistants.workspace import workspace as module
+    from dev.assistants.workspace import workspace as module
     original = workspace.source_files()
     state = save(workspace, **{'system.md': 'Updated', 'task.md': 'New task'})
     real = module.atomic_bytes
@@ -213,7 +213,7 @@ def test_write_failure_rolls_back_complete_source_and_keeps_draft(workspace, mon
 
 def test_restart_recovers_journal_before_discovery_and_preserves_external_edits(workspace):
     """Recovery checks all bytes before rollback and refuses unrelated edits."""
-    from devtools.assistants.workspace.io import recover
+    from dev.assistants.workspace.io import recover
     path = workspace.specs / 'fixture' / 'system.md'
     old = path.read_bytes()
     journal = {'assistant': 'fixture', 'changes': {'system.md': [base64.b64encode(old).decode(), base64.b64encode(b'Partial write').decode()]}}
@@ -246,7 +246,7 @@ def test_routes_retire_direct_writes_and_support_full_lifecycle(workspace, monke
 
 def test_committed_restart_finishes_history_and_closes_draft_once(workspace):
     """A crash after source commit can finish store updates without reapplying files."""
-    from devtools.assistants.workspace.io import recover
+    from dev.assistants.workspace.io import recover
     state = save(workspace, **{'system.md': 'Committed source'})
     path = workspace.specs / 'fixture' / 'system.md'
     path.write_text('Committed source')

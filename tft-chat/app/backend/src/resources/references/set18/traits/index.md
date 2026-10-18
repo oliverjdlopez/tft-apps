@@ -4,8 +4,6 @@ title: Traits
 description: Trait identities, breakpoints, numerical tables and special forms.
 kind: index
 parent: set18
-sets:
-- '18'
 ---
 # Traits
 

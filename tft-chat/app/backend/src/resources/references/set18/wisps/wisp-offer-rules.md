@@ -5,8 +5,6 @@ description: Wisp shop cadence, purchase rules, bands, variant eligibility and c
   Wisp offer ledgers; no equal selection odds are assumed.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisp-offer-rules.md; original source wording retained.
 patches:
 - '18.2'

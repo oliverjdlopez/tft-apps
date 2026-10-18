@@ -5,8 +5,6 @@ description: Published patch 18.2 reference disagreements and missing fields acr
   and Wisps. Use to assess conflicting values; missing data is not a conflicting value.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/systems/reference-conflicts.md; original source wording retained.
 patches:
 - '18.2'

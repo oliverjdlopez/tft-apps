@@ -23,8 +23,6 @@ class AssistantRegistry:
             KeyError: If a tool, group, or handoff target is unknown.
             ValueError: If names are duplicated, models are invalid, or handoffs cycle.
         """
-        from domain.tools import tool_name
-
         self.specs = MappingProxyType({spec.name: spec for spec in specs})
         if len(self.specs) != len(specs):
             raise ValueError("Duplicate assistant names")
@@ -34,7 +32,7 @@ class AssistantRegistry:
         )
         self.tool_names = MappingProxyType(
             {
-                name: tuple(tool_name(tool) for tool in tools)
+                name: tuple(tool.name for tool in tools)
                 for name, tools in self.tools.items()
             }
         )
@@ -89,7 +87,7 @@ class AssistantRegistry:
 
 
 # Runtime readers capture this reference once per operation. Specs publication
-# belongs to devtools; isolated execution supplies its own registry explicitly.
+# belongs to dev; isolated execution supplies its own registry explicitly.
 registry: AssistantRegistry | None = None
 
 

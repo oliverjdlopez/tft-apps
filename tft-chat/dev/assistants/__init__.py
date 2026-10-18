@@ -1,6 +1,6 @@
 """Development adapters for assistant authoring and captured execution."""
 
-from devtools.assistants.capture import (
+from dev.assistants.capture import (
     AssistantDefinitions,
     EDITABLE_FILES,
     capture,
@@ -8,9 +8,9 @@ from devtools.assistants.capture import (
     registry_from_capture,
     registry_from_files,
 )
-from devtools.assistants.execution import assistant_from_capture, assistant_from_registry
-from devtools.assistants.definitions import load_development_spec
-from devtools.assistants.recording import InvocationRecording, record_invocation
+from dev.assistants.execution import assistant_from_capture, assistant_from_registry
+from dev.assistants.definitions import load_development_spec
+from dev.assistants.recording import InvocationRecording, record_invocation
 
 __all__ = [
     "EDITABLE_FILES",

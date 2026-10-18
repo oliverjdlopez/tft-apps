@@ -4,8 +4,6 @@ title: Items
 description: Equipment collections, emblems, consumables, recipes and effect tables.
 kind: index
 parent: set18
-sets:
-- '18'
 ---
 # Items
 

@@ -5,7 +5,7 @@ import hashlib
 from pathlib import Path
 
 from domain.assistants import ASSISTANT_SPECS_DIR
-from devtools.assistants.workspace.workspace import (
+from dev.assistants.workspace.workspace import (
     ConflictError as DocumentConflictError,
     Workspace,
 )

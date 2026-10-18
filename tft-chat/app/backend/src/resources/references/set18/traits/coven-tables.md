@@ -5,8 +5,6 @@ description: Coven numerical mechanics, reward tables and source disagreements. 
   and rewards.
 kind: reference
 parent: set18/traits
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/traits/coven-tables.md; original source wording retained.
 patches:
 - '18.2'

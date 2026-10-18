@@ -5,8 +5,6 @@ description: Champion roster covering all 65 Set 18 champions, costs, traits, co
   Use for unit identity and scaling-role questions. Excludes full abilities and performance recommendations.
 kind: reference
 parent: set18/units
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/unit_context.md; original source wording retained.
 patches:
 - '18.1'

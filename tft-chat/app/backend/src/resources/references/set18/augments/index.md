@@ -4,8 +4,6 @@ title: Augments
 description: Augment collections, offer restrictions, reward tables and probabilities.
 kind: index
 parent: set18
-sets:
-- '18'
 ---
 # Augments
 

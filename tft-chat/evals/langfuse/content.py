@@ -103,7 +103,7 @@ def validate_bundle(bundle: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(f"Unknown case IDs: {sorted(set(selected) - ids)}")
     captured_names = None
     if value.get('execution'):
-        from devtools.assistants import registry_from_capture
+        from dev.assistants import registry_from_capture
         execution = value['execution']
         if execution.get('version') != 1 or set(execution.get('graphs', {})) != {variant['name'] for variant in config['variants']}:
             raise ValueError('Invalid captured execution version or variants')

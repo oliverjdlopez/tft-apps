@@ -12,7 +12,7 @@ from core.config import load_config
 from domain.assistants import Assistant
 from domain.assistants.registry import current_registry
 from domain.assistants.models import AssistantSpec
-from devtools.assistants import diagnostics
+from dev.assistants import diagnostics
 from domain.assistants.utils import load_assistant_spec
 from domain.runtime.utils import wrap_task_input
 from domain.constants import OpenAIModels, ReasoningEfforts
@@ -160,7 +160,7 @@ def test_create_agent_returns_fresh_instances_and_handoff_graphs() -> None:
 
 def test_durable_overrides_retain_dynamic_callbacks() -> None:
     """Replacing prompts preserves runtime instruction policy on every agent."""
-    from devtools.assistants import assistant_from_registry
+    from dev.assistants import assistant_from_registry
 
     source = current_registry()
     agent = assistant_from_registry(
@@ -172,12 +172,12 @@ def test_durable_overrides_retain_dynamic_callbacks() -> None:
         },
     )
     from agents import RunContextWrapper
-    from domain.runtime import AssistantRunContext, PreparedResources, RuntimeSettings
+    from domain.runtime import AssistantRunContext, RuntimeSettings
     context = AssistantRunContext(
         runtime=RuntimeSettings(
-            request_id="test", set_number=18, root_assistant="chat",
+            request_id="test", root_assistant="chat",
         ),
-        resources=PreparedResources(),
+        resources=None,
         evidence=None,
     )
     assert callable(agent.instructions)

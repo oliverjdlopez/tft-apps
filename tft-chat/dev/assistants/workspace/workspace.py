@@ -10,14 +10,14 @@ import uuid
 from threading import RLock
 
 from domain.assistants import registry as runtime
-from devtools.assistants import (
+from dev.assistants import (
     AssistantDefinitions,
     EDITABLE_FILES,
     capture,
     digest,
     registry_from_files,
 )
-from devtools.assistants.workspace.io import (
+from dev.assistants.workspace.io import (
     atomic_bytes,
     checkout_lock,
     recover,

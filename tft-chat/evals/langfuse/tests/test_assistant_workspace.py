@@ -9,7 +9,7 @@ import threading
 import pytest
 from fastapi import Request
 
-from devtools.assistants import capture, digest, registry_from_capture, registry_from_files
+from dev.assistants import capture, digest, registry_from_capture, registry_from_files
 from evals.langfuse import assistant_workspace as module
 from evals.langfuse.jobs import JobStore
 from evals.langfuse.content import validate_bundle

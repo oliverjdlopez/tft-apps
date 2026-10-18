@@ -1,12 +1,14 @@
 """Verify captured evaluation controls, provenance, and failure cleanup."""
 import asyncio
+import hashlib
 from types import SimpleNamespace
 
 import pytest
 from agents import RunContextWrapper
 
 from domain.runtime.models import AssistantRunContext, ToolActivity
-from devtools.assistants import capture, registry_from_files
+from domain.resources.models import ResourceRead
+from dev.assistants import capture, registry_from_files
 from evals.assistant_execution import execute_captured
 
 
@@ -25,6 +27,10 @@ def test_captured_execution_preserves_controls_and_failed_run_evidence(monkeypat
         'child': {'system.md': 'Frozen child', 'agent.json': '{"model":"gpt-6-sol","resources":{"skills":[]}}'},
     }))
     observed = []
+    resource_read = ResourceRead(
+        id='fixture/reference', path='fixture/reference.md', kind='reference',
+        sha256='source-hash', content='Read before generation completes.', record_ids=('record-1',),
+    )
 
     async def run(agent, *, input, context, hooks, max_turns, run_config):
         """Exercise dynamic instruction callbacks without a model or database connection."""
@@ -42,6 +48,7 @@ def test_captured_execution_preserves_controls_and_failed_run_evidence(monkeypat
             assert target.model == 'gpt-6-luna'
             target.instructions(wrapper, target)
         context.activity.calls['pending'] = ToolActivity(call_id='pending', name='test_tool')
+        context.activity.resource_reads[resource_read.id] = resource_read
         observed.append(context)
         if fail:
             raise ValueError('model failure')
@@ -60,7 +67,14 @@ def test_captured_execution_preserves_controls_and_failed_run_evidence(monkeypat
     assert metadata['assembled_instructions'] == {'root': 'Root candidate', 'child': 'Child candidate'}
     assert set(metadata['instruction_hashes']) == {'root', 'child'}
     assert metadata['captured_graph_hash'] == graph['hash']
-    assert metadata['resources'] == {'reads': []}
+    assert metadata['resources'] == {'reads': [{
+        'id': resource_read.id, 'path': resource_read.path, 'kind': 'reference',
+        'sha256': 'source-hash',
+        'content_sha256': hashlib.sha256(resource_read.content.encode()).hexdigest(),
+        'record_ids': ['record-1'],
+    }]}
+    assert set(metadata['activity']) == {'calls', 'handoffs'}
+    assert metadata['activity']['calls']['pending']['status'] == 'failed'
     assert metadata['run_model_settings'] == {'temperature': 0.2, 'max_tokens': 800}
     assert observed[0].activity.calls['pending'].status == 'failed'
     if fail:

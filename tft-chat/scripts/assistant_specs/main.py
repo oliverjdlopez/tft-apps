@@ -26,7 +26,7 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
         Created identity and source path.
     """
     from domain.assistants.utils import resolve_tools
-    from devtools.assistants.definitions import load_development_spec
+    from dev.assistants.definitions import load_development_spec
 
     validate_name(name)
     specs = spec_inventory(root)

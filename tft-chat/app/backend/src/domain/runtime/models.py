@@ -15,18 +15,9 @@ class RuntimeSettings:
     """Hold explicit settings shared by a request's agents and tools."""
 
     request_id: str
-    set_number: int | None
     root_assistant: str
     surface: str = "chat"
     system: str | None = None
-
-
-@dataclass
-class PreparedResources:
-    """Retain selected catalogues and actual reads for one invocation."""
-
-    catalogues: dict[str, ResourceLibrary] = field(default_factory=dict)
-    reads: dict[str, ResourceRead] = field(default_factory=dict)
 
 
 @dataclass
@@ -44,10 +35,11 @@ class ToolActivity:
 
 @dataclass
 class ActivityState:
-    """Retain invocation-local lifecycle records without emitting browser events."""
+    """Retain invocation-local tool, handoff, and successful resource-read records."""
 
     calls: dict[str, ToolActivity] = field(default_factory=dict)
     handoffs: list[tuple[str, str]] = field(default_factory=list)
+    resource_reads: dict[str, ResourceRead] = field(default_factory=dict)
 
 
 @dataclass
@@ -60,7 +52,7 @@ class AssistantRunContext:
     """
 
     runtime: RuntimeSettings
-    resources: PreparedResources
+    resources: ResourceLibrary | None
     evidence: EvidenceStore | None
     activity: ActivityState = field(default_factory=ActivityState)
     timing: dict[str, Any] | None = None

@@ -73,13 +73,12 @@ def build_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKIL
             if link == resource_id:
                 raise ValueError(f'Self-referencing resource link: {resource_id}')
         if metadata.parent:
-            parent = library.entries[metadata.parent].metadata
             if metadata.id.startswith(('skill:', 'playbook:')):
                 owner = metadata.id.split('/')[0]
                 if not metadata.parent.startswith(owner) or not resource_id.startswith(metadata.parent + '/'):
                     raise ValueError(f'Instruction child must inherit its package: {resource_id}')
-            elif not resource_id.startswith(metadata.parent + '/') or metadata.sets != parent.sets:
-                raise ValueError(f'Child must inherit parent identity and set scope: {resource_id}')
+            elif not resource_id.startswith(metadata.parent + '/'):
+                raise ValueError(f'Child must inherit parent identity: {resource_id}')
         elif metadata.kind not in {'index', 'skill', 'playbook'}:
             raise ValueError(f'Leaf resource needs a parent: {resource_id}')
         for view in metadata.views:

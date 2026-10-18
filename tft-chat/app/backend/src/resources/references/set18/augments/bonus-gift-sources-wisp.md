@@ -5,8 +5,6 @@ description: Bonus Gift source ledger — wisp. Complete published rows for this
   or exclusion rules. Select every group for exhaustive totals; no implied selection weights.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/bonus-gift-sources-wisp.md; original source wording retained.
 patches:
 - '18.2'

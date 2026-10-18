@@ -6,8 +6,6 @@ description: Risky Wisp reference with named effects, base/upgraded/prismatic va
   and full effect tooltips.
 kind: records
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisps-risky.md; original source wording retained.
 patches:
 - '18.1'

@@ -4,8 +4,6 @@ title: Selected item and effect references
 description: Selected item effect values, including artifacts and special equipment; not a full item catalog.
 kind: reference
 parent: set18/items
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/items/selected-effect-tables.md; original source wording retained.
 patches:
 - '18.2'

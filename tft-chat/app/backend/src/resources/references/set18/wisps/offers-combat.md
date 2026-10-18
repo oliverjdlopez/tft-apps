@@ -6,8 +6,6 @@ description: Combat Wisp reference with named effects, base/upgraded/prismatic v
   and full effect tooltips.
 kind: records
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisps-combat.md; original source wording retained.
 patches:
 - '18.1'

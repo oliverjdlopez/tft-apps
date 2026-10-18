@@ -5,8 +5,6 @@ description: Other recovered augment rules mechanics, rewards, interactions and 
   topic; selection weights are included only where explicitly given.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/other-rules.md; original source wording retained.
 patches:
 - '18.2'

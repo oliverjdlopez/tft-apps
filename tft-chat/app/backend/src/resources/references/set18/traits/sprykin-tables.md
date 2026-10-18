@@ -4,8 +4,6 @@ title: Sprykin and the BFF
 description: Sprykin and the BFF detailed effects, thresholds, quest rules and unresolved fields.
 kind: reference
 parent: set18/traits
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/traits/sprykin-tables.md; original source wording retained.
 patches:
 - '18.2'

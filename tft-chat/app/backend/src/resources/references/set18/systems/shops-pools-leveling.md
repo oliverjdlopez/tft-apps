@@ -5,8 +5,6 @@ description: Shop cost probabilities, champion pool copies, XP requirements and 
   leveling and reroll math; preserves the 64 versus 68 XP disagreement.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/systems/shops-pools-leveling.md; original source wording retained.
 patches:
 - '18.2'

@@ -5,8 +5,6 @@ description: Player damage by stage and surviving units. Use for loss damage cal
   exceptions are unresolved.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/systems/player-damage.md; original source wording retained.
 patches:
 - '18.2'

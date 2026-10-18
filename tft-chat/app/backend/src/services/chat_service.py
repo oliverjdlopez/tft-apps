@@ -79,12 +79,11 @@ async def stream_chat(
     )
     run_input = invocation_input(messages, assistant.spec.task_prompt)
     run_context = await asyncio.to_thread(
-        create_context, assistant, set_number=config.chat.set_number,
+        create_context, assistant,
         surface="chat", request_id=request_label, system=system, timing=timing,
     )
     if timing is not None:
         timing['agent_setup_ms'] = round((time.perf_counter() - setup_started) * 1000, 3)
-    resources = run_context.resources
     reachable_tool_names = list(registry.reachable_tool_names[assistant_name])
     setup_started = time.perf_counter()
     tools_by_name = {
@@ -107,7 +106,7 @@ async def stream_chat(
                 for group in reachable_groups
             ),
             "context_sources": ",".join(
-                dict.fromkeys(read.path for read in resources.reads.values() if read.kind != 'skill')
+                dict.fromkeys(read.path for read in run_context.activity.resource_reads.values() if read.kind != 'skill')
             ),
         },
     ) as chat_trace:

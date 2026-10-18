@@ -299,6 +299,7 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         async def stream_events(self):
             if False:
                 yield None
+            self.is_complete = True
 
     def fake_trace(workflow_name: str, *, metadata: dict[str, object]):
         captured["workflow_name"] = workflow_name
@@ -307,12 +308,12 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
 
     monkeypatch.setattr("services.chat_service.trace", fake_trace)
 
-    def selected_resources(**kwargs):
-        """Provide an empty catalogue without model calls."""
-        return {}
+    def selected_resources(self):
+        """Omit shared materials for this streaming-only test."""
+        return None
 
     monkeypatch.setattr(
-        "domain.runtime.execution.select_resource_catalogues", selected_resources
+        "domain.assistants.Assistant.load_resource_library", selected_resources
     )
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks, run_config):
@@ -365,7 +366,7 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
     assert captured["run_agent"].model == "gpt-5"
     assert captured["run_agent"].handoffs[0].model == "gpt-5"
     assert captured["context"].runtime.root_assistant == "meta_expert"
-    assert captured["context"].resources.reads == {}
+    assert captured["context"].activity.resource_reads == {}
     assert captured["stream_input"] == [
         {"role": "user", "content": "What is the best comp?"}
     ]
@@ -383,6 +384,13 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
     }
 
     class FailingResult:
+        is_complete = False
+
+        def cancel(self, mode):
+            """Expose the SDK cancellation contract after the turn-limit error."""
+            assert mode == "immediate"
+            self.is_complete = True
+
         async def stream_events(self):
             if False:
                 yield None
@@ -397,6 +405,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
                     delta="fallback response",
                 ),
             )
+            self.is_complete = True
 
     main_agent = None
 
@@ -420,12 +429,12 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         fake_run_streamed,
     )
 
-    def selected_resources(**_kwargs):
-        """Provide prepared resources without invoking resource selectors."""
-        return {}
+    def selected_resources(self):
+        """Omit shared materials for this streaming-only test."""
+        return None
 
     monkeypatch.setattr(
-        "domain.runtime.execution.select_resource_catalogues", selected_resources
+        "domain.assistants.Assistant.load_resource_library", selected_resources
     )
 
     request = ChatRequest(
@@ -461,11 +470,27 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
     """HTTP consumer closure reaches the active main or fallback stream adapter."""
     contexts = []
     closed = []
-    main_result, final_result = object(), object()
+    class Result:
+        """Expose SDK cancellation while the browser adapter is suspended."""
 
-    def prepared(**_kwargs):
-        """Provide resources without invoking a selector or external model."""
-        return {}
+        is_complete = False
+
+        def cancel(self, mode):
+            """Stop the simulated background run immediately."""
+            assert mode == "immediate"
+            self.is_complete = True
+
+        async def stream_events(self):
+            """Allow runtime to drain the cancelled SDK stream."""
+            assert self.is_complete
+            if False:
+                yield None
+
+    main_result, final_result = Result(), Result()
+
+    def prepared(self):
+        """Omit shared materials for this streaming-only test."""
+        return None
 
     def run_streamed(agent, *, context, **_kwargs):
         """Capture the shared context for both runner entry points."""
@@ -483,7 +508,7 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
         finally:
             closed.append(result)
 
-    monkeypatch.setattr("domain.runtime.execution.select_resource_catalogues", prepared)
+    monkeypatch.setattr("domain.assistants.Assistant.load_resource_library", prepared)
     monkeypatch.setattr("domain.runtime.execution.Runner.run_streamed", run_streamed)
     monkeypatch.setattr("services.chat_service.stream_agent_events", events)
 
@@ -503,6 +528,8 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
 
     asyncio.run(run())
     assert closed == [final_result if fallback else main_result]
+    assert main_result.is_complete
+    assert final_result.is_complete == fallback
     assert len(contexts) == (2 if fallback else 1)
     assert all(context is contexts[0] for context in contexts)
     assert contexts[0].activity.calls["pending"].status == "cancelled"

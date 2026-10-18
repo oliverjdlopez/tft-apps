@@ -4,27 +4,32 @@ Static facts live under `app/backend/src/resources/references`. Assistants see
 only root directory descriptions in their instructions. `read_resource("set18")`
 returns a set overview and permitted topic IDs; reading a topic reveals its
 children. A leaf read returns the complete source body. Any known ID may be read
-directly, but every read requires membership in the catalogue selected for the
-active assistant during runtime context assembly.
+directly, but every read requires membership in the catalogue selected by the
+active `Assistant` from its own spec.
 Descriptions and index listings guide discovery; they are not factual evidence.
 
 `domain.resources` owns resource schemas, metadata validation, storage, caching,
-and complete content loading. `domain.assistants.utils.select_resource_catalogues`
-interprets spec exposure and selects a catalogue for the requested set. Assistant
+and complete content loading. `Assistant.resource_catalogue` interprets its own
+spec exposure and selects its permitted catalogue. Assistant
 renderers format library metadata into instruction directories; `domain.tools.context`
 formats read responses and records actual reads. Runtime coordinates setup and
-retains the selected catalogues and read record for the invocation. The resources
+retains the library directly in `AssistantRunContext.resources` and successful
+read records in the invocation activity log; it
+does not assign permissions or retain catalogues keyed by assistant name. The resources
 package has no assistant or invocation dependencies. There is no provider or selector execution path.
 
 ## Authoring and parsing
 
 See [resource layout and schema](resource-layout.md) for the complete contract.
 Reference Markdown has strict YAML frontmatter: stable `id`, `title`,
-`description`, `kind`, `parent`, and explicit `sets`; optional `patches`,
+`description`, `kind`, and `parent`; optional `patches`,
 `requires`, `related`, and `provenance` describe applicability and relationships.
 Identity is independent of physical paths. Unknown fields, duplicate keys/IDs,
-broken links, invalid set inheritance, and cyclic required dependencies fail
+broken links and cyclic required dependencies fail
 validation rather than silently removing facts from discovery.
+The library assumes all resources belong to the consistent current set. Resource
+metadata, tool responses, invocation context, and execution receipts carry no set
+number; patch provenance remains available.
 
 Indexes are authored Markdown documents. Their child lists derive from parent
 IDs and are filtered for the active assistant. Leaf references preserve complete
@@ -62,13 +67,17 @@ changed before its first read returns an error asking for a fresh invocation;
 an already cached read retains the original content. Symlinks and arbitrary
 filesystem paths cannot become read targets.
 
-`AssistantRunContext.resources.reads` records actual read IDs, source paths,
+`AssistantRunContext.activity.resource_reads` records actual read IDs, source paths,
 source SHA-256 hashes, complete returned content, and variant IDs. Captured
 execution receipts additionally record content hashes, including reads preceding
-a failed generation. Index reads count as reads too. Source paths identify
+a failed generation. Receipts keep those summaries under `resources.reads`;
+activity exports contain tool and handoff records without duplicating resource
+bodies. Index reads count as reads too. Source paths identify
 provenance but are never resource identities. Body caches do not grant access:
-the read tool supplies the active SDK assistant's prepared catalogue, and reads
-check membership before consulting the shared cache.
+the read tool asks the active `Assistant` for its permitted catalogue, and reads
+check membership before consulting the shared cache. Prompt directories use the
+same assistant method. Handoffs and clones apply their own specs to the shared
+materials; neither a reused name nor a cached body grants additional access.
 
 ## Migration and validation
 

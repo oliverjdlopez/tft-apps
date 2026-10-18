@@ -169,7 +169,7 @@ def test_unscored_native_dataset_runs_without_evaluators(monkeypatch):
             """Provide the SDK flushing contract."""
 
     from domain.assistants.registry import current_registry
-    from devtools.assistants import capture
+    from dev.assistants import capture
     frozen = capture(current_registry())
     bundle["execution"] = {"version": 1, "graphs": {"baseline": frozen}}
     report = run_bundle(bundle, Client())
@@ -304,7 +304,7 @@ def test_native_generation_links_frozen_prompt_without_fetch(monkeypatch):
 def test_case_databases_reach_isolated_workers_without_leaking(monkeypatch, natural):
     """Mixed-set cases keep their own target across attempts and preserve defaults."""
     from domain.assistants.registry import current_registry
-    from devtools.assistants import capture
+    from dev.assistants import capture
     graph = capture(current_registry())
     suite = {"name": "chat", "assistant": "chat", "family": "assistant", "execution": "live", "database": "suite_db",
              "captured_graphs": {"baseline": graph, "candidate": graph}}

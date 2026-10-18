@@ -28,7 +28,7 @@ from api.routes import chat
 from core.config import load_config
 from db.models import Base, AnalysisScope, AnalysisFactBuild, UnitStatQueryTable, ALL_STARS, ANALYSIS_FACT_SCHEMA_VERSION
 from domain.assistants import Assistant
-from devtools.assistants import registry_from_files
+from dev.assistants import registry_from_files
 from domain.tools import get_tool
 from domain.tools.db_tools import ranking_tools
 from domain.tools.evidence.models import DisplaySpec

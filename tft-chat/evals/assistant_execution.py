@@ -21,7 +21,7 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
     """
     from agents import ModelSettings, RunConfig
     from domain.runtime.execution import create_context, run
-    from devtools.assistants import assistant_from_capture, record_invocation
+    from dev.assistants import assistant_from_capture, record_invocation
 
     require_capture(config)
     lineage = config.get('workspace_lineage') or {}
@@ -38,12 +38,11 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
     agent = assistant
     recording = record_invocation(agent)
     context = await asyncio.to_thread(create_context, assistant, surface=surface)
-    resources = context.resources
     instructions = recording.instructions
     model_settings = recording.model_settings
     metadata = {'assembled_instructions': instructions, 'captured_graph_hash': graph['hash'],
         'model_settings': model_settings, 'resources': {},
-        'runtime': {'set_number': context.runtime.set_number, 'root_assistant': assistant.name, 'surface': surface},
+        'runtime': {'root_assistant': assistant.name, 'surface': surface},
         'model': str(agent.model), 'run_model_settings': config.get('model_settings', {})}
     result = None
     try:
@@ -58,10 +57,14 @@ async def execute_captured(prompt: str, config: dict[str, Any]) -> tuple[Any, di
     metadata['resources'] = {
         'reads': [{'id': read.id, 'path': read.path, 'kind': read.kind, 'sha256': read.sha256,
                    'content_sha256': hashlib.sha256(read.content.encode()).hexdigest(),
-                   'record_ids': list(read.record_ids)} for read in resources.reads.values()],
+                   'record_ids': list(read.record_ids)} for read in context.activity.resource_reads.values()],
     }
     metadata['instruction_hashes'] = {key: hashlib.sha256(value.encode()).hexdigest() for key, value in instructions.items()}
-    metadata['activity'] = asdict(context.activity)
+    # Resource receipts above retain hashes and provenance without copying bodies.
+    metadata['activity'] = {
+        'calls': {key: asdict(call) for key, call in context.activity.calls.items()},
+        'handoffs': list(context.activity.handoffs),
+    }
     return result, metadata
 
 
@@ -82,7 +85,7 @@ def require_capture(config: dict[str, Any]) -> AssistantRegistry:
     Raises:
         ValueError: If the graph is absent or candidate targets are invalid.
     """
-    from devtools.assistants import registry_from_capture
+    from dev.assistants import registry_from_capture
 
     if not config.get('captured_graph'):
         raise ValueError('Live assistant execution requires a captured graph; export a fresh bundle before running it.')
@@ -129,8 +132,8 @@ def current_execution(suite: dict, variants: list[dict]) -> dict:
     """
     from copy import deepcopy
     from domain.assistants.constants import ASSISTANT_SPECS_DIR, ROOT_DIR
-    from devtools.assistants import capture, registry_from_files
-    from devtools.assistants.workspace.workspace import Workspace
+    from dev.assistants import capture, registry_from_files
+    from dev.assistants.workspace.workspace import Workspace
     workspace = Workspace(ROOT_DIR, ASSISTANT_SPECS_DIR)
     definitions = registry_from_files(workspace.source_files())
     names = list(definitions.registry.reachable_assistant_names[suite['assistant']])

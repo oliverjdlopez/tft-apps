@@ -4,8 +4,6 @@ title: Set 18 references
 description: Browse static TFT facts by topic; source patch coverage and disagreements are retained.
 kind: index
 parent: null
-sets:
-- '18'
 ---
 # Set 18 reference directory
 

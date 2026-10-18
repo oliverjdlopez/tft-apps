@@ -10,10 +10,8 @@ from uuid import uuid4
 
 from agents import RunConfig, Runner, RunResult, RunResultStreaming
 
-from core.config import load_config
 from domain.runtime.activity import ActivityRunHooks, finalize_activity
-from domain.assistants.utils import select_resource_catalogues
-from domain.runtime.models import AssistantRunContext, PreparedResources, RuntimeSettings
+from domain.runtime.models import AssistantRunContext, RuntimeSettings
 from domain.runtime.utils import cancel_streamed_result, invocation_input
 from domain.tools.evidence.models import EvidenceStore
 
@@ -25,7 +23,7 @@ Input = str | Sequence[Mapping[str, str]]
 
 
 def create_context(
-    assistant: Assistant, *, set_number: int | None = None,
+    assistant: Assistant, *,
     surface: str = 'assistant', request_id: str | None = None,
     system: str | None = None, timing: dict[str, Any] | None = None,
 ) -> AssistantRunContext:
@@ -33,7 +31,6 @@ def create_context(
 
     Args:
         assistant: Configured root whose graph defines resource permissions.
-        set_number: TFT set; omission uses the application configuration.
         surface: Execution provenance such as chat, task, or eval.
         request_id: Caller identity; omission generates a unique identifier.
         system: Optional caller prefix rendered only by the root assistant.
@@ -42,25 +39,12 @@ def create_context(
     Returns:
         Context shared by all handoffs, with independent evidence and reads.
     """
-    specs = {}
-    pending = [assistant]
-    seen = set()
-    while pending:
-        node = pending.pop()
-        if id(node) in seen:
-            continue
-        seen.add(id(node))
-        specs[node.spec.name] = node.spec
-        pending.extend(node.handoffs)
-    selected_set = load_config().chat.set_number if set_number is None else set_number
     return AssistantRunContext(
         runtime=RuntimeSettings(
-            request_id=request_id or uuid4().hex, set_number=selected_set,
+            request_id=request_id or uuid4().hex,
             root_assistant=assistant.spec.name, surface=surface, system=system,
         ),
-        resources=PreparedResources(
-            catalogues=select_resource_catalogues(specs=specs, set_number=selected_set),
-        ),
+        resources=assistant.load_resource_library(),
         evidence=EvidenceStore(), timing=timing,
     )
 

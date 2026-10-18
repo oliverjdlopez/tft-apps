@@ -39,7 +39,9 @@ and structured record views. Preparation loads a cached metadata index;
 `read_resource` loads complete content by stable ID and records hashes for actual
 reads. Reference sources live under `app/backend/src/resources/references`;
 portable skill packages remain under `resources/skills`.
-`domain.assistants.utils.select_resource_catalogues` selects exposure from specs.
+`Assistant.resource_catalogue` selects exposure from that instance's spec for both
+prompt directories and tool reads. Runtime holds one shared material library,
+without a table of assistant permissions.
 The library supplies metadata listings and complete contents; assistant renderers
 format instruction directories, and `domain.tools.context` formats read responses
 and records actual reads. Runtime coordinates setup and retains invocation state.

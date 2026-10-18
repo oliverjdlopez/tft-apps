@@ -5,8 +5,6 @@ description: Lux and Avatar variants numerical mechanics, reward tables and sour
   trait calculations and rewards.
 kind: reference
 parent: set18/traits
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/traits/lux-avatar-tables.md; original source wording retained.
 patches:
 - '18.2'

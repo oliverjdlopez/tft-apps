@@ -9,6 +9,12 @@ and `domain.tools.context` formats read responses and records actual reads.
 Runtime retains invocation state and coordinates setup.
 Assistant renderers choose how to format those listings into instructions.
 
+`resources/models.py` defines shared `ResourceMetadata` plus explicit `Skill` and
+`Playbook` subclasses for package entry points. The subclasses fix their kind,
+validate a root package ID, and expose its name. `ResourceDescriptor` retains the
+typed metadata with its source revision; `ResourceRead` retains loaded content.
+The library's storage, caching, and discovery operations apply to all resource types.
+
 ```text
 app/backend/src/resources/
   references/set18/
@@ -40,7 +46,6 @@ title: Champion roster
 description: Complete champion population with costs, traits, roles, and forms.
 kind: reference
 parent: set18/units
-sets: ['18']
 patches: ['18.1']
 related: [set18/systems/reference-conflicts]
 provenance: Source coverage and revision notes belong here.
@@ -48,10 +53,11 @@ provenance: Source coverage and revision notes belong here.
 # Complete champion roster
 ```
 
-`id` is a set, skill, or playbook namespace followed by lowercase slash-separated names.
+`id` is a reference root, skill, or playbook namespace followed by lowercase slash-separated names.
 `kind` is `index`, `reference`, `records`, `skill`, `skill-reference`, `playbook`, or
 `playbook-reference`.
-Every reference declares its set scope; children inherit their parent's scope.
+The library assumes one consistent set. Resources have no set-number field,
+filtering, or tracking; reference roots are names, without set-number semantics.
 Every non-root reference has a known parent. Reference roots are indexes. Skill
 supporting resources inherit the owning package's permission; they cannot grant
 new access through links. Stable IDs are the only resource identities; old provider aliases are not accepted.

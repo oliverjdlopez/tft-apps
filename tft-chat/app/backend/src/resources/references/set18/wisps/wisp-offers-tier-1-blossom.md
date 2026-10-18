@@ -5,8 +5,6 @@ description: Wisp offer ledger — tier 1 blossom. Complete published rows for t
   or exclusion rules. Select every group for exhaustive totals; no implied selection weights.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisp-offers-tier-1-blossom.md; original source wording
   retained.
 patches:

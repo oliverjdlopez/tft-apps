@@ -3,15 +3,12 @@
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 from common.parsers import first_markdown_heading
 from domain.assistants.constants import ROOT_DIR
 from domain.assistants.models import AssistantSpec
-from domain.resources.library import get_library
-from domain.resources.models import ResourceLibrary
 
 
 # -----------------------------------------------------------------------------
@@ -145,59 +142,3 @@ def load_assistant_spec(path: Path, *, root_dir: Path = ROOT_DIR) -> AssistantSp
         **resource_fields,
         **config,
     )
-
-
-# -----------------------------------------------------------------------------
-# Resource exposure
-#
-# Interpret assistant configuration without owning invocation or execution state.
-# -----------------------------------------------------------------------------
-
-def select_resource_catalogues(
-    *, specs: Mapping[str, AssistantSpec], set_number: int | None,
-) -> dict[str, ResourceLibrary]:
-    """Select each graph node's catalogue from its frozen resource configuration.
-
-    Args:
-        specs: Definitions in this invocation's reachable assistant graph.
-        set_number: TFT set used to select applicable references.
-
-    Returns:
-        Metadata-only catalogues keyed by assistant name. Views share the source
-        body cache without expanding their membership or creating invocation state.
-    """
-    eligible = any(
-        spec.repository_context or spec.skill_names or spec.playbook_names
-        for spec in specs.values()
-    )
-    library = get_library() if eligible else None
-    catalogues = {}
-    if library is None:
-        return catalogues
-    for name, spec in specs.items():
-        can_read = (
-            spec.include_all_tools or 'context' in spec.tool_group_keys
-            or 'read_resource' in spec.tool_names
-        )
-        entries = {}
-        if can_read:
-            for resource_id, descriptor in library.entries.items():
-                if resource_id.startswith(('skill:', 'playbook:')):
-                    namespace, package = resource_id.split('/', 1)[0].split(':', 1)
-                    configured = spec.skill_names if namespace == 'skill' else spec.playbook_names
-                    allowed = (
-                        (spec.repository_context or bool(configured))
-                        and (configured is None or package in configured)
-                    )
-                else:
-                    allowed = spec.repository_context and (
-                        set_number is None or str(set_number) in descriptor.metadata.sets
-                    )
-                if allowed:
-                    entries[resource_id] = descriptor
-        catalogues[name] = ResourceLibrary(
-            entries=entries,
-            roots=tuple(resource_id for resource_id in library.roots if resource_id in entries),
-            body_cache=library.body_cache,
-        )
-    return catalogues

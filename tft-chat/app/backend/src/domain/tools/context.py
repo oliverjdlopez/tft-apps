@@ -34,12 +34,14 @@ async def read_resource(
         not establish complete coverage of game facts. Unknown or denied IDs
         return an unavailable result. No selectors or model calls are involved.
     """
-    if not isinstance(ctx.context, AssistantRunContext) or ctx.agent is None:
+    # Delegate policy to the active assistant without making tool registration
+    # depend on assistant construction. A plain SDK agent cannot grant access.
+    catalogue = getattr(ctx.agent, 'resource_catalogue', None)
+    if not isinstance(ctx.context, AssistantRunContext) or not callable(catalogue):
         return {"found": False, "error": "Resource reads require an assistant invocation."}
-    resources = ctx.context.resources
-    library = resources.catalogues.get(ctx.agent.name)
+    library = catalogue(ctx.context.resources)
     return await asyncio.to_thread(
-        read_resource_content, library, resource_id, reads=resources.reads,
+        read_resource_content, library, resource_id, reads=ctx.context.activity.resource_reads,
     )
 
 
@@ -80,7 +82,7 @@ def read_resource_content(
         'name': metadata.title, 'path': read.path,
         'heading': descriptor.view or '', 'content': read.content, 'complete': True,
         'sha256': read.sha256, 'record_ids': read.record_ids,
-        'sets': metadata.sets, 'patches': metadata.patches,
+        'patches': metadata.patches,
         'provenance': metadata.provenance,
         'children': resource_entries(library, resource_id), **links,
     }

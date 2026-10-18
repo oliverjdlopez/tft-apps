@@ -5,8 +5,6 @@ description: Augment offer ledger — silver. Complete published rows for this g
   or exclusion rules. Select every group for exhaustive totals; no implied selection weights.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/offers-silver.md; original source wording retained.
 patches:
 - '18.2'

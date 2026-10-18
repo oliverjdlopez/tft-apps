@@ -5,8 +5,6 @@ description: Booster Pack / + / ++ mechanics, rewards, interactions and limitati
   selection weights are included only where explicitly given.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/booster-pack.md; original source wording retained.
 patches:
 - '18.2'

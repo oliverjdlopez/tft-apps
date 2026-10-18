@@ -5,8 +5,6 @@ description: Slightly Magic Roll mechanics, rewards, interactions and limitation
   weights are included only where explicitly given.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/slightly-magic-roll.md; original source wording retained.
 patches:
 - '18.2'

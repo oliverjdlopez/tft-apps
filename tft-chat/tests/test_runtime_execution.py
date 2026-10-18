@@ -8,12 +8,14 @@ from types import SimpleNamespace
 import httpx
 import pytest
 from agents import Agent, RunConfig, RunContextWrapper
+from agents.tool_context import ToolContext
 from agents.models.openai_responses import OpenAIResponsesModel
 from openai import AsyncOpenAI
 
 from domain.assistants import Assistant, AssistantRegistry, AssistantSpec, ChatAssistant
 from domain.runtime.execution import create_context, run, run_streamed, stream_events
 from domain.runtime.models import ToolActivity
+from domain.runtime.activity import ActivityRunHooks
 
 
 def spec(name='fixture', **changes):
@@ -22,14 +24,37 @@ def spec(name='fixture', **changes):
                          system_prompt='SYSTEM', task_prompt='', path='fixture/system.md', **changes)
 
 
+@pytest.mark.parametrize('arguments, expected', [
+    ('{"cost": 4}', {'cost': 4}),
+    ('{"cost":', {}),
+    ('[4]', {}),
+    ('null', {}),
+])
+def test_activity_records_sdk_json_arguments(arguments, expected):
+    """Record object arguments without letting malformed model input break logging."""
+    assistant = Assistant.from_spec(spec())
+    context = create_context(assistant)
+    wrapper = ToolContext(
+        context=context, agent=assistant, tool_name='lookup',
+        tool_call_id='call-1', tool_arguments=arguments,
+    )
+    asyncio.run(ActivityRunHooks().on_tool_start(
+        wrapper, assistant, SimpleNamespace(name='lookup'),
+    ))
+    call = context.activity.calls['call-1']
+    assert call.arguments == expected
+    assert call.agent_name == assistant.name
+    assert call.status == 'running' and call.started_at is not None
+
+
 def test_construction_and_cloning_do_not_gather_runtime_context(monkeypatch):
     """Creating agents requires no catalogue, evidence, or invocation state."""
     def forbidden(*args, **kwargs):
         """Reject accidental context gathering during construction."""
         pytest.fail('Agent construction gathered runtime context')
 
-    monkeypatch.setattr('domain.runtime.execution.select_resource_catalogues', forbidden)
-    monkeypatch.setattr('domain.assistants.utils.get_library', forbidden)
+    monkeypatch.setattr('domain.assistants.Assistant.load_resource_library', forbidden)
+    monkeypatch.setattr('domain.assistants.assistant.get_library', forbidden)
     root = spec('chat', handoff_names=('child',))
     assistant = Assistant.from_name('chat', registry=AssistantRegistry([root, spec('child')]))
     assert isinstance(assistant, Agent) and isinstance(assistant, ChatAssistant)
@@ -113,6 +138,7 @@ def test_stream_cleanup_cancels_before_closing_sdk_iterator(monkeypatch, interru
 
         def cancel(self, mode):
             """Release background work before aclose can finish."""
+            assert mode == 'immediate'
             state.append('cancel')
             self.is_complete = True
 

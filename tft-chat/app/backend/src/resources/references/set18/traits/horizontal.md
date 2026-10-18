@@ -6,8 +6,6 @@ description: Set 18 combat and horizontal traits covering Adaptor, Brawler, Defe
   Excludes performance advice and loot probabilities.
 kind: reference
 parent: set18/traits
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/traits/horizontal.md; original source wording retained.
 patches:
 - '18.1'

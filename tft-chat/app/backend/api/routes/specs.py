@@ -5,9 +5,9 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
 from services import spec_service
-from devtools.assistants.workspace import bridge, trials
-from devtools.assistants.workspace.models import ExperimentRequest, ImportRequest, RestoreRequest, RevisionRequest, SaveRequest, TrialRequest, WorkspaceState, RunReceipt, ValidationResult
-from devtools.assistants.workspace.workspace import ConflictError
+from dev.assistants.workspace import bridge, trials
+from dev.assistants.workspace.models import ExperimentRequest, ImportRequest, RestoreRequest, RevisionRequest, SaveRequest, TrialRequest, WorkspaceState, RunReceipt, ValidationResult
+from dev.assistants.workspace.workspace import ConflictError
 
 router = APIRouter(prefix='/api/specs', tags=['specs'])
 

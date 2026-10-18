@@ -4,8 +4,6 @@ title: Solar, Lunar, and Eclipse
 description: Solar, Lunar and Eclipse trait breakpoints and effects.
 kind: reference
 parent: set18/traits
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/traits/solar-lunar-eclipse-tables.md; original source wording
   retained.
 patches:

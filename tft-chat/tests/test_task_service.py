@@ -27,8 +27,8 @@ def test_transcription_pipeline_distills_original_source_once(monkeypatch, origi
         assert isinstance(context, AssistantRunContext)
         assert callable(agent.instructions)
         assert context.runtime.surface == "task"
-        assert not context.resources.reads and not context.resources.catalogues
-        assert not context.resources.reads
+        assert context.resources is None
+        assert not context.activity.resource_reads
         assert agent.tools == []
         assert agent.handoffs == []
         assert agent.output_type is None
@@ -88,8 +88,8 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
     def fake_run(agent, *, input, context, **kwargs):
         """Capture the model boundary reached by the normal task endpoint."""
         calls.append((agent.name, input))
-        assert not context.resources.reads and not context.resources.catalogues
-        assert not context.resources.reads
+        assert context.resources is None
+        assert not context.activity.resource_reads
         return SimpleNamespace(final_output="# Distilled reference\n\nSource-grounded notes.")
 
     monkeypatch.setattr("domain.runtime.execution.Runner.run_sync", fake_run)
@@ -108,7 +108,7 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
 @pytest.mark.parametrize("explicit", [False, True])
 def test_assistant_cli_distills_file_with_default_or_explicit_name(monkeypatch, tmp_path, capsys, explicit) -> None:
     """Exercise the script entry point with the requested assistant identity."""
-    from devtools.assistants.__main__ import main
+    from dev.assistants.__main__ import main
     source = tmp_path / "source.txt"
     source.write_text("[00:12] Supplied source", encoding="utf-8")
     calls = []

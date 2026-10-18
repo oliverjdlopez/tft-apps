@@ -7,8 +7,8 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
-from devtools.assistants.workspace.io import checkout_lock
-from devtools.assistants import digest, registry_from_capture
+from dev.assistants.workspace.io import checkout_lock
+from dev.assistants import digest, registry_from_capture
 from evals.assistant_execution import current_execution
 from .prompts import publish_graph_prompts
 from .content import fetch_bundle, load_catalog, load_snapshot, validate_bundle

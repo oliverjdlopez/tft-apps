@@ -10,7 +10,8 @@ from agents import Agent, RunContextWrapper
 
 from domain.assistants.models import AssistantSpec
 from domain.assistants.registry import AssistantRegistry, current_registry
-from domain.resources.library import resource_entries
+from domain.resources.library import get_library, resource_entries
+from domain.resources.models import ResourceLibrary
 from domain.assistants.utils import resolve_tools
 from domain.runtime.models import AssistantRunContext
 
@@ -130,6 +131,69 @@ class Assistant(Agent[AssistantRunContext]):
         )
         return clone
 
+    @property
+    def uses_resources(self) -> bool:
+        """Whether this spec grants resources and declares the tool to read them."""
+        spec = self.spec
+        return bool(
+            (spec.repository_context or spec.skill_names or spec.playbook_names)
+            and (spec.include_all_tools or 'context' in spec.tool_group_keys
+                 or 'read_resource' in spec.tool_names)
+        )
+
+    def load_resource_library(self) -> ResourceLibrary | None:
+        """Load shared materials once if this assistant or a handoff uses them.
+
+        Returns:
+            The complete metadata snapshot for an invocation, or None when no
+            node needs resources. Construction itself never loads materials.
+        """
+        pending = [self]
+        seen = set()
+        while pending:
+            node = pending.pop()
+            if id(node) in seen:
+                continue
+            seen.add(id(node))
+            if node.uses_resources:
+                return get_library()
+            pending.extend(node.handoffs)
+        return None
+
+    def resource_catalogue(
+        self, library: ResourceLibrary | None,
+    ) -> ResourceLibrary:
+        """Select materials this assistant may expose and read under its own spec.
+
+        Args:
+            library: Shared invocation materials, without assistant permissions.
+
+        Returns:
+            A metadata view with this assistant's permitted IDs. The shared body
+            cache supplies content but never grants access to additional IDs.
+        """
+        if library is None or not self.uses_resources:
+            return ResourceLibrary()
+        spec = self.spec
+        entries = {}
+        for resource_id, descriptor in library.entries.items():
+            if resource_id.startswith(('skill:', 'playbook:')):
+                namespace, package = resource_id.split('/', 1)[0].split(':', 1)
+                configured = spec.skill_names if namespace == 'skill' else spec.playbook_names
+                allowed = (
+                    (spec.repository_context or bool(configured))
+                    and (configured is None or package in configured)
+                )
+            else:
+                allowed = spec.repository_context
+            if allowed:
+                entries[resource_id] = descriptor
+        return ResourceLibrary(
+            entries=entries,
+            roots=tuple(resource_id for resource_id in library.roots if resource_id in entries),
+            body_cache=library.body_cache,
+        )
+
     def render_instructions(
         self,
         wrapper: RunContextWrapper[AssistantRunContext],
@@ -152,7 +216,7 @@ class Assistant(Agent[AssistantRunContext]):
         if context.runtime.root_assistant == self.spec.name and context.runtime.system:
             parts.append(context.runtime.system)
         parts.append(self.spec.system_prompt)
-        entries = resource_entries(context.resources.catalogues.get(self.spec.name))
+        entries = resource_entries(self.resource_catalogue(context.resources))
         if entries:
             parts.append(
                 "## Available resources\nUse `read_resource` with an exact ID to read a resource or browse an index."

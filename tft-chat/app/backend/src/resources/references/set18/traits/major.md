@@ -6,8 +6,6 @@ description: Set 18 major and vertical traits covering Blackthorn, Blossom, Cove
   advice and loot probabilities.
 kind: reference
 parent: set18/traits
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/traits/major.md; original source wording retained.
 patches:
 - '18.1'

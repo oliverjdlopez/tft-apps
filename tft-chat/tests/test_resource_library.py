@@ -10,7 +10,7 @@ import yaml
 from domain.tools.context import read_resource_content
 from domain.resources.library import resource_entries
 from domain.resources.library import build_library, get_library, read_content, validate_library
-from domain.resources.models import ResourceLibrary, ResourceMetadata, WispDocument
+from domain.resources.models import Playbook, ResourceLibrary, ResourceMetadata, Skill, WispDocument
 
 
 def document(root: Path, name: str, metadata: dict, body: str = 'COMPLETE BODY') -> Path:
@@ -22,9 +22,9 @@ def document(root: Path, name: str, metadata: dict, body: str = 'COMPLETE BODY')
 
 
 def metadata(resource_id: str, kind: str = 'index', parent: str | None = None, **extra) -> dict:
-    """Create explicit set-scoped metadata for isolated fixture resources."""
+    """Create metadata for isolated fixture resources."""
     return dict(id=resource_id, title=resource_id, description='Discovery description',
-                kind=kind, parent=parent, sets=['18'], **extra)
+                kind=kind, parent=parent, **extra)
 
 
 @pytest.fixture
@@ -95,6 +95,19 @@ def test_resource_ids_survive_file_moves(roots):
     assert read_content(after, 'set18/units/roster').content.endswith('Last fact\n')
 
 
+def test_reference_root_is_an_ordinary_name(roots):
+    """Reference discovery and reads need no numeric set identity or metadata."""
+    document(roots[0], 'guide.md', metadata('guide'))
+    document(roots[0], 'guide-facts.md', metadata('guide/facts', 'reference', 'guide'),
+             'Complete facts')
+    library = build_library(*roots)
+    index = read_resource_content(library, 'guide')
+    assert [child['id'] for child in index['children']] == ['guide/facts']
+    facts = read_resource_content(library, 'guide/facts')
+    assert facts['content'] == 'Complete facts'
+    assert 'sets' not in facts and 'set_number' not in facts
+
+
 def test_presentation_uses_only_the_supplied_catalogue(roots):
     """Caller-selected entries bound children, links, and reads even with a shared cache."""
     document(roots[0], 'topic/facts.md', metadata(
@@ -123,7 +136,6 @@ def test_presentation_uses_only_the_supplied_catalogue(roots):
     ({'parent': 'set18/missing'}, 'Broken resource link'),
     ({'requires': ['set18/missing']}, 'Broken resource link'),
     ({'id': 'set18'}, 'Duplicate resource ID'),
-    ({'sets': ['17']}, 'set scope'),
     ({'description': ''}, 'description'),
     ({'extra_field': 'unexpected'}, 'extra_field'),
 ])
@@ -248,6 +260,12 @@ def playbook_roots(roots):
 def test_playbooks_and_skills_present_distinct_resources(playbook_roots):
     """Presentation exposes both namespaces without requiring any assistant configuration."""
     library = build_library(*playbook_roots)
+    skill = library.entries['skill:workflow'].metadata
+    playbook = library.entries['playbook:workflow'].metadata
+    assert isinstance(skill, Skill) and isinstance(playbook, Playbook)
+    assert skill.name == playbook.name == 'workflow'
+    assert type(library.entries['skill:workflow/example'].metadata) is ResourceMetadata
+    assert type(library.entries['playbook:workflow/example'].metadata) is ResourceMetadata
     assert {entry['id'] for entry in resource_entries(library)} == {
         'set18', 'playbook:workflow', 'skill:workflow',
     }
@@ -257,6 +275,27 @@ def test_playbooks_and_skills_present_distinct_resources(playbook_roots):
     assert guide['children'][0]['id'] == 'playbook:workflow/example'
     assert read_resource_content(library, 'playbook:workflow/example')['content'] == 'GUIDE EXAMPLE'
     assert read_resource_content(library, 'skill:workflow')['content'] == 'FULL WORKFLOW'
+
+
+@pytest.mark.parametrize('model,namespace,other', [
+    (Skill, 'skill', 'playbook'), (Playbook, 'playbook', 'skill'),
+])
+def test_instruction_models_enforce_package_identity(model, namespace, other):
+    """Dedicated types cannot represent another namespace or a supporting document."""
+    fields = dict(id=f'{namespace}:general-guidance', title='General guidance', description='Instructions')
+    resource = model(**fields)
+    assert resource.kind == namespace and resource.name == 'general-guidance'
+    assert model.model_validate_json(resource.model_dump_json()) == resource
+    for changes in (
+        {'id': f'{other}:general-guidance'},
+        {'id': f'{namespace}:general-guidance/example'},
+        {'id': f'{namespace}:invalid--name'},
+        {'id': f'{namespace}:' + 'a' * 65},
+        {'kind': other},
+        {'parent': f'{namespace}:parent'},
+    ):
+        with pytest.raises(ValueError):
+            model(**(fields | changes))
 
 
 def test_playbook_changes_invalidate_metadata_and_retain_cached_reads(playbook_roots):

@@ -6,11 +6,11 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 
-from domain.resources.models import ResourceDescriptor, ResourceMetadata, ResourceRead, WispDocument
+from domain.resources.models import Playbook, ResourceDescriptor, ResourceRead, Skill, WispDocument
 
 
 # ---------------------------------------------------------------------------
@@ -107,8 +107,8 @@ def source_revision(path: Path) -> tuple[int, int]:
     return stat.st_mtime_ns, stat.st_size
 
 
-def instruction_metadata(path: Path, root: Path, kind: str) -> ResourceMetadata:
-    """Adapt skill or playbook entry-point metadata into a resource descriptor.
+def instruction_metadata(path: Path, root: Path, kind: Literal['skill', 'playbook']) -> Skill | Playbook:
+    """Load a typed skill or playbook from its entry-point metadata.
 
     Args:
         path: SKILL.md or PLAYBOOK.md entry point under its package root.
@@ -116,7 +116,7 @@ def instruction_metadata(path: Path, root: Path, kind: str) -> ResourceMetadata:
         kind: Instruction namespace, either skill or playbook.
 
     Returns:
-        A stable instruction descriptor shared by discovery and permission checks.
+        A Skill or Playbook retained in the library's resource descriptor.
     """
     metadata = read_header(path)
     allowed = {'name', 'description', 'license', 'compatibility', 'metadata', 'allowed-tools'}
@@ -127,7 +127,8 @@ def instruction_metadata(path: Path, root: Path, kind: str) -> ResourceMetadata:
         raise ValueError(f'Invalid {kind} name: {path}')
     if path.parent.parent != root or path.parent.name != name:
         raise ValueError(f'{kind.title()} name must match its direct-child package: {path}')
-    return ResourceMetadata(id=f'{kind}:{name}', title=name, description=description, kind=kind)
+    model = {'skill': Skill, 'playbook': Playbook}[kind]
+    return model(id=f'{kind}:{name}', title=name, description=description)
 
 
 # ---------------------------------------------------------------------------

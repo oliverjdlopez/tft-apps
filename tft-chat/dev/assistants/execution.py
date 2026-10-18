@@ -8,7 +8,7 @@ from typing import Any
 
 from domain.assistants import Assistant
 from domain.assistants.registry import AssistantRegistry
-from devtools.assistants.capture import AssistantDefinitions, registry_from_capture
+from dev.assistants.capture import AssistantDefinitions, registry_from_capture
 
 
 def _replace_instructions(

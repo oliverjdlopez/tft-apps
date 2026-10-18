@@ -32,13 +32,13 @@ fallback still renders with its specification's identity and root-only prefix.
 
 The source responsibilities are:
 
-- `assistant.py`: the SDK subclass, spec/name construction, and default rendering.
+- `assistant.py`: the SDK subclass, spec/name construction, resource access, and default rendering.
 - `chat.py`: chat-specific rendering; the package installs its explicit mapping.
 - `models.py` and `utils.py`: immutable specifications, file loading, and tool resolution.
 - `registry.py`: validated definitions, direct/reachable tool metadata, and handoff graphs.
 - `domain.resources.library`: catalogue construction, metadata listings, and complete reads.
-- `domain.assistants.utils.select_resource_catalogues`: spec-based resource exposure.
-  Assistants format their selected catalogue metadata into prompts.
+- `Assistant.resource_catalogue`: each instance's spec-based resource access.
+  Prompts and resource reads use the same method against shared materials.
 - `domain.tools.context`: read-tool responses and actual-read recording.
 - `domain.runtime`: context gathering, input assembly, execution, and activity lifecycle.
 
@@ -47,10 +47,11 @@ without constructing agents. Registry construction rejects unknown tools,
 missing handoffs, and cycles. Each graph receives independent SDK tool lists.
 Repository loading stays lazy so startup can recover the Specs workspace journal
 before reading definitions. The tool catalogue loads when the registry resolves
-declared tools.
+declared tools. Registry tool-name metadata reads `.name` directly from those
+resolved SDK tools.
 
 The runtime registry reference is published by
-`devtools.assistants.workspace.workspace.DefinitionsPublisher` after validation.
+`dev.assistants.workspace.workspace.DefinitionsPublisher` after validation.
 Publication affects new graphs; existing agents retain their specs and configuration.
 Development adapters own captures, candidates, recording, diagnostics, and frozen
 model choices. The live assistant package never imports development code.
@@ -132,8 +133,8 @@ guides. For example:
 Omitting `resources` is equivalent to an empty object; it does not enable
 repository context. Tools and handoffs remain separate top-level settings.
 The loaders map this object to `AssistantSpec.repository_context`, `skill_names`,
-and `playbook_names`; assistant configuration uses those validated fields to select
-catalogues when runtime coordinates invocation setup.
+and `playbook_names`; each `Assistant` uses those validated fields to select its
+catalogue for prompt rendering and resource reads.
 
 Version 2 captured graphs freeze spec-owned exposure, including both allowlists.
 The development replay adapter preserves the implicit chat workflow restriction
@@ -189,29 +190,35 @@ prompts used by normal application runs.
 
 All execution surfaces use `domain.runtime.execution`:
 
-- `create_context(assistant, ...)` gathers the reachable graph's resource catalogue
-  and access permissions, and creates fresh evidence, activity, and read provenance.
+- `create_context(assistant, ...)` asks the assistant for shared resource materials
+  and creates fresh evidence, activity, and read provenance.
 - `run(assistant, input, ...)` and `run_sync(assistant, input, ...)` prepare context
   when omitted, apply the root task wrapper, and call the matching SDK Runner API.
 - `run_streamed(assistant, input, ...)` is an async context manager yielding the
   SDK streaming result. `stream_events(result)` consumes its unmodified events and
   cancels SDK work before closing an interrupted iterator.
 
-Context options include set number, surface, request ID, system prefix, and timing.
+Context options include surface, request ID, system prefix, and timing.
 They belong to runtime, never assistant construction. A prepared context can be
 supplied for recording or multiple execution attempts; callers cannot also pass
 context-creation options. Async entry points gather resources in a worker thread.
 The synchronous entry point preserves SDK event-loop behavior and rejects use
 inside an active event loop.
 
-Each invocation owns fresh mutable state. Its handoffs share that context and its
-resource permissions. The library supplies cached metadata; preparing another
-invocation recomputes permissions and starts with empty reads and activity.
-`domain.assistants.utils.select_resource_catalogues` interprets spec exposure
-and selects applicable references for the requested set. Runtime retains the
-returned catalogues in `PreparedResources.catalogues`, alongside a fresh read
-record; it owns no resource selection or response-formatting implementation.
-Each catalogue shares the library's body cache. Assistant renderers use the
+Each invocation owns fresh mutable state. Its handoffs share materials and read
+records, while each assistant retains its own immutable spec and access policy.
+`Assistant.load_resource_library()` loads one metadata snapshot if any graph node
+uses resources. Runtime retains it directly in `AssistantRunContext.resources`
+(or `None` for a resource-free graph). Successful reads are logged in
+`AssistantRunContext.activity.resource_reads` alongside tool and handoff activity;
+context has no assistant-name-to-permissions table.
+`Assistant.resource_catalogue(library)` applies that instance's
+reference, skill, playbook, and read-tool declarations to the supplied materials.
+Prompt rendering and `read_resource` both delegate to it. Renaming an assistant
+does not change its rights; a clone with a different spec uses that spec's policy,
+even with the same context and cached bodies. A plain SDK agent cannot gain access
+by copying an assistant name.
+Each selected view shares the library's body cache. Assistant renderers use the
 library's metadata listing; the read tool loads content and formats its response.
 `domain.resources` has no assistant, spec, or invocation dependencies.
 Resource flags do not grant missing tools. Skills and playbooks retain separate
@@ -252,6 +259,11 @@ surface-specific tracing. Chat also owns the maximum-turn fallback policy: it
 clones the root without tools or handoffs, reuses the original context/evidence,
 and executes the prepared continuation through runtime.
 
+Stream cleanup requires the SDK result's `cancel(mode="immediate")` contract,
+then drains the stream to settle cancellation. Test adapters implement that same
+contract. Activity hooks decode the SDK's JSON argument strings into dictionaries;
+malformed JSON and non-object values produce an empty argument record.
+
 API, CLI, transcription, chat, Specs trials, and captured evaluations all use this
 boundary. Evaluation adapters first validate captures and replace candidate
 prompts, then construct ordinary assistants. They attach instruction recording and
@@ -287,7 +299,7 @@ uv run --extra evals chat-tft-evals validate
 Live evals additionally require model credentials and, for data-backed cases,
 an evaluation database. Langfuse owns evaluation datasets, prompt candidates,
 experiment comparisons, and annotations. Captured experiments and Specs trials
-adapt frozen definitions through `devtools.assistants`, then execute through runtime
+adapt frozen definitions through `dev.assistants`, then execute through runtime
 with application context and the same resource restrictions.
 Historical bundles without captured execution remain readable but cannot run;
 export a fresh captured bundle to execute their dataset.
@@ -299,7 +311,7 @@ local catalog and works when Langfuse is stopped. See
 
 The [assistant workspace](../development/assistant-workspace.md) separates saved
 drafts from active repository behavior. `AssistantRegistry` contains immutable
-runtime definitions and precomputed graph metadata. `devtools.assistants` pairs
+runtime definitions and precomputed graph metadata. `dev.assistants` pairs
 validated registries with source inventories, freezes model defaults, and owns
 publication to the live runtime.
 Captured worker execution builds a graph from its isolated registry. Runtime

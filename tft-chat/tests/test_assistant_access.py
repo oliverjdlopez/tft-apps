@@ -11,7 +11,7 @@ from domain.assistants import Assistant, AssistantRegistry
 from domain.assistants.registry import current_registry
 from domain.assistants.models import AssistantSpec
 from domain.assistants.utils import load_assistant_spec
-from devtools.assistants.definitions import load_development_spec
+from dev.assistants.definitions import load_development_spec
 
 
 def _current_config(**changes) -> dict:
@@ -146,7 +146,7 @@ def test_live_loader_rejects_historical_aliases_and_standalone_specs(tmp_path):
 
 
 def test_development_loader_retains_historical_definition_support(tmp_path):
-    """Older authored artifacts remain readable only through devtools."""
+    """Older authored artifacts remain readable only through dev."""
     legacy = tmp_path / "legacy.md"
     legacy.write_text(
         "---\nname: legacy\ntool_groups: context\n---\n# Legacy instructions\n",
@@ -168,7 +168,7 @@ def test_instruction_callbacks_require_prepared_application_context():
 
 def test_workspace_configuration_accepts_and_captures_playbooks():
     """Draft validation and graph serialization retain independent guide access."""
-    from devtools.assistants import capture, registry_from_capture, registry_from_files
+    from dev.assistants import capture, registry_from_capture, registry_from_files
     source = registry_from_files({'fixture': {
         'system.md': 'Use the specific guide when relevant.',
         'agent.json': json.dumps({'tools': {'groups': ['context']},

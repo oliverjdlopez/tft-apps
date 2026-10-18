@@ -49,7 +49,7 @@ settings, context policy, and skill access. A checkout file lock serializes
 workspace writes. The durable `apply-journal.json` records original and replacement
 bytes before replacing files. Directory and file writes are fsynced. Only
 `system.md`, `agent.json`, and `task.md` are replaced; additional files survive.
-The devtools-owned `DefinitionsPublisher` installs a complete registry for new
+The dev-owned `DefinitionsPublisher` installs a complete registry for new
 invocations by replacing the runtime module's registry reference under the
 publisher lock. The registry constructor validates the graph and precomputes
 metadata; runtime assistants have no publication or reload API. Previously
@@ -159,8 +159,14 @@ are `draft`, `validate`, `apply`, `discard`, `restore`, `trials`, `experiments`,
 active identities. `/api/specs/runs/{id}` refreshes saved results without changing
 the editor's files. See the generated FastAPI `/docs` for typed request/response
 schemas. Workspace storage, recovery, graph capture, and publication live under
-`devtools/assistants/`; service and route modules are application adapters, while
+`dev/assistants/`; service and route modules are application adapters, while
 captured execution remains in `evals/assistant_execution.py`.
+
+The `dev/` directory holds development tooling alongside existing reports and
+research artifacts. Python imports use `dev.assistants`; manual runs use
+`python -m dev.assistants` or the installed `chat-tft-assistants` command.
+The wheel includes only `dev/__init__.py` and `dev/assistants/` from this tree,
+leaving reports, datasets, exports, and profiles out of the installed package.
 
 Run focused offline checks from the ChatTFT root:
 

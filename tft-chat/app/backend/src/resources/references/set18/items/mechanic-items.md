@@ -5,8 +5,6 @@ description: Set 18 Wisp potions and permanent stat consumables, temporary item 
   selectors. Use for identifying mechanic-created items and distinguishing temporary equipment from permanent upgrades.
 kind: reference
 parent: set18/items
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/items/mechanic-items.md; original source wording retained.
 patches:
 - '18.1'

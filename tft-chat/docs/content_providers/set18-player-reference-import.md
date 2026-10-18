@@ -12,7 +12,8 @@ No missing probabilities or contradictory values were resolved during import.
 ## Runtime organization
 
 Each file below is a complete selectable Markdown collection with a unique
-`set-18-reference-` identity and `sets: 18`. Systems, traits, items, augments and
+hierarchical resource identity. Resource metadata no longer tracks a set number.
+Systems, traits, items, augments and
 Wisp effects have separate routing descriptions. Ledger chunks group Wisp rows
 by tier and variant, augment rows by rarity (encounters separately), and Bonus
 Gift rows by source type. Every chunk repeats its field legend and includes all

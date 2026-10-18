@@ -5,8 +5,6 @@ description: Wisp offer ledger — tier 2 base. Complete published rows for this
   or exclusion rules. Select every group for exhaustive totals; no implied selection weights.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisp-offers-tier-2-base.md; original source wording
   retained.
 patches:

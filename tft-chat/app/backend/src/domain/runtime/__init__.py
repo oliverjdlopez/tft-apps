@@ -3,7 +3,6 @@
 from .models import (
     ActivityState,
     AssistantRunContext,
-    PreparedResources,
     RuntimeSettings,
     ToolActivity,
 )
@@ -11,7 +10,6 @@ from .models import (
 __all__ = [
     "ActivityState",
     "AssistantRunContext",
-    "PreparedResources",
     "RuntimeSettings",
     "ToolActivity",
 ]

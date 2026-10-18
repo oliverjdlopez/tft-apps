@@ -4,8 +4,6 @@ title: Emblem recipes and bonuses
 description: All 20 emblem recipes and bonuses. Use for emblem crafting and extra trait-specific effects.
 kind: reference
 parent: set18/items
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/items/emblem-recipes.md; original source wording retained.
 patches:
 - '18.2'

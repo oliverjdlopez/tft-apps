@@ -5,8 +5,6 @@ description: Blue, Silver, Gold and Prismatic loot-orb rewards and published pro
   excludes Bonus Gift delivery classifications.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/systems/loot-orbs.md; original source wording retained.
 patches:
 - '18.2'

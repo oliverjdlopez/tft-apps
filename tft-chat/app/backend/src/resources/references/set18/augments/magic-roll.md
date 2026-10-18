@@ -5,8 +5,6 @@ description: A Magic Roll mechanics, rewards, interactions and limitations. Use 
   weights are included only where explicitly given.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/magic-roll.md; original source wording retained.
 patches:
 - '18.2'

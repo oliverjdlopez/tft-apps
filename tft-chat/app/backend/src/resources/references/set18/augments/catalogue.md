@@ -6,8 +6,6 @@ description: Set 18 Silver, Gold and Prismatic augments including trait-linked a
   advice.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augment_context.md; original source wording retained.
 patches:
 - '18.1'

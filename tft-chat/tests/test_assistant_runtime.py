@@ -17,7 +17,7 @@ from domain.resources.library import build_library
 from domain.runtime.models import ToolActivity
 from domain.runtime import execution
 from domain.tools import get_tool
-from devtools.assistants import assistant_from_capture, capture, digest, record_invocation
+from dev.assistants import assistant_from_capture, capture, digest, record_invocation
 
 
 @pytest.fixture(autouse=True)
@@ -31,12 +31,10 @@ def resources(monkeypatch, tmp_path):
         ('set18', 'index', None, 'Directory'),
         ('set18/units', 'index', 'set18', 'Unit directory'),
         ('set18/units/roster', 'reference', 'set18/units', 'PRIVATE REFERENCE'),
-        ('set17', 'index', None, 'OTHER SET SECRET'),
     ]:
         path = references / (resource_id.replace('/', '-') + '.md')
-        scope = resource_id.split('/')[0].removeprefix('set')
         metadata = {'id': resource_id, 'title': resource_id, 'description': 'Discover resources',
-                    'kind': kind, 'parent': parent, 'sets': [scope], 'patches': ['18.1']}
+                    'kind': kind, 'parent': parent, 'patches': ['18.1']}
         path.write_text('---\n' + yaml.safe_dump(metadata) + '---\n' + body)
     for name in ('allowed', 'other'):
         package = skills / name
@@ -47,7 +45,7 @@ def resources(monkeypatch, tmp_path):
         package = playbooks / name
         package.mkdir(parents=True)
         (package / 'PLAYBOOK.md').write_text(f'---\nname: {name}\ndescription: Specific {name} guide\n---\nPLAYBOOK {name.upper()}')
-    monkeypatch.setattr('domain.assistants.utils.get_library', lambda: build_library(references, skills, playbooks))
+    monkeypatch.setattr('domain.assistants.assistant.get_library', lambda: build_library(references, skills, playbooks))
 
     async def forbidden(*args, **kwargs):
         """Fail if preparation or a resource read invokes another model."""
@@ -79,7 +77,7 @@ def run_offline(assistant, input, *, system=None, timing=None):
 
     with pytest.MonkeyPatch.context() as patch:
         patch.setattr('domain.runtime.execution.Runner.run_sync', capture_run)
-        return execution.run_sync(assistant, input, system=system, set_number=18)
+        return execution.run_sync(assistant, input, system=system)
 
 
 def instructions(agent, invocation):
@@ -150,7 +148,7 @@ def test_execution_exposes_metadata_without_bodies_or_selection():
     assert 'skill:allowed' in instructions(child, invocation)
     assert 'skill:other' not in instructions(child, invocation)
     assert 'skill:other' in instructions(leaf, invocation)
-    assert not invocation.context.resources.reads
+    assert not invocation.context.activity.resource_reads
     assert 'context_selection_ms' not in timing and 'skill_selection_ms' not in timing
     assert recording.instructions['root'] == instructions(root, invocation)
 
@@ -166,8 +164,8 @@ def test_reads_return_complete_contents_and_track_only_actual_reads():
     assert skill['content'] == 'PRIVATE ALLOWED' and skill['kind'] == 'skill'
     assert instructions(child, invocation) == before
     read(invocation, child, 'skill:allowed')
-    assert len(invocation.context.resources.reads) == 2
-    assert set(invocation.context.resources.reads) == {'set18/units/roster', 'skill:allowed'}
+    assert len(invocation.context.activity.resource_reads) == 2
+    assert set(invocation.context.activity.resource_reads) == {'set18/units/roster', 'skill:allowed'}
 
 
 def test_shared_cache_does_not_expand_prepared_handoff_catalogues():
@@ -175,23 +173,26 @@ def test_shared_cache_does_not_expand_prepared_handoff_catalogues():
     invocation = run_offline(Assistant.from_name('root', registry=registry()), 'Question')
     child = invocation.agent.handoffs[0]
     leaf = child.handoffs[0]
-    catalogues = invocation.context.resources.catalogues
+    library = invocation.context.resources
+    catalogues = {node.name: node.resource_catalogue(library)
+                  for node in (child, leaf)}
     assert catalogues['child'].body_cache is catalogues['leaf'].body_cache
     assert read(invocation, leaf, 'skill:other')['found']
     assert 'skill:other' in catalogues['child'].body_cache
     assert 'skill:other' not in catalogues['child'].entries
     assert not read(invocation, child, 'skill:other')['found']
-    assert not read(invocation, child.clone(name='unknown'), 'set18')['found']
+    assert read(invocation, child.clone(name='renamed'), 'set18')['found']
+    assert not read(invocation, Agent(name=child.name), 'set18')['found']
 
 
-@pytest.mark.parametrize('resource_id', ['skill:other', 'set17',
+@pytest.mark.parametrize('resource_id', ['skill:other',
                                          '../private.ini', 'reference:/etc/passwd', 'missing'])
-def test_read_denies_unknown_paths_sets_and_disallowed_skills(resource_id):
+def test_read_denies_unknown_paths_and_disallowed_skills(resource_id):
     """Exact catalogue membership enforces references and skills alike."""
     invocation = run_offline(Assistant.from_name('root', registry=registry()), 'Question')
     result = read(invocation, invocation.agent.handoffs[0], resource_id)
     assert result['found'] is False and 'content' not in result
-    assert not invocation.context.resources.reads
+    assert not invocation.context.activity.resource_reads
 
 
 def test_chat_and_transcript_boundaries():
@@ -201,7 +202,9 @@ def test_chat_and_transcript_boundaries():
     assert read(invocation, invocation.agent, 'skill:allowed')['found'] is False
     transcript = run_offline(Assistant.from_name('root', registry=registry(resources=False)), 'Transcript')
     assert instructions(transcript.agent, transcript) == 'ROOT'
-    assert resource_entries(transcript.context.resources.catalogues.get('root')) == []
+    assert resource_entries(transcript.agent.resource_catalogue(
+        transcript.context.resources,
+    )) == []
 
 
 def test_context_disabled_and_empty_allowlists_deny_reads():
@@ -215,7 +218,41 @@ def test_context_disabled_and_empty_allowlists_deny_reads():
     invocation = run_offline(Assistant.from_name('root', registry=source), 'Question')
     assert read(invocation, invocation.agent, 'skill:allowed')['found']
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
-    assert resource_entries(invocation.context.resources.catalogues.get('child')) == []
+    assert resource_entries(invocation.agent.handoffs[0].resource_catalogue(
+        invocation.context.resources,
+    )) == []
+
+
+def test_clone_uses_its_own_permissions_with_the_same_context():
+    """A clone cannot inherit access through its name or a previously cached body."""
+    invocation = run_offline(Assistant.from_name('root', registry=registry()), 'Question')
+    child = invocation.agent.handoffs[0]
+    assert read(invocation, child, 'skill:allowed')['found']
+    restricted = child.clone(spec=replace(
+        child.spec, repository_context=False, skill_names=(), playbook_names=('other',),
+    ))
+    prompt = instructions(restricted, invocation)
+    assert 'playbook:other' in prompt
+    assert 'skill:allowed' not in prompt and '`set18`' not in prompt
+    assert not read(invocation, restricted, 'skill:allowed')['found']
+    assert not read(invocation, restricted, 'set18')['found']
+    assert read(invocation, restricted, 'playbook:other')['found']
+    assert read(invocation, child, 'skill:allowed')['found']
+    assert not read(invocation, child, 'playbook:other')['found']
+
+
+def test_resource_free_root_delegates_to_handoff_with_its_own_access():
+    """A parent's empty policy cannot suppress or acquire its child's permissions."""
+    source = registry()
+    root = replace(source.get_spec('root'), repository_context=False,
+                   tool_group_keys=(), skill_names=(), playbook_names=())
+    graph = AssistantRegistry([root, source.get_spec('child'), source.get_spec('leaf')])
+    invocation = run_offline(Assistant.from_name('root', registry=graph), 'Question')
+    assert invocation.context.resources is not None
+    assert not invocation.context.resources.body_cache
+    assert instructions(invocation.agent, invocation) == 'ROOT'
+    assert not read(invocation, invocation.agent, 'set18')['found']
+    assert read(invocation, invocation.agent.handoffs[0], 'set18')['found']
 
 
 def test_capture_and_run_state_are_isolated():
@@ -238,7 +275,7 @@ def test_capture_and_run_state_are_isolated():
     child = first.agent.handoffs[0]
     assert instructions(child, first).startswith('CANDIDATE')
     assert read(first, child, 'skill:allowed')['found']
-    assert not second.context.resources.reads
+    assert not second.context.activity.resource_reads
     assert first.agent is instance
     assert second.agent is second_instance
     assert first.agent is not second.agent
@@ -249,15 +286,15 @@ def test_capture_and_run_state_are_isolated():
 
 def test_graph_shares_catalogue_and_repeated_runs_isolate_state(monkeypatch):
     """Load graph resources once while giving each execution independent state."""
-    from domain.assistants import utils as resource_module
+    from domain.assistants import assistant as resource_module
 
-    original = resource_module.get_library
+    library = resource_module.get_library()
     loads = []
 
     def load():
         """Count catalogue requests without replacing real permission behavior."""
         loads.append(True)
-        return original()
+        return library
 
     monkeypatch.setattr(resource_module, 'get_library', load)
     instance = Assistant.from_name('root', registry=registry())
@@ -268,10 +305,15 @@ def test_graph_shares_catalogue_and_repeated_runs_isolate_state(monkeypatch):
     first.context.activity.calls['pending'] = ToolActivity('pending', 'lookup')
     second = run_offline(instance, 'Second')
     assert loads == [True, True]
-    assert not second.context.resources.reads
+    assert first.context.resources is second.context.resources is library
+    assert first.context.activity.resource_reads is not second.context.activity.resource_reads
+    assert library.body_cache['skill:allowed'] is first.context.activity.resource_reads['skill:allowed']
+    assert not second.context.activity.resource_reads
     assert not second.context.activity.calls
     assert first.context.evidence is not second.context.evidence
     assert first.context.runtime.request_id != second.context.runtime.request_id
+    assert read(second, child, 'skill:allowed')['found']
+    assert second.context.activity.resource_reads['skill:allowed'] is library.body_cache['skill:allowed']
 
 
 def test_explicit_empty_captured_prompt_keeps_only_metadata():
@@ -435,7 +477,7 @@ def test_playbook_handoff_catalogues_and_reads_enforce_frozen_permissions():
     ])
     result = read(invocation, child, 'playbook:allowed')
     assert result['content'] == 'PLAYBOOK ALLOWED' and result['complete']
-    assert invocation.context.resources.reads['playbook:allowed'].sha256 == result['sha256']
+    assert invocation.context.activity.resource_reads['playbook:allowed'].sha256 == result['sha256']
 
 
 def test_explicit_playbook_access_without_references_or_skills():
@@ -526,7 +568,9 @@ def test_handoff_uses_registered_subclass_and_root_only_output_type(monkeypatch)
         def render_instructions(self, wrapper, agent):
             """Render a custom prompt from the node's own spec and prepared resources."""
             context = wrapper.context
-            ids = [entry['id'] for entry in resource_entries(context.resources.catalogues.get(self.name))]
+            ids = [entry['id'] for entry in resource_entries(self.resource_catalogue(
+                context.resources,
+            ))]
             return self.spec.system_prompt + ' CUSTOM: ' + ', '.join(ids)
 
     monkeypatch.setitem(ASSISTANT_CLASSES, 'child', CustomAssistant)

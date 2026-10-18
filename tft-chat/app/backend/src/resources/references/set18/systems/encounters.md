@@ -4,8 +4,6 @@ title: Encounters
 description: Encounter effects, conflicting encounter odds, Gold Subscription payouts and Reroll Subscription schedules.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/systems/encounters.md; original source wording retained.
 patches:
 - '18.2'

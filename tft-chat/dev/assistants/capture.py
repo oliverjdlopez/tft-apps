@@ -11,7 +11,7 @@ from typing import Any
 
 from domain.assistants.registry import AssistantRegistry
 from domain.assistants.models import AssistantSpec
-from devtools.assistants.definitions import load_development_spec
+from dev.assistants.definitions import load_development_spec
 
 EDITABLE_FILES = ("system.md", "agent.json", "task.md")
 

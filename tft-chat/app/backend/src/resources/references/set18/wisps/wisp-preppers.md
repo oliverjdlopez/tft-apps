@@ -4,8 +4,6 @@ title: Preppers
 description: Preppers Wisp numeric effects, variants and limitations.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisp-preppers.md; original source wording retained.
 patches:
 - '18.2'

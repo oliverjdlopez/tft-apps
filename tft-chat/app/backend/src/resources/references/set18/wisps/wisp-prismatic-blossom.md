@@ -4,8 +4,6 @@ title: Prismatic Blossom Wisp effects
 description: Prismatic Blossom Wisp effects Wisp numeric effects, variants and limitations.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisp-prismatic-blossom.md; original source wording retained.
 patches:
 - '18.2'

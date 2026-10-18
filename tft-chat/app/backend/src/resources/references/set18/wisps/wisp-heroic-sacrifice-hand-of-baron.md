@@ -4,8 +4,6 @@ title: Heroic Sacrifice and Hand of Baron
 description: Heroic Sacrifice and Hand of Baron Wisp numeric effects, variants and limitations.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisp-heroic-sacrifice-hand-of-baron.md; original source
   wording retained.
 patches:

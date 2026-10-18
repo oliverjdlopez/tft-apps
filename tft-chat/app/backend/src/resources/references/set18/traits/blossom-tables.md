@@ -4,8 +4,6 @@ title: Blossom
 description: Blossom detailed effects, thresholds, quest rules and unresolved fields.
 kind: reference
 parent: set18/traits
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/traits/blossom-tables.md; original source wording retained.
 patches:
 - '18.2'

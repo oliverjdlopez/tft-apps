@@ -11,6 +11,12 @@ belongs in reference resources; durable assistant policy belongs in `system.md`.
 Loading and protocol validation live in `domain.resources`. Skill packages
 live under `app/backend/src/resources/skills/<name>/SKILL.md`.
 
+`domain.resources.models.Skill` and `Playbook` are explicit, immutable
+`ResourceMetadata` subclasses. Entry-point loading stores these types in
+`ResourceDescriptor.metadata`. Each enforces its own root ID namespace and kind,
+and exposes the package `name` from its ID. Supporting documents retain ordinary
+`ResourceMetadata`; complete bodies still load through `ResourceRead` on demand.
+
 ## Skill frontmatter
 
 Selection uses only the protocol fields `name` and `description`:
@@ -48,8 +54,10 @@ The shipped chat spec sets `resources.skills` to `[]`. Other assistants qualify 
 repository context or an explicit nonempty `resources.skills` allowlist and must also
 have the read tool. An omitted allowlist permits all discovered skills for an
 eligible assistant; an empty list permits none. Transcript-only assistants have
-no resource access. Both metadata and reads enforce each assistant's own frozen
-permissions, including every handoff and captured graph. The final responder
+no resource access. `Assistant.resource_catalogue` applies its own spec to the
+shared library for both metadata and reads, including every handoff and captured
+graph. Context stores materials and read records without assigning permissions.
+The final responder
 can read only `tft-statistical-interpretation`; it owns the context read group
 alongside its evidence presentation group.
 

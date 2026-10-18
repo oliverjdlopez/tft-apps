@@ -5,8 +5,6 @@ description: Dark Ritual mechanics, rewards, interactions and limitations. Use f
   weights are included only where explicitly given.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/dark-ritual.md; original source wording retained.
 patches:
 - '18.2'

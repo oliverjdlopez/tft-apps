@@ -6,8 +6,6 @@ description: Wisps set mechanic rules including shop cadence, purchase limits, p
   selection probabilities.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisps.md; original source wording retained.
 patches:
 - '18.1'

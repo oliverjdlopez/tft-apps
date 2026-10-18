@@ -5,8 +5,6 @@ description: Set 18 live system changes for Carousel, targeting after crowd cont
   encounters and patch scope. Use for current system-rule questions. Excludes shop odds and detailed cashout probabilities.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/system_context.md; original source wording retained.
 patches:
 - '18.1'

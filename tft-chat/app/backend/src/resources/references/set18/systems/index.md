@@ -4,8 +4,6 @@ title: Systems
 description: Shop pools, leveling, damage, encounters and unresolved source disagreements.
 kind: index
 parent: set18
-sets:
-- '18'
 ---
 # Systems
 

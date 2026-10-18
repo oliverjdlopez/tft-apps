@@ -30,7 +30,7 @@ class ChatAssistant(Assistant):
         if context.runtime.root_assistant == self.spec.name and context.runtime.system:
             parts.append(context.runtime.system)
         parts.append(self.spec.system_prompt)
-        entries = resource_entries(context.resources.catalogues.get(self.spec.name))
+        entries = resource_entries(self.resource_catalogue(context.resources))
         if entries:
             parts.append("## Available TFT references\nUse `read_resource` with an exact ID to read a reference or browse an index.")
             for entry in entries:

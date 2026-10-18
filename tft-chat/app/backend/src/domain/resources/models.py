@@ -8,7 +8,7 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-ResourceId = Annotated[str, Field(pattern=r'^(?:set[0-9]+(?:\.[0-9]+)?|(?:skill|playbook):[a-z0-9-]+)(?:/[a-z0-9-]+)*$')]
+ResourceId = Annotated[str, Field(pattern=r'^(?:[a-z0-9]+(?:[.-][a-z0-9]+)*|(?:skill|playbook):[a-z0-9-]+)(?:/[a-z0-9-]+)*$')]
 
 
 class ResourceMetadata(BaseModel):
@@ -25,7 +25,6 @@ class ResourceMetadata(BaseModel):
     description: Annotated[str, Field(min_length=1, max_length=1024)]
     kind: Literal['index', 'reference', 'records', 'skill', 'skill-reference', 'playbook', 'playbook-reference']
     parent: ResourceId | None = None
-    sets: tuple[Annotated[str, Field(pattern=r'^\d+(?:\.\d+)?$')], ...] = ()
     patches: tuple[str, ...] = ()
     requires: tuple[ResourceId, ...] = ()
     related: tuple[ResourceId, ...] = ()
@@ -35,7 +34,7 @@ class ResourceMetadata(BaseModel):
 
     @model_validator(mode='after')
     def validate_storage(self) -> ResourceMetadata:
-        """Reject inconsistent kind, scope, and backing-file metadata.
+        """Reject inconsistent kind and backing-file metadata.
 
         Returns:
             Validated metadata safe for library construction.
@@ -51,9 +50,41 @@ class ResourceMetadata(BaseModel):
                 raise ValueError(f'{namespace.title()} resources require a matching resource kind')
         elif self.kind in {'skill', 'skill-reference', 'playbook', 'playbook-reference'}:
             raise ValueError('Reference IDs cannot grant skill or playbook instructions')
-        elif not self.sets or self.id.split('/')[0].removeprefix('set') not in self.sets:
-            raise ValueError('Reference namespace must agree with explicit set scope')
         return self
+
+
+class Skill(ResourceMetadata):
+    """Describe a reusable guidance package discovered from its SKILL.md entry point.
+
+    The descriptor holds storage details; the skill body remains lazy-loaded.
+    Supporting references use their own ResourceMetadata rather than Skill.
+    """
+
+    id: Annotated[str, Field(pattern=r'^skill:[a-z0-9]+(?:-[a-z0-9]+)*$', max_length=70)]
+    kind: Literal['skill'] = 'skill'
+    parent: None = None
+
+    @property
+    def name(self) -> str:
+        """Return the package name encoded by this skill's stable identity."""
+        return self.id.removeprefix('skill:')
+
+
+class Playbook(ResourceMetadata):
+    """Describe a specific task guide discovered from its PLAYBOOK.md entry point.
+
+    The descriptor holds storage details; the playbook body remains lazy-loaded.
+    Supporting references use their own ResourceMetadata rather than Playbook.
+    """
+
+    id: Annotated[str, Field(pattern=r'^playbook:[a-z0-9]+(?:-[a-z0-9]+)*$', max_length=73)]
+    kind: Literal['playbook'] = 'playbook'
+    parent: None = None
+
+    @property
+    def name(self) -> str:
+        """Return the package name encoded by this playbook's stable identity."""
+        return self.id.removeprefix('playbook:')
 
 
 class OfferWindow(BaseModel):

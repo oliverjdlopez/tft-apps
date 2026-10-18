@@ -245,7 +245,7 @@ def test_resource_library_has_no_assistant_dependencies() -> None:
 def test_live_assistant_domain_has_no_development_dependencies() -> None:
     """Keep authoring, evaluation, diagnostics, and manual commands out of domain."""
     root = ROOT / "app/backend/src/domain/assistants"
-    forbidden = ("devtools", "evals")
+    forbidden = ("dev", "evals")
     violations = []
     for path in root.glob("*.py"):
         for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
@@ -282,7 +282,7 @@ from domain.assistants import Assistant
 Assistant.from_name('distill-transcript')
 forbidden = sorted(
     name for name in sys.modules
-    if name == 'devtools' or name.startswith('devtools.')
+    if name == 'dev' or name.startswith('dev.')
     or name == 'evals' or name.startswith('evals.')
     or name in {'domain.assistants.token_logging', 'domain.assistants.__main__'}
 )

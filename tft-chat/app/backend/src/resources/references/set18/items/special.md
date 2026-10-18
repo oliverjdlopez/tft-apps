@@ -6,8 +6,6 @@ description: Set 18 emblems, additional holder effects, Consuming Flora, tempora
   equipment.
 kind: reference
 parent: set18/items
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/items/special.md; original source wording retained.
 patches:
 - '18.1'

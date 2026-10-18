@@ -5,8 +5,6 @@ description: Solo Stage 1 champion reference and its unspecified test assumption
   arbitrary board states.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/systems/solo-stage-one.md; original source wording retained.
 patches:
 - '18.2'

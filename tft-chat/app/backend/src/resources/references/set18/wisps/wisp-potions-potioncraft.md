@@ -4,8 +4,6 @@ title: Potions and Potioncraft
 description: Potions and Potioncraft Wisp numeric effects, variants and limitations.
 kind: reference
 parent: set18/wisps
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/mechanics/wisp-potions-potioncraft.md; original source wording
   retained.
 patches:

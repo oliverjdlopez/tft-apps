@@ -418,7 +418,7 @@ Edit `resources.skills` and `resources.playbooks` in `agent.json` to configure t
 omitted arrays display as all. Saving never writes application source. Document reads remain available; legacy
 direct document writes return 410. SQLite and recovery journals are checkout-owned
 under ignored `.runtime/assistant-workspace/`. Apply/refresh install complete
-validated registries through the devtools-owned `DefinitionsPublisher`. Runtime
+validated registries through the dev-owned `DefinitionsPublisher`. Runtime
 assistants contain no publication API or publication locks; their registry
 precomputes metadata during construction. Constructed SDK graphs retain their
 previous definitions.

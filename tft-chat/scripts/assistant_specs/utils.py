@@ -24,7 +24,7 @@ def validate_name(name: str) -> str:
 
 def spec_inventory(root: Path) -> dict:
     """Load directory specs strictly so malformed sources cannot masquerade as retired."""
-    from devtools.assistants.definitions import load_development_spec
+    from dev.assistants.definitions import load_development_spec
 
     result = {}
     for directory in sorted(root.iterdir()):

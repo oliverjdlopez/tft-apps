@@ -5,8 +5,6 @@ description: Missed Connections and Slice of Life mechanics, rewards, interactio
   augment topic; selection weights are included only where explicitly given.
 kind: reference
 parent: set18/augments
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/augments/missed-connections-slice-of-life.md; original source
   wording retained.
 patches:

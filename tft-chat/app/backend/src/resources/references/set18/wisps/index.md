@@ -4,8 +4,6 @@ title: Wisps
 description: Offer rules, complete variant populations, stage views, rewards and restrictions.
 kind: index
 parent: set18
-sets:
-- '18'
 ---
 # Wisps
 

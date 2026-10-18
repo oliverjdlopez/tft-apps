@@ -4,8 +4,6 @@ title: Units
 description: Complete roster, champion identities, costs, traits, roles and forms.
 kind: index
 parent: set18
-sets:
-- '18'
 ---
 # Units
 

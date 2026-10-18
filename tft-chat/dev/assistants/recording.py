@@ -7,7 +7,7 @@ from typing import Any
 
 from agents import Agent, RunContextWrapper
 
-from devtools.assistants.diagnostics import agent_model_name
+from dev.assistants.diagnostics import agent_model_name
 
 
 @dataclass

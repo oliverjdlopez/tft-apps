@@ -5,8 +5,6 @@ description: Silver, Gold and Prismatic augment sequences and conditional branch
   published totals are inconsistent.
 kind: reference
 parent: set18/systems
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/systems/augment-tier-odds.md; original source wording retained.
 patches:
 - '18.2'

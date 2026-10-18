@@ -6,8 +6,6 @@ description: Set 18 completed and Radiant equipment, Artifacts and Tactician ite
   complete numerical tooltips.
 kind: reference
 parent: set18/items
-sets:
-- '18'
 provenance: Migrated from resources/context/set18/items/catalogue.md; original source wording retained.
 patches:
 - '18.1'
