@@ -21,8 +21,8 @@ def test_captured_execution_preserves_controls_and_failed_run_evidence(monkeypat
     """Durable candidates and SDK settings retain typed state and actual instruction hashes."""
     graph = capture(registry_from_files({
         'root': {'system.md': 'Frozen root', 'task.md': 'TASK',
-                 'agent.json': '{"model":"gpt-6-sol","skills":[],"handoffs":["child"]}'},
-        'child': {'system.md': 'Frozen child', 'agent.json': '{"model":"gpt-6-sol","skills":[]}'},
+                 'agent.json': '{"model":"gpt-6-sol","resources":{"skills":[]},"handoffs":["child"]}'},
+        'child': {'system.md': 'Frozen child', 'agent.json': '{"model":"gpt-6-sol","resources":{"skills":[]}}'},
     }))
     observed = []
 

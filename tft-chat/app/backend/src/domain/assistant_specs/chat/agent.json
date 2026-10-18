@@ -6,6 +6,10 @@
     "include_all": false,
     "groups": ["context", "ranking", "probability"]
   },
-  "context": {"repository": true},
+  "resources": {
+    "context": {"repository": true},
+    "skills": [],
+    "playbooks": []
+  },
   "handoffs": ["data_analyst", "final_responder"]
 }

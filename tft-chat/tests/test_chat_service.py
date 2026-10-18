@@ -20,7 +20,7 @@ from services.chat_service import (
 )
 from domain.tools import get_tool
 from domain.assistants.registry import current_registry
-from domain.runtime import AssistantRunContext, PreparedResources, ToolActivity
+from domain.runtime import AssistantRunContext, ToolActivity
 from domain.runtime.activity import ActivityRunHooks
 from domain.tools.evidence import EvidenceStore
 from domain.tools.context import CONTEXT_TOOL_GROUP
@@ -309,10 +309,10 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
 
     def selected_resources(**kwargs):
         """Provide an empty catalogue without model calls."""
-        return PreparedResources()
+        return {}
 
     monkeypatch.setattr(
-        "domain.runtime.execution.prepare_resources", selected_resources
+        "domain.runtime.execution.select_resource_catalogues", selected_resources
     )
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks, run_config):
@@ -422,10 +422,10 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
 
     def selected_resources(**_kwargs):
         """Provide prepared resources without invoking resource selectors."""
-        return PreparedResources()
+        return {}
 
     monkeypatch.setattr(
-        "domain.runtime.execution.prepare_resources", selected_resources
+        "domain.runtime.execution.select_resource_catalogues", selected_resources
     )
 
     request = ChatRequest(
@@ -465,7 +465,7 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
 
     def prepared(**_kwargs):
         """Provide resources without invoking a selector or external model."""
-        return PreparedResources()
+        return {}
 
     def run_streamed(agent, *, context, **_kwargs):
         """Capture the shared context for both runner entry points."""
@@ -483,7 +483,7 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
         finally:
             closed.append(result)
 
-    monkeypatch.setattr("domain.runtime.execution.prepare_resources", prepared)
+    monkeypatch.setattr("domain.runtime.execution.select_resource_catalogues", prepared)
     monkeypatch.setattr("domain.runtime.execution.Runner.run_streamed", run_streamed)
     monkeypatch.setattr("services.chat_service.stream_agent_events", events)
 

@@ -39,8 +39,10 @@ and structured record views. Preparation loads a cached metadata index;
 `read_resource` loads complete content by stable ID and records hashes for actual
 reads. Reference sources live under `app/backend/src/resources/references`;
 portable skill packages remain under `resources/skills`.
-`domain.assistants.resources` owns permission-filtered discovery, instruction
-directory rendering, read-tool response formatting, and invocation read tracking.
+`domain.assistants.utils.select_resource_catalogues` selects exposure from specs.
+The library supplies metadata listings and complete contents; assistant renderers
+format instruction directories, and `domain.tools.context` formats read responses
+and records actual reads. Runtime coordinates setup and retains invocation state.
 The resource library handles storage and loading without assistant dependencies.
 See [resource layout](../content_providers/resource-layout.md).
 

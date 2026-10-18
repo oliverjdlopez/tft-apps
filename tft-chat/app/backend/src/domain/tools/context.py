@@ -10,7 +10,8 @@ from agents import function_tool
 from agents.tool_context import ToolContext
 from pydantic import Field
 
-from domain.assistants.resources import read_resource_content
+from domain.resources.library import read_content, resource_entries
+from domain.resources.models import ResourceLibrary, ResourceRead
 from domain.runtime.models import AssistantRunContext
 from domain.types import AssistantToolGroup
 
@@ -35,8 +36,54 @@ async def read_resource(
     """
     if not isinstance(ctx.context, AssistantRunContext) or ctx.agent is None:
         return {"found": False, "error": "Resource reads require an assistant invocation."}
-    return await asyncio.to_thread(read_resource_content, ctx.context.resources, ctx.agent.name, resource_id)
+    resources = ctx.context.resources
+    library = resources.catalogues.get(ctx.agent.name)
+    return await asyncio.to_thread(
+        read_resource_content, library, resource_id, reads=resources.reads,
+    )
 
+
+def read_resource_content(
+    library: ResourceLibrary | None, resource_id: str,
+    *, reads: dict[str, ResourceRead] | None = None,
+) -> dict[str, object]:
+    """Return one complete resource with its catalogue children and links.
+
+    Args:
+        library: Resource catalogue supplied by the caller.
+        resource_id: Stable resource identity from a directory or reference link.
+        reads: Optional caller-owned record of successfully returned resources.
+
+    Returns:
+        Full content and metadata, or an unavailable result for an absent ID.
+    """
+    if library is None or resource_id not in library.entries:
+        return {'found': False, 'error': 'Resource unavailable; use a catalogue resource ID.'}
+    descriptor = library.entries[resource_id]
+    try:
+        read = read_content(library, resource_id)
+    except (ValueError, OSError) as error:
+        return {'found': False, 'error': str(error)}
+    if reads is not None:
+        reads[resource_id] = read
+    metadata = descriptor.metadata
+    links = {}
+    for key in ('requires', 'related'):
+        links[key] = tuple(value for value in getattr(metadata, key)
+                           if value in library.entries)
+    if descriptor.view not in {None, 'stage-all'} and f'{metadata.id}/stage-all' in library.entries:
+        links['requires'] += (f'{metadata.id}/stage-all',)
+    return {
+        'found': True, 'resource_id': resource_id,
+        'kind': resource_id.split(':', 1)[0] if resource_id.startswith(('skill:', 'playbook:')) else 'reference',
+        'resource_kind': metadata.kind if not descriptor.view else 'view',
+        'name': metadata.title, 'path': read.path,
+        'heading': descriptor.view or '', 'content': read.content, 'complete': True,
+        'sha256': read.sha256, 'record_ids': read.record_ids,
+        'sets': metadata.sets, 'patches': metadata.patches,
+        'provenance': metadata.provenance,
+        'children': resource_entries(library, resource_id), **links,
+    }
 
 CONTEXT_TOOL_GROUP = AssistantToolGroup(
     key='context', label='Resource Reading',

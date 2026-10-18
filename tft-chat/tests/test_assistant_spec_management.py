@@ -23,8 +23,10 @@ def test_create_copy_and_recoverable_removal(specs, tmp_path):
     """Copy optional files and preserve the complete removed directory in a backup."""
     config_path = specs / "old_expert/agent.json"
     config = json.loads(config_path.read_text())
-    assert config['playbooks'] == []
-    config['playbooks'] = ['specific-guide']
+    assert config['resources'] == {'context': {'repository': False}, 'skills': [], 'playbooks': []}
+    assert not {'context', 'skills', 'playbooks'} & config.keys()
+    assert config['resources']['playbooks'] == []
+    config['resources']['playbooks'] = ['specific-guide']
     config_path.write_text(json.dumps(config))
     (specs / "old_expert/task.md").write_text("Analyze: {input}")
     (specs / "old_expert/notes.txt").write_text("Preserve this too.")
@@ -33,13 +35,25 @@ def test_create_copy_and_recoverable_removal(specs, tmp_path):
     assert (specs / "new_expert/task.md").read_text().strip() == "Analyze: {input}"
     copied = json.loads((specs / "new_expert/agent.json").read_text())
     assert copied['name'] == 'new_expert'
-    assert copied['playbooks'] == ['specific-guide'] and copied['skills'] == []
+    assert copied['resources']['playbooks'] == ['specific-guide'] and copied['resources']['skills'] == []
+    assert not {'context', 'skills', 'playbooks'} & copied.keys()
     assert not (specs / "new_expert/notes.txt").exists()
     assert remove_spec(specs, tmp_path, "old_expert")["blockers"] == []
     assert (specs / "old_expert").exists()
     result = remove_spec(specs, tmp_path, "old_expert", apply=True, backup_dir=tmp_path / "backups")
     assert not (specs / "old_expert").exists()
     assert (Path(result["backup"]) / "notes.txt").read_text() == "Preserve this too."
+
+
+def test_copy_preserves_omitted_resource_allowlists(specs):
+    """Copying an unrestricted category must not turn omission into denial."""
+    config_path = specs / 'old_expert/agent.json'
+    config = json.loads(config_path.read_text())
+    config['resources'] = {'context': {'repository': True}}
+    config_path.write_text(json.dumps(config))
+    create_spec(specs, 'copied_expert', copy_from='old_expert')
+    copied = json.loads((specs / 'copied_expert/agent.json').read_text())
+    assert copied['resources'] == {'context': {'repository': True}}
 
 
 @pytest.mark.parametrize("name", ["../outside", "/tmp/outside", "", "AGENTS", "judge", "old_expert"])

@@ -8,7 +8,9 @@ Edit and test existing assistants in the [Specs workspace](assistant-workspace.m
 Save draft never changes application behavior; Apply validates and installs it.
 
 Repository assistant instructions belong in plain `system.md` without frontmatter.
-Put names, descriptions, model settings, tools, and handoffs in `agent.json`;
+Put names, descriptions, model settings, tools, and handoffs in `agent.json`.
+Group prepared-resource settings under `resources`: `context.repository`,
+`skills`, and `playbooks`;
 put an actual input wrapper in `task.md`. The `distill-transcript` assistant uses
 this same format. Live discovery accepts only complete directory definitions.
 The development compatibility loader handles older saved drafts and imported
@@ -31,7 +33,9 @@ spec's tool references and handoffs before publishing the complete directory.
 New names use lowercase letters, digits, underscores, and hyphens and start with a letter.
 
 A fresh spec starts with no tools, skills, playbooks, handoffs, or repository context.
-Copies retain the source's independent skill and playbook access and optional task wrapper. Review copied
+Create and copy commands write the nested `resources` object. Copies retain the
+source's independent skill and playbook access, including omitted versus empty
+allowlists, and optional task wrapper. Review copied
 instructions for references to the old assistant's name. Configure access in
 `app/backend/src/domain/assistant_specs/<name>/agent.json` and edit instructions
 in `system.md`; the application's Developer → Specs page can edit these files too.

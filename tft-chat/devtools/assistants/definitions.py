@@ -9,6 +9,7 @@ from typing import Any
 from common.parsers import first_markdown_heading, parse_frontmatter, parse_string_list
 from common.paths import find_repo_root
 from domain.assistants.models import AssistantSpec
+from domain.assistants.utils import resource_spec_fields
 
 
 ROOT_DIR = find_repo_root()
@@ -83,19 +84,6 @@ def _read_handoffs(
     )
 
 
-def _read_context_policy(config: dict[str, Any]) -> bool:
-    """Read the repository policy shared by current and saved definitions."""
-    context = config.get("context") or {}
-    if not isinstance(context, dict):
-        raise ValueError("context must be an object")
-    unsupported = sorted(set(context) - {"repository"})
-    if unsupported:
-        raise ValueError(f"unsupported context keys: {', '.join(unsupported)}")
-    if "repository" in context and not isinstance(context["repository"], bool):
-        raise ValueError("context.repository must be a boolean")
-    return bool(context.get("repository"))
-
-
 def load_development_spec(
     path: Path, *, root_dir: Path = ROOT_DIR,
 ) -> AssistantSpec:
@@ -138,6 +126,12 @@ def load_development_spec(
         or description
     )
     include_all_tools, tool_group_keys, tool_names = _read_tool_access(config, metadata)
+    # Historical drafts retain their flat fields; current definitions have one
+    # resource object. Reject mixed forms rather than silently changing access.
+    legacy_resources = {key: config[key] for key in ("context", "skills", "playbooks") if key in config}
+    if "resources" in config and legacy_resources:
+        raise ValueError("context, skills, and playbooks must be nested under resources")
+    resource_fields = resource_spec_fields(config.get("resources", legacy_resources))
     values: dict[str, Any] = {
         "name": name,
         "description": description,
@@ -149,9 +143,7 @@ def load_development_spec(
         "tool_group_keys": tool_group_keys,
         "tool_names": tool_names,
         "handoff_names": _read_handoffs(config, metadata),
-        "repository_context": _read_context_policy(config),
-        "skill_names": config.get("skills"),
-        "playbook_names": config.get("playbooks"),
+        **resource_fields,
     }
     model = config.get("model") or metadata.get("model")
     reasoning = config.get("reasoning") or metadata.get("reasoning")

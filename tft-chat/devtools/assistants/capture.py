@@ -92,6 +92,7 @@ def registry_from_files(files: dict[str, dict[str, str]]) -> AssistantDefinition
                     "include_all_tools",
                     "handoffs",
                     "handoff_names",
+                    "resources",
                     "context",
                     "skills",
                     "playbooks",
@@ -164,13 +165,13 @@ def capture(
         }
         for name in selected
     }
-    value = json.loads(json.dumps({"version": 1, "specs": specs}))
+    value = json.loads(json.dumps({"version": 2, "specs": specs}))
     return {**value, "hash": digest(value)}
 
 
 def registry_from_capture(graph: dict) -> AssistantDefinitions:
     """Restore a versioned graph and normalize historical capture fields."""
-    if graph.get("version") != 1 or digest(
+    if graph.get("version") not in (1, 2) or digest(
         {key: graph[key] for key in ("version", "specs")}
     ) != graph.get("hash"):
         raise ValueError("Invalid captured assistant graph")
@@ -182,6 +183,10 @@ def registry_from_capture(graph: dict) -> AssistantDefinitions:
         # Captures created before playbooks must not gain a new capability.
         config.setdefault("playbook_names", ())
         spec = AssistantSpec(**config)
+        # Version 1 enforced chat's workflow restriction outside its spec. Keep
+        # that historical behavior in the replay adapter; version 2 is spec-owned.
+        if graph["version"] == 1 and spec.name == "chat":
+            spec = replace(spec, skill_names=(), playbook_names=())
         if name != spec.name or not definition.get("resolved_model"):
             raise ValueError("Invalid captured assistant identity or model")
         specs.append(spec)

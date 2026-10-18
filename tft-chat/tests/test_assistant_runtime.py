@@ -12,7 +12,7 @@ from agents.tool_context import ToolContext
 
 from domain.assistants import Assistant, ChatAssistant, AssistantRegistry
 from domain.assistants.models import AssistantSpec
-from domain.assistants.resources import resource_entries
+from domain.resources.library import resource_entries
 from domain.resources.library import build_library
 from domain.runtime.models import ToolActivity
 from domain.runtime import execution
@@ -47,7 +47,7 @@ def resources(monkeypatch, tmp_path):
         package = playbooks / name
         package.mkdir(parents=True)
         (package / 'PLAYBOOK.md').write_text(f'---\nname: {name}\ndescription: Specific {name} guide\n---\nPLAYBOOK {name.upper()}')
-    monkeypatch.setattr('domain.runtime.resources.get_library', lambda: build_library(references, skills, playbooks))
+    monkeypatch.setattr('domain.assistants.utils.get_library', lambda: build_library(references, skills, playbooks))
 
     async def forbidden(*args, **kwargs):
         """Fail if preparation or a resource read invokes another model."""
@@ -170,6 +170,20 @@ def test_reads_return_complete_contents_and_track_only_actual_reads():
     assert set(invocation.context.resources.reads) == {'set18/units/roster', 'skill:allowed'}
 
 
+def test_shared_cache_does_not_expand_prepared_handoff_catalogues():
+    """A sibling's cached body cannot add entries to another assistant's catalogue."""
+    invocation = run_offline(Assistant.from_name('root', registry=registry()), 'Question')
+    child = invocation.agent.handoffs[0]
+    leaf = child.handoffs[0]
+    catalogues = invocation.context.resources.catalogues
+    assert catalogues['child'].body_cache is catalogues['leaf'].body_cache
+    assert read(invocation, leaf, 'skill:other')['found']
+    assert 'skill:other' in catalogues['child'].body_cache
+    assert 'skill:other' not in catalogues['child'].entries
+    assert not read(invocation, child, 'skill:other')['found']
+    assert not read(invocation, child.clone(name='unknown'), 'set18')['found']
+
+
 @pytest.mark.parametrize('resource_id', ['skill:other', 'set17',
                                          '../private.ini', 'reference:/etc/passwd', 'missing'])
 def test_read_denies_unknown_paths_sets_and_disallowed_skills(resource_id):
@@ -182,12 +196,12 @@ def test_read_denies_unknown_paths_sets_and_disallowed_skills(resource_id):
 
 def test_chat_and_transcript_boundaries():
     """Chat cannot read skills and transcript-only invocations have no resources."""
-    invocation = run_offline(Assistant.from_name('chat', registry=registry(root_name='chat', root_skill_names=('allowed',))), 'Question')
+    invocation = run_offline(Assistant.from_name('chat', registry=registry(root_name='chat')), 'Question')
     assert 'skill:allowed' not in instructions(invocation.agent, invocation)
     assert read(invocation, invocation.agent, 'skill:allowed')['found'] is False
     transcript = run_offline(Assistant.from_name('root', registry=registry(resources=False)), 'Transcript')
     assert instructions(transcript.agent, transcript) == 'ROOT'
-    assert resource_entries(transcript.context.resources, 'root') == []
+    assert resource_entries(transcript.context.resources.catalogues.get('root')) == []
 
 
 def test_context_disabled_and_empty_allowlists_deny_reads():
@@ -201,7 +215,7 @@ def test_context_disabled_and_empty_allowlists_deny_reads():
     invocation = run_offline(Assistant.from_name('root', registry=source), 'Question')
     assert read(invocation, invocation.agent, 'skill:allowed')['found']
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
-    assert resource_entries(invocation.context.resources, 'child') == []
+    assert resource_entries(invocation.context.resources.catalogues.get('child')) == []
 
 
 def test_capture_and_run_state_are_isolated():
@@ -235,7 +249,7 @@ def test_capture_and_run_state_are_isolated():
 
 def test_graph_shares_catalogue_and_repeated_runs_isolate_state(monkeypatch):
     """Load graph resources once while giving each execution independent state."""
-    from domain.runtime import resources as resource_module
+    from domain.assistants import utils as resource_module
 
     original = resource_module.get_library
     loads = []
@@ -425,7 +439,7 @@ def test_playbook_handoff_catalogues_and_reads_enforce_frozen_permissions():
 
 
 def test_explicit_playbook_access_without_references_or_skills():
-    """Specific guides can be granted independently while chat remains restricted."""
+    """Specific guides can be granted independently, including by a custom chat spec."""
     source = registry()
     source = AssistantRegistry([
         replace(source.get_spec(name), repository_context=False, skill_names=(), playbook_names=('allowed',))
@@ -440,8 +454,20 @@ def test_explicit_playbook_access_without_references_or_skills():
         replace(chat_source.get_spec(name), playbook_names=('allowed',)) for name in list(chat_source.assistant_names)
     ])
     chat = run_offline(Assistant.from_name('chat', registry=chat_source), 'Guide question')
-    assert 'playbook:allowed' not in instructions(chat.agent, chat)
-    assert not read(chat, chat.agent, 'playbook:allowed')['found']
+    assert 'playbook:allowed' in instructions(chat.agent, chat)
+    assert read(chat, chat.agent, 'playbook:allowed')['found']
+
+
+@pytest.mark.parametrize('version,exposed', [(1, False), (2, True)])
+def test_captured_chat_exposure_preserves_its_policy_version(version, exposed):
+    """Old graphs retain the implicit restriction; new graphs honor explicit specs."""
+    source = registry(root_name='chat', root_skill_names=('allowed',))
+    graph = capture(source)
+    graph['version'] = version
+    graph['hash'] = digest({key: graph[key] for key in ('version', 'specs')})
+    invocation = run_offline(assistant_from_capture(graph, 'chat'), 'Question')
+    assert read(invocation, invocation.agent, 'skill:allowed')['found'] is exposed
+    assert graph['specs']['chat']['skill_names'] == ['allowed']
 
 
 def test_historical_captures_do_not_gain_playbook_permissions():
@@ -500,7 +526,7 @@ def test_handoff_uses_registered_subclass_and_root_only_output_type(monkeypatch)
         def render_instructions(self, wrapper, agent):
             """Render a custom prompt from the node's own spec and prepared resources."""
             context = wrapper.context
-            ids = [entry['id'] for entry in resource_entries(context.resources, self.name)]
+            ids = [entry['id'] for entry in resource_entries(context.resources.catalogues.get(self.name))]
             return self.spec.system_prompt + ' CUSTOM: ' + ', '.join(ids)
 
     monkeypatch.setitem(ASSISTANT_CLASSES, 'child', CustomAssistant)
@@ -522,7 +548,7 @@ def test_chat_subclass_dispatches_inside_captured_handoffs():
     source = registry()
     source = AssistantRegistry([
         replace(source.get_spec('root'), handoff_names=('chat',)),
-        replace(source.get_spec('child'), name='chat'),
+        replace(source.get_spec('child'), name='chat', skill_names=(), playbook_names=()),
         source.get_spec('leaf'),
     ])
     instance = assistant_from_capture(capture(source), 'root',

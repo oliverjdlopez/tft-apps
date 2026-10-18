@@ -4,14 +4,17 @@ Static facts live under `app/backend/src/resources/references`. Assistants see
 only root directory descriptions in their instructions. `read_resource("set18")`
 returns a set overview and permitted topic IDs; reading a topic reveals its
 children. A leaf read returns the complete source body. Any known ID may be read
-directly, but every read independently checks set scope and assistant permissions.
+directly, but every read requires membership in the catalogue selected for the
+active assistant during runtime context assembly.
 Descriptions and index listings guide discovery; they are not factual evidence.
 
 `domain.resources` owns resource schemas, metadata validation, storage, caching,
-and complete content loading. `domain.assistants.resources` owns the assistant
-view: permission and set filtering, instruction directory rendering, tool-response
-formatting, and recording actual reads. The resources package has no assistant
-or invocation dependencies. There is no provider or selector execution path.
+and complete content loading. `domain.assistants.utils.select_resource_catalogues`
+interprets spec exposure and selects a catalogue for the requested set. Assistant
+renderers format library metadata into instruction directories; `domain.tools.context`
+formats read responses and records actual reads. Runtime coordinates setup and
+retains the selected catalogues and read record for the invocation. The resources
+package has no assistant or invocation dependencies. There is no provider or selector execution path.
 
 ## Authoring and parsing
 
@@ -64,7 +67,8 @@ source SHA-256 hashes, complete returned content, and variant IDs. Captured
 execution receipts additionally record content hashes, including reads preceding
 a failed generation. Index reads count as reads too. Source paths identify
 provenance but are never resource identities. Body caches do not grant access:
-every read checks the active SDK assistant's frozen permissions.
+the read tool supplies the active SDK assistant's prepared catalogue, and reads
+check membership before consulting the shared cache.
 
 ## Migration and validation
 

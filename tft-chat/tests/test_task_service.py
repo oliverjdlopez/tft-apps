@@ -27,7 +27,7 @@ def test_transcription_pipeline_distills_original_source_once(monkeypatch, origi
         assert isinstance(context, AssistantRunContext)
         assert callable(agent.instructions)
         assert context.runtime.surface == "task"
-        assert not context.resources.reads and context.resources.library is None
+        assert not context.resources.reads and not context.resources.catalogues
         assert not context.resources.reads
         assert agent.tools == []
         assert agent.handoffs == []
@@ -88,7 +88,7 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
     def fake_run(agent, *, input, context, **kwargs):
         """Capture the model boundary reached by the normal task endpoint."""
         calls.append((agent.name, input))
-        assert not context.resources.reads and context.resources.library is None
+        assert not context.resources.reads and not context.resources.catalogues
         assert not context.resources.reads
         return SimpleNamespace(final_output="# Distilled reference\n\nSource-grounded notes.")
 

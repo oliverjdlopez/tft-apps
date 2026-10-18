@@ -297,7 +297,7 @@ if forbidden:
 
 
 @pytest.mark.parametrize("module", [
-    "domain.resources.library", "domain.assistants.resources",
+    "domain.resources.library", "domain.tools.context", "domain.runtime.execution",
     "domain.assistants", "domain.assistants.assistant",
     "domain.compositions.acceleration", "domain.compositions.reference",
     "services.compositions.persistence", "services.compositions.utils",
@@ -327,6 +327,16 @@ def test_assistants_define_agents_without_gathering_or_running_context() -> None
             if isinstance(node, ast.ImportFrom):
                 if node.module == 'agents' and any(alias.name == 'Runner' for alias in node.names):
                     violations.append(f'{path.name}:{node.lineno}: Runner')
-                if node.module in {'domain.runtime.execution', 'domain.runtime.resources'}:
+                if node.module == 'domain.runtime.execution':
                     violations.append(f'{path.name}:{node.lineno}: {node.module}')
     assert not violations, '\n'.join(violations)
+
+
+def test_runtime_contains_no_resource_exposure_policy() -> None:
+    """Runtime coordinates setup but delegates resource selection and presentation."""
+    root = ROOT / 'app/backend/src/domain/runtime'
+    assert not (root / 'resources.py').exists()
+    for path in root.glob('*.py'):
+        for node in ast.walk(ast.parse(path.read_text(encoding='utf-8'))):
+            if isinstance(node, ast.Attribute):
+                assert node.attr not in {'repository_context', 'skill_names', 'playbook_names'}, path

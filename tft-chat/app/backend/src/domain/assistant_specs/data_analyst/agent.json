@@ -6,7 +6,9 @@
     "include_all": false,
     "groups": ["ranking", "query_cohorts", "deltas", "context"]
   },
-  "context": {"repository": true},
+  "resources": {
+    "context": {"repository": true}
+  },
 
   "handoffs": ["final_responder"]
 }

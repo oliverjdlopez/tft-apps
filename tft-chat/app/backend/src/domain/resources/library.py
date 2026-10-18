@@ -135,6 +135,36 @@ def get_library(reference_root: Path = REFERENCE_ROOT, skill_root: Path = SKILL_
         return _CACHE[signature]
 
 
+def resource_entries(
+    library: ResourceLibrary | None, parent: str | None = None,
+) -> list[dict[str, object]]:
+    """Describe catalogue roots or direct children without loading bodies.
+
+    Args:
+        library: Resource catalogue supplied by the caller.
+        parent: Optional exact ID whose direct children are requested.
+
+    Returns:
+        Child IDs and descriptions from the supplied catalogue.
+    """
+    if library is None:
+        return []
+    if parent is not None and parent not in library.entries:
+        return []
+    entries = []
+    for resource_id, descriptor in library.entries.items():
+        actual_parent = descriptor.metadata.id if descriptor.view else descriptor.metadata.parent
+        if actual_parent != parent:
+            continue
+        metadata = descriptor.metadata
+        entries.append({'id': resource_id,
+                        'name': metadata.title + (f' — {descriptor.view}' if descriptor.view else ''),
+                        'description': metadata.description,
+                        'kind': 'reference' if descriptor.view else metadata.kind,
+                        'patches': metadata.patches})
+    return entries
+
+
 def read_content(library: ResourceLibrary, resource_id: str) -> ResourceRead:
     """Read one approved source revision and cache its complete rendered content.
 
@@ -145,10 +175,13 @@ def read_content(library: ResourceLibrary, resource_id: str) -> ResourceRead:
     Returns:
         Complete source or derived-view contents with revision provenance.
     """
+    # A shared cache may contain bodies outside this catalogue. Resolve membership
+    # before consulting it so a library view remains an exact set of readable IDs.
+    descriptor = library.entries[resource_id]
     # Cache access is serialized because parallel SDK reads can run on threads.
     with _CACHE_LOCK:
         if resource_id not in library.body_cache:
-            library.body_cache[resource_id] = load_content(library.entries[resource_id])
+            library.body_cache[resource_id] = load_content(descriptor)
         return library.body_cache[resource_id]
 
 

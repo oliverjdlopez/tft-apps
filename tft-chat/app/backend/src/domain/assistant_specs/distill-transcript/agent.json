@@ -4,6 +4,8 @@
   "handoff_description": "Preserve useful source claims, conditions, attribution, and uncertainty in compact Markdown reference notes.",
   "tools": [],
   "handoffs": [],
-  "context": {"repository": false},
-  "skills": []
+  "resources": {
+    "context": {"repository": false},
+    "skills": []
+  }
 }

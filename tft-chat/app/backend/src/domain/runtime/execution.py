@@ -12,8 +12,8 @@ from agents import RunConfig, Runner, RunResult, RunResultStreaming
 
 from core.config import load_config
 from domain.runtime.activity import ActivityRunHooks, finalize_activity
-from domain.runtime.models import AssistantRunContext, RuntimeSettings
-from domain.runtime.resources import prepare_resources
+from domain.assistants.utils import select_resource_catalogues
+from domain.runtime.models import AssistantRunContext, PreparedResources, RuntimeSettings
 from domain.runtime.utils import cancel_streamed_result, invocation_input
 from domain.tools.evidence.models import EvidenceStore
 
@@ -58,7 +58,9 @@ def create_context(
             request_id=request_id or uuid4().hex, set_number=selected_set,
             root_assistant=assistant.spec.name, surface=surface, system=system,
         ),
-        resources=prepare_resources(specs=specs, set_number=selected_set),
+        resources=PreparedResources(
+            catalogues=select_resource_catalogues(specs=specs, set_number=selected_set),
+        ),
         evidence=EvidenceStore(), timing=timing,
     )
 

@@ -19,7 +19,7 @@ from evals.langfuse.tests.test_content import FakeClient
 def graph(prompt='Active', handoffs=None):
     """Build an isolated, tool-free graph with optional frozen handoffs."""
     import json
-    files = {'fixture': {'system.md': prompt, 'agent.json': json.dumps({'handoffs': handoffs or [], 'skills': []})},
+    files = {'fixture': {'system.md': prompt, 'agent.json': json.dumps({'handoffs': handoffs or [], 'resources': {'skills': []}})},
              'target': {'system.md': 'Frozen target'}}
     return capture(registry_from_files(files))
 
@@ -213,8 +213,8 @@ def test_real_subprocess_executes_captured_handoffs_tools_models_and_wrappers(mo
     monkeypatch.delenv('LANGFUSE_PUBLIC_KEY', raising=False)
     monkeypatch.delenv('LANGFUSE_SECRET_KEY', raising=False)
     files = {'fixture': {'system.md': 'Captured draft root', 'task.md': 'Frozen task wrapper',
-                        'agent.json': json.dumps({'model': 'gpt-6-sol', 'reasoning': 'low', 'skills': [], 'handoffs': ['target']})},
-             'target': {'system.md': 'Captured handoff policy', 'agent.json': '{"model":"gpt-6-luna","tools":{"groups":["context"]},"context":{"repository":true},"skills":[]}'},
+                        'agent.json': json.dumps({'model': 'gpt-6-sol', 'reasoning': 'low', 'resources': {'skills': []}, 'handoffs': ['target']})},
+             'target': {'system.md': 'Captured handoff policy', 'agent.json': '{"model":"gpt-6-luna","tools":{"groups":["context"]},"resources":{"context":{"repository":true},"skills":[]}}'},
              }
     frozen = capture(registry_from_files(files))
     try:

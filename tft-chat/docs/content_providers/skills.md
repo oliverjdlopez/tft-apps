@@ -44,8 +44,8 @@ Assistants choose relevant workflows from their catalogue. Explicit
 there is no automatic preselection or fixed three-skill cap. The read returns
 the complete skill body in a tool result, preserving sequencing and constraints.
 
-Chat cannot discover or read skill bodies. Other assistants qualify through
-repository context or an explicit nonempty `skills` allowlist and must also
+The shipped chat spec sets `resources.skills` to `[]`. Other assistants qualify through
+repository context or an explicit nonempty `resources.skills` allowlist and must also
 have the read tool. An omitted allowlist permits all discovered skills for an
 eligible assistant; an empty list permits none. Transcript-only assistants have
 no resource access. Both metadata and reads enforce each assistant's own frozen
@@ -93,13 +93,13 @@ remain valid; adding this category does not move authored content automatically.
 An assistant's `agent.json` can independently declare:
 
 ```json
-{"skills": ["general-guidance"], "playbooks": ["specific-guide"]}
+{"resources": {"skills": ["general-guidance"], "playbooks": ["specific-guide"]}}
 ```
 
-Omitting `playbooks` permits all discovered playbooks for an eligible assistant;
+Omitting `resources.playbooks` permits all discovered playbooks for an eligible assistant;
 `[]` denies them all. Eligibility requires repository context or an explicit
-nonempty playbook allowlist, plus the `read_resource` tool. Chat cannot read
-playbooks, matching its skill boundary; transcript-only assistants remain without
+nonempty playbook allowlist, plus the `read_resource` tool. The shipped chat spec
+sets `resources.playbooks` to `[]`, matching its skill configuration; transcript-only assistants remain without
 resources unless explicitly configured. Playbook bodies appear only in tool
 results after a read, never automatically in instructions. Requests naming
 `playbook:<name>` or `/playbook <name>` identify the guide the assistant should read.

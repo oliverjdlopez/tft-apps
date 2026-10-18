@@ -3,8 +3,11 @@
 The resource library separates identity, discovery metadata, and complete content.
 Physical paths can change while authored IDs and links remain stable.
 `domain.resources` manages this library without assistant presentation or access
-policy. `domain.assistants.resources` turns its metadata and content into
-permission-filtered instruction directories and read-tool responses.
+policy. Its library lists catalogue metadata and loads complete contents. Assistant
+configuration selects exposure from specs; assistant renderers format prompts,
+and `domain.tools.context` formats read responses and records actual reads.
+Runtime retains invocation state and coordinates setup.
+Assistant renderers choose how to format those listings into instructions.
 
 ```text
 app/backend/src/resources/
@@ -104,7 +107,7 @@ and `description` frontmatter with the same package naming and description
 limits as skills. IDs use `playbook:<name>`; supporting Markdown uses
 `kind: playbook-reference`, child IDs such as `playbook:<name>/example`, and an
 explicit parent within the same package. Storage namespaces and resource kinds
-must agree. Their `playbooks` allowlist is independent of `skills`; both apply
+must agree. Their `resources.playbooks` allowlist is independent of `resources.skills`; both apply
 to children and exact reads. See [authoring and access](skills.md#adding-a-playbook).
 The metadata cache tracks changes in all three resource roots.
 

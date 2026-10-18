@@ -23,21 +23,10 @@ class RuntimeSettings:
 
 @dataclass
 class PreparedResources:
-    """Retain available resources, frozen access, and actual read provenance."""
+    """Retain selected catalogues and actual reads for one invocation."""
 
-    library: ResourceLibrary | None = None
-    set_number: int | None = None
-    access: dict[str, ResourceAccess] = field(default_factory=dict)
+    catalogues: dict[str, ResourceLibrary] = field(default_factory=dict)
     reads: dict[str, ResourceRead] = field(default_factory=dict)
-
-
-@dataclass(frozen=True)
-class ResourceAccess:
-    """Freeze one assistant's reference and workflow permissions."""
-
-    references: bool = False
-    skills: tuple[str, ...] = ()
-    playbooks: tuple[str, ...] = ()
 
 
 @dataclass

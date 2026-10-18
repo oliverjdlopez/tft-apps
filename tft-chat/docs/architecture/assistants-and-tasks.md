@@ -36,15 +36,18 @@ The source responsibilities are:
 - `chat.py`: chat-specific rendering; the package installs its explicit mapping.
 - `models.py` and `utils.py`: immutable specifications, file loading, and tool resolution.
 - `registry.py`: validated definitions, direct/reachable tool metadata, and handoff graphs.
-- `resources.py`: assistant-visible resource metadata and permission-checked reads.
+- `domain.resources.library`: catalogue construction, metadata listings, and complete reads.
+- `domain.assistants.utils.select_resource_catalogues`: spec-based resource exposure.
+  Assistants format their selected catalogue metadata into prompts.
+- `domain.tools.context`: read-tool responses and actual-read recording.
 - `domain.runtime`: context gathering, input assembly, execution, and activity lifecycle.
 
 Registries expose frozen specs and read-only lookup tables. Discovery reads these
 without constructing agents. Registry construction rejects unknown tools,
 missing handoffs, and cycles. Each graph receives independent SDK tool lists.
 Repository loading stays lazy so startup can recover the Specs workspace journal
-before reading definitions. Tool resolution is deferred because the context tool
-uses assistant resource reads.
+before reading definitions. The tool catalogue loads when the registry resolves
+declared tools.
 
 The runtime registry reference is published by
 `devtools.assistants.workspace.workspace.DefinitionsPublisher` after validation.
@@ -61,8 +64,8 @@ to create, copy, or remove specs and synchronize their Langfuse prompts.
 Each assistant lives under `app/backend/src/domain/assistant_specs/<name>/`:
 
 - `system.md` contains plain Markdown instructions without frontmatter.
-- `agent.json` optionally declares the name, descriptions, tool access, context
-  policy, handoffs, model, reasoning, skill, and playbook overrides.
+- `agent.json` optionally declares the name, descriptions, tool access, handoffs,
+  model, and reasoning. Its `resources` object groups context, skill, and playbook policy.
 - `task.md` optionally wraps task-style input. Most assistants do not need one.
 
 All current assistant definitions use this same layout. The `distill-transcript`
@@ -77,11 +80,14 @@ text are valid, including explicitly cleared experimental instructions. These in
 and captured definitions. Registry construction separately checks tool references
 and handoff graphs. The loader has no field-validation helper chain or parallel
 key allowlist; remaining JSON fields are checked by the model constructor's
-signature. Nested tool/context objects are read for their supported fields, and
+signature. The nested `resources` and `resources.context` objects reject unknown keys;
+tool objects are read for their supported fields, and
 Markdown is read as instruction text without frontmatter interpretation.
 The development loader retains
 legacy frontmatter and field aliases for saved drafts, captures, and migration
-commands without exposing those formats to live discovery.
+commands without exposing those formats to live discovery. Historical flat resource
+fields are supported only by that development loader; combining them with
+`resources` is rejected to avoid ambiguous permissions.
 
 `domain.assistants.registry` loads immutable specifications for runtime use.
 Registry construction rejects missing tools, handoff targets, and cycles.
@@ -101,21 +107,38 @@ header is validated before streaming, and the selected specification controls
 request instructions, reachable tools, handoffs, and tracing metadata without
 granting capabilities outside the registered graph.
 
-Skill and playbook access use independent optional `skills` and `playbooks`
-arrays in `agent.json`. Omission permits every discovered resource in that
+All prepared-resource configuration lives under `resources` in `agent.json`.
+`resources.context.repository` enables repository reference access and defaults
+to false. Skill and playbook access use independent optional `resources.skills`
+and `resources.playbooks` arrays. Omission permits every discovered resource in that
 category for an eligible assistant; an empty array denies the category. Each
 category requires repository context or its own nonempty allowlist, and reads
-require the read tool. Chat cannot read either category. Instructions expose
+require the read tool. The shipped chat spec declares empty lists for both categories;
+there is no hardcoded assistant-name restriction. Instructions expose
 only permitted metadata; bodies arrive through exact `read_resource` calls.
 Skills contain reusable general guidance, while playbooks contain specific task
 guides. For example:
 
 ```json
-{"skills": ["tft-statistical-interpretation"], "playbooks": ["specific-guide"]}
+{
+  "resources": {
+    "context": {"repository": true},
+    "skills": ["tft-statistical-interpretation"],
+    "playbooks": ["specific-guide"]
+  }
+}
 ```
 
-Captured graphs freeze both allowlists. Historical captures without
-`playbook_names` deny playbook access, preserving their original capabilities.
+Omitting `resources` is equivalent to an empty object; it does not enable
+repository context. Tools and handoffs remain separate top-level settings.
+The loaders map this object to `AssistantSpec.repository_context`, `skill_names`,
+and `playbook_names`; assistant configuration uses those validated fields to select
+catalogues when runtime coordinates invocation setup.
+
+Version 2 captured graphs freeze spec-owned exposure, including both allowlists.
+The development replay adapter preserves the implicit chat workflow restriction
+for version 1 graphs. Historical captures without `playbook_names` deny playbook
+access, preserving their original capabilities.
 See [skill and playbook authoring](../content_providers/skills.md).
 
 Backend code imports this public surface through the installed `domain.assistants`
@@ -184,8 +207,16 @@ inside an active event loop.
 Each invocation owns fresh mutable state. Its handoffs share that context and its
 resource permissions. The library supplies cached metadata; preparing another
 invocation recomputes permissions and starts with empty reads and activity.
+`domain.assistants.utils.select_resource_catalogues` interprets spec exposure
+and selects applicable references for the requested set. Runtime retains the
+returned catalogues in `PreparedResources.catalogues`, alongside a fresh read
+record; it owns no resource selection or response-formatting implementation.
+Each catalogue shares the library's body cache. Assistant renderers use the
+library's metadata listing; the read tool loads content and formats its response.
+`domain.resources` has no assistant, spec, or invocation dependencies.
 Resource flags do not grant missing tools. Skills and playbooks retain separate
-allowlists, and exact reads enforce access independently of prompt rendering.
+allowlists. Reads require membership in the supplied catalogue even when another
+assistant has already cached the body. Children and links stay within that catalogue.
 `domain.resources` owns library loading and content without depending on assistants.
 
 Runtime input assembly copies supported conversation messages and applies

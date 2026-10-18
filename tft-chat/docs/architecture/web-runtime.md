@@ -414,7 +414,7 @@ unprivileged. See [Flowchart commands and compatibility](../apps/flowchart.md).
 immutable local draft revisions, graph validation, bounded independent trials,
 optional Langfuse comparisons/import, history/restore, and recoverable Apply.
 The configuration summary shows independent skill and playbook allowlists.
-Edit the `skills` and `playbooks` arrays in `agent.json` to configure them;
+Edit `resources.skills` and `resources.playbooks` in `agent.json` to configure them;
 omitted arrays display as all. Saving never writes application source. Document reads remain available; legacy
 direct document writes return 410. SQLite and recovery journals are checkout-owned
 under ignored `.runtime/assistant-workspace/`. Apply/refresh install complete

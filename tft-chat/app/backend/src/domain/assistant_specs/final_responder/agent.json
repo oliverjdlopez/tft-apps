@@ -6,7 +6,9 @@
     "include_all": false,
     "groups": ["evidence", "context"]
   },
-  "context": {"repository": true},
-  "skills": ["tft-statistical-interpretation"],
+  "resources": {
+    "context": {"repository": true},
+    "skills": ["tft-statistical-interpretation"]
+  },
   "handoffs": []
 }

@@ -6,6 +6,8 @@
     "include_all": false,
     "groups": ["ranking", "query_cohorts", "context"]
   },
-  "context": {"repository": true},
+  "resources": {
+    "context": {"repository": true}
+  },
   "handoffs": ["data_analyst"]
 }

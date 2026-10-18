@@ -32,7 +32,7 @@ def render(agent) -> str:
 def workspace(tmp_path: Path) -> Workspace:
     """Use a separate specification tree, registry, and ignored SQLite store."""
     specs = tmp_path / 'assistant_specs'
-    files = {'fixture': {'system.md': '# Fixture\nOriginal prompt.\n', 'agent.json': '{"name":"fixture","skills":[]}'},
+    files = {'fixture': {'system.md': '# Fixture\nOriginal prompt.\n', 'agent.json': '{"name":"fixture","resources":{"skills":[]}}'},
              'target': {'system.md': '# Target\nOriginal target.\n'}}
     for name, documents in files.items():
         directory = specs / name
@@ -80,7 +80,7 @@ def test_apply_complete_optional_files_and_existing_graph_remains_captured(works
     """Apply changes all editable files, retains unrelated files and old agents."""
     from domain.assistants import Assistant
     old = Assistant.from_name('fixture', registry=workspace.active().registry)
-    state = save(workspace, **{'system.md': 'New prompt', 'agent.json': '{"handoffs":["target"],"skills":[]}', 'task.md': 'Task wrapper'})
+    state = save(workspace, **{'system.md': 'New prompt', 'agent.json': '{"handoffs":["target"],"resources":{"skills":[]}}', 'task.md': 'Task wrapper'})
     before = workspace.state('fixture')['active']['hash']
     applied = workspace.apply('fixture', **expected(state))
     assert applied['draft'] is None
@@ -181,7 +181,7 @@ def test_discard_restore_and_captured_handoffs(workspace):
 @pytest.mark.parametrize('config,error', [('{"handoffs":["absent"]}', 'Unknown assistant'),
     ('{"handoffs":["fixture"]}', 'cycle'), ('{"tools":["absent"]}', 'Unknown'),
     ('{"name":"renamed"}', 'identity'), ('{"model":"missing-model"}', 'model must be'),
-    ('{"context":{"repository":"yes"}}', 'boolean')])
+    ('{"resources":{"context":{"repository":"yes"}}}', 'boolean')])
 def test_invalid_graph_saved_but_cannot_apply_or_test(workspace, config, error):
     """Draft execution cannot bypass tools, identity, model, or graph validation."""
     state = save(workspace, **{'agent.json': config})

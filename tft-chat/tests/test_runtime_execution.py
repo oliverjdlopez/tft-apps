@@ -28,7 +28,8 @@ def test_construction_and_cloning_do_not_gather_runtime_context(monkeypatch):
         """Reject accidental context gathering during construction."""
         pytest.fail('Agent construction gathered runtime context')
 
-    monkeypatch.setattr('domain.runtime.execution.prepare_resources', forbidden)
+    monkeypatch.setattr('domain.runtime.execution.select_resource_catalogues', forbidden)
+    monkeypatch.setattr('domain.assistants.utils.get_library', forbidden)
     root = spec('chat', handoff_names=('child',))
     assistant = Assistant.from_name('chat', registry=AssistantRegistry([root, spec('child')]))
     assert isinstance(assistant, Agent) and isinstance(assistant, ChatAssistant)

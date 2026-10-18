@@ -55,22 +55,23 @@ def create_spec(root: Path, name: str, *, prompt: str | None = None,
                       "handoff_description": original.handoff_description,
                       "tools": {"include_all": original.include_all_tools,
                                 "groups": list(original.tool_group_keys), "names": list(original.tool_names)},
-                      "context": {"repository": original.repository_context},
+                      "resources": {"context": {"repository": original.repository_context}},
                       "handoffs": list(original.handoff_names)}
             if original.model is not None:
                 config["model"] = original.model.value
             if original.reasoning is not None:
                 config["reasoning"] = original.reasoning.value
             if original.skill_names is not None:
-                config["skills"] = list(original.skill_names)
+                config["resources"]["skills"] = list(original.skill_names)
             if original.playbook_names is not None:
-                config["playbooks"] = list(original.playbook_names)
+                config["resources"]["playbooks"] = list(original.playbook_names)
             (candidate / "system.md").write_text(original.system_prompt + "\n", encoding="utf-8")
             if original.task_prompt:
                 (candidate / "task.md").write_text(original.task_prompt + "\n", encoding="utf-8")
         else:
             config = {"description": name, "tools": {"groups": [], "names": []},
-                      "handoffs": [], "skills": [], "playbooks": [], "context": {"repository": False}}
+                      "handoffs": [], "resources": {"skills": [], "playbooks": [],
+                                                    "context": {"repository": False}}}
         config["name"] = name
         (candidate / "agent.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
         if prompt is not None:

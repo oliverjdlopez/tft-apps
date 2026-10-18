@@ -29,30 +29,36 @@ class AssistantRegistry:
         if len(self.specs) != len(specs):
             raise ValueError("Duplicate assistant names")
         self.assistant_names = tuple(sorted(self.specs))
-        self.tools = MappingProxyType({
-            spec.name: tuple(resolve_tools(spec)) for spec in specs
-        })
-        self.tool_names = MappingProxyType({
-            name: tuple(tool_name(tool) for tool in tools)
-            for name, tools in self.tools.items()
-        })
-        self.handoff_names = MappingProxyType({
-            spec.name: tuple(spec.handoff_names) for spec in specs
-        })
+        self.tools = MappingProxyType(
+            {spec.name: tuple(resolve_tools(spec)) for spec in specs}
+        )
+        self.tool_names = MappingProxyType(
+            {
+                name: tuple(tool_name(tool) for tool in tools)
+                for name, tools in self.tools.items()
+            }
+        )
+        self.handoff_names = MappingProxyType(
+            {spec.name: tuple(spec.handoff_names) for spec in specs}
+        )
         for spec in specs:
             spec.model_settings()
             if not spec.resolved_model().strip():
                 raise ValueError("Model must be nonempty")
             for target in spec.handoff_names:
                 if target not in self.specs:
-                    raise KeyError(f"Unknown handoff assistant {target!r} in {spec.name!r}")
+                    raise KeyError(
+                        f"Unknown handoff assistant {target!r} in {spec.name!r}"
+                    )
 
         reachable = {}
 
         def visit(name: str, path: tuple[str, ...]) -> tuple[str, ...]:
             """Validate handoff cycles and memoize each reachable graph."""
             if name in path:
-                raise ValueError(f"assistant handoff cycle: {' -> '.join((*path, name))}")
+                raise ValueError(
+                    f"assistant handoff cycle: {' -> '.join((*path, name))}"
+                )
             if name not in reachable:
                 names = [name]
                 for target in self.handoff_names[name]:
@@ -63,14 +69,16 @@ class AssistantRegistry:
         for name in self.assistant_names:
             visit(name, ())
         self.reachable_assistant_names = MappingProxyType(reachable)
-        self.reachable_tool_names = MappingProxyType({
-            name: tuple(dict.fromkeys(
-                tool
-                for target in targets
-                for tool in self.tool_names[target]
-            ))
-            for name, targets in reachable.items()
-        })
+        self.reachable_tool_names = MappingProxyType(
+            {
+                name: tuple(
+                    dict.fromkeys(
+                        tool for target in targets for tool in self.tool_names[target]
+                    )
+                )
+                for name, targets in reachable.items()
+            }
+        )
 
     def get_spec(self, name: str) -> AssistantSpec:
         """Return a definition or report an unknown assistant name."""
@@ -93,8 +101,10 @@ def current_registry() -> AssistantRegistry:
     """
     global registry
     if registry is None:
-        registry = AssistantRegistry([
-            load_assistant_spec(path)
-            for path in discover_files(ASSISTANT_SPECS_DIR, ["*/system.md"])
-        ])
+        registry = AssistantRegistry(
+            [
+                load_assistant_spec(path)
+                for path in discover_files(ASSISTANT_SPECS_DIR, ["*/system.md"])
+            ]
+        )
     return registry

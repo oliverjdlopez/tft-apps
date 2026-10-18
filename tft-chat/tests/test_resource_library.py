@@ -7,10 +7,10 @@ from pathlib import Path
 import pytest
 import yaml
 
-from domain.assistants.resources import read_resource_content, resource_entries
+from domain.tools.context import read_resource_content
+from domain.resources.library import resource_entries
 from domain.resources.library import build_library, get_library, read_content, validate_library
-from domain.resources.models import ResourceMetadata, WispDocument
-from domain.runtime.models import PreparedResources, ResourceAccess
+from domain.resources.models import ResourceLibrary, ResourceMetadata, WispDocument
 
 
 def document(root: Path, name: str, metadata: dict, body: str = 'COMPLETE BODY') -> Path:
@@ -45,14 +45,6 @@ def roots(tmp_path):
     return references, skills, tmp_path / 'playbooks'
 
 
-def prepared(library, *, skills=(), references=True):
-    """Bind two distinct assistant permissions to the same validated library."""
-    return PreparedResources(library=library, set_number=18, access={
-        'reader': ResourceAccess(references=references, skills=skills),
-        'denied': ResourceAccess(),
-    })
-
-
 def test_discovery_is_header_only_and_content_is_cached(roots, monkeypatch):
     """Building and rendering directories never load any body or backing JSON."""
     original = Path.read_bytes
@@ -65,17 +57,17 @@ def test_discovery_is_header_only_and_content_is_cached(roots, monkeypatch):
 
     monkeypatch.setattr(Path, 'read_bytes', counted)
     library = build_library(*roots)
-    resources = prepared(library)
+    reads_returned = {}
     assert not reads and not library.body_cache
-    assert [entry['id'] for entry in resource_entries(resources, 'reader')] == ['set18']
-    index = read_resource_content(resources, 'reader', 'set18')
+    assert {entry['id'] for entry in resource_entries(library)} == {'set18', 'skill:workflow'}
+    index = read_resource_content(library, 'set18', reads=reads_returned)
     assert [child['id'] for child in index['children']] == ['set18/units']
     assert len(reads) == 1
     assert 'Last fact' not in index['content']
-    facts = read_resource_content(resources, 'reader', 'set18/units/roster')
+    facts = read_resource_content(library, 'set18/units/roster')
     assert 'First fact' in facts['content'] and 'Last fact' in facts['content']
-    read_resource_content(resources, 'reader', 'set18/units/roster')
-    assert len(reads) == 2 and len(resources.reads) == 2
+    read_resource_content(library, 'set18/units/roster', reads=reads_returned)
+    assert len(reads) == 2 and len(reads_returned) == 2
 
 
 def test_metadata_and_body_cache_invalidate_without_mutating_old_runs(roots):
@@ -103,17 +95,28 @@ def test_resource_ids_survive_file_moves(roots):
     assert read_content(after, 'set18/units/roster').content.endswith('Last fact\n')
 
 
-def test_child_reads_inherit_permissions_even_when_ids_are_known(roots):
-    """An index link or guessed ID never grants reference or skill access."""
-    resources = prepared(build_library(*roots), skills=('workflow',))
-    assert read_resource_content(resources, 'reader', 'skill:workflow')['children'][0]['id'] == 'skill:workflow/example'
-    assert read_resource_content(resources, 'reader', 'skill:workflow/example')['content'] == 'PRIVATE EXAMPLE'
-    for resource_id in ('set18', 'set18/units/roster', 'skill:workflow', 'skill:workflow/example'):
-        assert not read_resource_content(resources, 'denied', resource_id)['found']
-    assert resource_entries(resources, 'denied', 'skill:workflow') == []
-    resources.set_number = 17
-    assert not read_resource_content(resources, 'reader', 'set18/units/roster')['found']
-    assert read_resource_content(resources, 'reader', 'skill:workflow/example')['found']
+def test_presentation_uses_only_the_supplied_catalogue(roots):
+    """Caller-selected entries bound children, links, and reads even with a shared cache."""
+    document(roots[0], 'topic/facts.md', metadata(
+        'set18/units/roster', 'reference', 'set18/units',
+        related=['skill:workflow'], requires=['skill:workflow/example'],
+    ))
+    library = build_library(*roots)
+    assert read_resource_content(library, 'skill:workflow/example')['content'] == 'PRIVATE EXAMPLE'
+    subset = ResourceLibrary(
+        entries={key: value for key, value in library.entries.items() if key.startswith('set18')},
+        body_cache=library.body_cache,
+    )
+    assert [entry['id'] for entry in resource_entries(subset)] == ['set18']
+    result = read_resource_content(subset, 'set18/units/roster')
+    assert result['found'] and not result['requires'] and not result['related']
+    assert read_resource_content(library, 'set18/units/roster')['related'] == ('skill:workflow',)
+    assert not read_resource_content(subset, 'skill:workflow/example')['found']
+    with pytest.raises(KeyError):
+        read_content(subset, 'skill:workflow/example')
+    assert resource_entries(subset, 'skill:workflow') == []
+    assert resource_entries(None) == []
+    assert not read_resource_content(None, 'set18')['found']
 
 
 @pytest.mark.parametrize('mutation, message', [
@@ -210,11 +213,11 @@ def test_required_dependencies_cannot_cycle(roots):
 
 def test_stage_reads_link_rules_and_unrestricted_variants():
     """Stage discovery supplies all dependencies needed to interpret its population."""
-    resources = prepared(build_library())
-    result = read_resource_content(resources, 'reader', 'set18/wisps/offers-goldxp/stage-2')
+    library = build_library()
+    result = read_resource_content(library, 'set18/wisps/offers-goldxp/stage-2')
     assert result['found'] and result['record_ids']
     assert result['requires'] == ('set18/wisps/rules', 'set18/wisps/offers-goldxp/stage-all')
-    full = read_resource_content(resources, 'reader', 'set18/wisps/offers-goldxp')
+    full = read_resource_content(library, 'set18/wisps/offers-goldxp')
     assert full['sha256'] == result['sha256'] and full['content'] != result['content']
 
 
@@ -242,22 +245,18 @@ def playbook_roots(roots):
     return roots
 
 
-def test_playbooks_have_independent_discovery_reads_and_child_permissions(playbook_roots):
-    """Identically named skills and guides never grant access to each other."""
+def test_playbooks_and_skills_present_distinct_resources(playbook_roots):
+    """Presentation exposes both namespaces without requiring any assistant configuration."""
     library = build_library(*playbook_roots)
-    resources = PreparedResources(library=library, set_number=18, access={
-        'guide': ResourceAccess(playbooks=('workflow',)),
-        'general': ResourceAccess(skills=('workflow',)),
-    })
-    assert [entry['id'] for entry in resource_entries(resources, 'guide')] == ['playbook:workflow']
+    assert {entry['id'] for entry in resource_entries(library)} == {
+        'set18', 'playbook:workflow', 'skill:workflow',
+    }
     assert not library.body_cache
-    guide = read_resource_content(resources, 'guide', 'playbook:workflow')
+    guide = read_resource_content(library, 'playbook:workflow')
     assert guide['content'] == 'FULL SPECIFIC GUIDE' and guide['kind'] == 'playbook'
     assert guide['children'][0]['id'] == 'playbook:workflow/example'
-    assert read_resource_content(resources, 'guide', 'playbook:workflow/example')['content'] == 'GUIDE EXAMPLE'
-    assert not read_resource_content(resources, 'guide', 'skill:workflow')['found']
-    assert read_resource_content(resources, 'general', 'skill:workflow')['found']
-    assert not read_resource_content(resources, 'general', 'playbook:workflow/example')['found']
+    assert read_resource_content(library, 'playbook:workflow/example')['content'] == 'GUIDE EXAMPLE'
+    assert read_resource_content(library, 'skill:workflow')['content'] == 'FULL WORKFLOW'
 
 
 def test_playbook_changes_invalidate_metadata_and_retain_cached_reads(playbook_roots):

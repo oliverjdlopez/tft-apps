@@ -6,7 +6,7 @@ from agents import Agent, RunContextWrapper
 
 from ..runtime.models import AssistantRunContext
 from .assistant import Assistant
-from .resources import resource_entries
+from domain.resources.library import resource_entries
 
 
 class ChatAssistant(Assistant):
@@ -30,7 +30,7 @@ class ChatAssistant(Assistant):
         if context.runtime.root_assistant == self.spec.name and context.runtime.system:
             parts.append(context.runtime.system)
         parts.append(self.spec.system_prompt)
-        entries = resource_entries(context.resources, self.spec.name)
+        entries = resource_entries(context.resources.catalogues.get(self.spec.name))
         if entries:
             parts.append("## Available TFT references\nUse `read_resource` with an exact ID to read a reference or browse an index.")
             for entry in entries:

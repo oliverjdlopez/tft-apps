@@ -88,7 +88,7 @@ def test_skill_allowlist_defaults_to_all_and_loads_named_entries(tmp_path: Path)
         "description": "Fixture",
         "handoff_description": "Fixture handoff",
         "tools": [],
-        "context": {"repository": False},
+        "resources": {"context": {"repository": False}},
         "handoffs": [],
     }
     (unrestricted_dir / "agent.json").write_text(
@@ -98,7 +98,7 @@ def test_skill_allowlist_defaults_to_all_and_loads_named_entries(tmp_path: Path)
     restricted_dir.mkdir()
     (restricted_dir / "system.md").write_text("# Restricted\n", encoding="utf-8")
     (restricted_dir / "agent.json").write_text(
-        json.dumps({**base, "name": "restricted", "skills": ["comparison"]}),
+        json.dumps({**base, "name": "restricted", "resources": {"skills": ["comparison"]}}),
         encoding="utf-8",
     )
 
@@ -302,6 +302,7 @@ def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
     cohort_names = [tool.name for tool in COHORT_TOOL_GROUP.tools]
     delta_names = [tool.name for tool in DELTA_TOOL_GROUP.tools]
     assert spec.tool_group_keys == ("context", "ranking", "probability")
+    assert spec.skill_names == () and spec.playbook_names == ()
     assert tool_names == context_names + ranking_names + probability_names
     assert list(registry.reachable_tool_names[spec.name]) == (
         context_names

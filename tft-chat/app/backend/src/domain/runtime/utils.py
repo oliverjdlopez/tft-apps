@@ -6,7 +6,6 @@ import json
 from typing import Any
 from collections.abc import Mapping, Sequence
 
-
 # ---------------------------------------------------------------------------
 # Activity hooks
 #
