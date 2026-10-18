@@ -9,7 +9,7 @@ provider or selector chooses workflows before execution. Factual game material
 belongs in reference resources; durable assistant policy belongs in `system.md`.
 
 Loading and protocol validation live in `domain.resources`. Skill packages
-live under `app/backend/src/resources/skills/<name>/SKILL.md`.
+live under `app/backend/src/domain/resources/content/skills/<name>/SKILL.md`.
 
 `domain.resources.models.Skill` and `Playbook` are explicit, immutable
 `ResourceMetadata` subclasses. Entry-point loading stores these types in
@@ -54,9 +54,11 @@ The shipped chat spec sets `resources.skills` to `[]`. Other assistants qualify 
 repository context or an explicit nonempty `resources.skills` allowlist and must also
 have the read tool. An omitted allowlist permits all discovered skills for an
 eligible assistant; an empty list permits none. Transcript-only assistants have
-no resource access. `Assistant.resource_catalogue` applies its own spec to the
-shared library for both metadata and reads, including every handoff and captured
-graph. Context stores materials and read records without assigning permissions.
+no model-facing resource access, although their context holds the shared library.
+Renderers and reads use `AssistantSpec.allows_resource` to check the active spec
+against that library, including every handoff and captured graph. No assistant
+constructs a filtered library. Context stores shared materials and invocation-local
+read records without assigning permissions.
 The final responder
 can read only `tft-statistical-interpretation`; it owns the context read group
 alongside its evidence presentation group.
@@ -75,7 +77,7 @@ reference; its original interpretation guidance is retained verbatim there.
 
 ## Adding a playbook
 
-Create `app/backend/src/resources/playbooks/<name>/PLAYBOOK.md` with the same
+Create `app/backend/src/domain/resources/content/playbooks/<name>/PLAYBOOK.md` with the same
 `name` and `description` frontmatter rules as a skill:
 
 ```markdown

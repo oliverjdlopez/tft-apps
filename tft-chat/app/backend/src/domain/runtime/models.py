@@ -52,7 +52,7 @@ class AssistantRunContext:
     """
 
     runtime: RuntimeSettings
-    resources: ResourceLibrary | None
+    resources: ResourceLibrary
     evidence: EvidenceStore | None
     activity: ActivityState = field(default_factory=ActivityState)
     timing: dict[str, Any] | None = None

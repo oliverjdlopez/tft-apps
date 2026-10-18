@@ -198,16 +198,16 @@ The following inventory accounts for all 37 files in `96e733b`. Each linked path
 
 | File | Change |
 | --- | --- |
-| [chat/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/chat/system.md) | Question-oriented routing, economical clarification, name reuse, stopping, and evidence boundaries. |
-| [comp_expert/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/comp_expert/system.md) | Relevant composition dimensions, same-copy comparisons, dependency limits, and uncertainty. |
-| [data_analyst/agent.json](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/data_analyst/agent.json) | Description reflects investigations beyond direct lookups. |
-| [data_analyst/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/data_analyst/system.md) | Investigation protocol, tool selection, conditional comparisons, and supported handoff. |
-| [final_responder/agent.json](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/final_responder/agent.json) | Interpretation-only skill allowlist. |
-| [final_responder/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/final_responder/system.md) | Concise synthesis and evidence display guidance without fixed report quotas. |
-| [item_expert/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/item_expert/system.md) | Accurate third-slot use of existing loadout filters. |
-| [skill_selector/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/skill_selector/system.md) | Select procedures that materially help the question; avoid redundant coverage. |
-| [unit_expert/agent.json](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/unit_expert/agent.json) | Removes the fixed shortlist from the description. |
-| [unit_expert/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistant_specs/unit_expert/system.md) | Question-specific unit comparisons and accurate item, sample, and evidence limits. |
+| [chat/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/chat/system.md) | Question-oriented routing, economical clarification, name reuse, stopping, and evidence boundaries. |
+| [comp_expert/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/comp_expert/system.md) | Relevant composition dimensions, same-copy comparisons, dependency limits, and uncertainty. |
+| [data_analyst/agent.json](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/data_analyst/agent.json) | Description reflects investigations beyond direct lookups. |
+| [data_analyst/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/data_analyst/system.md) | Investigation protocol, tool selection, conditional comparisons, and supported handoff. |
+| [final_responder/agent.json](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/final_responder/agent.json) | Interpretation-only skill allowlist. |
+| [final_responder/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/final_responder/system.md) | Concise synthesis and evidence display guidance without fixed report quotas. |
+| [item_expert/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/item_expert/system.md) | Accurate third-slot use of existing loadout filters. |
+| [skill_selector/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/skill_selector/system.md) | Select procedures that materially help the question; avoid redundant coverage. |
+| [unit_expert/agent.json](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/unit_expert/agent.json) | Removes the fixed shortlist from the description. |
+| [unit_expert/system.md](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/assistants/specs/unit_expert/system.md) | Question-specific unit comparisons and accurate item, sample, and evidence limits. |
 
 ### Runtime and query code
 
@@ -224,9 +224,9 @@ The following inventory accounts for all 37 files in `96e733b`. Each linked path
 
 | File | Change |
 | --- | --- |
-| [Statistical investigation](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/resources/skills/tft-statistical-investigation/SKILL.md) | Focused planning, meaningful follow-ups, and same-copy comparison guidance. |
-| [Statistical interpretation](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/resources/skills/tft-statistical-interpretation/SKILL.md) | Population, denominator, uncertainty, and observational evidence discipline. |
-| [Unit itemization](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/resources/skills/tft-unit-itemization/SKILL.md) | Conditional tool use, exact loadouts, and context-supported allocation analysis. |
+| [Statistical investigation](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/resources/content/skills/tft-statistical-investigation/SKILL.md) | Focused planning, meaningful follow-ups, and same-copy comparison guidance. |
+| [Statistical interpretation](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/resources/content/skills/tft-statistical-interpretation/SKILL.md) | Population, denominator, uncertainty, and observational evidence discipline. |
+| [Unit itemization](/home/oliverjdlopez/.codex/worktrees/c78c/tft-apps/tft-chat/app/backend/src/domain/resources/content/skills/tft-unit-itemization/SKILL.md) | Conditional tool use, exact loadouts, and context-supported allocation analysis. |
 
 ### Evaluation assets and regression tests
 

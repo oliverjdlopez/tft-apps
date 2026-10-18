@@ -12,6 +12,7 @@ ChatTFT is a Python 3.13+ Teamfight Tactics analysis application: Riot and Commu
 
 - Use Google-style docstrings for every function and model; explain its purpose and where it is applied.
 - Add targeted inline comments wherever a reviewer may struggle to follow non-obvious code. Examples include unusual initialization, loop priming, complex expressions, and multi-function pipelines; this list is not exhaustive.
+- Separate logical sections of code within a function or method with a blank line, then a one-line comment, then the code. This improves readability.
 - Good comments explain why the code exists or takes a particular approach, rather than merely restating it. Explaining what the code does is still useful when that context implicitly communicates the why.
 - Optimize modules for intent-first reading. Readability outweighs keeping helper implementations nearby when their names already explain their behavior.
 - Put data models in `models.py` unless they implement surprising, inseparable behavior.
@@ -26,7 +27,6 @@ ChatTFT is a Python 3.13+ Teamfight Tactics analysis application: Riot and Commu
   modules, separate each module's helpers with a prominent five- or six-line
   comment banner that names the purpose module; use local imports when needed
   to keep the consolidated module free of circular imports.
-- Functions left in a purpose module should be first-class operations of that module, not underscore-prefixed implementation details.
 
 ## Universal repository rules
 
@@ -55,7 +55,7 @@ Before completing a task, first gather the related repository documentation.
 | --- | --- |
 | `app/backend/api/**`, `app/backend/src/services/**`, `app/frontend/src/**`, `scripts/start.py` | [Web runtime and UI](docs/architecture/web-runtime.md) |
 | `app/backend/src/domain/assistants/**`, `assistant_specs/**`, `domain/tasks/**` | [Assistants and tasks](docs/architecture/assistants-and-tasks.md) |
-| `app/backend/src/domain/resources/**`, `app/backend/src/resources/**` | [Runtime context](docs/content_providers/context.md) and [skills](docs/content_providers/skills.md) |
+| `app/backend/src/domain/resources/**`, `app/backend/src/domain/resources/content/**` | [Runtime context](docs/content_providers/context.md) and [skills](docs/content_providers/skills.md) |
 | `app/backend/src/domain/tools/**` | [Model-facing tools](docs/tools/README.md) |
 | `app/backend/src/db/**`, database rebuild/migration/publication scripts | [Persistence and analytics](docs/data/persistence-and-analytics.md) |
 | `scripts/ingestion/**`, Riot/Community Dragon clients, `db/insert.py` | [Ingestion and upstreams](docs/data/ingestion.md) |

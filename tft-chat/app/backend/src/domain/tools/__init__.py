@@ -273,9 +273,13 @@ async def call_tool(
 ) -> Any:
     """Invoke one native TFT tool by name and return JSON-compatible data."""
     tool = get_tool(name)
+
+    # Invoke lightweight callables directly when they are not SDK tools.
     if callable(tool) and not hasattr(tool, "on_invoke_tool"):
         result = await tool(**(arguments or {}))
         return model_jsonable(result)
+
+    # Build an SDK context for native tool invocation.
     payload = json.dumps(arguments or {})
     ctx = ToolContext(
         None,

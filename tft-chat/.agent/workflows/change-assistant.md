@@ -4,7 +4,7 @@ title: Change an assistant
 summary: Change assistant specs, prompts, tools, handoffs, and regression evals together.
 paths:
   - "app/backend/src/domain/assistants/**"
-  - "app/backend/src/domain/assistant_specs/**"
+  - "app/backend/src/domain/assistants/specs/**"
   - "evals/langfuse/**"
 task_types: [add-assistant, change-prompt, change-handoff, prompt-tuning]
 keywords: [assistant, system.md, agent.json, handoff, eval]

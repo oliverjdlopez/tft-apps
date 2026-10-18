@@ -37,7 +37,7 @@ Create and copy commands write the nested `resources` object. Copies retain the
 source's independent skill and playbook access, including omitted versus empty
 allowlists, and optional task wrapper. Review copied
 instructions for references to the old assistant's name. Configure access in
-`app/backend/src/domain/assistant_specs/<name>/agent.json` and edit instructions
+`app/backend/src/domain/assistants/specs/<name>/agent.json` and edit instructions
 in `system.md`; the application's Developer → Specs page can edit these files too.
 Creating a spec does not create an empty evaluation dataset.
 

@@ -5,7 +5,7 @@ description: Coordinate independent tasks listed in SMALLTASKS.md by investigati
 
 # Small Tasks Coordinator
 
-Read `SMALLTASKS.md`, which contains scoped, well-defined tasks.
+Your job is to coordinate the execution of tasks listed in `SMALLTASKS.md`, which contains scoped, well-defined tasks. 
 
 For each task, conduct a preliminary investigation to understand the broader context. Use that information to check whether the tasks are independent and can be implemented and merged in any order. If tasks depend on one another, ask the user to clarify the intended order and scope. Steps that are clearly subtasks of one parent task do not need this clarification.
 
@@ -16,3 +16,5 @@ After all subagents return, combine their changes. Resolve trivial conflicts tha
 Apply the final diffs to the head of the current branch and leave them uncommitted. Report an overview of each subagent’s work.
 
 If the branch has received committed or uncommitted changes since dispatch, and the final diffs still fit the original branch state, combine the changes into one coherent diff but keep it in the independent worktree rather than applying it to the branch. Report this to the user.
+
+If the repo contains a single `SMALLTASKS.md` file, then use it. If it contains multiple `SMALLTASKS.md` files, then check to see if there is one in your working directory. If so, use that one. Otherwise, tell the user that you found multiple `SMALLTASKS.md` files and ask them to specify which one to use.

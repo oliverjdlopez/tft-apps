@@ -69,6 +69,8 @@ def fixture_boards() -> tuple[BoardObservation, ...]:
                 ),
             )
         )
+
+    # Return all boards in the deterministic example population.
     return tuple(boards)
 
 

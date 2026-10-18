@@ -24,7 +24,7 @@ Tool modules are grouped by responsibility:
 ## Assistants
 
 `domain.assistants` builds OpenAI Agents SDK agents from spec directories under
-`domain/assistant_specs/`. Each spec pairs a `system.md` prompt with an
+`domain/assistants/specs/`. Each spec pairs a `system.md` prompt with an
 optional `agent.json` declaring its description, tool groups/names, and
 handoffs. The `chat` assistant has no direct data tools and hands every
 statistical question to `data_analyst`, which owns typed rankings, cohort
@@ -37,11 +37,11 @@ response.
 `domain.resources` validates authored metadata, hierarchical index relationships,
 and structured record views. Preparation loads a cached metadata index;
 `read_resource` loads complete content by stable ID and records hashes for actual
-reads. Reference sources live under `app/backend/src/resources/references`;
+reads. Reference sources live under `app/backend/src/domain/resources/content/references`;
 portable skill packages remain under `resources/skills`.
-`Assistant.resource_catalogue` selects exposure from that instance's spec for both
-prompt directories and tool reads. Runtime holds one shared material library,
-without a table of assistant permissions.
+`AssistantSpec.allows_resource` checks access for both prompt directories and
+tool reads. Runtime places the repository-wide library in every context;
+assistants neither load it nor construct filtered library copies.
 The library supplies metadata listings and complete contents; assistant renderers
 format instruction directories, and `domain.tools.context` formats read responses
 and records actual reads. Runtime coordinates setup and retains invocation state.

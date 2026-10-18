@@ -32,7 +32,7 @@ All backend packages live under `app/backend`.
 - `domain` owns agent-facing behavior: tool functions and groups
   (`domain.tools`) and assistant definitions,
   assistant specs and registry (`domain.assistants`,
-  `domain/assistant_specs/`), and application workflows (`domain.tasks`).
+  `domain/assistants/specs/`), and application workflows (`domain.tasks`).
 - `services` owns chat orchestration and adapts domain behavior for the HTTP layer: chat, display,
   assistant, task, and introspection services.
 - `db` and `core` own the data pipeline, the upstream clients (Riot plus the

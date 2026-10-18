@@ -1,22 +1,23 @@
 # Reference resources and progressive disclosure
 
-Static facts live under `app/backend/src/resources/references`. Assistants see
+Static facts live under `app/backend/src/domain/resources/content/references`. Assistants see
 only root directory descriptions in their instructions. `read_resource("set18")`
 returns a set overview and permitted topic IDs; reading a topic reveals its
 children. A leaf read returns the complete source body. Any known ID may be read
-directly, but every read requires membership in the catalogue selected by the
-active `Assistant` from its own spec.
+directly, but every read requires membership in the repository library and
+permission from the active assistant's spec.
 Descriptions and index listings guide discovery; they are not factual evidence.
 
 `domain.resources` owns resource schemas, metadata validation, storage, caching,
-and complete content loading. `Assistant.resource_catalogue` interprets its own
-spec exposure and selects its permitted catalogue. Assistant
-renderers format library metadata into instruction directories; `domain.tools.context`
-formats read responses and records actual reads. Runtime coordinates setup and
-retains the library directly in `AssistantRunContext.resources` and successful
-read records in the invocation activity log; it
-does not assign permissions or retain catalogues keyed by assistant name. The resources
-package has no assistant or invocation dependencies. There is no provider or selector execution path.
+and complete content loading. Runtime loads the repository-wide library directly
+into `AssistantRunContext.resources` for every invocation, regardless of the
+assistant graph. Assistants never construct their own libraries. Their renderers
+filter metadata with `self.spec.allows_resource(id)` and compose their own
+instruction directories. `domain.tools.context` uses the active assistant's spec
+to check reads and filter child listings and links from the same shared library.
+Successful reads are recorded in invocation activity. The resources package has
+no assistant or invocation dependencies. There is no provider or selector
+execution path.
 
 ## Authoring and parsing
 
@@ -74,9 +75,8 @@ a failed generation. Receipts keep those summaries under `resources.reads`;
 activity exports contain tool and handoff records without duplicating resource
 bodies. Index reads count as reads too. Source paths identify
 provenance but are never resource identities. Body caches do not grant access:
-the read tool asks the active `Assistant` for its permitted catalogue, and reads
-check membership before consulting the shared cache. Prompt directories use the
-same assistant method. Handoffs and clones apply their own specs to the shared
+the read tool checks library membership and the active assistant's spec before
+consulting the shared cache. Prompt directories use the same spec predicate. Handoffs and clones apply their own specs to the shared
 materials; neither a reused name nor a cached body grants additional access.
 
 ## Migration and validation

@@ -3,9 +3,9 @@ id: change-runtime-context-or-skill
 title: Change runtime context or a skill
 summary: Change progressively disclosed factual references or focused TFT playbooks without mixing their roles.
 paths:
-  - "app/backend/src/resources/references/**"
-  - "app/backend/src/resources/skills/**"
-  - "app/backend/src/resources/playbooks/**"
+  - "app/backend/src/domain/resources/content/references/**"
+  - "app/backend/src/domain/resources/content/skills/**"
+  - "app/backend/src/domain/resources/content/playbooks/**"
   - "app/backend/src/domain/resources/**"
 task_types: [change-runtime-context, add-chat-skill, change-context-routing]
 keywords: [context, skill, frontmatter, selection]
@@ -21,7 +21,7 @@ Changing the factual TFT corpus, context-file parsing/ranking/budgets, or task p
 
 ## Before editing
 
-Decide which layer owns the change: factual reference → `resources/references`; general guidance → `resources/skills`; specific task guide → `resources/playbooks`; durable assistant policy → `domain/assistant_specs`. Resource loading, validation, and models live in `domain/resources`; `Assistant.resource_catalogue` selects exposure from its own spec for prompts and reads; the resource library supplies listings and complete content, while `domain/tools/context.py` formats read responses. Runtime only coordinates setup and retains shared materials and invocation state. Assistant renderers format directory metadata into prompts. Read the library and its tests before changing routing metadata.
+Decide which layer owns the change: factual reference → `resources/references`; general guidance → `resources/skills`; specific task guide → `resources/playbooks`; durable assistant policy → `domain/assistants/specs`. Resource loading, validation, and models live in `domain/resources`; assistant renderers and the read tool check `AssistantSpec.allows_resource` against the repository-wide context library; the resource library supplies listings and complete content, while `domain/tools/context.py` formats read responses. Runtime loads the shared repository library independently of the assistant graph and retains invocation state; assistants never construct their own libraries. Assistant renderers format directory metadata into prompts. Read the library and its tests before changing routing metadata.
 
 ## Implementation sequence
 

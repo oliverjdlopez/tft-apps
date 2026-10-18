@@ -16,7 +16,7 @@ typed metadata with its source revision; `ResourceRead` retains loaded content.
 The library's storage, caching, and discovery operations apply to all resource types.
 
 ```text
-app/backend/src/resources/
+app/backend/src/domain/resources/content/
   references/set18/
     index.md
     units/index.md

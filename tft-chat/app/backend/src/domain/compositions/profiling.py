@@ -85,4 +85,6 @@ class CompositionProfiler:
             f"cpu={row['cpu_seconds_delta']:.3f}s, peak_rss={row['peak_rss_bytes']} bytes, "
             f"cuda={row['cuda']}" for row in self.stages
         )
+
+        # Return the summary with one line per recorded stage.
         return "\n".join(lines) + "\n"

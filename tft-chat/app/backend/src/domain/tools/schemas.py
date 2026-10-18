@@ -18,6 +18,8 @@ def schema_for_type(annotation: Any) -> dict[str, Any]:
         return {}
     origin = get_origin(annotation)
     args = get_args(annotation)
+
+    # Handle Annotated metadata before dispatching on the underlying type.
     if origin is Annotated:
         schema = schema_for_type(args[0])
         for metadata in args[1:]:
@@ -32,6 +34,8 @@ def schema_for_type(annotation: Any) -> dict[str, Any]:
             if (maximum := getattr(metadata, "le", None)) is not None:
                 schema["maximum"] = maximum
         return schema
+
+    # Map primitive Python types to their JSON Schema equivalents.
     if annotation is str:
         return {"type": "string"}
     if annotation is int:
@@ -42,6 +46,8 @@ def schema_for_type(annotation: Any) -> dict[str, Any]:
         return {"type": "boolean"}
     if annotation is type(None):
         return {"type": "null"}
+
+    # Handle compound typing forms and model-backed schemas.
     if origin in (Union, UnionType):
         return {"anyOf": [schema_for_type(arg) for arg in args]}
     if origin is Literal:
@@ -64,6 +70,8 @@ def schema_for_type(annotation: Any) -> dict[str, Any]:
         }
     if origin is dict:
         return {"type": "object"}
+
+    # Delegate model schemas to Pydantic when the annotation is a model class.
     if inspect.isclass(annotation) and issubclass(annotation, BaseModel):
         return annotation.model_json_schema()
     return {}
@@ -75,6 +83,8 @@ def input_schema(fn: Callable[..., Any]) -> dict[str, Any]:
         hints = get_type_hints(fn, include_extras=True)
     except Exception:  # noqa: BLE001 - unresolved refs should not hide the tool.
         hints = {}
+
+    # Build property definitions and required argument names.
     properties: dict[str, Any] = {}
     required: list[str] = []
     for name, parameter in signature.parameters.items():
@@ -86,6 +96,8 @@ def input_schema(fn: Callable[..., Any]) -> dict[str, Any]:
         else:
             schema = {**schema, "default": parameter.default}
         properties[name] = schema
+
+    # Assemble the complete object schema from the parameter definitions.
     result: dict[str, Any] = {
         "type": "object",
         "properties": properties,

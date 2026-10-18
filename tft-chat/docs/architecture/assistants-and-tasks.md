@@ -32,13 +32,15 @@ fallback still renders with its specification's identity and root-only prefix.
 
 The source responsibilities are:
 
-- `assistant.py`: the SDK subclass, spec/name construction, resource access, and default rendering.
+- `assistant.py`: the SDK subclass, spec/name construction and default rendering.
+  Private helpers assemble the root/spec prompt sections and permitted resource
+  catalogue; `render_instructions` retains context validation and timing.
 - `chat.py`: chat-specific rendering; the package installs its explicit mapping.
 - `models.py` and `utils.py`: immutable specifications, file loading, and tool resolution.
 - `registry.py`: validated definitions, direct/reachable tool metadata, and handoff graphs.
 - `domain.resources.library`: catalogue construction, metadata listings, and complete reads.
-- `Assistant.resource_catalogue`: each instance's spec-based resource access.
-  Prompts and resource reads use the same method against shared materials.
+- `AssistantSpec.allows_resource`: spec-based checks used by renderers and reads
+  against the shared repository library.
 - `domain.tools.context`: read-tool responses and actual-read recording.
 - `domain.runtime`: context gathering, input assembly, execution, and activity lifecycle.
 
@@ -62,7 +64,7 @@ Use the [assistant spec management commands](../development/assistant-specs.md)
 to create, copy, or remove specs and synchronize their Langfuse prompts.
 `AGENTS.md` and `README.md` are documentation, not executable assistants.
 
-Each assistant lives under `app/backend/src/domain/assistant_specs/<name>/`:
+Each assistant lives under `app/backend/src/domain/assistants/specs/<name>/`:
 
 - `system.md` contains plain Markdown instructions without frontmatter.
 - `agent.json` optionally declares the name, descriptions, tool access, handoffs,
@@ -190,7 +192,7 @@ prompts used by normal application runs.
 
 All execution surfaces use `domain.runtime.execution`:
 
-- `create_context(assistant, ...)` asks the assistant for shared resource materials
+- `create_context(assistant, ...)` loads the shared repository resource library
   and creates fresh evidence, activity, and read provenance.
 - `run(assistant, input, ...)` and `run_sync(assistant, input, ...)` prepare context
   when omitted, apply the root task wrapper, and call the matching SDK Runner API.
@@ -205,26 +207,26 @@ context-creation options. Async entry points gather resources in a worker thread
 The synchronous entry point preserves SDK event-loop behavior and rejects use
 inside an active event loop.
 
-Each invocation owns fresh mutable state. Its handoffs share materials and read
-records, while each assistant retains its own immutable spec and access policy.
-`Assistant.load_resource_library()` loads one metadata snapshot if any graph node
-uses resources. Runtime retains it directly in `AssistantRunContext.resources`
-(or `None` for a resource-free graph). Successful reads are logged in
-`AssistantRunContext.activity.resource_reads` alongside tool and handoff activity;
-context has no assistant-name-to-permissions table.
-`Assistant.resource_catalogue(library)` applies that instance's
-reference, skill, playbook, and read-tool declarations to the supplied materials.
-Prompt rendering and `read_resource` both delegate to it. Renaming an assistant
-does not change its rights; a clone with a different spec uses that spec's policy,
-even with the same context and cached bodies. A plain SDK agent cannot gain access
-by copying an assistant name.
-Each selected view shares the library's body cache. Assistant renderers use the
-library's metadata listing; the read tool loads content and formats its response.
-`domain.resources` has no assistant, spec, or invocation dependencies.
-Resource flags do not grant missing tools. Skills and playbooks retain separate
-allowlists. Reads require membership in the supplied catalogue even when another
-assistant has already cached the body. Children and links stay within that catalogue.
-`domain.resources` owns library loading and content without depending on assistants.
+Each invocation retains the repository-wide `ResourceLibrary` directly in
+`AssistantRunContext.resources`. Runtime calls `get_library()` independently of
+which assistants are in the graph. Unchanged repository revisions reuse the same
+library and body cache across invocations; source changes produce a new snapshot
+without mutating contexts already running. Even an assistant with no resource
+permissions receives the shared library in its context.
+
+Assistants do not load, own, or construct filtered libraries. Each
+`render_instructions` reads the context library's metadata and filters entries
+using `self.spec.allows_resource(id)` before composing its own text. The read tool
+checks the active instance's spec against that same library before accessing the
+body cache, and filters child listings and links with the same check. A clone's
+spec controls its rights; a copied name or cached body does not grant access.
+Resource flags do not grant missing tools, and skills and playbooks retain
+separate allowlists. The library itself has no assistant or spec dependencies.
+
+Successful reads are recorded in `AssistantRunContext.activity.resource_reads`
+alongside tool and handoff activity. Each invocation owns fresh evidence and
+activity even when it shares the library with another invocation. Handoffs reuse
+the context and apply their own specs when rendering or reading.
 
 Runtime input assembly copies supported conversation messages and applies
 `task.md` only to the latest user message. It never modifies caller history.

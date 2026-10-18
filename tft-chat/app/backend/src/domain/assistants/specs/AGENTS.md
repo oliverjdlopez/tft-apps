@@ -1,6 +1,6 @@
 # Assistant-spec agent instructions
 
-These rules apply under `app/backend/src/domain/assistant_specs/`.
+These rules apply under `app/backend/src/domain/assistants/specs/`.
 
 - Read `docs/architecture/assistants-and-tasks.md` and `.agent/workflows/change-assistant.md`.
 - Put durable language policy in `system.md`; put tool groups/names, handoffs, description, model, and reasoning settings in `agent.json`; add `task.md` only when task-style wrapping is real behavior.

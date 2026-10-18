@@ -9,6 +9,7 @@ from domain.tasks import transcript
 from domain.assistants.registry import current_registry
 from domain.assistants.constants import AssistantName
 from domain.runtime.utils import wrap_task_input
+from domain.resources.models import ResourceLibrary
 from services import task_service
 
 
@@ -27,7 +28,7 @@ def test_transcription_pipeline_distills_original_source_once(monkeypatch, origi
         assert isinstance(context, AssistantRunContext)
         assert callable(agent.instructions)
         assert context.runtime.surface == "task"
-        assert context.resources is None
+        assert isinstance(context.resources, ResourceLibrary)
         assert not context.activity.resource_reads
         assert agent.tools == []
         assert agent.handoffs == []
@@ -88,7 +89,7 @@ def test_media_distillation_task_http_route_runs_the_registered_assistant(monkey
     def fake_run(agent, *, input, context, **kwargs):
         """Capture the model boundary reached by the normal task endpoint."""
         calls.append((agent.name, input))
-        assert context.resources is None
+        assert isinstance(context.resources, ResourceLibrary)
         assert not context.activity.resource_reads
         return SimpleNamespace(final_output="# Distilled reference\n\nSource-grounded notes.")
 

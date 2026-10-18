@@ -172,12 +172,13 @@ def test_durable_overrides_retain_dynamic_callbacks() -> None:
         },
     )
     from agents import RunContextWrapper
+    from domain.resources.models import ResourceLibrary
     from domain.runtime import AssistantRunContext, RuntimeSettings
     context = AssistantRunContext(
         runtime=RuntimeSettings(
             request_id="test", root_assistant="chat",
         ),
-        resources=None,
+        resources=ResourceLibrary(),
         evidence=None,
     )
     assert callable(agent.instructions)

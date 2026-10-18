@@ -9,7 +9,7 @@ from threading import RLock
 from domain.resources.models import ResourceDescriptor, ResourceLibrary, ResourceMetadata, ResourceRead
 from domain.resources.utils import instruction_metadata, load_content, read_header, source_revision
 
-RESOURCE_ROOT = Path(__file__).resolve().parents[2] / 'resources'
+RESOURCE_ROOT = Path(__file__).resolve().parent / 'content'
 REFERENCE_ROOT = RESOURCE_ROOT / 'references'
 SKILL_ROOT = RESOURCE_ROOT / 'skills'
 PLAYBOOK_ROOT = RESOURCE_ROOT / 'playbooks'
@@ -168,14 +168,13 @@ def read_content(library: ResourceLibrary, resource_id: str) -> ResourceRead:
     """Read one approved source revision and cache its complete rendered content.
 
     Args:
-        library: Validated snapshot already selected by invocation preparation.
+        library: Validated repository snapshot; callers enforce assistant access.
         resource_id: Exact known ID, independent of filesystem paths.
 
     Returns:
         Complete source or derived-view contents with revision provenance.
     """
-    # A shared cache may contain bodies outside this catalogue. Resolve membership
-    # before consulting it so a library view remains an exact set of readable IDs.
+    # Resolve against this revision before consulting its cached body.
     descriptor = library.entries[resource_id]
     # Cache access is serialized because parallel SDK reads can run on threads.
     with _CACHE_LOCK:

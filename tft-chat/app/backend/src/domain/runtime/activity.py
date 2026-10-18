@@ -25,12 +25,16 @@ class ActivityRunHooks(RunHooks[AssistantRunContext]):
         """Start a call using its SDK identity rather than a shared current tool."""
         if not isinstance(context, ToolContext):
             return
+
+        # Retrieve this invocation's activity and current call identity.
         state = context.context.activity
         call_id = context.tool_call_id
         call = state.calls.get(call_id)
         if call is None:
             call = ToolActivity(call_id=call_id, name=context.tool_name)
             state.calls[call_id] = call
+
+        # Record the SDK agent, arguments, and start time for this call.
         call.agent_name = agent.name
         call.arguments = decode_tool_arguments(context.tool_arguments)
         call.started_at = time.perf_counter()
@@ -45,6 +49,8 @@ class ActivityRunHooks(RunHooks[AssistantRunContext]):
         """Complete only this call, preserving failures recorded by wrappers."""
         if not isinstance(context, ToolContext):
             return
+
+        # Mark only an unfinished call as successfully completed.
         call = context.context.activity.calls.get(context.tool_call_id)
         if call is not None and call.status == "running":
             call.ended_at = time.perf_counter()

@@ -72,6 +72,8 @@ class State(CompositionModel):
             raise ValueError(
                 "HDBSCAN state contains duplicate families or observations"
             )
+
+        # Reject stored references that have no observed unit content.
         if any(
             not board.units for cluster in self.clusters for board in cluster.references
         ):

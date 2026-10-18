@@ -92,6 +92,8 @@ def field_definition(key: str) -> EvidenceField:
         unit = "number"
     else:
         unit = "count"
+
+    # Return the field's known display and grouping semantics.
     return EvidenceField(
         key=key,
         label=key.replace("_", " ").capitalize(),
@@ -108,9 +110,13 @@ def normalize_cell(field: EvidenceField, value: object) -> str | int | float | N
         if not isinstance(value, str):
             raise ValueError("Expected a public text value")
         return value
+
+    # Normalize numeric values only after rejecting non-analytical types.
     if isinstance(value, bool):
         raise ValueError("Boolean is not an analytical number")
     number = float(value)
+
+    # Enforce the declared unit's supported numeric range.
     if field.unit == "count":
         if number < 0 or not number.is_integer():
             raise ValueError("Invalid count")
@@ -258,6 +264,8 @@ def resolve_presentation(
     )
     if dataset is None:
         raise ValueError("Unknown dataset reference")
+
+    # Validate table options against the selected dataset type.
     if isinstance(dataset, RankingDataset):
         fields = {field.key: field for field in dataset.fields}
         if spec.kind == "distribution":
@@ -291,6 +299,8 @@ def resolve_presentation(
         raise ValueError(
             "Distributions use their backend placement bins, without table options"
         )
+
+    # Store one resolved presentation for this tool call.
     if store.presentations and call_id not in store.presentations:
         raise ValueError("One initial display is supported per answer")
     presentation = ResolvedPresentation(

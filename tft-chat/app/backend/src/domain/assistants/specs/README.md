@@ -3,7 +3,7 @@
 Each assistant lives in its own directory:
 
 ```text
-domain/assistant_specs/<assistant_name>/
+domain/assistants/specs/<assistant_name>/
   agent.json
   system.md
   task.md

@@ -16,13 +16,14 @@ from services import spec_service
 def render(agent) -> str:
     """Render instructions with the typed context required by application runs."""
     from agents import RunContextWrapper
+    from domain.resources.models import ResourceLibrary
     from domain.runtime import AssistantRunContext, RuntimeSettings
 
     context = AssistantRunContext(
         runtime=RuntimeSettings(
             request_id="test", root_assistant=agent.name,
         ),
-        resources=None,
+        resources=ResourceLibrary(),
         evidence=None,
     )
     return agent.instructions(RunContextWrapper(context), agent)

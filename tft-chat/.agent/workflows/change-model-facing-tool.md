@@ -4,7 +4,7 @@ title: Change a model-facing tool
 summary: Safely add or modify a bounded native Agents SDK tool.
 paths:
   - "app/backend/src/domain/tools/**"
-  - "app/backend/src/domain/assistant_specs/**"
+  - "app/backend/src/domain/assistants/specs/**"
 task_types: [add-tool, change-tool-schema, modify-analysis-query]
 keywords: [function_tool, tool schema, registry, structured result]
 requires: [docs/tools/README.md]

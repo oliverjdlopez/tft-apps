@@ -57,11 +57,15 @@ class AssistantRegistry:
                 raise ValueError(
                     f"assistant handoff cycle: {' -> '.join((*path, name))}"
                 )
+
+            # Expand each assistant's reachable handoff graph once.
             if name not in reachable:
                 names = [name]
                 for target in self.handoff_names[name]:
                     names.extend(visit(target, (*path, name)))
                 reachable[name] = tuple(dict.fromkeys(names))
+
+            # Return the cached closure for this assistant.
             return reachable[name]
 
         for name in self.assistant_names:

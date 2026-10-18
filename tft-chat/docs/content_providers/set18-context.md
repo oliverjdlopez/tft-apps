@@ -1,7 +1,7 @@
 # Set 18 context coverage and sources
 
 The Set 18 factual corpus lives in
-`app/backend/src/resources/references/set18/`. It now uses stable IDs, strict typed YAML metadata, hierarchical topic indexes,
+`app/backend/src/domain/resources/content/references/set18/`. It now uses stable IDs, strict typed YAML metadata, hierarchical topic indexes,
 and complete read bodies. Seven typed Wisp JSON populations supply lossless stage
 views; ten prose JSON companions were consolidated into Markdown. See
 [resource layout](resource-layout.md) and the [migration receipt](resource-migration.json).

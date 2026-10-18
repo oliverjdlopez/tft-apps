@@ -10,6 +10,7 @@ from agents import function_tool
 from agents.tool_context import ToolContext
 from pydantic import Field
 
+from domain.assistants.models import AssistantSpec
 from domain.resources.library import read_content, resource_entries
 from domain.resources.models import ResourceLibrary, ResourceRead
 from domain.runtime.models import AssistantRunContext
@@ -34,32 +35,32 @@ async def read_resource(
         not establish complete coverage of game facts. Unknown or denied IDs
         return an unavailable result. No selectors or model calls are involved.
     """
-    # Delegate policy to the active assistant without making tool registration
-    # depend on assistant construction. A plain SDK agent cannot grant access.
-    catalogue = getattr(ctx.agent, 'resource_catalogue', None)
-    if not isinstance(ctx.context, AssistantRunContext) or not callable(catalogue):
+    # Access follows the active instance's spec, never its display name or cache.
+    spec = getattr(ctx.agent, 'spec', None)
+    if not isinstance(ctx.context, AssistantRunContext) or not isinstance(spec, AssistantSpec):
         return {"found": False, "error": "Resource reads require an assistant invocation."}
-    library = catalogue(ctx.context.resources)
     return await asyncio.to_thread(
-        read_resource_content, library, resource_id, reads=ctx.context.activity.resource_reads,
+        read_resource_content, ctx.context.resources, resource_id,
+        spec=spec, reads=ctx.context.activity.resource_reads,
     )
 
 
 def read_resource_content(
-    library: ResourceLibrary | None, resource_id: str,
-    *, reads: dict[str, ResourceRead] | None = None,
+    library: ResourceLibrary, resource_id: str,
+    *, spec: AssistantSpec, reads: dict[str, ResourceRead] | None = None,
 ) -> dict[str, object]:
     """Return one complete resource with its catalogue children and links.
 
     Args:
-        library: Resource catalogue supplied by the caller.
+        library: Shared repository library supplied by the invocation.
         resource_id: Stable resource identity from a directory or reference link.
+        spec: Active assistant definition controlling reads and returned metadata.
         reads: Optional caller-owned record of successfully returned resources.
 
     Returns:
         Full content and metadata, or an unavailable result for an absent ID.
     """
-    if library is None or resource_id not in library.entries:
+    if resource_id not in library.entries or not spec.allows_resource(resource_id):
         return {'found': False, 'error': 'Resource unavailable; use a catalogue resource ID.'}
     descriptor = library.entries[resource_id]
     try:
@@ -72,8 +73,10 @@ def read_resource_content(
     links = {}
     for key in ('requires', 'related'):
         links[key] = tuple(value for value in getattr(metadata, key)
-                           if value in library.entries)
-    if descriptor.view not in {None, 'stage-all'} and f'{metadata.id}/stage-all' in library.entries:
+                           if value in library.entries and spec.allows_resource(value))
+    if (descriptor.view not in {None, 'stage-all'}
+            and f'{metadata.id}/stage-all' in library.entries
+            and spec.allows_resource(f'{metadata.id}/stage-all')):
         links['requires'] += (f'{metadata.id}/stage-all',)
     return {
         'found': True, 'resource_id': resource_id,
@@ -84,7 +87,8 @@ def read_resource_content(
         'sha256': read.sha256, 'record_ids': read.record_ids,
         'patches': metadata.patches,
         'provenance': metadata.provenance,
-        'children': resource_entries(library, resource_id), **links,
+        'children': [entry for entry in resource_entries(library, resource_id)
+                     if spec.allows_resource(entry['id'])], **links,
     }
 
 CONTEXT_TOOL_GROUP = AssistantToolGroup(

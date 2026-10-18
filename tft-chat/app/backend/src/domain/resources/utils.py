@@ -219,7 +219,7 @@ def load_content(descriptor: ResourceDescriptor) -> ResourceRead:
         descriptor.data_path is not None and source_revision(descriptor.data_path) != descriptor.data_revision
     ):
         raise ValueError('Resource changed during read; start a fresh invocation')
-    source_root = Path(__file__).resolve().parents[2] / 'resources'
+    source_root = Path(__file__).resolve().parent / 'content'
     source_path = (str(descriptor.path.relative_to(source_root))
                    if descriptor.path.is_relative_to(source_root) else descriptor.path.name)
     return ResourceRead(id=metadata.id + (f'/{descriptor.view}' if descriptor.view else ''),

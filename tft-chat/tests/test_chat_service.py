@@ -308,12 +308,13 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
 
     monkeypatch.setattr("services.chat_service.trace", fake_trace)
 
-    def selected_resources(self):
-        """Omit shared materials for this streaming-only test."""
-        return None
+    def selected_resources():
+        """Use an empty repository library for this streaming-only test."""
+        from domain.resources.models import ResourceLibrary
+        return ResourceLibrary()
 
     monkeypatch.setattr(
-        "domain.assistants.Assistant.load_resource_library", selected_resources
+        "domain.runtime.execution.get_library", selected_resources
     )
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks, run_config):
@@ -429,12 +430,13 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
         fake_run_streamed,
     )
 
-    def selected_resources(self):
-        """Omit shared materials for this streaming-only test."""
-        return None
+    def selected_resources():
+        """Use an empty repository library for this streaming-only test."""
+        from domain.resources.models import ResourceLibrary
+        return ResourceLibrary()
 
     monkeypatch.setattr(
-        "domain.assistants.Assistant.load_resource_library", selected_resources
+        "domain.runtime.execution.get_library", selected_resources
     )
 
     request = ChatRequest(
@@ -488,9 +490,10 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
 
     main_result, final_result = Result(), Result()
 
-    def prepared(self):
-        """Omit shared materials for this streaming-only test."""
-        return None
+    def prepared():
+        """Use an empty repository library for this streaming-only test."""
+        from domain.resources.models import ResourceLibrary
+        return ResourceLibrary()
 
     def run_streamed(agent, *, context, **_kwargs):
         """Capture the shared context for both runner entry points."""
@@ -508,7 +511,7 @@ def test_closing_chat_closes_active_adapter_and_finalizes_activity(monkeypatch, 
         finally:
             closed.append(result)
 
-    monkeypatch.setattr("domain.assistants.Assistant.load_resource_library", prepared)
+    monkeypatch.setattr("domain.runtime.execution.get_library", prepared)
     monkeypatch.setattr("domain.runtime.execution.Runner.run_streamed", run_streamed)
     monkeypatch.setattr("services.chat_service.stream_agent_events", events)
 

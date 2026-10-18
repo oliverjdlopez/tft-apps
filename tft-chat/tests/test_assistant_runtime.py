@@ -45,7 +45,7 @@ def resources(monkeypatch, tmp_path):
         package = playbooks / name
         package.mkdir(parents=True)
         (package / 'PLAYBOOK.md').write_text(f'---\nname: {name}\ndescription: Specific {name} guide\n---\nPLAYBOOK {name.upper()}')
-    monkeypatch.setattr('domain.assistants.assistant.get_library', lambda: build_library(references, skills, playbooks))
+    monkeypatch.setattr('domain.runtime.execution.get_library', lambda: build_library(references, skills, playbooks))
 
     async def forbidden(*args, **kwargs):
         """Fail if preparation or a resource read invokes another model."""
@@ -168,18 +168,17 @@ def test_reads_return_complete_contents_and_track_only_actual_reads():
     assert set(invocation.context.activity.resource_reads) == {'set18/units/roster', 'skill:allowed'}
 
 
-def test_shared_cache_does_not_expand_prepared_handoff_catalogues():
-    """A sibling's cached body cannot add entries to another assistant's catalogue."""
+def test_shared_library_cache_does_not_grant_handoff_access():
+    """A sibling's cached body remains inaccessible under the active assistant's spec."""
     invocation = run_offline(Assistant.from_name('root', registry=registry()), 'Question')
     child = invocation.agent.handoffs[0]
     leaf = child.handoffs[0]
     library = invocation.context.resources
-    catalogues = {node.name: node.resource_catalogue(library)
-                  for node in (child, leaf)}
-    assert catalogues['child'].body_cache is catalogues['leaf'].body_cache
+    assert 'skill:other' in library.entries
+    assert not child.spec.allows_resource('skill:other')
+    assert leaf.spec.allows_resource('skill:other')
     assert read(invocation, leaf, 'skill:other')['found']
-    assert 'skill:other' in catalogues['child'].body_cache
-    assert 'skill:other' not in catalogues['child'].entries
+    assert 'skill:other' in library.body_cache
     assert not read(invocation, child, 'skill:other')['found']
     assert read(invocation, child.clone(name='renamed'), 'set18')['found']
     assert not read(invocation, Agent(name=child.name), 'set18')['found']
@@ -196,15 +195,15 @@ def test_read_denies_unknown_paths_and_disallowed_skills(resource_id):
 
 
 def test_chat_and_transcript_boundaries():
-    """Chat cannot read skills and transcript-only invocations have no resources."""
+    """Chat denies skills; transcript instructions omit the available repository library."""
     invocation = run_offline(Assistant.from_name('chat', registry=registry(root_name='chat')), 'Question')
     assert 'skill:allowed' not in instructions(invocation.agent, invocation)
     assert read(invocation, invocation.agent, 'skill:allowed')['found'] is False
     transcript = run_offline(Assistant.from_name('root', registry=registry(resources=False)), 'Transcript')
     assert instructions(transcript.agent, transcript) == 'ROOT'
-    assert resource_entries(transcript.agent.resource_catalogue(
-        transcript.context.resources,
-    )) == []
+    assert transcript.context.resources.entries
+    assert not read(transcript, transcript.agent, 'set18')['found']
+    assert not transcript.context.activity.resource_reads
 
 
 def test_context_disabled_and_empty_allowlists_deny_reads():
@@ -218,9 +217,9 @@ def test_context_disabled_and_empty_allowlists_deny_reads():
     invocation = run_offline(Assistant.from_name('root', registry=source), 'Question')
     assert read(invocation, invocation.agent, 'skill:allowed')['found']
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
-    assert resource_entries(invocation.agent.handoffs[0].resource_catalogue(
-        invocation.context.resources,
-    )) == []
+    child = invocation.agent.handoffs[0]
+    assert all(not child.spec.allows_resource(entry['id'])
+               for entry in resource_entries(invocation.context.resources))
 
 
 def test_clone_uses_its_own_permissions_with_the_same_context():
@@ -286,7 +285,7 @@ def test_capture_and_run_state_are_isolated():
 
 def test_graph_shares_catalogue_and_repeated_runs_isolate_state(monkeypatch):
     """Load graph resources once while giving each execution independent state."""
-    from domain.assistants import assistant as resource_module
+    from domain.runtime import execution as resource_module
 
     library = resource_module.get_library()
     loads = []
@@ -568,9 +567,8 @@ def test_handoff_uses_registered_subclass_and_root_only_output_type(monkeypatch)
         def render_instructions(self, wrapper, agent):
             """Render a custom prompt from the node's own spec and prepared resources."""
             context = wrapper.context
-            ids = [entry['id'] for entry in resource_entries(self.resource_catalogue(
-                context.resources,
-            ))]
+            ids = [entry['id'] for entry in resource_entries(context.resources)
+                   if self.spec.allows_resource(entry['id'])]
             return self.spec.system_prompt + ' CUSTOM: ' + ', '.join(ids)
 
     monkeypatch.setitem(ASSISTANT_CLASSES, 'child', CustomAssistant)

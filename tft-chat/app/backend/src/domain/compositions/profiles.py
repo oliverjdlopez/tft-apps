@@ -22,6 +22,8 @@ def summarize_outcomes(outcomes, member_ids, minimum=1):
         else "available"
     )
     counts = tuple(sum(p == i for p in placements.values()) for i in range(1, 9))
+
+    # Build the public outcome summary from the filtered placement counts.
     return OutcomeSummary(
         state=state,
         observed_boards=n,

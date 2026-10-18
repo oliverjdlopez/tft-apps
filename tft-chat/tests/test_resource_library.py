@@ -2,15 +2,24 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 import yaml
 
 from domain.tools.context import read_resource_content
+from domain.assistants.models import AssistantSpec
 from domain.resources.library import resource_entries
 from domain.resources.library import build_library, get_library, read_content, validate_library
 from domain.resources.models import Playbook, ResourceLibrary, ResourceMetadata, Skill, WispDocument
+
+
+READ_SPEC = AssistantSpec(
+    name='fixture', description='Fixture', handoff_description='Fixture',
+    system_prompt='', task_prompt='', path='fixture/system.md',
+    repository_context=True, tool_names=('read_resource',),
+)
 
 
 def document(root: Path, name: str, metadata: dict, body: str = 'COMPLETE BODY') -> Path:
@@ -60,13 +69,13 @@ def test_discovery_is_header_only_and_content_is_cached(roots, monkeypatch):
     reads_returned = {}
     assert not reads and not library.body_cache
     assert {entry['id'] for entry in resource_entries(library)} == {'set18', 'skill:workflow'}
-    index = read_resource_content(library, 'set18', reads=reads_returned)
+    index = read_resource_content(library, 'set18', spec=READ_SPEC, reads=reads_returned)
     assert [child['id'] for child in index['children']] == ['set18/units']
     assert len(reads) == 1
     assert 'Last fact' not in index['content']
-    facts = read_resource_content(library, 'set18/units/roster')
+    facts = read_resource_content(library, 'set18/units/roster', spec=READ_SPEC)
     assert 'First fact' in facts['content'] and 'Last fact' in facts['content']
-    read_resource_content(library, 'set18/units/roster', reads=reads_returned)
+    read_resource_content(library, 'set18/units/roster', spec=READ_SPEC, reads=reads_returned)
     assert len(reads) == 2 and len(reads_returned) == 2
 
 
@@ -101,35 +110,31 @@ def test_reference_root_is_an_ordinary_name(roots):
     document(roots[0], 'guide-facts.md', metadata('guide/facts', 'reference', 'guide'),
              'Complete facts')
     library = build_library(*roots)
-    index = read_resource_content(library, 'guide')
+    index = read_resource_content(library, 'guide', spec=READ_SPEC)
     assert [child['id'] for child in index['children']] == ['guide/facts']
-    facts = read_resource_content(library, 'guide/facts')
+    facts = read_resource_content(library, 'guide/facts', spec=READ_SPEC)
     assert facts['content'] == 'Complete facts'
     assert 'sets' not in facts and 'set_number' not in facts
 
 
-def test_presentation_uses_only_the_supplied_catalogue(roots):
-    """Caller-selected entries bound children, links, and reads even with a shared cache."""
+def test_presentation_filters_shared_library_using_active_spec(roots):
+    """Spec permissions bound links and reads even when the shared body is cached."""
     document(roots[0], 'topic/facts.md', metadata(
         'set18/units/roster', 'reference', 'set18/units',
         related=['skill:workflow'], requires=['skill:workflow/example'],
     ))
     library = build_library(*roots)
-    assert read_resource_content(library, 'skill:workflow/example')['content'] == 'PRIVATE EXAMPLE'
-    subset = ResourceLibrary(
-        entries={key: value for key, value in library.entries.items() if key.startswith('set18')},
-        body_cache=library.body_cache,
-    )
-    assert [entry['id'] for entry in resource_entries(subset)] == ['set18']
-    result = read_resource_content(subset, 'set18/units/roster')
+    assert read_resource_content(library, 'skill:workflow/example', spec=READ_SPEC)['content'] == 'PRIVATE EXAMPLE'
+    restricted = replace(READ_SPEC, skill_names=(), playbook_names=())
+    result = read_resource_content(library, 'set18/units/roster', spec=restricted)
     assert result['found'] and not result['requires'] and not result['related']
-    assert read_resource_content(library, 'set18/units/roster')['related'] == ('skill:workflow',)
-    assert not read_resource_content(subset, 'skill:workflow/example')['found']
-    with pytest.raises(KeyError):
-        read_content(subset, 'skill:workflow/example')
-    assert resource_entries(subset, 'skill:workflow') == []
+    assert read_resource_content(library, 'set18/units/roster', spec=READ_SPEC)['related'] == ('skill:workflow',)
+    assert not read_resource_content(library, 'skill:workflow/example', spec=restricted)['found']
+    assert 'skill:workflow/example' in library.entries
+    assert 'skill:workflow/example' in library.body_cache
+    assert resource_entries(library, 'missing') == []
     assert resource_entries(None) == []
-    assert not read_resource_content(None, 'set18')['found']
+    assert not read_resource_content(library, 'missing', spec=READ_SPEC)['found']
 
 
 @pytest.mark.parametrize('mutation, message', [
@@ -226,10 +231,10 @@ def test_required_dependencies_cannot_cycle(roots):
 def test_stage_reads_link_rules_and_unrestricted_variants():
     """Stage discovery supplies all dependencies needed to interpret its population."""
     library = build_library()
-    result = read_resource_content(library, 'set18/wisps/offers-goldxp/stage-2')
+    result = read_resource_content(library, 'set18/wisps/offers-goldxp/stage-2', spec=READ_SPEC)
     assert result['found'] and result['record_ids']
     assert result['requires'] == ('set18/wisps/rules', 'set18/wisps/offers-goldxp/stage-all')
-    full = read_resource_content(library, 'set18/wisps/offers-goldxp')
+    full = read_resource_content(library, 'set18/wisps/offers-goldxp', spec=READ_SPEC)
     assert full['sha256'] == result['sha256'] and full['content'] != result['content']
 
 
@@ -270,11 +275,11 @@ def test_playbooks_and_skills_present_distinct_resources(playbook_roots):
         'set18', 'playbook:workflow', 'skill:workflow',
     }
     assert not library.body_cache
-    guide = read_resource_content(library, 'playbook:workflow')
+    guide = read_resource_content(library, 'playbook:workflow', spec=READ_SPEC)
     assert guide['content'] == 'FULL SPECIFIC GUIDE' and guide['kind'] == 'playbook'
     assert guide['children'][0]['id'] == 'playbook:workflow/example'
-    assert read_resource_content(library, 'playbook:workflow/example')['content'] == 'GUIDE EXAMPLE'
-    assert read_resource_content(library, 'skill:workflow')['content'] == 'FULL WORKFLOW'
+    assert read_resource_content(library, 'playbook:workflow/example', spec=READ_SPEC)['content'] == 'GUIDE EXAMPLE'
+    assert read_resource_content(library, 'skill:workflow', spec=READ_SPEC)['content'] == 'FULL WORKFLOW'
 
 
 @pytest.mark.parametrize('model,namespace,other', [

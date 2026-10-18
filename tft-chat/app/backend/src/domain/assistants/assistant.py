@@ -10,8 +10,7 @@ from agents import Agent, RunContextWrapper
 
 from domain.assistants.models import AssistantSpec
 from domain.assistants.registry import AssistantRegistry, current_registry
-from domain.resources.library import get_library, resource_entries
-from domain.resources.models import ResourceLibrary
+from domain.resources.library import resource_entries
 from domain.assistants.utils import resolve_tools
 from domain.runtime.models import AssistantRunContext
 
@@ -57,8 +56,12 @@ class Assistant(Agent[AssistantRunContext]):
             An SDK-compatible assistant without invocation state.
         """
         targets = list(handoffs or ())
+
+        # Check that constructed targets match the declared handoffs.
         if tuple(target.spec.name for target in targets) != spec.handoff_names:
             raise ValueError(f"Handoffs must match the specification for {spec.name!r}")
+
+        # Construct the node after validating its outgoing edges.
         return cls(
             name=spec.name,
             spec=spec,
@@ -92,6 +95,8 @@ class Assistant(Agent[AssistantRunContext]):
         """
         source = registry if registry is not None else current_registry()
         source.get_spec(name)
+
+        # Resolve the effective model for every reachable assistant.
         models = {
             target: (
                 model if model is not None else source.get_spec(target).resolved_model()
@@ -106,6 +111,8 @@ class Assistant(Agent[AssistantRunContext]):
                 if target == name and cls is not Assistant
                 else ASSISTANT_CLASSES.get(target, Assistant)
             )
+
+            # Build this node with its selected class and resolved children.
             return implementation.from_spec(
                 source.get_spec(target),
                 model=models[target],
@@ -123,76 +130,17 @@ class Assistant(Agent[AssistantRunContext]):
         retain the SDK's normal shallow-copy behavior.
         """
         instructions = kwargs.get("instructions", self.instructions)
+
+        # Preserve SDK clone behavior before rebinding the default renderer.
         clone = super().clone(**kwargs)
+
+        # Keep the default renderer bound to the cloned assistant instance.
         clone.instructions = (
             clone.render_instructions
             if "instructions" not in kwargs and instructions == self.render_instructions
             else instructions
         )
         return clone
-
-    @property
-    def uses_resources(self) -> bool:
-        """Whether this spec grants resources and declares the tool to read them."""
-        spec = self.spec
-        return bool(
-            (spec.repository_context or spec.skill_names or spec.playbook_names)
-            and (spec.include_all_tools or 'context' in spec.tool_group_keys
-                 or 'read_resource' in spec.tool_names)
-        )
-
-    def load_resource_library(self) -> ResourceLibrary | None:
-        """Load shared materials once if this assistant or a handoff uses them.
-
-        Returns:
-            The complete metadata snapshot for an invocation, or None when no
-            node needs resources. Construction itself never loads materials.
-        """
-        pending = [self]
-        seen = set()
-        while pending:
-            node = pending.pop()
-            if id(node) in seen:
-                continue
-            seen.add(id(node))
-            if node.uses_resources:
-                return get_library()
-            pending.extend(node.handoffs)
-        return None
-
-    def resource_catalogue(
-        self, library: ResourceLibrary | None,
-    ) -> ResourceLibrary:
-        """Select materials this assistant may expose and read under its own spec.
-
-        Args:
-            library: Shared invocation materials, without assistant permissions.
-
-        Returns:
-            A metadata view with this assistant's permitted IDs. The shared body
-            cache supplies content but never grants access to additional IDs.
-        """
-        if library is None or not self.uses_resources:
-            return ResourceLibrary()
-        spec = self.spec
-        entries = {}
-        for resource_id, descriptor in library.entries.items():
-            if resource_id.startswith(('skill:', 'playbook:')):
-                namespace, package = resource_id.split('/', 1)[0].split(':', 1)
-                configured = spec.skill_names if namespace == 'skill' else spec.playbook_names
-                allowed = (
-                    (spec.repository_context or bool(configured))
-                    and (configured is None or package in configured)
-                )
-            else:
-                allowed = spec.repository_context
-            if allowed:
-                entries[resource_id] = descriptor
-        return ResourceLibrary(
-            entries=entries,
-            roots=tuple(resource_id for resource_id in library.roots if resource_id in entries),
-            body_cache=library.body_cache,
-        )
 
     def render_instructions(
         self,
@@ -211,26 +159,68 @@ class Assistant(Agent[AssistantRunContext]):
         context = wrapper.context
         if not isinstance(context, AssistantRunContext):
             raise TypeError("assistant instructions require AssistantRunContext")
+
+        # Validate context before collecting prompt sections and timing.
         started = time.perf_counter()
-        parts = []
-        if context.runtime.root_assistant == self.spec.name and context.runtime.system:
-            parts.append(context.runtime.system)
-        parts.append(self.spec.system_prompt)
-        entries = resource_entries(self.resource_catalogue(context.resources))
-        if entries:
-            parts.append(
-                "## Available resources\nUse `read_resource` with an exact ID to read a resource or browse an index."
-            )
-            for entry in entries:
-                patches = ", ".join(str(patch) for patch in entry["patches"])
-                scope = f"; patches: {patches}" if patches else ""
-                parts.append(
-                    f"- `{entry['id']}` — {entry['name']} ({entry['kind']}{scope}): {entry['description']}"
-                )
+        parts = self._base_instruction_parts(context)
+        resource_instructions = self._resource_instructions(context)
+
+        # Include resource guidance only when permitted entries exist.
+        if resource_instructions:
+            parts.append(resource_instructions)
+
+        # Record rendering cost when the invocation exposes timing state.
         if context.timing is not None:
             context.timing["instruction_assembly_ms"] = round(
                 context.timing.get("instruction_assembly_ms", 0.0)
                 + (time.perf_counter() - started) * 1000,
                 3,
             )
+
+        # Return the complete prompt without empty sections.
+        return "\n\n".join(part.strip() for part in parts if part.strip())
+
+    def _base_instruction_parts(self, context: AssistantRunContext) -> list[str]:
+        """Return the root prefix and this assistant's system prompt, in order.
+
+        Args:
+            context: Invocation state supplying the optional root system prefix.
+
+        Returns:
+            Prompt sections preceding the available-resource catalogue.
+        """
+        if context.runtime.root_assistant == self.spec.name and context.runtime.system:
+            return [context.runtime.system, self.spec.system_prompt]
+        return [self.spec.system_prompt]
+
+    def _resource_instructions(self, context: AssistantRunContext) -> str:
+        """Render metadata for resources this assistant is allowed to read.
+
+        Args:
+            context: Invocation state containing the shared resource library.
+
+        Returns:
+            Available-resource guidance and entries, or an empty string.
+        """
+        entries = [
+            entry
+            for entry in resource_entries(context.resources)
+            if self.spec.allows_resource(entry["id"])
+        ]
+        if not entries:
+            return ""
+
+        parts = [
+            "## Available resources\nUse `read_resource` with an exact ID to read a resource or browse an index."
+        ]
+
+        # Format each permitted resource as one catalogue entry.
+        for entry in entries:
+            patches = ", ".join(str(patch) for patch in entry["patches"])
+            scope = f"; patches: {patches}" if patches else ""
+            parts.append(
+                f"- `{entry['id']}` — {entry['name']} ({entry['kind']}{scope}): {entry['description']}"
+            )
+
+        # Join the catalogue guidance and its formatted entries.
         return "\n\n".join(part.strip() for part in parts if part.strip())

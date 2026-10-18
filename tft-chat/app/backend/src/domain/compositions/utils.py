@@ -59,6 +59,8 @@ def matches_pattern(board: BoardObservation, pattern: StructuralPattern) -> bool
         )
         if copies < requirement.min_copies:
             return False
+
+    # Check trait thresholds after confirming all unit requirements.
     return all(
         any(
             t.trait.key == r.trait.key

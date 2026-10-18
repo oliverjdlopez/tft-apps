@@ -20,7 +20,7 @@ request ended before that stage completed; interrupted streams are recorded as
 such. The output is local diagnostic data and is ignored by Git.
 Instruction assembly is the cumulative time spent rendering dynamic instruction
 callbacks across model steps, including fallback. Agent setup includes graph construction and the shared
-resource catalogue/access snapshot; resource loading has no separate timing field.
+repository resource library snapshot; resource loading has no separate timing field.
 
 ## Backend composition
 
@@ -40,7 +40,7 @@ inputs and delegate to `services/`:
 - Assistant and tool discovery in `/api/config` and `/api/assistants`, plus
   `X-Chat-Assistant` validation, read loaded definitions directly. They do not
   construct executable agents. Each chat request uses `Assistant.from_name` to
-  build a fresh SDK subclass graph. Runtime then gathers resource permissions and
+  build a fresh SDK subclass graph. Runtime then loads the shared repository library and
   creates request-local evidence and activity. `agent_setup_ms` includes graph
   construction, context gathering, and streaming-adapter setup.
 - `display_service.py` supplies explorer views for models, databases, tools,

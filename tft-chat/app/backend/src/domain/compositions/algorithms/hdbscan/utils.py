@@ -75,6 +75,8 @@ def freeze_clusters(boards, distances, labels, persistence, *, vectors=None):
             )
         )
         label_families[label] = family_id
+
+    # Return stable families, frozen clusters, and native label mappings.
     return tuple(families), tuple(clusters), label_families
 
 
@@ -141,6 +143,8 @@ def diagnostic_panels(boards, assignments, clusters, strengths, parameters):
         }
         for board, assignment in zip(boards, assignments)
     ]
+
+    # Assemble the persistence, noise, and classification policy panels.
     panels = (
         DiagnosticPanel(
             panel_id="persistence",
@@ -175,6 +179,8 @@ def diagnostic_panels(boards, assignments, clusters, strengths, parameters):
             },
         ),
     )
+
+    # Warn when discovery produced no density families.
     warnings = (
         ()
         if clusters
@@ -198,6 +204,8 @@ def validate_model(model):
         raise ValueError("HDBSCAN model must serialize every effective parameter")
     parameters = Parameters.model_validate(model.effective_parameters)
     state = State.model_validate(model.state)
+
+    # Verify that serialized families match the frozen reference state.
     family_map = {family.family_id: family for family in model.families}
     if len(family_map) != len(model.families) or set(family_map) != {
         c.family_id for c in state.clusters
@@ -217,6 +225,8 @@ def validate_model(model):
             raise ValueError("HDBSCAN family representative is not a native member")
         if family.variations:
             raise ValueError("HDBSCAN v1 does not define variations")
+
+    # Return the validated runtime parameters and reference state.
     return parameters, state
 
 
@@ -354,5 +364,7 @@ def backend_diagnostics(diagnostics, discovery):
               "fit_precision": "float32" if discovery.backend == "cuda" else "float64",
               "neighbor_build": "brute_force" if discovery.backend == "cuda" else None},
     )
+
+    # Add discovery warnings to the execution backend panel.
     warnings = diagnostics.warnings + ((discovery.warning,) if discovery.warning else ())
     return diagnostics.model_copy(update={"panels": (*diagnostics.panels, panel), "warnings": warnings})

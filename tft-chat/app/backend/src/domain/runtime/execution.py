@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from agents import RunConfig, Runner, RunResult, RunResultStreaming
 
+from domain.resources.library import get_library
 from domain.runtime.activity import ActivityRunHooks, finalize_activity
 from domain.runtime.models import AssistantRunContext, RuntimeSettings
 from domain.runtime.utils import cancel_streamed_result, invocation_input
@@ -30,7 +31,7 @@ def create_context(
     """Gather resources and create fresh mutable state for one invocation.
 
     Args:
-        assistant: Configured root whose graph defines resource permissions.
+        assistant: Configured root supplying invocation identity.
         surface: Execution provenance such as chat, task, or eval.
         request_id: Caller identity; omission generates a unique identifier.
         system: Optional caller prefix rendered only by the root assistant.
@@ -44,7 +45,7 @@ def create_context(
             request_id=request_id or uuid4().hex,
             root_assistant=assistant.spec.name, surface=surface, system=system,
         ),
-        resources=assistant.load_resource_library(),
+        resources=get_library(),
         evidence=EvidenceStore(), timing=timing,
     )
 

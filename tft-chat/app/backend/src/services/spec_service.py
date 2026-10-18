@@ -38,7 +38,7 @@ def workspace() -> dict:
         assistants.append({'name': name, 'description': spec.description, 'model': spec.resolved_model(),
             'tools': list(spec.tool_names), 'tool_groups': list(spec.tool_group_keys), 'handoffs': list(spec.handoff_names),
             'eval_suites': suites.get(name, []), 'sources': [{'document_id': hashlib.sha256(f'spec\0{name}\0{filename}'.encode()).hexdigest()[:24],
-                'label': filename, 'path': f'app/backend/src/domain/assistant_specs/{name}/{filename}'}
+                'label': filename, 'path': f'app/backend/src/domain/assistants/specs/{name}/{filename}'}
                 for filename in EDITABLE_FILES if filename in active.source_files.get(name, {})]})
     return {'assistants': assistants}
 

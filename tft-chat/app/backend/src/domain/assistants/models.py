@@ -49,9 +49,13 @@ class AssistantSpec:
                 raise ValueError(f"{field} must be text")
             if field == "name" and not value.strip():
                 raise ValueError(f"{field} must be nonempty")
+
+        # Require permission flags to be actual booleans.
         for field in ("include_all_tools", "repository_context"):
             if not isinstance(getattr(self, field), bool):
                 raise ValueError(f"{field} must be a boolean")
+
+        # Validate and freeze the declared tool and resource name lists.
         for field in ("tool_group_keys", "tool_names", "handoff_names", "skill_names", "playbook_names"):
             value = getattr(self, field)
             if value is None and field in {"skill_names", "playbook_names"}:
@@ -61,6 +65,8 @@ class AssistantSpec:
             ):
                 raise ValueError(f"{field} must be a sequence of nonempty names")
             object.__setattr__(self, field, tuple(dict.fromkeys(name.strip() for name in value)))
+
+        # Normalize model and reasoning values to their enums.
         for field, enum in (("model", OpenAIModels), ("reasoning", ReasoningEfforts)):
             value = getattr(self, field)
             if value is not None:
@@ -68,6 +74,30 @@ class AssistantSpec:
                     object.__setattr__(self, field, enum(value.strip() if isinstance(value, str) else value))
                 except (TypeError, ValueError):
                     raise ValueError(f"{field} must be a valid {enum.__name__} value") from None
+
+    def allows_resource(self, resource_id: str) -> bool:
+        """Check this definition's access without constructing a resource library.
+
+        Args:
+            resource_id: Repository resource ID, including any package child path.
+
+        Returns:
+            Whether declared tool access and resource permissions allow the ID.
+            The caller separately checks that the resource exists in the library.
+        """
+        if not (self.include_all_tools or 'context' in self.tool_group_keys
+                or 'read_resource' in self.tool_names):
+            return False
+
+        # Apply the configured allowlists to skills and playbooks.
+        if resource_id.startswith(('skill:', 'playbook:')):
+            namespace, package = resource_id.split('/', 1)[0].split(':', 1)
+            configured = self.skill_names if namespace == 'skill' else self.playbook_names
+            return bool(
+                (self.repository_context or configured)
+                and (configured is None or package in configured)
+            )
+        return self.repository_context
 
     def resolved_model(self) -> str:
         """Return the pinned model or the application's configured default."""
