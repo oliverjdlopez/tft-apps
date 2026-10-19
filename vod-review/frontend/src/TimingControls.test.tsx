@@ -16,20 +16,21 @@ function mockApi() {
 it("sends download FPS alongside quality and checkpoint settings", async () => {
   const fetch = mockApi();
   render(<App />);
-  await screen.findByRole("combobox", { name: "Recent videos" });
-  fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
-  fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
+  fireEvent.click(screen.getByRole("button", { name: "Add video" }));
+  fireEvent.change(screen.getByLabelText("Twitch or YouTube link"), { target: { value: "https://youtu.be/example" } });
+  fireEvent.click(screen.getByRole("radio", { name: /Download a local copy/ }));
   fireEvent.change(screen.getByLabelText("Download target FPS"), { target: { value: "30" } });
-  fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "2" } });
-  fireEvent.click(screen.getByRole("button", { name: "Download video from link" }));
+  fireEvent.change(screen.getByLabelText("Download checkpoint interval"), { target: { value: "15" } });
+  fireEvent.click(screen.getByRole("button", { name: "Add to queue" }));
   await screen.findByText("Stopped test download");
   const call = fetch.mock.calls.find(([url]) => String(url).endsWith("/from-url"));
-  expect(JSON.parse(String(call?.[1]?.body))).toMatchObject({ target_fps: 30, quality: "720p", checkpoint_interval_seconds: 120 });
+  expect(JSON.parse(String(call?.[1]?.body))).toMatchObject({ target_fps: 30, quality: "720p", checkpoint_interval_seconds: 900 });
 });
 it("sends a time-based interval for round analysis", async () => {
   const fetch = mockApi();
   render(<App />);
-  fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: "v" } });
+  fireEvent.click(await screen.findByRole("button", { name: "Choose a replay" }));
+  fireEvent.click(await screen.findByRole("button", { name: /^clip\.mp4/ }));
   const interval = await screen.findByLabelText("Analysis interval in seconds");
   fireEvent.change(interval, { target: { value: "0.25" } });
   fireEvent.click(screen.getByRole("button", { name: "Process video" }));
@@ -72,7 +73,8 @@ it("keeps polling round progress until completion with stable callbacks", async 
     return { ok: true, status: 200, json: async () => payload } as Response;
   });
   render(<App />);
-  fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: "v" } });
+  fireEvent.click(await screen.findByRole("button", { name: "Choose a replay" }));
+  fireEvent.click(await screen.findByRole("button", { name: /^clip\.mp4/ }));
   expect(await screen.findByRole("button", { name: "Preparing 20%" }, { timeout: 2000 })).toBeDisabled();
   expect(await screen.findByRole("button", { name: "Preparing 60%" }, { timeout: 2000 })).toBeDisabled();
   expect(await screen.findByRole("button", { name: "Analyze again" }, { timeout: 2000 })).toBeEnabled();

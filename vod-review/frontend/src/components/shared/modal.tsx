@@ -3,11 +3,12 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogContent, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 /** Supply focus management for existing conditionally mounted video dialogs. */
-export function Modal({ title, onOpenChange, children, destructive = false }: {
+export function Modal({ title, onOpenChange, children, destructive = false, className }: {
   title: string;
   onOpenChange: (open: boolean) => void;
   children: ReactNode;
   destructive?: boolean;
+  className?: string;
 }) {
   // These dialogs are opened by several existing actions, not one DialogTrigger.
   const origin = useRef(document.activeElement as HTMLElement | null);
@@ -22,7 +23,7 @@ export function Modal({ title, onOpenChange, children, destructive = false }: {
   );
   return (
     <Dialog open onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} aria-describedby={undefined} onCloseAutoFocus={restoreFocus}>
+      <DialogContent showCloseButton={false} aria-describedby={undefined} onCloseAutoFocus={restoreFocus} className={className}>
         <DialogTitle className="sr-only">{title}</DialogTitle>
         {children}
       </DialogContent>

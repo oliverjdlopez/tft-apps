@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import App from "./App";
 import type { VideoRecord } from "./api";
@@ -31,15 +31,24 @@ function mockApi(record = video, overrides?: (url: string, options?: RequestInit
 }
 async function selectReview() {
   render(<App />);
-  fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: "online" } });
+  fireEvent.click(await screen.findByRole("button", { name: "Choose a replay" }));
+  fireEvent.click(await screen.findByRole("button", { name: /^Remote review/ }));
   await screen.findByTestId("youtube-player");
+}
+const playbackMode = () => screen.getByRole("group", { name: "Review playback mode" });
+const modeButton = (label: "Streaming" | "Local copy") => within(playbackMode()).getByRole("button", { name: label });
+function addVideo(url: string) {
+  fireEvent.click(screen.getByRole("button", { name: "Add video" }));
+  fireEvent.change(screen.getByLabelText("Twitch or YouTube link"), { target: { value: url } });
 }
 it("imports YouTube online by default without requesting a download", async () => {
   const fetch = mockApi();
   render(<App />);
-  fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: video.source_url } });
-  fireEvent.click(screen.getByRole("button", { name: "Open online video from link" }));
+  addVideo(video.source_url!);
+  expect(screen.getByRole("radio", { name: /Stream and review/ })).toBeChecked();
+  fireEvent.click(screen.getByRole("button", { name: "Add to queue" }));
   await screen.findByTestId("youtube-player");
+  expect(screen.queryByRole("dialog", { name: "Add a video" })).not.toBeInTheDocument();
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/videos/online"))).toBe(true);
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/from-url"))).toBe(false);
   expect(screen.getByLabelText("Analysis interval in seconds")).toHaveValue(10);
@@ -48,12 +57,12 @@ it("imports YouTube online by default without requesting a download", async () =
 it("ignores hidden offline checkpoint settings when opening an online review", async () => {
   const fetch = mockApi();
   render(<App />);
-  fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
-  fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "999" } });
-  fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "online" } });
-  fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: video.source_url } });
-  expect(screen.queryByLabelText("Download checkpoint interval in minutes")).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole("button", { name: "Open online video from link" }));
+  addVideo(video.source_url!);
+  fireEvent.click(screen.getByRole("radio", { name: /Download a local copy/ }));
+  fireEvent.change(screen.getByLabelText("Download checkpoint interval"), { target: { value: "60" } });
+  fireEvent.click(screen.getByRole("radio", { name: /Stream and review/ }));
+  expect(screen.queryByLabelText("Download checkpoint interval")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Add to queue" }));
   await screen.findByTestId("youtube-player");
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/videos/online"))).toBe(true);
 });
@@ -63,26 +72,28 @@ it("uses the review timeline and offset for round clicks and disables local medi
   await selectReview();
   expect(screen.getByTestId("youtube-player")).toHaveAttribute("data-start", "600");
   fireEvent.change(screen.getByLabelText("Seek offset in seconds"), { target: { value: "-3" } });
-  fireEvent.click(screen.getByRole("button", { name: /21.*Jump/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Jump to round 2-1/ }));
   expect(adapter.seek).toHaveBeenLastCalledWith(17, true);
-  expect(screen.getByRole("button", { name: "Transcribe selected video" })).toBeDisabled();
   expect(screen.getByRole("button", { name: /Download selected/ })).toBeDisabled();
+  fireEvent.click(screen.getByRole("tab", { name: "Transcript" }));
+  expect(screen.getByText("Generating a transcript requires an Offline copy.")).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: "Transcribe video" })).not.toBeInTheDocument();
 });
 it("keeps online playback and results on failed offline conversion", async () => {
   mockApi(video, (url) => url.endsWith("/offline-download") ? { task_id: "d", status: "failed", progress: 0, error: "Offline copy failed" } : undefined);
   await selectReview();
-  fireEvent.change(screen.getByLabelText("Review playback mode"), { target: { value: "offline" } });
+  fireEvent.click(modeButton("Local copy"));
   await screen.findByText("Offline copy failed");
   expect(screen.getByTestId("youtube-player")).toBeInTheDocument();
-  expect(screen.getByLabelText("Review playback mode")).toHaveValue("online");
+  expect(modeButton("Streaming")).toHaveAttribute("aria-pressed", "true");
 });
 it("switches the same review to offline when its tracked download completes", async () => {
   const offline = { ...video, mode: "offline" as const, local_available: true };
   const fetch = mockApi(video, (url) => url.endsWith("/offline-download") ? { task_id: "d", status: "completed", progress: 100, video: offline } : url.endsWith("/playback") ? { status: "ready", manifest_url: "/manifest.m3u8" } : undefined);
   await selectReview();
-  fireEvent.change(screen.getByLabelText("Review playback mode"), { target: { value: "offline" } });
+  fireEvent.click(modeButton("Local copy"));
   await waitFor(() => expect(screen.queryByTestId("youtube-player")).not.toBeInTheDocument());
-  expect(screen.getByLabelText("Review playback mode")).toHaveValue("offline");
+  expect(modeButton("Local copy")).toHaveAttribute("aria-pressed", "true");
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/mode"))).toBe(false);
 });
 it("fetches a timestamped still for online drawing", async () => {
@@ -110,11 +121,11 @@ it("shows progressive online rounds and restores completed results after a faile
     return reads === 1 ? { ...video, current_job: completed, latest_job: running, active_job: running } : { ...video, current_job: completed, latest_job: { ...running, status: "failed", phase: "failed", error: "Remote stream unavailable" }, active_job: null };
   });
   await selectReview();
-  expect(screen.getByRole("button", { name: /31.*Jump/ })).toBeInTheDocument();
-  expect(screen.getByLabelText("Review playback mode")).toBeDisabled();
+  expect(screen.getByRole("button", { name: /Jump to round 3-1/ })).toBeInTheDocument();
+  expect(modeButton("Local copy")).toBeDisabled();
   await screen.findByText("Remote stream unavailable", {}, { timeout: 2000 });
-  expect(screen.getByRole("button", { name: /21.*Jump/ })).toBeInTheDocument();
-  expect(screen.queryByRole("button", { name: /31.*Jump/ })).not.toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /Jump to round 2-1/ })).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /Jump to round 3-1/ })).not.toBeInTheDocument();
 });
 it("recovers this review's paused conversion independently of the latest global task", async () => {
   const fetch = mockApi(video, (url, options) => {
@@ -125,20 +136,20 @@ it("recovers this review's paused conversion independently of the latest global 
   });
   await selectReview();
   await screen.findByRole('button', { name: 'Resume offline download' });
-  expect(screen.getByLabelText('Review playback mode')).toBeDisabled();
+  expect(modeButton('Local copy')).toBeDisabled();
   expect(screen.getByRole('button', { name: 'Process video' })).toBeDisabled();
   fireEvent.click(screen.getByRole('button', { name: 'Dismiss offline download' }));
-  await waitFor(() => expect(screen.getByLabelText('Review playback mode')).toBeEnabled());
+  await waitFor(() => expect(modeButton('Local copy')).toBeEnabled());
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith('/downloads/this-review/dismiss'))).toBe(true);
-  expect(screen.getByLabelText('Review playback mode')).toHaveValue('online');
+  expect(modeButton('Streaming')).toHaveAttribute('aria-pressed', 'true');
 });
 
 it("imports Twitch VODs online without a download", async () => {
   const record = { ...video, source_id: "twitch:123", source_url: "https://www.twitch.tv/videos/123" };
   const fetch = mockApi(record);
   render(<App />);
-  fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: record.source_url } });
-  fireEvent.click(screen.getByRole("button", { name: "Open online video from link" }));
+  addVideo(record.source_url);
+  fireEvent.click(screen.getByRole("button", { name: "Add to queue" }));
   await screen.findByTestId("twitch-player");
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/videos/online"))).toBe(true);
   expect(fetch.mock.calls.some(([url]) => String(url).endsWith("/from-url"))).toBe(false);
@@ -148,7 +159,7 @@ it("seeks saved Online transcript seconds without source or manual OCR offsets",
   const transcript = { task_id: 'saved', video_id: video.id, status: 'completed', progress: 100, transcript: 'Source speech', language: 'en', segments: [{ id: 's000000', start: 12.25, end: 16, text: 'Source speech' }] };
   mockApi({ ...video, source_start_seconds: 300 }, url => url.endsWith('/transcription') || url.includes('/transcriptions/saved?') ? transcript : url.endsWith('/tasks') || url.endsWith('/transcript-tasks') ? { tasks: [] } : undefined);
   await selectReview();
-  fireEvent.change(screen.getByLabelText('Seek offset in seconds'), { target: { value: '20' } });
+  fireEvent.click(screen.getByRole('tab', { name: 'Transcript' }));
   fireEvent.click(await screen.findByRole('button', { name: '0:12' }));
   expect(adapter.seek).toHaveBeenLastCalledWith(12.25, true);
   expect(screen.getByTestId('youtube-player')).toHaveAttribute('data-start', '300');

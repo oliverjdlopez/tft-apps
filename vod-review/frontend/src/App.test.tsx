@@ -1,6 +1,7 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import App, { buildRoundExportClips, getSeekTimestamp, groupRoundTransitions, isFeaturedRound, parseTimestamp } from "./App";
+import App, { buildRoundExportClips, formatRoundLabel, getSeekTimestamp, groupRoundTransitions, isFeaturedRound, parseTimestamp } from "./App";
+import { parseClock } from "./AddVideoDialog";
 import type { SampleResult, VideoRecord } from "./api";
 
 afterEach(() => {
@@ -8,6 +9,16 @@ afterEach(() => {
   vi.restoreAllMocks();
   window.localStorage.clear();
 });
+
+async function chooseVideo(name: RegExp | string) {
+  fireEvent.click(await screen.findByRole("button", { name: /Choose a replay|Switch replay/ }));
+  fireEvent.click(await screen.findByRole("button", { name: typeof name === "string" ? new RegExp(`^${name}`) : name }));
+}
+
+function openAddVideo(url?: string) {
+  fireEvent.click(within(screen.getByRole("banner")).getByRole("button", { name: "Add video" }));
+  if (url !== undefined) fireEvent.change(screen.getByLabelText("Twitch or YouTube link"), { target: { value: url } });
+}
 
 describe("replay discovery", () => {
   it("saves channel settings and lists discovered replays", async () => {
@@ -46,8 +57,8 @@ describe("replay discovery", () => {
     });
 
     render(<App />);
-    await screen.findByText("No videos yet");
-    fireEvent.click(screen.getByRole("button", { name: "Replay source settings" }));
+    await screen.findByText("No videos yet.");
+    fireEvent.click(screen.getByRole("button", { name: "Sources and automatic imports" }));
     fireEvent.change(await screen.findByLabelText("Automatic import creators"), {
       target: { value: "https://www.youtube.com/@example" },
     });
@@ -58,10 +69,12 @@ describe("replay discovery", () => {
     expect(JSON.parse(window.localStorage.getItem("framewise.replaySources") ?? "[]")).toEqual([
       "https://www.youtube.com/@example",
     ]);
-    fireEvent.click(screen.getByRole("button", { name: "Display new replays" }));
+    fireEvent.click(screen.getByRole("button", { name: "Choose a replay" }));
+    fireEvent.click(screen.getByRole("button", { name: "Find new replays" }));
     expect(await screen.findByText("Fresh tournament VOD")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Use replay" }));
-    expect(screen.getByLabelText("Twitch or YouTube URL")).toHaveValue("https://www.youtube.com/watch?v=abc123");
+    expect(screen.getByRole("dialog", { name: "Add a video" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Twitch or YouTube link")).toHaveValue("https://www.youtube.com/watch?v=abc123");
   });
 
   it("opens settings when no replay sources have been configured", async () => {
@@ -71,8 +84,9 @@ describe("replay discovery", () => {
       json: async () => String(input).endsWith("/api/resumable-download") ? null : [],
     } as Response));
     render(<App />);
-    await screen.findByText("No videos yet");
-    fireEvent.click(screen.getByRole("button", { name: "Display new replays" }));
+    await screen.findByText("No videos yet.");
+    fireEvent.click(screen.getByRole("button", { name: "Choose a replay" }));
+    fireEvent.click(screen.getByRole("button", { name: "Find new replays" }));
     expect(screen.getByRole("dialog", { name: "Sources and automation" })).toBeInTheDocument();
   });
 });
@@ -101,14 +115,14 @@ describe("VOD download range", () => {
       json: async () => [],
     } as Response);
     render(<App />);
-    await screen.findByText("No videos yet");
-    fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
-    fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
-    fireEvent.change(screen.getByLabelText("Download start timestamp"), { target: { value: "2:00" } });
-    fireEvent.change(screen.getByLabelText("Download end timestamp"), { target: { value: "1:00" } });
-    fireEvent.click(screen.getByRole("button", { name: "Download video from link" }));
+    await screen.findByText("No videos yet.");
+    openAddVideo("https://youtu.be/example");
+    fireEvent.click(screen.getByRole("radio", { name: /Download a local copy/ }));
+    fireEvent.change(screen.getByLabelText("Download start time"), { target: { value: "2:00" } });
+    fireEvent.change(screen.getByLabelText("Download end time"), { target: { value: "1:00" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add to queue" }));
 
-    expect(await screen.findByText("The end timestamp must be after the start timestamp.")).toBeInTheDocument();
+    expect(await screen.findByRole("alert")).toHaveTextContent("The end time must be after the start time.");
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith("/api/videos/from-url"))).toBe(false);
   });
 
@@ -137,26 +151,29 @@ describe("VOD download range", () => {
       return { ok: true, status: 200, json: async () => [] } as Response;
     });
     render(<App />);
-    await screen.findByText("No videos yet");
-    fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
-    fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
-    fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "5" } });
+    await screen.findByText("No videos yet.");
+    openAddVideo("https://youtu.be/example");
+    fireEvent.click(screen.getByRole("radio", { name: /Download a local copy/ }));
+    fireEvent.change(screen.getByLabelText("Download checkpoint interval"), { target: { value: "15" } });
     expect(screen.getByLabelText("Download video quality")).toHaveValue("720p");
     fireEvent.change(screen.getByLabelText("Download video quality"), { target: { value: "480p" } });
-    fireEvent.click(screen.getByRole("button", { name: "Download video from link" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add to queue" }));
 
     expect(await screen.findByRole("button", { name: "Resume" })).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Add a video" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Use saved footage/i })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: /Checkpoint VOD/ })).toBeInTheDocument();
     const request = fetchMock.mock.calls.find(([input]) => String(input).endsWith("/api/videos/from-url"));
-    expect(JSON.parse(String(request?.[1]?.body))).toMatchObject({ checkpoint_interval_seconds: 300, quality: "480p" });
-    fireEvent.click(screen.getByRole("button", { name: /Dismiss/i }));
+    expect(JSON.parse(String(request?.[1]?.body))).toMatchObject({ checkpoint_interval_seconds: 900, quality: "480p" });
+    fireEvent.click(screen.getByRole("button", { name: "Choose a replay" }));
+    expect(screen.getByRole("button", { name: /^Checkpoint VOD.*New/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Checkpoint VOD.*Paused 25%/ })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "Dismiss" }));
     await waitFor(() => expect(screen.queryByText("Download paused")).not.toBeInTheDocument());
   });
 });
 
 describe("transcription only URL import", () => {
-  it("ignores hidden video settings and opens the automatic transcript only on request", async () => {
+  it("hides video settings and opens the automatic transcript only on request", async () => {
     let downloadPolls = 0;
     const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
       const url = String(input);
@@ -175,30 +192,23 @@ describe("transcription only URL import", () => {
       return { ok: true, json: async () => [] } as Response;
     });
     render(<App />);
-    await screen.findByText("No videos yet");
-    const toggle = screen.getByRole("switch", { name: "Transcription only" });
-    expect(toggle).not.toBeChecked();
-    fireEvent.change(screen.getByLabelText("Download start hours"), { target: { value: "2" } });
-    fireEvent.change(screen.getByLabelText("Download end hours"), { target: { value: "1" } });
-    fireEvent.change(screen.getByLabelText("Import playback mode"), { target: { value: "offline" } });
-    fireEvent.change(screen.getByLabelText("Download checkpoint interval in minutes"), { target: { value: "400" } });
+    await screen.findByText("No videos yet.");
+    openAddVideo("https://youtu.be/example");
+    fireEvent.click(screen.getByRole("radio", { name: /Download a local copy/ }));
+    fireEvent.change(screen.getByLabelText("Download start time"), { target: { value: "2:00" } });
     fireEvent.change(screen.getByLabelText("Download target FPS"), { target: { value: "15" } });
-    fireEvent.click(toggle);
-    expect(toggle).toBeChecked();
-    expect(screen.queryByLabelText("Download start hours")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("radio", { name: /Transcript only/ }));
+    expect(screen.queryByLabelText("Download start time")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Download video quality")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Download target FPS")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Download checkpoint interval in minutes")).not.toBeInTheDocument();
-    fireEvent.change(screen.getByLabelText("Twitch or YouTube URL"), { target: { value: "https://youtu.be/example" } });
-    fireEvent.click(screen.getByRole("button", { name: "Download and transcribe audio from link" }));
-    await waitFor(() => expect(toggle).toBeDisabled());
+    fireEvent.click(screen.getByRole("button", { name: "Get transcript" }));
     expect(await screen.findByText("Transcribing audio…")).toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Add a video" })).not.toBeInTheDocument();
     expect(screen.getByText("65%")).toBeInTheDocument();
     expect(screen.getByRole("progressbar", { name: "Download and transcription progress" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Pause" })).not.toBeInTheDocument();
     const viewTranscript = await screen.findByRole("button", { name: "View transcript" });
     expect(screen.queryByLabelText("Transcript text")).not.toBeInTheDocument();
-    expect(screen.queryByRole("dialog", { name: "Transcript" })).not.toBeInTheDocument();
     fireEvent.click(viewTranscript);
     expect(screen.getByRole("dialog", { name: "Transcript" })).toBeInTheDocument();
     expect(screen.getByRole("note")).toHaveTextContent("Audio-only download: no video is available to play.");
@@ -206,15 +216,28 @@ describe("transcription only URL import", () => {
     fireEvent.click(screen.getByRole("button", { name: "Close transcript" }));
     expect(screen.queryByLabelText("Transcript text")).not.toBeInTheDocument();
     fireEvent.click(viewTranscript);
-    expect(screen.getByLabelText("Transcript text")).toHaveValue("Recognized speech from the URL.");
     fireEvent.keyDown(screen.getByRole("dialog", { name: "Transcript" }), { key: "Escape" });
     await waitFor(() => expect(screen.queryByRole("dialog", { name: "Transcript" })).not.toBeInTheDocument());
     expect(screen.getByText("Transcription complete · en")).toBeInTheDocument();
     const request = fetchMock.mock.calls.find(([input]) => String(input).endsWith("/api/videos/from-url"));
     expect(JSON.parse(String(request?.[1]?.body))).toEqual({ url: "https://youtu.be/example", quality: "720p", media_type: "audio", transcribe: true });
-    await waitFor(() => expect(toggle).toBeEnabled());
-    fireEvent.click(toggle);
-    expect(screen.getByLabelText("Download start hours")).toHaveValue(2);
+  });
+});
+
+describe("add video dialog", () => {
+  it("parses h:mm range times", () => {
+    expect(parseClock("")).toBeNull();
+    expect(parseClock("1:30")).toBe(5400);
+    expect(parseClock("45")).toBe(2700);
+    expect(parseClock("1:02:03")).toBe(3723);
+    expect(parseClock("1:60")).toBeNaN();
+    expect(parseClock("soon")).toBeNaN();
+  });
+
+  it("formats compact round labels as stage-round", () => {
+    expect(formatRoundLabel("32")).toBe("3-2");
+    expect(formatRoundLabel("4-1")).toBe("4-1");
+    expect(formatRoundLabel("unknown")).toBe("unknown");
   });
 });
 
@@ -331,24 +354,22 @@ describe("game detection", () => {
     vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
 
     render(<App />);
-    fireEvent.change(await screen.findByRole("combobox", { name: "Recent videos" }), { target: { value: video.id } });
+    await chooseVideo("Round visibility test");
 
-    const transitionsHeading = await screen.findByText("Confirmed round changes");
-    expect(transitionsHeading.closest("aside")).toHaveClass("library-panel");
-    expect(screen.getByRole("combobox", { name: "Recent videos" })).toHaveValue(video.id);
-    expect(screen.getByText("11")).toBeInTheDocument();
-    expect(screen.getByText("32")).toBeInTheDocument();
-    expect(screen.getByText("42")).toBeInTheDocument();
-    expect(screen.getByText("12")).toBeInTheDocument();
-    const exportButton = await screen.findByRole("button", { name: "Download selected (7)" });
+    const rail = await screen.findByRole("complementary", { name: "Review tools" });
+    expect(screen.getByRole("button", { name: /Switch replay, current: Round visibility test/ })).toBeInTheDocument();
+    expect(await within(rail).findByText("1-1")).toBeInTheDocument();
+    expect(within(rail).getByText("3-2")).toBeInTheDocument();
+    expect(within(rail).getByText("4-2")).toBeInTheDocument();
+    expect(within(rail).getByText("1-2")).toBeInTheDocument();
+    expect(within(rail).queryByText("2-2")).not.toBeInTheDocument();
+    const exportButton = await within(rail).findByRole("button", { name: "Download selected (7)" });
     expect(exportButton).toBeEnabled();
-    expect(exportButton.closest("aside")).toHaveClass("library-panel");
 
-    fireEvent.click(screen.getByRole("button", { name: "Show 2 more" }));
+    fireEvent.click(within(rail).getByRole("checkbox", { name: "Show all rounds" }));
 
-    expect(screen.getByText("12")).toBeInTheDocument();
-    expect(screen.getByText("22")).toBeInTheDocument();
-    expect(screen.getByText("33")).toBeInTheDocument();
+    expect(within(rail).getByText("2-2")).toBeInTheDocument();
+    expect(within(rail).getByText("3-3")).toBeInTheDocument();
     expect(screen.getByRole("checkbox", { name: "Include round 12 in export" })).toBeChecked();
     expect(screen.getByRole("button", { name: "Download selected (7)" })).toBeEnabled();
 
@@ -440,11 +461,13 @@ it("reads an automatic transcript when reopening its library video", async () =>
     return { ok: true, json: async () => payload } as Response;
   });
   render(<App />);
-  fireEvent.change(await screen.findByLabelText("Recent videos"), { target: { value: video.id } });
-  const viewTranscript = await screen.findByRole("button", { name: "View transcript" });
-  fireEvent.click(screen.getByRole("tab", { name: "Distilled notes" }));
-  fireEvent.click(viewTranscript);
-  expect(screen.getByRole("tab", { name: "Transcript" })).toHaveAttribute("aria-selected", "true");
+  await chooseVideo("Automatic VOD");
+  fireEvent.click(await screen.findByRole("button", { name: "Transcript ready" }));
+  const views = screen.getByRole("tablist", { name: "Transcript views" });
+  fireEvent.click(within(views).getByRole("tab", { name: "Distilled notes" }));
+  fireEvent.click(within(views).getByRole("tab", { name: "Transcript" }));
+  expect(within(views).getByRole("tab", { name: "Transcript" })).toHaveAttribute("aria-selected", "true");
+  expect(screen.getByRole("button", { name: "Open full transcript" })).toBeInTheDocument();
   expect(screen.queryByRole("dialog", { name: "Transcript" })).not.toBeInTheDocument();
   expect(screen.getByLabelText("Transcript text")).toHaveValue("Saved automatic transcript");
   expect(fetch.mock.calls.some(([, options]) => options?.method === "POST")).toBe(false);
@@ -460,11 +483,11 @@ it("queues transcript seeks before local metadata and restores the selected vide
   });
   vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
   const rendered = render(<App />);
-  fireEvent.change(await screen.findByLabelText('Recent videos'), { target: { value: video.id } });
+  await chooseVideo('Timed VOD');
+  fireEvent.click(await screen.findByRole('tab', { name: 'Transcript', selected: false }));
   const time = await screen.findByRole('button', { name: '0:12' });
   const player = document.querySelector('video')!;
   Object.defineProperty(player, 'readyState', { configurable: true, value: 0 });
-  fireEvent.change(screen.getByLabelText('Seek offset in seconds'), { target: { value: '20' } });
   fireEvent.click(time);
   expect(player.currentTime).toBe(0);
   fireEvent.loadedMetadata(player);
@@ -474,7 +497,7 @@ it("queues transcript seeks before local metadata and restores the selected vide
   expect(document.querySelector('video')).toBe(player);
   rendered.unmount();
   render(<App />);
-  await waitFor(() => expect(screen.getByLabelText('Recent videos')).toHaveValue(video.id));
+  await screen.findByRole('button', { name: /Switch replay, current: Timed VOD/ });
   await screen.findByRole('tab', { name: 'Distilled notes' });
   expect(screen.getByRole('tab', { name: 'Distilled notes' })).toHaveAttribute('aria-selected', 'true');
   expect(fetch.mock.calls.some(([, options]) => options?.method === 'POST')).toBe(false);

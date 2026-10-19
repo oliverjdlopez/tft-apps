@@ -5,7 +5,7 @@ import { useTranscriptTasks, type Evidence, type MomentsOutput } from "./useTran
 import "./TranscriptTools.css";
 
 type Tab = "moments" | "notes" | "transcript";
-type Props = { title: string; transcription: TranscriptionTask | null; videoId?: string; online?: boolean; transcribing?: boolean; onTranscribe?: () => void; onSeek?: (seconds: number, play: boolean) => void; focusTranscript?: number };
+type Props = { title: string; transcription: TranscriptionTask | null; videoId?: string; online?: boolean; transcribing?: boolean; onTranscribe?: () => void; onSeek?: (seconds: number, play: boolean) => void; focusTranscript?: number; showTitle?: boolean };
 const actions = [{ name: "transcription_pipeline", label: "Distill transcript", tab: "notes" as Tab }, { name: "find_key_moments", label: "Find key moments", tab: "moments" as Tab }];
 const stamp = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
 
@@ -15,7 +15,7 @@ function savedTab(key: string): Tab {
 }
 
 /** Reusable transcript workspace; audio-only callers omit the playback callback. */
-export function TranscriptTools({ title, transcription, videoId, online, transcribing, onTranscribe, onSeek, focusTranscript = 0 }: Props) {
+export function TranscriptTools({ title, transcription, videoId, online, transcribing, onTranscribe, onSeek, focusTranscript = 0, showTitle = true }: Props) {
   const tools = useTranscriptTasks(transcription?.task_id, videoId);
   const storageKey = `vod-transcript-tab:${videoId ?? transcription?.task_id ?? "audio"}`;
   const [tab, setTab] = useState<Tab>(() => savedTab(storageKey));
@@ -45,7 +45,7 @@ export function TranscriptTools({ title, transcription, videoId, online, transcr
     catch { setCopyError("Could not copy the transcript"); }
   };
   return <section className="transcript-tools" aria-label="Transcript tools">
-    <h3>{videoId ? title : source?.title ?? title}</h3>
+    {showTitle && <h3>{videoId ? title : source?.title ?? title}</h3>}
     {transcription && !transcription.video_id && <p className="transcript-audio-notice" role="note">Audio-only download: no video is available to play.</p>}
     <div className="transcript-actions">{actions.map(action => {
       const state = tools.tasks.find(task => task.name === action.name);
