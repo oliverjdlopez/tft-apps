@@ -1,4 +1,7 @@
 **/.venv/
+**/.flash/
+**/.runpod/
+**/*-artifact.tar.gz
 **/node_modules/
 **/__pycache__/
 **/.pytest_cache/

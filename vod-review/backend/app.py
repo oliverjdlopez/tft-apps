@@ -716,6 +716,22 @@ def download_audio_url(url: str, task_id: str, progress_callback: Callable[[floa
 
 def _transcribe_audio_file(path: str, progress_callback: Callable[[float], None] | None = None) -> AudioTranscription:
     """Recognize audio once, retaining text and media-relative segment timings."""
+    backend = os.environ.get("VOD_TRANSCRIPTION_BACKEND", "local").strip().lower()
+    if backend not in {"local", "runpod"}:
+        raise ValueError("VOD_TRANSCRIPTION_BACKEND must be local or runpod")
+    if backend == "runpod":
+        try:
+            if __package__:
+                from .remote_transcription import transcribe_remote
+            else:
+                from remote_transcription import transcribe_remote
+        except ImportError as exc:
+            raise HTTPException(status_code=503, detail="Runpod transcription requires `uv sync --extra runpod`.") from exc
+        result = AudioTranscription.model_validate(transcribe_remote(path))
+        if progress_callback:
+            progress_callback(99.0)
+        return result
+
     try:
         from faster_whisper import WhisperModel
     except ImportError as exc:

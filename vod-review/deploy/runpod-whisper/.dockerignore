@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!mounted_audio.py
+!cached_model.py
+!handler.py
+!requirements.txt

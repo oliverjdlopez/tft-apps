@@ -65,6 +65,11 @@ Both flags can be supplied together to save full frames and crops.
 
 ## Transcribe VOD audio
 
+Recognition can also run remotely using Runpod-cached Hugging Face model weights
+and audio uploads to a Runpod network volume. The worker image contains dependencies
+and our handler, without Whisper weights. See [Runpod setup](../docs/runpod-transcription.md) for
+dependencies, volume configuration, credentials, and backend selection.
+
 Transcription is opt-in. After downloading a video, choose **Transcribe selected
 video** in the library panel, or enable **Transcription only** beside the URL
 field, paste a URL, and start the download. This downloads the full audio and
