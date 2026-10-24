@@ -291,7 +291,8 @@ attempt runs or fails. Search filters the list; Refresh rereads saved state.
 Each entry shows available artifacts. **Video** includes the existing local or
 YouTube/Twitch player and, when present, game and round navigation. Round clicks
 seek actual saved frame timestamps. The existing VOD game-grouping function is
-reused. **Transcript** provides a readable source transcript, language, and, when
+reused. **Transcript** fills the available main viewing area and provides the
+source transcript, language, and, when
 available, searchable speech segments whose timestamps open the video at that
 position. Legacy transcripts remain plain text. Changing reader modes retains
 the playback position, and leaving the desktop tab pauses playback. Selection
