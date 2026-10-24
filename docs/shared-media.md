@@ -273,3 +273,54 @@ removes unconfirmed input; confirmed input remains for retries. Closing the page
 before answering may leave pending bytes on disk, but never starts recognition.
 Progress is displayed for the current page session; completed transcripts remain
 available in desktop Media after reload.
+<<<<<<< HEAD
+=======
+
+## Watch & Read
+
+**Watch & Read** (Ctrl/Cmd+6) is a separate desktop destination for viewing
+existing content. It opens `/watch` on the owned VOD frontend, in a persistent
+sandboxed view, sharing VOD's frontend/backend processes. The VOD Review page
+and Media browser retain their existing behavior.
+
+The left library shows videos with a completed transcript, completed round
+results, or both. It joins shared catalogue videos and transcript snapshots with
+existing VOD records, including online reviews that have no downloaded file.
+Audio-only transcripts, unrelated resources, unprocessed videos, and unfinished
+results are excluded. An older successful result remains available while a newer
+attempt runs or fails. Search filters the list; Refresh rereads saved state.
+
+Each entry shows available artifacts. **Video** includes the existing local or
+YouTube/Twitch player and, when present, game and round navigation. Round clicks
+seek actual saved frame timestamps. The existing VOD game-grouping function is
+reused. **Transcript** fills the available main viewing area and provides the
+source transcript, language, and, when
+available, searchable speech segments whose timestamps open the video at that
+position. Legacy transcripts remain plain text. Changing reader modes retains
+the playback position, and leaving the desktop tab pauses playback. Selection
+and search survive desktop tab switches.
+
+The GET-only `/api/viewing-library` and `/api/viewing-library/{identity}` routes
+compose existing records without publishing snapshots or starting jobs. Owned
+video IDs and explicit `video_id` / `video_reference` metadata link artifacts;
+catalogue-only source joins require matching start/end coverage. No filename
+matching is used to associate a transcript with a video. All catalogue pages
+are considered. Stored round results remain VOD-owned; they are not copied into
+a new catalogue protocol.
+
+`/api/viewing-library/{identity}/content` serves an existing local copy with
+range support without changing VOD Review's saved playback mode. Existing HLS
+assets are used when available in Offline review mode; otherwise the original
+file is played directly. Viewing never starts playback conversion. Unsupported
+codecs, missing files, unavailable embeds, and unreadable transcript snapshots
+have explicit messages; a playback failure does not prevent transcript reading.
+Sharing disabled/unavailable is reported separately from an empty library.
+This page offers no discovery, import, analysis, recognition, or distillation.
+
+Offline coverage: `backend/tests/test_viewing_library.py` exercises the real
+HTTP routes with temporary SQLite/catalogue state and no application lifespan;
+`src/ViewingLibrary.test.tsx` covers reading, seeking, filtering, stale responses,
+pause-on-hide, and recovery. Desktop workspace tests cover separate persistent
+views and shared service readiness. Live provider playback requires separate
+network verification.
+>>>>>>> view-first

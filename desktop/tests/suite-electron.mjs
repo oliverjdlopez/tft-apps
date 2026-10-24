@@ -82,6 +82,7 @@ async function run() {
   workspace.compositionsEnabled = true;
   if (disposablePorts) {
     workspace.pages.get("vod").url = `http://127.0.0.1:${video.frontendPort}`;
+    workspace.pages.get("viewer").url = `http://127.0.0.1:${video.frontendPort}/watch`;
   }
   for (const [tab, view, route] of [["chat", workspace.chat, "/"],
     ["compositions", workspace.compositions, "/compositions"], ["rolldown", workspace.rolldown, "/rolldown"],
@@ -115,6 +116,13 @@ async function run() {
     await until(() => page.view.webContents.executeJavaScript("document.querySelector('video').currentTime>=1.9"));
     console.log("PASS: native synthetic upload, decoded playback and seek");
   }
+  workspace.select("viewer");
+  const viewer = workspace.pages.get("viewer");
+  await until(() => viewer.view.webContents.executeJavaScript(
+    "document.body.innerText.includes('No videos with saved transcripts or round transitions yet.')",
+  ).catch(() => false));
+  assert.equal(await viewer.view.webContents.executeJavaScript("typeof window.desktopWorkspace"), "undefined");
+  console.log("PASS: Watch & Read loads and excludes the unprocessed upload");
   workspace.select("chat");
   await workspace.chat.webContents.executeJavaScript("(() => { const input=document.querySelector('textarea'); Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set.call(input,'Native retained draft'); input.dispatchEvent(new Event('input',{bubbles:true})); })()");
   await until(() => workspace.chat.webContents.executeJavaScript("document.querySelector('.send-btn')?.disabled === false"));

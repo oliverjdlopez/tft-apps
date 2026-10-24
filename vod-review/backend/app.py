@@ -1260,11 +1260,14 @@ app.include_router(replay_automation_router)
 try:
     from .media_store.router import router as shared_media_router
     from .shared_resources import router as shared_video_router
+    from .viewing_library import router as viewing_library_router
 except ImportError:
     from media_store.router import router as shared_media_router
     from shared_resources import router as shared_video_router
+    from viewing_library import router as viewing_library_router
 app.include_router(shared_media_router)
 app.include_router(shared_video_router)
+app.include_router(viewing_library_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"],

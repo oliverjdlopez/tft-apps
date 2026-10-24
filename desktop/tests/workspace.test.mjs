@@ -390,3 +390,31 @@ test("Media uses the shell and restricts catalogue IPC to its main frame", async
   } finally { workspace.close(); }
   assert.equal(handlers.has("desktop-media"), false);
 });
+
+test("Watch & Read shares video readiness and retains an independent viewing page", async () => {
+  const starts = [];
+  const workspace = new DesktopWorkspace(windowFixture(), () => {}, async (tab) => { starts.push(tab); });
+  try {
+    workspace.select("viewer");
+    const viewer = workspace.pages.get("viewer");
+    assert.equal(viewer.view.webContents.loads.length, 0);
+    await new Promise((resolve) => setImmediate(resolve));
+    assert.deepEqual(starts, ["viewer"]);
+    assert.deepEqual(viewer.view.webContents.loads, ["http://localhost:5174/watch"]);
+    viewer.view.webContents.emit("did-finish-load");
+    assert.equal(workspace.currentContents(), viewer.view.webContents);
+    assert.equal(viewer.view.visible, true);
+    workspace.select("vod");
+    await new Promise((resolve) => setImmediate(resolve));
+    const review = workspace.pages.get("vod");
+    assert.deepEqual(review.view.webContents.loads, ["http://localhost:5174"]);
+    review.view.webContents.emit("did-finish-load");
+    workspace.select("viewer");
+    assert.equal(viewer.view.webContents.loads.length, 1);
+    assert.equal(review.view.visible, false);
+    assert.equal(viewer.view.options.webPreferences.preload, undefined);
+    const contents = workspace.window.webContents;
+    contents.mainFrame.url = new URL("../workspace.html", import.meta.url).href;
+    assert.equal(workspaceCommandAllowed({ sender: contents, senderFrame: contents.mainFrame }, contents, contents.mainFrame.url, "viewer"), true);
+  } finally { workspace.close(); }
+});

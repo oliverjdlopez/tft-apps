@@ -145,7 +145,7 @@ function ensureVideoWorkspace(tab) {
     if (quitting) return;
     const service = new VideoRuntime(root, node, options, wsl);
     videoRuntimes.set(key, service);
-    service.on("failure", () => { service.state = "failed"; workspace?.fail("vod"); });
+    service.on("failure", () => { service.state = "failed"; workspace?.fail("vod"); workspace?.fail("viewer"); });
     await service.start();
   })().finally(() => videoStarts.delete(key));
   videoStarts.set(key, pending);
@@ -248,6 +248,7 @@ function installMenu(langfuseRuns = []) {
       { label: "Rolldown", accelerator: "CmdOrCtrl+3", click: () => workspace?.select("rolldown") },
       { label: "Flowchart", accelerator: "CmdOrCtrl+4", click: () => workspace?.select("flowchart") },
       { label: "VOD Review", accelerator: "CmdOrCtrl+5", click: () => workspace?.select("vod") },
+      { label: "Watch & Read", accelerator: "CmdOrCtrl+6", click: () => workspace?.select("viewer") },
       { label: "Langfuse", accelerator: "CmdOrCtrl+7", click: () => workspace?.select("langfuse") },
       { label: "Database", accelerator: "CmdOrCtrl+8", click: () => workspace?.select("database") },
       { label: "Media", accelerator: "CmdOrCtrl+9", click: () => workspace?.select("media") },

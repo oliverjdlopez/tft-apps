@@ -7,6 +7,7 @@ import { DEFAULT_LANGFUSE_URL, langfuseRunReferences } from "./langfuse.mjs";
 
 const shellPath = fileURLToPath(new URL("./workspace.html", import.meta.url));
 const externalPages = {
+  viewer: { url: "http://localhost:5174/watch", partition: "persist:watch-read" },
   vod: { url: "http://localhost:5174", partition: "persist:vod-review" },
   langfuse: { url: DEFAULT_LANGFUSE_URL, partition: "persist:langfuse" },
   database: { url: "http://localhost:8979", partition: "persist:cloudbeaver" },
@@ -191,7 +192,7 @@ export class DesktopWorkspace {
     // Video startup has its own deadline. Begin the page deadline only after
     // service readiness so model imports do not exhaust the browser timeout.
     const prepareLangfuse = tab === "langfuse" && this.prepareLangfuse;
-    const ready = tab === "vod" ? this.ensureVideo(tab)
+    const ready = ["vod", "viewer"].includes(tab) ? this.ensureVideo(tab)
       : prepareLangfuse ? Promise.resolve().then(() => this.prepareLangfuse(session.fromPartition(page.partition)))
         : Promise.resolve();
     const navigate = () => {
@@ -200,7 +201,7 @@ export class DesktopWorkspace {
       return page.view.webContents.loadURL(page.url);
     };
     // Preserve video startup timing while preparing Langfuse's session first.
-    const navigation = tab === "vod" || prepareLangfuse ? ready.then(navigate) : navigate();
+    const navigation = ["vod", "viewer"].includes(tab) || prepareLangfuse ? ready.then(navigate) : navigate();
     Promise.resolve(navigation).catch((error) => {
       // An old navigation promise can settle after the user has already retried.
       if (generation === page.generation && error.code !== "ERR_ABORTED") this.fail(tab);
