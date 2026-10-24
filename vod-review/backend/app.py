@@ -1316,6 +1316,82 @@ async def discover_replays(request: ReplayDiscoveryRequest) -> dict[str, Any]:
     return {"replays": ordered, "errors": errors}
 
 
+def uploaded_audio_path(upload_id: str) -> Path:
+    """Resolve a server-issued upload identity without accepting filesystem paths."""
+    if len(upload_id) != 32 or any(char not in "0123456789abcdef" for char in upload_id):
+        raise HTTPException(status_code=404, detail="Upload not found")
+    path = db.DATA_DIR / "audio-uploads" / upload_id
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Upload not found")
+    return path
+
+
+@app.post("/api/uploads", status_code=201)
+async def upload_media(file: UploadFile = File(...)) -> dict[str, Any]:
+    """Inspect uploaded streams, importing video or retaining audio for consent."""
+    import av
+
+    upload_id = uuid.uuid4().hex
+    filename = Path(file.filename or "media").name
+    path = db.VIDEO_DIR / f"{upload_id}{Path(filename).suffix.lower()}"
+    try:
+        with path.open("wb") as output:
+            await asyncio.to_thread(shutil.copyfileobj, file.file, output)
+        try:
+            with av.open(str(path)) as container:
+                has_video = any(not (stream.disposition & stream.disposition.attached_pic) for stream in container.streams.video)
+                has_audio = bool(container.streams.audio)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail="The file is not readable audio or video") from exc
+        if has_video:
+            video = persist_video(path, filename, file.content_type or "video/mp4", upload_id)
+            start_playback_preparation(upload_id)
+            return {"kind": "video", "video": video}
+        if not has_audio:
+            raise HTTPException(status_code=400, detail="The file contains no audio or video streams")
+        destination = db.DATA_DIR / "audio-uploads" / upload_id
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        path.replace(destination)
+        return {"kind": "audio", "upload_id": upload_id, "name": filename}
+    except Exception:
+        path.unlink(missing_ok=True)
+        raise
+
+
+@app.post("/api/uploads/{upload_id}/transcription", status_code=202)
+async def transcribe_upload(upload_id: str) -> dict[str, Any]:
+    """Start recognition only after confirmation, reusing an existing task."""
+    path = uploaded_audio_path(upload_id)
+    try:
+        payload = db.get_transcription_task(upload_id)
+    except HTTPException as exc:
+        if exc.status_code != 404:
+            raise
+        payload = db.create_transcription_task(upload_id, str(path))
+    if payload["status"] == "completed" or upload_id in TRANSCRIPTION_TASKS:
+        return payload
+    db.update_transcription_task(upload_id, status="queued", progress=0)
+    task = asyncio.create_task(_run_transcription_task(upload_id), name=f"transcribe-upload-{upload_id}")
+    TRANSCRIPTION_TASKS[upload_id] = task
+    task.add_done_callback(lambda completed: TRANSCRIPTION_TASKS.pop(upload_id, None))
+    return db.get_transcription_task(upload_id)
+
+
+@app.delete("/api/uploads/{upload_id}", status_code=204)
+async def discard_upload(upload_id: str) -> Response:
+    """Remove an unconfirmed upload while preserving confirmed task input."""
+    path = uploaded_audio_path(upload_id)
+    try:
+        db.get_transcription_task(upload_id)
+    except HTTPException as exc:
+        if exc.status_code != 404:
+            raise
+    else:
+        raise HTTPException(status_code=409, detail="This upload already has a transcription task")
+    path.unlink()
+    return Response(status_code=204)
+
+
 @app.post("/api/videos", status_code=201)
 async def upload_video(file: UploadFile = File(...)) -> dict[str, Any]:
     filename = Path(file.filename or "video").name

@@ -32,8 +32,8 @@ experiments; saving a local draft leaves active application definitions unchange
 | `probability` | `rolldown_probabilities` | Exact normal-shop rolldown odds with shared-pool depletion |
 | `evidence` | `present_evidence` | Reference-only selection of backend-owned displays |
 
-The final responder selects evidence displays by reference and supplies concise
-prose; unsupported results remain Markdown. The registry
+Chat and the data analyst select evidence displays by reference and answer
+directly using the `final-response` playbook; unsupported results remain Markdown. The registry
 exposes no raw-row browser, generic leaderboard, ingestion, or match-store
 mutation tools.
 

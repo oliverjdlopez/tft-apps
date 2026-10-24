@@ -99,7 +99,15 @@ tools, handoffs, and trace metadata remain governed by the assistant registry.
 header renders them in an **Assistant** selector immediately left of the Model
 selector, persists the user's choice locally, and supplies that name through
 the routing header on each request. On narrow screens, the header actions wrap
-so both selectors and conversation controls remain reachable.
+so selectors and conversation controls remain reachable.
+The **Reasoning** selector persists its choice locally and sends optional
+`reasoning_effort` with each chat request. Options come from the backend
+`ReasoningEfforts` enum (`none`, `low`, `medium`, `high`, `xhigh`).
+**Assistant default** sends null and retains each assistant specification's settings.
+An explicit effort applies through SDK run settings to the root, all handoffs,
+and the tool-limit fallback without modifying saved specifications. Unknown
+efforts fail request validation. Provider/model support governs which efforts
+can execute; provider errors follow the existing chat error path.
 The adapter emits a `text_part_complete` event after each Responses API output
 text part. The browser buffers its deltas until that semantic boundary, then
 appends the complete part with two leading line breaks, a
@@ -344,11 +352,18 @@ augments with the same fallback order; see
 preserve request order and contain `status`, canonical `api_name`, same-origin
 `src`, `asset_patch`, and `fallback`; unavailable references have a null URL.
 
-The service constructs the existing `TFTNameResolver.from_set()` from downloaded
-catalog metadata. It does not fetch Community Dragon, query the database, or
-import ingestion operations during rendering. Catalogs and manifests are cached
-by their file revisions; file existence is rechecked during resolution. Invalid,
-legacy metadata-less, conflicting, and failed download references are unavailable.
+At FastAPI startup, the server downloads the latest `en_us` catalogue and the
+configured TFT set's default image groups (or Community Dragon's current set
+when no set is configured). Existing images are reused, while failed downloads
+are logged and retried on the next start; an upstream failure does not prevent
+the rest of the application from serving. The service constructs the existing
+`TFTNameResolver.from_set()` from this local metadata. It does not fetch
+Community Dragon, query the database, or import ingestion operations during
+rendering. Catalogs and manifests are cached by their file revisions; file
+existence is rechecked during resolution. Invalid, legacy metadata-less,
+conflicting, and failed download references are unavailable.
+The downloader skips unsupported catalogue image-path tokens and continues
+fetching valid references from the same bundle.
 
 Use the existing downloader to prepare a bundle in this checkout:
 
@@ -384,10 +399,15 @@ entities reuses those lookups; switching context disposes stale requests. Reload
 the page after downloading or replacing a bundle to refresh browser lookup state.
 Image transfer failures preserve labels and show the same unavailable-image note.
 Evidence tables use this resolver for loaded unit, item, and trait names. They
-request images using the configured set number returned by `/api/config`, with
-`latest` asset lookup scoped to that set; if no set is configured, the table
-remains text-only. These decorative images do not alter evidence values or claim
-that the selected set-level images represent the historical patch of the query.
+request images using the set number returned by `/api/config`: the configured
+set takes priority, otherwise the newest downloaded set is used, matching the
+local catalog default. `latest` asset lookup stays scoped to that set. If neither
+is available, the table renders text without empty image placeholders. The chat
+view passes this asset context explicitly into each
+message and its evidence cards, including presentations arriving during streaming.
+Image lookup failures preserve the answer text and table labels. These decorative
+images do not alter evidence values or claim that the selected set-level images
+represent the historical patch of the query.
 The requests contain public entity names only and never include evidence scope or
 player identifiers. Evidence cards omit patch-fallback notices because these
 assets are treated as set-level imagery.

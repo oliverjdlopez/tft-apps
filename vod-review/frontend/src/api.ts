@@ -131,6 +131,15 @@ export async function uploadVideo(file: File): Promise<VideoRecord> {
   return request<VideoRecord>("/api/videos", { method: "POST", body });
 }
 
+export type MediaUpload = { kind: "video"; video: VideoRecord } | { kind: "audio"; upload_id: string; name: string };
+export async function uploadMedia(file: File): Promise<MediaUpload> {
+  const body = new FormData();
+  body.append("file", file);
+  return request<MediaUpload>("/api/uploads", { method: "POST", body });
+}
+export const transcribeUpload = (id: string) => request<TranscriptionTask>(`/api/uploads/${id}/transcription`, { method: "POST" });
+export const discardUpload = (id: string) => request<void>(`/api/uploads/${id}`, { method: "DELETE" });
+
 export type TranscriptionTask = { task_id: string; video_id: string | null; status: "queued" | "running" | "completed" | "failed"; progress: number; transcript: string | null; language: string | null; error: string | null };
 export type DownloadTask = { task_id: string; target_video_id?: string | null; status: "queued" | "running" | "pausing" | "paused" | "completed" | "failed" | "dismissed"; progress: number; video?: VideoRecord | null; error?: string | null; media_type?: "video" | "audio"; transcription_task_id?: string | null; transcription?: TranscriptionTask | null };
 export type DownloadQuality = "480p" | "720p" | "1080p" | "best";

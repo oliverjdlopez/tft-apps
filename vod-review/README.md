@@ -4,6 +4,11 @@ Normal entry point: run `python3 scripts/setup.py` from the suite root, then
 `npm start` or `npm run dev` from `../desktop/`. See [suite setup](../docs/desktop.md).
 Standalone commands below remain available for testing and troubleshooting.
 
+The backend loads `vod-review/.env`, with process environment variables taking
+precedence. Desktop startup synchronizes shared root `.env` defaults while
+preserving VOD-specific overrides. See [shared dotenv defaults](../docs/desktop.md#shared-dotenv-defaults)
+for editing rules and refreshing settings before standalone startup.
+
 
 Local app for uploading a video—or downloading one from a Twitch or YouTube URL—drawing one fixed analysis region, and classifying the round shown in that crop at a configurable snapshot interval.
 

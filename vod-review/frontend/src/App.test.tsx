@@ -447,3 +447,30 @@ it("reads an automatic transcript when reopening its library video", async () =>
   expect(screen.getByLabelText("Transcript text")).toHaveValue("Saved automatic transcript");
   expect(fetch.mock.calls.some(([, options]) => options?.method === "POST")).toBe(false);
 });
+
+describe("audio uploads", () => {
+  it.each([false, true])("requires confirmation before recognition (confirm=%s)", async (confirm) => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input, options) => {
+      const url = String(input);
+      let payload: unknown = [];
+      if (url.endsWith("/api/resumable-download")) payload = null;
+      if (url.endsWith("/api/uploads")) payload = { kind: "audio", upload_id: "audio-id", name: "recording.mp4" };
+      if (url.endsWith("/api/uploads/audio-id/transcription")) payload = { task_id: "audio-id", video_id: null, status: "completed", progress: 100, transcript: "Recognized speech", language: "en", error: null };
+      return { ok: true, status: options?.method === "DELETE" ? 204 : 200, json: async () => payload } as Response;
+    });
+    render(<App />);
+    expect(screen.getByRole("button", { name: "Upload" })).toBeInTheDocument();
+    fireEvent.change(screen.getAllByLabelText("Audio or video file")[0], { target: { files: [new File(["audio"], "recording.mp4", { type: "video/mp4" })] } });
+    await screen.findByRole("dialog", { name: "Transcribe audio?" });
+    expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith("/transcription"))).toBe(false);
+    fireEvent.click(screen.getByRole("button", { name: confirm ? "Transcribe" : "Cancel" }));
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "Transcribe audio?" })).not.toBeInTheDocument());
+    if (confirm) {
+      fireEvent.click(await screen.findByRole("button", { name: "View transcript" }));
+      expect(screen.getByLabelText("Transcript text")).toHaveValue("Recognized speech");
+    } else {
+      expect(fetchMock.mock.calls.some(([url, options]) => String(url).endsWith("/api/uploads/audio-id") && options?.method === "DELETE")).toBe(true);
+      expect(fetchMock.mock.calls.some(([url]) => String(url).endsWith("/transcription"))).toBe(false);
+    }
+  });
+});

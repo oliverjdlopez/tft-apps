@@ -4,11 +4,11 @@
   "handoff_description": "Use for focused unit, item, or trait rankings and for conditional board comparisons or cohort investigations that need more than a direct lookup.",
   "tools": {
     "include_all": false,
-    "groups": ["ranking", "query_cohorts", "deltas", "context"]
+    "groups": ["ranking", "query_cohorts", "deltas", "context", "evidence"]
   },
   "resources": {
     "context": {"repository": true}
   },
 
-  "handoffs": ["final_responder"]
+  "handoffs": []
 }

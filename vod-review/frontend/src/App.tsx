@@ -13,7 +13,7 @@ import { Switch as UiSwitch } from "@/components/ui/switch";
 import { ChangeEvent, PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Activity, Check, CircleHelp, Cpu, Crosshair, Download, Film, FolderOpen, Link2, ListVideo, LoaderCircle, Pause, Play, RefreshCcw, Save, ScanSearch, Settings, SkipBack, SkipForward, Trash2, TriangleAlert, Upload, X } from "lucide-react";
-import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getReplayAutomation, getVideoTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadVideo, VideoRecord } from "./api";
+import { BoundingBox, deleteVideo, dismissPausedDownload, discoverReplays, DownloadMediaType, DownloadQuality, DownloadTask, downloadRoundExport, getDownloadTask, getResumableDownload, getReplayAutomation, getVideoTranscription, getVideo, importVideoUrl, listVideos, pauseDownload, Replay, resumeDownload, RoundExportClip, saveBox, savePausedDownload, SampleResult, startProcessing, startTranscription, TranscriptionTask, uploadMedia, transcribeUpload, discardUpload, getTranscription, MediaUpload, VideoRecord } from "./api";
 import { TwitchPlayer } from "./TwitchPlayer";
 import { YouTubePlayer, PlayerAdapter } from "./YouTubePlayer";
 import { importOnlineVideo, setVideoMode, downloadOfflineVideo, getVideoFrame, getOfflineDownload } from "./api";
@@ -305,13 +305,50 @@ function App() {
     return () => { cancelled = true; window.clearInterval(timer); };
   }, [selectedId, transcribing]);
 
+  const [pendingAudio, setPendingAudio] = useState<Extract<MediaUpload, { kind: "audio" }> | null>(null);
+  const [audioTask, setAudioTask] = useState<TranscriptionTask | null>(null);
+  const [audioBusy, setAudioBusy] = useState(false);
+
+  useEffect(() => {
+    if (!audioTask || !["queued", "running"].includes(audioTask.status)) return;
+    let cancelled = false;
+    const refresh = async () => {
+      try {
+        const result = await getTranscription(audioTask.task_id);
+        if (!cancelled) setAudioTask(result);
+      } catch (reason) {
+        if (!cancelled) setError(reason instanceof Error ? reason.message : "Could not refresh transcription");
+      }
+    };
+    const timer = window.setInterval(() => void refresh(), 1500);
+    void refresh();
+    return () => { cancelled = true; window.clearInterval(timer); };
+  }, [audioTask?.task_id, audioTask?.status]);
+
+  const handleAudioDecision = async (confirmed: boolean) => {
+    if (!pendingAudio || audioBusy) return;
+    setAudioBusy(true);
+    try {
+      if (confirmed) setAudioTask(await transcribeUpload(pendingAudio.upload_id));
+      else await discardUpload(pendingAudio.upload_id);
+      setPendingAudio(null);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Could not process audio upload");
+    } finally { setAudioBusy(false); }
+  };
+
   const handleUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     setError(null);
     setUploading(true);
     try {
-      const record = await uploadVideo(file);
+      const result = await uploadMedia(file);
+      if (result.kind === "audio") {
+        setPendingAudio(result);
+        return;
+      }
+      const record = result.video;
       setVideos((current) => [record, ...current.filter((video) => video.id !== record.id)]);
       setSelectedId(record.id);
     } catch (reason: unknown) {
@@ -547,13 +584,27 @@ function App() {
           <Settings size={18} />
         </UiButton>
         <UiButton variant="outline" className="creator-schedule-button" type="button" aria-label="Automatic creator imports" onClick={() => setAutomationOpen(true)}><RefreshCcw size={16} /><span>Automatic imports</span></UiButton>
-        <UploadButton onChange={handleUpload} disabled={uploading}>
+        <UploadButton onChange={handleUpload} disabled={uploading || !!pendingAudio || audioTask?.status === "queued" || audioTask?.status === "running"}>
           {uploading ? <LoaderCircle className="spin" size={17} /> : <Upload size={17} />}
-          {uploading ? "Uploading…" : "Upload video"}
+          {uploading ? "Uploading…" : "Upload"}
         </UploadButton>
       </header>
 
       {error && <UiAlert variant="destructive" className="toast error-toast"><X size={16} /> {error}<UiButton variant="outline" onClick={() => setError(null)} aria-label="Dismiss error">Dismiss</UiButton></UiAlert>}
+      {pendingAudio && <Modal title="Transcribe audio?" onOpenChange={() => { if (!audioBusy) void handleAudioDecision(false); }}>
+        <h2>Transcribe audio?</h2><p>“{pendingAudio.name}” contains audio without video. Transcribe it and save the transcript to Media?</p>
+        <div className="confirm-modal-actions"><UiButton variant="outline" disabled={audioBusy} onClick={() => void handleAudioDecision(false)}>Cancel</UiButton><UiButton disabled={audioBusy} onClick={() => void handleAudioDecision(true)}>{audioBusy ? "Please wait…" : "Transcribe"}</UiButton></div>
+      </Modal>}
+      {audioTask && <div role="status" className="download-progress">
+        <p>{audioTask.status === "completed" ? "Audio transcription complete" : audioTask.status === "failed" ? `Audio transcription failed: ${audioTask.error}` : `Transcribing uploaded audio… ${Math.round(audioTask.progress)}%`}</p>
+        {audioTask.status === "completed" && <UiButton variant="outline" onClick={() => setTranscriptPreview(audioTask)}>View transcript</UiButton>}
+        {audioTask.status === "failed" && <UiButton variant="outline" disabled={audioBusy} onClick={async () => {
+          setAudioBusy(true);
+          try { setAudioTask(await transcribeUpload(audioTask.task_id)); }
+          catch (reason) { setError(reason instanceof Error ? reason.message : "Could not retry transcription"); }
+          finally { setAudioBusy(false); }
+        }}>Retry transcription</UiButton>}
+      </div>}
       {transcriptPreview && <Modal title="Transcript" onOpenChange={() => setTranscriptPreview(null)}>
         <div className="settings-modal-heading"><h2>Transcript</h2><UiButton variant="outline" type="button" aria-label="Close transcript" onClick={() => setTranscriptPreview(null)}><X size={17} /></UiButton></div>
         {transcriptPreview.language && <p>Detected language: {transcriptPreview.language}</p>}
@@ -622,8 +673,8 @@ function App() {
               <div className="welcome-icon"><Film size={28} /></div>
               <p className="eyebrow">READY WHEN YOU ARE</p>
               <h2>Find the moment that matters.</h2>
-              <p>Upload a VOD, choose a frame, and draw a fixed region to analyze at your chosen snapshot interval.</p>
-              <UploadButton onChange={handleUpload} disabled={uploading}><Upload size={17} />Choose a video</UploadButton>
+              <p>Upload audio to transcribe, or upload a VOD and choose a region for round analysis.</p>
+              <UploadButton onChange={handleUpload} disabled={uploading || !!pendingAudio || audioTask?.status === "queued" || audioTask?.status === "running"}><Upload size={17} />Choose a file</UploadButton>
             </div>
           )}
         </UiCard>

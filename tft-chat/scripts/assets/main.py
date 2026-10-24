@@ -113,6 +113,30 @@ async def download_bundle(args: argparse.Namespace) -> int:
     return 1 if failures else 0
 
 
+async def download_startup_assets(set_number: int | None = None) -> int:
+    """Ensure the default latest-patch image bundle exists before the UI serves.
+
+    Args:
+        set_number: Configured TFT set, or ``None`` to use Community Dragon's
+            current set selection.
+
+    Returns:
+        Zero when every image is available and one when one or more downloads
+        failed. Existing files are reused and failed files are retried next start.
+    """
+    args = argparse.Namespace(
+        patch="latest",
+        locale="en_us",
+        set_number=set_number,
+        groups=list(GROUPS),
+        folder="cdragon",
+        concurrency=8,
+        timeout=30,
+        overwrite=False,
+    )
+    return await download_bundle(args)
+
+
 def main() -> int:
     """Validate CLI arguments and return a nonzero exit code for incomplete bundles."""
     parser = build_parser()

@@ -4,6 +4,7 @@ import base64
 import asyncio
 import json
 from contextlib import AbstractContextManager
+from dataclasses import replace
 from types import SimpleNamespace
 
 import pytest
@@ -11,7 +12,7 @@ from agents import MaxTurnsExceeded
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from api.routes.chat import ChatMessage, ChatRequest, router as chat_router
-from domain.constants import AnthropicModels, OpenAIModels
+from domain.constants import AnthropicModels, OpenAIModels, ReasoningEfforts
 from core.config import load_config
 from services.chat_service import (
     chat_config,
@@ -69,7 +70,7 @@ def test_discovery_routes_and_name_validation_do_not_build_agents(monkeypatch) -
     rows = {row["name"]: row for row in catalogue.json()["assistants"]}
     assert rows["chat"]["description"] == registry.get_spec("chat").description
     assert rows["chat"]["tools"] == list(registry.tool_names["chat"])
-    assert rows["chat"]["handoffs"] == ["data_analyst", "final_responder"]
+    assert rows["chat"]["handoffs"] == ["data_analyst"]
     assert resolve_chat_assistant(" meta_expert ") == "meta_expert"
     with pytest.raises(LookupError, match="Unknown chat assistant"):
         resolve_chat_assistant("missing")
@@ -90,7 +91,32 @@ def test_chat_route_rejects_unknown_assistant_header_before_streaming() -> None:
     assert response.json() == {"detail": "Unknown chat assistant 'missing'."}
 
 
-def test_chat_config_includes_models_and_tools() -> None:
+@pytest.mark.parametrize(
+    ("configured_set", "downloaded_sets", "expected_set"),
+    [(17, [18, 19], 17), (None, [18, 19], 19), (None, [], None)],
+)
+def test_config_asset_context_uses_local_catalog_default(
+    monkeypatch, tmp_path, configured_set, downloaded_sets, expected_set,
+) -> None:
+    """Resolve an image set without requiring an explicit chat set setting."""
+    config = load_config()
+    config = replace(config, chat=replace(config.chat, set_number=configured_set))
+    monkeypatch.setattr("services.chat_service.load_config", lambda: config)
+    monkeypatch.setattr("services.assets.service.ASSET_ROOT", tmp_path)
+    for set_number in downloaded_sets:
+        (tmp_path / "latest" / f"set-{set_number}.0").mkdir(parents=True)
+    app = FastAPI()
+    app.include_router(chat_router)
+
+    response = TestClient(app).get("/api/config")
+
+    assert response.status_code == 200
+    assert response.json()["asset_context"] == {"set_number": expected_set}
+
+
+def test_chat_config_includes_models_and_tools(monkeypatch, tmp_path) -> None:
+    """Keep configuration discovery independent of checkout-local downloads."""
+    monkeypatch.setattr("services.assets.service.ASSET_ROOT", tmp_path)
     config = chat_config()
 
     assert config["default_assistant"] == "chat"
@@ -103,9 +129,9 @@ def test_chat_config_includes_models_and_tools() -> None:
         *[tool.name for tool in CONTEXT_TOOL_GROUP.tools],
         *[tool.name for tool in RANKING_TOOL_GROUP.tools],
         *[tool.name for tool in PROBABILITY_TOOL_GROUP.tools],
+        "present_evidence",
         *[tool.name for tool in COHORT_TOOL_GROUP.tools],
         *[tool.name for tool in DELTA_TOOL_GROUP.tools],
-        "present_evidence",
     ]
     assert [group["key"] for group in config["tool_groups"]] == [
         "query_cohorts",
@@ -282,7 +308,8 @@ def test_stream_agent_events_translates_tools_and_handoffs() -> None:
     ]
 
 
-def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
+@pytest.mark.parametrize("effort", [None, *ReasoningEfforts])
+def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch, effort) -> None:
     captured: dict[str, object] = {}
 
     class FakeTrace(AbstractContextManager):
@@ -324,6 +351,7 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
         assert isinstance(context, AssistantRunContext)
         assert isinstance(context.evidence, EvidenceStore)
         assert isinstance(hooks, ActivityRunHooks)
+        captured["run_config"] = run_config
         captured["context"] = context
         captured["run_agent"] = agent
         captured["stream_input"] = input
@@ -347,10 +375,15 @@ def test_stream_chat_wraps_the_main_run_in_a_trace(monkeypatch) -> None:
                 model="gpt-5",
                 max_tool_rounds=2,
                 assistant_name="meta_expert",
+                reasoning_effort=effort,
             )
         ]
 
     chunks = asyncio.run(collect())
+    if effort is None:
+        assert captured["run_config"] is None
+    else:
+        assert captured["run_config"].model_settings.reasoning.effort == effort.value
     assert captured["run_agent"].name == "meta_expert"
     assert len(chunks) == 1
     payload = chunks[0].strip().removeprefix(STREAM_EVENT_PREFIX).removesuffix(STREAM_EVENT_SUFFIX)
@@ -415,6 +448,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
 
     def fake_run_streamed(agent, *, input, max_turns, context, hooks, run_config):
         nonlocal main_agent
+        assert run_config.model_settings.reasoning.effort == "high"
         if main_agent is None:
             main_agent = agent
         else:
@@ -457,6 +491,7 @@ def test_stream_chat_uses_selected_assistant_for_tool_limit_fallback(
                 model="gpt-5",
                 max_tool_rounds=2,
                 assistant_name=assistant_name,
+                reasoning_effort=ReasoningEfforts.HIGH,
             )
         ]
 
@@ -567,3 +602,14 @@ def test_resource_source_events_follow_successful_reads(kind):
     assert events[0]['path'] == resource['path']
     assert ('content' in events[0]) == (kind == 'reference')
     assert events[1]['type'] == 'tool' and events[1]['name'] == 'read_resource'
+
+
+def test_chat_rejects_unknown_reasoning_effort() -> None:
+    """Reject invalid effort values before starting a streamed request."""
+    app = FastAPI()
+    app.include_router(chat_router)
+    with TestClient(app) as client:
+        response = client.post("/api/chat", json={
+            "model": "fake", "messages": [], "reasoning_effort": "invalid",
+        })
+    assert response.status_code == 422

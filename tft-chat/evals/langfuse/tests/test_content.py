@@ -295,5 +295,5 @@ def test_fresh_live_exports_capture_every_dataset_format(tmp_path, schema, monke
     execution = frozen['execution']
     assert set(execution['graphs']) == {variant['name'] for variant in frozen['config']['variants']}
     for captured in execution['graphs'].values():
-        assert {'chat', 'data_analyst', 'final_responder'} == set(captured['specs'])
+        assert {'chat', 'data_analyst'} == set(captured['specs'])
     assert '/workspace/' in frozen['prompts']['chat']['name']

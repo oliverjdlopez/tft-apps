@@ -10,7 +10,7 @@
       "family": "assistant",
       "max_turns": 7,
       "name": "chat",
-      "snapshot": "705e8c0a1d71bc21a39c4cdcca6cd5c96a5bebd3ee35e5496665ba368a8e63bc"
+      "snapshot": "34853e07fe44af089ec781ee3cae8ad564e7e6998a69fee1ad757dc943b8f4de"
     },
     {
       "assistant": "comp_expert",
@@ -44,7 +44,7 @@
       "family": "assistant",
       "max_turns": 7,
       "name": "data_analyst",
-      "snapshot": "d698a77aa043f70ae002a638b2bf56fd284bfb834662395c416450c14e206fce"
+      "snapshot": "b2389e98047b96d6fd6b851c2de4ff85d131b6b3ef41660c5c8ea5049d68e969"
     },
     {
       "assistant": "chat",

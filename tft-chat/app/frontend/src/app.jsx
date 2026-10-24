@@ -923,7 +923,7 @@ const INITIAL_MESSAGE = {
 // Keep the starter prompt feature available for a future configured list.
 const STARTER_PROMPTS = [];
 
-function ChatMessage({ message, streaming }) {
+function ChatMessage({ message, streaming, assetContext }) {
   if (message.role === "user") {
     return (
       <div className="msg msg-user">
@@ -953,7 +953,7 @@ function ChatMessage({ message, streaming }) {
             thinking
           </p>
         ) : null}
-        {(message.presentations || []).map((presentation) => <EvidenceDisplay key={presentation.id} presentation={presentation} assetContext={config?.asset_context} />)}
+        {(message.presentations || []).map((presentation) => <EvidenceDisplay key={presentation.id} presentation={presentation} assetContext={assetContext} />)}
         {message.presentationError ? <p role="status">{message.presentationError}</p> : null}
         {error ? (
           <div className="statusline bad">
@@ -978,6 +978,9 @@ function ChatView({ config, reloadConfig, isActive }) {
   const [selectedModel, setSelectedModel] = useLocalStorage(
     "chatModel",
     "",
+  );
+  const [selectedReasoningEffort, setSelectedReasoningEffort] = useLocalStorage(
+    "chatReasoningEffort", "",
   );
   const [selectedAssistant, setSelectedAssistant] = useLocalStorage(
     "chatAssistant",
@@ -1035,6 +1038,9 @@ function ChatView({ config, reloadConfig, isActive }) {
     config?.models?.find((candidate) => candidate.id === selectedModel) ||
     config?.models?.find((candidate) => candidate.id === config?.default_model) ||
     config?.models?.[0];
+  const reasoningEfforts = config?.reasoning_efforts || [];
+  const reasoningEffort = reasoningEfforts.includes(selectedReasoningEffort)
+    ? selectedReasoningEffort : "";
   const toolGroupOf = useMemo(() => {
     const map = {};
     (config?.tool_groups || []).forEach((group) => {
@@ -1109,6 +1115,7 @@ function ChatView({ config, reloadConfig, isActive }) {
         body: JSON.stringify({
           model: model?.id || selectedModel,
           messages: historyMessages,
+          reasoning_effort: reasoningEffort || null,
         }),
       });
       if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
@@ -1231,6 +1238,20 @@ function ChatView({ config, reloadConfig, isActive }) {
                 ))}
               </UiNativeSelect>
             </label>
+            <label className="assistant-select">
+              <span>Reasoning</span>
+              <UiNativeSelect
+                aria-label="Reasoning effort"
+                value={reasoningEffort}
+                onChange={(event) => setSelectedReasoningEffort(event.target.value)}
+                disabled={busy || !reasoningEfforts.length}
+              >
+                <option value="">Assistant default</option>
+                {reasoningEfforts.map((effort) => (
+                  <option key={effort} value={effort}>{effort}</option>
+                ))}
+              </UiNativeSelect>
+            </label>
             <IconButton
               icon="clear"
               label="New conversation"
@@ -1261,6 +1282,7 @@ function ChatView({ config, reloadConfig, isActive }) {
               <ChatMessage
                 key={i}
                 message={m}
+                assetContext={config?.asset_context}
                 streaming={
                   busy && m.role === "assistant" && i === messages.length - 1
                 }

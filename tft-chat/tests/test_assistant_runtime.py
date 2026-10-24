@@ -249,7 +249,7 @@ def test_resource_free_root_delegates_to_handoff_with_its_own_access():
     invocation = run_offline(Assistant.from_name('root', registry=graph), 'Question')
     assert invocation.context.resources is not None
     assert not invocation.context.resources.body_cache
-    assert instructions(invocation.agent, invocation) == 'ROOT'
+    assert instructions(invocation.agent, invocation) == 'ROOT\n\n## Available handoffs\n- `child`: Root'
     assert not read(invocation, invocation.agent, 'set18')['found']
     assert read(invocation, invocation.agent.handoffs[0], 'set18')['found']
 
@@ -333,7 +333,7 @@ def test_tool_access_is_required_in_addition_to_resource_flags():
         for name in list(source.assistant_names)
     ])
     invocation = run_offline(Assistant.from_name('root', registry=source), 'Question')
-    assert instructions(invocation.agent, invocation) == 'ROOT'
+    assert instructions(invocation.agent, invocation) == 'ROOT\n\n## Available handoffs\n- `child`: Root'
     assert not read(invocation, invocation.agent, 'set18/units/roster')['found']
 
 
@@ -545,16 +545,23 @@ def test_chat_class_owns_readable_prompt_and_fallback_identity():
     prompt = instructions(invocation.agent, invocation)
     assert prompt.startswith('PREFIX\n\nROOT')
     assert '## Available TFT references' in prompt
+    handoff_block = '## Available handoffs\n- `child`: Root'
+    assert handoff_block in prompt and '- `leaf`:' not in prompt
     assert '- `set18` — set18 (index; patches: 18.1): Discover resources' in prompt
     assert '"id":' not in prompt and 'progressive disclosure' not in prompt
     assert 'Wisp stage views' not in prompt and 'PRIVATE' not in prompt
     assert 'skill:' not in prompt and 'playbook:' not in prompt
     child_prompt = instructions(invocation.agent.handoffs[0], invocation)
     assert '## Available resources' in child_prompt
+    assert '## Available handoffs\n- `leaf`: Root' in child_prompt
+    leaf = invocation.agent.handoffs[0].handoffs[0]
+    assert '## Available handoffs' not in instructions(leaf, invocation)
     assert 'PREFIX' not in child_prompt
     assert 'instruction_assembly_ms' in invocation.context.timing
-    fallback = Agent(name='chat_tft_final_response', instructions=invocation.agent.instructions)
-    assert instructions(fallback, invocation) == prompt
+    fallback = invocation.agent.clone(name='chat_tft_final_response', handoffs=[])
+    fallback_prompt = instructions(fallback, invocation)
+    assert '## Available handoffs' not in fallback_prompt
+    assert fallback_prompt == prompt.replace('\n\n' + handoff_block, '')
 
 
 def test_handoff_uses_registered_subclass_and_root_only_output_type(monkeypatch):

@@ -16,6 +16,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 
 from core.config import load_config
+from domain.constants import ReasoningEfforts
 from domain.model_catalog import chat_model_spec
 from services.chat_service import chat_config, resolve_chat_assistant, stream_chat
 from services.utils import write_chat_timing
@@ -37,6 +38,7 @@ class ChatRequest(BaseModel):
     model: str
     messages: list[ChatMessage]
     system: str | None = None
+    reasoning_effort: ReasoningEfforts | None = None
 
 
 @router.get("/api/config")
@@ -136,6 +138,7 @@ async def chat(
                 request_id=request_id,
                 assistant_name=assistant_name,
                 timing=timing,
+                reasoning_effort=body.reasoning_effort,
             ):
                 if "first_stream_chunk_ms" not in timing:
                     timing["first_stream_chunk_ms"] = round(

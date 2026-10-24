@@ -1,5 +1,5 @@
 /** Launch Electron with a known native Node executable and parent lifetime. */
-import { spawn } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -21,6 +21,7 @@ async function main() {
     console.log("ChatTFT desktop: npm start | npm run dev\nOptions (after --): --langfuse (start Langfuse; off by default) --python PATH --port PORT --dev-port PORT --startup-timeout SECONDS");
     return;
   }
+  execFileSync(options.python, [path.join(root, "desktop", "env_sync.py")], { stdio: "inherit" });
   const require = createRequire(import.meta.url);
   let electron;
   try {

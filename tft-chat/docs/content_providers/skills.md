@@ -1,7 +1,10 @@
 # Skills, playbooks, and progressive disclosure
 
-Repository skills provide reusable general guidance; playbooks provide specific
-task guides. Both are complete resources read on demand through
+The authoring direction is for skills to provide reusable TFT-specific judgment
+and for playbooks to guide broader analytical work. The shipped skills still
+include general investigation and statistical interpretation guidance; the
+reworked packages described below have not replaced them. Both categories are
+complete resources read on demand through
 `read_resource("skill:<name>")` or `read_resource("playbook:<name>")`. Assistants see only names and descriptions in
 their permitted resource catalogue until they explicitly read the resource. Supporting procedures appear as child IDs
 and are read separately with the same tool. No
@@ -18,6 +21,21 @@ and exposes the package `name` from its ID. Supporting documents retain ordinary
 `ResourceMetadata`; complete bodies still load through `ResourceRead` on demand.
 
 ## Skill frontmatter
+
+Three reworked packages are staged beside their originals under
+`dev/resource_drafting/stashed/`:
+
+- `tft-artifact-itemsv2/SKILL.md`: artifact compatibility and build-around requirements.
+- `tft-reasoning-fundamentalsv2/SKILL.md`: board strength and combat bottlenecks.
+- `tft-itemization-analysisv2/SKILL.md`: item allocation and build coherence.
+
+Their frontmatter names match the requested directory names. Each is a complete,
+self-contained skill with conditional examples and references to applicable
+game resources. The originals remain intact. This location is outside runtime
+discovery; writing these packages does not enable them for production assistants.
+Validate the three packages in an isolated skill root, since the surrounding
+stash also contains incomplete historical drafts. Format validation does not
+establish model behavior; no live model evaluation accompanies these revisions.
 
 Selection uses only the protocol fields `name` and `description`:
 
@@ -77,6 +95,21 @@ reference; its original interpretation guidance is retained verbatim there.
 
 ## Adding a playbook
 
+The shipped `final-response` playbook paraphrases the retained responder spec's
+core guidance: answer the original question concisely from verified results,
+state material uncertainty, and use supported evidence displays by reference.
+Chat and the analyst read it before composing analytical final answers; its body
+is retrieved on demand rather than inserted into their prompts. Its hyphenated
+package name follows the existing playbook naming protocol.
+
+Prototype playbooks in `dev/resource_drafting/playbooks/` explore broader modes
+of analytical work: **Mapping the meta**, **Investigating interactions**, and
+**Reconciling conflicting evidence**. They describe how to develop and test an
+explanation rather than prescribing a fixed query sequence. These review drafts
+are outside runtime discovery and do not alter assistant permissions or the
+transcript pipeline. Their packages can be validated by passing that directory
+as `playbook_root` to `domain.resources.library.validate_library`.
+
 Create `app/backend/src/domain/resources/content/playbooks/<name>/PLAYBOOK.md` with the same
 `name` and `description` frontmatter rules as a skill:
 
@@ -96,8 +129,8 @@ Supporting Markdown declares `kind: playbook-reference`, a child ID such as
 Children inherit the owning playbook's permissions. Links to skills or references
 never grant additional access.
 
-Use skills for guidance reused across many tasks (for example statistical
-interpretation), and playbooks for concrete task sequences. Existing skill IDs
+Use skills for TFT-specific judgment reused across tasks, and playbooks for
+broader analytical approaches. Existing skill IDs
 remain valid; adding this category does not move authored content automatically.
 
 An assistant's `agent.json` can independently declare:
@@ -108,9 +141,11 @@ An assistant's `agent.json` can independently declare:
 
 Omitting `resources.playbooks` permits all discovered playbooks for an eligible assistant;
 `[]` denies them all. Eligibility requires repository context or an explicit
-nonempty playbook allowlist, plus the `read_resource` tool. The shipped chat spec
-sets `resources.playbooks` to `[]`, matching its skill configuration; transcript-only assistants remain without
-resources unless explicitly configured. Playbook bodies appear only in tool
+nonempty playbook allowlist, plus the `read_resource` tool. The shipped chat spec permits only `final-response` through
+`resources.playbooks`, while its skill allowlist remains empty. The analyst's
+omitted playbook allowlist permits the guide alongside other discovered
+playbooks. Transcript-only assistants remain without resources unless explicitly
+configured. Playbook bodies appear only in tool
 results after a read, never automatically in instructions. Requests naming
 `playbook:<name>` or `/playbook <name>` identify the guide the assistant should read.
 

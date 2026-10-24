@@ -255,3 +255,21 @@ Cross-backend tests invoke each application's own interpreter and actual HTTP
 routes with temporary state, synthesize a small local video, stub network
 downloads, and omit application lifespans. They do not call models, contact
 YouTube/Twitch, run GPU inference, or initialize application RDS databases.
+
+## Local audio uploads
+
+VOD Review's **Upload** inspects actual streams. Video enters the normal library;
+audio-only files, including MP4 and audio with cover art, prompt for confirmation.
+Cancel removes the pending upload. Confirm starts transcription with progress,
+retry, and **View transcript** independent of the selected video. Completed text
+and timestamped JSON use the existing shared publication path. Audio creates no
+video review record and requires the usual faster-whisper/device configuration.
+
+`POST /api/uploads` returns `{kind: "video", video: ...}` or
+`{kind: "audio", upload_id: ..., name: ...}`. Audio is retained under
+`data/audio-uploads/`. `POST /api/uploads/{upload_id}/transcription` confirms
+recognition, reusing active/completed tasks. `DELETE /api/uploads/{upload_id}`
+removes unconfirmed input; confirmed input remains for retries. Closing the page
+before answering may leave pending bytes on disk, but never starts recognition.
+Progress is displayed for the current page session; completed transcripts remain
+available in desktop Media after reload.
