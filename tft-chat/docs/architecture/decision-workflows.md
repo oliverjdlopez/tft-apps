@@ -53,8 +53,9 @@ behavioral instructions, not a deterministic guarantee of model judgment.
 The three existing skills now supply focused investigation, interpretation,
 and itemization guidance. Current item effects and other game facts remain
 reference material. Responses preserve user constraints and distinguish
-associations from timing or causal claims. The final responder retains evidence
-references without mandatory table lengths or hypothetical result examples.
+associations from timing or causal claims. Chat and the analyst answer directly
+using the `final-response` playbook, with evidence displays selected by reference
+and no mandatory table lengths or hypothetical result examples.
 
 For a third-item question, `rank_unit_loadouts` can retain the two fixed items
 with `item_1` and `item_2` and require `item_count=3`. For an explicit cohort

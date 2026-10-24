@@ -511,7 +511,7 @@ export async function createParentPipe() {
  */
 export function workspaceCommandAllowed(event, contents, shellUrl, action) {
   return event.sender === contents && event.senderFrame === contents.mainFrame
-    && event.senderFrame?.url === shellUrl && ["chat", "rolldown", "flowchart", "compositions", "vod", "langfuse", "database", "media", "retry"].includes(action);
+    && event.senderFrame?.url === shellUrl && ["chat", "rolldown", "flowchart", "compositions", "vod", "viewer", "langfuse", "database", "media", "retry"].includes(action);
 }
 
 // ---------------------------------------------------------------------------

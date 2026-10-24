@@ -4,12 +4,12 @@
   "handoff_description": "Answer Teamfight Tactics meta questions like an expert player, grounded in the data and the data analyst.",
   "tools": {
     "include_all": false,
-    "groups": ["context", "ranking", "probability"]
+    "groups": ["context", "ranking", "probability", "evidence"]
   },
   "resources": {
     "context": {"repository": true},
     "skills": [],
-    "playbooks": []
+    "playbooks": ["final-response"]
   },
-  "handoffs": ["data_analyst", "final_responder"]
+  "handoffs": ["data_analyst"]
 }

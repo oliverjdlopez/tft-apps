@@ -19,6 +19,7 @@ export async function launchFromWsl(args, entry = new URL("./windows.mjs", impor
     return;
   }
   if (!process.env.WSL_DISTRO_NAME) throw new Error("Run this command in your WSL checkout using Linux Node.");
+  if (!setup) execFileSync(options.python, [`${root}/desktop/env_sync.py`], { stdio: "inherit" });
   let executable = windowsNode ?? process.env.CHATTFT_WINDOWS_NODE;
   if (!executable) {
     try {

@@ -1,7 +1,9 @@
 # Evidence displays
 
-The `evidence` tool group contains `present_evidence`, owned only by
-`final_responder`. It accepts `DisplaySpec`: `evidence_ref`, `dataset_ref`, one of
+The `evidence` tool group contains `present_evidence`, owned directly by
+`chat` and `data_analyst` and retained by the standalone `final_responder` spec.
+The answerers read `playbook:final-response` for synthesis and display guidance.
+It accepts `DisplaySpec`: `evidence_ref`, `dataset_ref`, one of
 `static_table`, `interactive_table`, or `distribution`, a title, optional short
 description, and table choices (`columns`, `primary_metric`, `sort_by`,
 `direction`, `group_by`). Table columns are unique, visible fields, bounded to

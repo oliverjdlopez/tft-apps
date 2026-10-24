@@ -190,6 +190,21 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
     from services.spec_service import initialize_workspace
 
     await asyncio.to_thread(initialize_workspace)
+    # Resolve the configured set's image bundle before the first browser request.
+    try:
+        repo_root = str(_repo_root())
+        if repo_root not in sys.path:
+            sys.path.insert(0, repo_root)
+        from scripts.assets.main import download_startup_assets
+
+        asset_status = await download_startup_assets(load_config().chat.set_number)
+        if asset_status:
+            logger.warning(
+                "static TFT asset download was incomplete; missing files will "
+                "be retried on next startup"
+            )
+    except Exception:  # noqa: BLE001 - upstream availability must not block app startup.
+        logger.exception("static TFT asset download failed; continuing without some local images")
     _install_local_trace_recorder()
     database_status = await asyncio.to_thread(_warm_database_at_startup)
     app.state.database_status = database_status

@@ -9,7 +9,8 @@ from collections.abc import AsyncIterator, Mapping, Sequence
 from contextlib import aclosing
 from typing import Any
 
-from agents import MaxTurnsExceeded
+from agents import MaxTurnsExceeded, ModelSettings, RunConfig
+from openai.types.shared.reasoning import Reasoning
 from agents.run_internal.items import run_items_to_input_items
 from agents.tracing import trace
 
@@ -23,8 +24,11 @@ from domain.assistants.constants import AssistantName
 from domain.assistants.registry import current_registry
 from domain.runtime.utils import invocation_input
 from domain.runtime.execution import create_context, run_streamed
+from domain.constants import ReasoningEfforts
 from domain.model_catalog import chat_model_specs
 from domain.tools import list_tool_group_metadata, list_tool_metadata
+from services.assets import service as asset_service
+from services.assets.utils import latest_set_number
 from services.streaming import stream_agent_events, stream_event
 
 logger = logging.getLogger(__name__)
@@ -53,6 +57,7 @@ async def stream_chat(
     request_id: str | None = None,
     assistant_name: str = CHAT_ASSISTANT_NAME,
     timing: dict[str, Any] | None = None,
+    reasoning_effort: ReasoningEfforts | None = None,
 ) -> AsyncIterator[str]:
     """Prepare and execute one routed chat request as text and UI events.
 
@@ -65,6 +70,7 @@ async def stream_chat(
         request_id: Optional request identifier for logs and stream events.
         assistant_name: Registered assistant used as the root graph node.
         timing: Optional timing record shared with the HTTP route.
+        reasoning_effort: Optional run-wide override of assistant reasoning defaults.
 
     Yields:
         Plain assistant text and encoded browser activity events.
@@ -76,6 +82,13 @@ async def stream_chat(
     setup_started = time.perf_counter()
     assistant = await asyncio.to_thread(
         Assistant.from_name, assistant_name, registry=registry, model=model,
+    )
+    # Run settings cover every handoff and the tool-free fallback.
+    run_config = (
+        RunConfig(model_settings=ModelSettings(
+            reasoning=Reasoning(effort=reasoning_effort.value),
+        ))
+        if reasoning_effort is not None else None
     )
     run_input = invocation_input(messages, assistant.spec.task_prompt)
     run_context = await asyncio.to_thread(
@@ -139,6 +152,7 @@ async def stream_chat(
             async with run_streamed(
                 agent, run_input, context=run_context,
                 max_turns=max_tool_rounds + 1, input_prepared=True,
+                run_config=run_config,
             ) as result:
                 async with aclosing(stream_agent_events(
                     result,
@@ -185,6 +199,7 @@ async def stream_chat(
                 max_turns=1,
                 context=run_context,
                 input_prepared=True,
+                run_config=run_config,
             ) as final_result:
                 async with aclosing(stream_agent_events(
                     final_result,
@@ -249,14 +264,15 @@ def chat_config(
     return {
         "composition_workbench": config.chat.composition_workbench,
         "flowchart_source": config.chat.flowchart_source,
-        # Browser asset lookup uses the configured set without exposing any
-        # database scope or player-specific identifiers.
+        # Match the local catalog's default when startup downloaded the current
+        # set without an explicit configuration. Never expose database scope.
         "asset_context": {
-            "set_number": config.chat.set_number,
+            "set_number": config.chat.set_number or latest_set_number(asset_service.ASSET_ROOT),
         },
         "default_assistant": CHAT_ASSISTANT_NAME,
         "assistants": list(registry.assistant_names),
         "default_model": config.models.openai_model,
+        "reasoning_efforts": [effort.value for effort in ReasoningEfforts],
         "models": [
             {
                 "id": model.id,

@@ -134,6 +134,7 @@ test("Force Reload restarts ChatTFT once, preserves external tabs, and handles f
   await import("../main.mjs");
   await new Promise((resolve) => setImmediate(resolve));
   const commands = menu.find((item) => item.label === "View").submenu;
+  assert.equal(commands.find((item) => item.label === "Watch & Read").accelerator, "CmdOrCtrl+6");
   const reload = commands.find((item) => item.label === "Reload").click;
   const force = commands.find((item) => item.label === "Force Reload").click;
   const workspace = Workspace.current;
@@ -141,11 +142,11 @@ test("Force Reload restarts ChatTFT once, preserves external tabs, and handles f
   assert.equal(videos.length, 1, "startup creates one VOD runtime");
   assert.equal(videos[0].starts, 1);
   videos[0].emit("failure", new Error("Video failed"));
-  assert.deepEqual(workspace.failed, ["vod"]);
+  assert.deepEqual(workspace.failed, ["vod", "viewer"]);
   let stopped;
   videos[0].gate = new Promise((resolve) => { stopped = resolve; });
   const vodRetry = workspace.ensureVideo("vod");
-  const secondRetry = workspace.ensureVideo("vod");
+  const secondRetry = workspace.ensureVideo("viewer");
   assert.equal(vodRetry, secondRetry);
   assert.equal(videos[0].stops, 1);
   stopped();

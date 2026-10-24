@@ -25,6 +25,10 @@ provided `AssistantRunContext` and never gather context themselves. The default
 renderer displays **Available resources**; chat displays **Available TFT
 references**. Both expose permitted metadata, not resource bodies.
 
+Both renderers append an **Available handoffs** block listing each direct target's
+name and `handoff_description` from the current SDK agent. Agents with no handoffs
+omit the block, including the final-answer fallback whose handoffs are cleared.
+
 The subclass preserves SDK dataclass initialization and validation. `clone()`
 retains spec metadata and SDK shallow-copy semantics, rebinding the default
 renderer to the copy unless instructions are explicitly overridden. A renamed
@@ -156,20 +160,24 @@ uses the registry's `reachable_tool_names[name]` rather than only
 construction and request metadata, so a reload cannot mix definitions within a
 request.
 The `chat` assistant directly owns context retrieval, bounded rankings,
-and rolldown probability estimation. Multi-step investigations can still follow
-the `chat` to `data_analyst` to `final_responder` path: the analyst runs bounded
-rankings and anonymous-board cohort investigations, with `query_cohorts` kept
-separate from the `deltas` group for frequency-first entity breakouts, and the
-responder is the terminal user-facing synthesizer. Delta guidance keeps the
+rolldown probability estimation, and evidence presentation. Multi-step
+investigations can follow the `chat` to `data_analyst` path: the analyst runs
+bounded rankings and anonymous-board cohort investigations, with `query_cohorts`
+kept separate from the `deltas` group for frequency-first entity breakouts.
+Both assistants answer the user directly and can present evidence. The analyst
+has no outgoing handoffs. Before synthesizing analytical results, they read
+`playbook:final-response`, which covers concise answers, material uncertainty,
+and reference-based displays. Delta guidance keeps the
 cohort as the contextual shell, distinguishes within-cohort `delta` from
 same-entity-outside-cohort `relative_delta`, and treats missing comparators as
 unavailable evidence. The [decision workflow design](decision-workflows.md)
 explains the prompt boundaries, alternatives, and same-copy item constraints.
 
-`final_responder` owns the `evidence` and `context` tool groups, permits only the
-`tft-statistical-interpretation` skill, and has no handoffs. Its
-`present_evidence` tool selects one initial static table, interactive table, or
-placement distribution by reference. Analytical tools retain their usual
+The `final_responder` spec remains available for explicit direct invocation,
+with its existing `evidence` and `context` tool groups and interpretation-only
+skill access. No shipped assistant hands off to it. Chat and the analyst now
+own the `evidence` group directly. `present_evidence` selects one initial static
+table, interactive table, or placement distribution by reference. Analytical tools retain their usual
 results and additionally register evidence when an invocation supplies an
 `EvidenceStore`. Runtime creates the store inside `AssistantRunContext.evidence`;
 chat shares that context across handoffs and its tool-free maximum-turn fallback.
@@ -182,11 +190,14 @@ Tool results pass through the SDK handoff history without a custom input filter,
 and the shared invocation context retains registered evidence independently of
 model-generated handoff text. Trace recording is observational; it does not
 transport tool results or evidence. Chat's prompt handles analytical routing;
-the analyst owns cohort membership and histogram retrieval guidance, while the
-final responder owns display selection and presentation fallback. Neither chat
-nor the analyst needs instructions to preserve references manually. Historical
-evaluation snapshots remain frozen; these corrections apply to repository
-prompts used by normal application runs.
+the analyst owns cohort membership and histogram retrieval guidance. The
+`final-response` playbook supplies display selection and presentation fallback
+guidance to the assistant finishing the answer. Neither chat nor the analyst
+needs instructions to preserve references manually. Historical
+evaluation snapshots remain frozen. The active local chat and analyst suites
+use successor snapshots whose routing checks require the analyst to finish the
+answer; standalone analyst cases also require no handoff. These local updates
+do not publish changes to hosted Langfuse datasets.
 
 ## Runtime context and execution
 

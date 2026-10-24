@@ -169,6 +169,14 @@ class Assistant(Agent[AssistantRunContext]):
         if resource_instructions:
             parts.append(resource_instructions)
 
+        # Describe only handoffs attached to the current SDK agent.
+        if agent.handoffs:
+            entries = [
+                f"- `{target.name}`: {target.handoff_description}"
+                for target in agent.handoffs
+            ]
+            parts.append("## Available handoffs\n" + "\n".join(entries))
+
         # Record rendering cost when the invocation exposes timing state.
         if context.timing is not None:
             context.timing["instruction_assembly_ms"] = round(

@@ -45,6 +45,14 @@ See [media browsing](shared-media.md#desktop-media-browser) for supported resour
 and publication. The browser uses the existing owned ChatTFT backend; it does not
 start another backend or run speech recognition.
 
+**Watch & Read** (Ctrl/Cmd+6) opens a separate persistent view at
+`http://localhost:5174/watch`, sharing the owned VOD runtime. It lists videos
+with existing transcripts or completed game/round results, including online
+reviews, and switches between a transcript reader and video with round seeking.
+It performs no discovery or processing. See [viewing existing content](shared-media.md#watch--read).
+Restart Electron to load the new tab and backend routes. VOD Review keeps its
+existing page at `/`.
+
 VOD creator-import schedules run once in the VOD backend, independent of
 whether the VOD tab is visible. The schedule persists in the app-local VOD database;
 closing the desktop stops its poller, with the most recent missed daily window
@@ -122,7 +130,7 @@ references. See [media sharing](shared-media.md) for APIs and storage lifecycle.
 Opt-in real application smoke (Linux/WSLg): from `desktop/`, run
 `env -u ELECTRON_RUN_AS_NODE node_modules/electron/dist/electron --disable-gpu tests/suite-electron.mjs`.
 It uses a private temporary Electron profile and VOD directory under `.migration/`,
-disables application RDS access, loads all five product views, and checks owned
+disables application RDS access, loads all six product views, and checks owned
 process shutdown on close. Application ports must be free. The simpler
 `tests/workspace-electron.mjs` smoke covers navigation, IPC and recovery with
 local HTML fixtures.
@@ -135,3 +143,31 @@ and rejects occupied ports.
 The native Windows wrapper keeps its Windows environment for locating
 `wsl.exe`; the selected Linux application environment is sent exclusively over
 the private worker pipe, including its process working directory.
+
+## Shared dotenv defaults
+
+Before starting either application, `npm start` and `npm run dev` synchronize
+`suite/.env` into `tft-chat/.env` and `vod-review/.env`. On WSL this runs in Linux
+before the Windows shell launches. Help and Windows setup do not synchronize.
+Use the root `.env.example` as a starting point; real `.env` files remain ignored.
+
+Each application file retains its manually maintained settings. Shared keys are
+written inside `# BEGIN GENERATED SHARED SETTINGS` / `# END GENERATED SHARED SETTINGS`
+markers, excluding keys defined anywhere outside that section (including empty
+values). Edit overrides outside the markers. Root changes and removals replace
+the generated section on the next desktop startup; deleting the root file removes
+all generated defaults. Unchanged files are not rewritten. Files are validated
+before writes and individually replaced atomically with private permissions;
+malformed dotenv files, damaged markers, or symlinked app files stop startup.
+
+Both backends load only their own `.env`; explicit process environment variables
+and desktop-owned runtime settings retain precedence. No shared values are loaded
+into the launcher's environment. Existing app-local values are always treated as
+intentional overrides, even if they match root values. Move a setting to the root
+and remove its manual app entry to make it shared.
+
+Standalone app commands load the last synchronized application file. To refresh
+without starting Electron, run `tft-chat/.venv/bin/python desktop/env_sync.py` from
+the suite root (use `.venv/Scripts/python.exe` on native Windows). Restart running
+applications after configuration changes. The separate Langfuse platform `.env`
+is not a synchronization target.

@@ -30,7 +30,7 @@ Decide which layer owns the change: factual reference → `resources/references`
 3. For a skill, create one direct child directory with one protocol-compatible `SKILL.md`. Its name must match the directory, and its description must explain capability, activation cues, and boundaries without custom routing fields.
 4. For a playbook, create `resources/playbooks/<name>/PLAYBOOK.md` with the same name/description rules. Use `playbook:<name>` IDs, `playbook-reference` children, and the independent `playbooks` assistant allowlist.
 5. Preserve exact catalogue IDs, complete resource reads, and per-assistant read permissions. No provider or selector preselects prompt bodies.
-6. Verify instructions contain only permitted metadata and read tool results contain full bodies. Chat cannot read skill or playbook bodies.
+6. Verify instructions contain only permitted metadata and read tool results contain full bodies. Chat's skill allowlist remains empty; its playbook allowlist permits only `final-response`.
 
 ## Validation
 

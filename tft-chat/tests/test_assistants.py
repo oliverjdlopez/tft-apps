@@ -182,7 +182,9 @@ def test_durable_overrides_retain_dynamic_callbacks() -> None:
         evidence=None,
     )
     assert callable(agent.instructions)
-    assert agent.instructions(RunContextWrapper(context), agent) == 'ROOT INSTRUCTIONS'
+    assert agent.instructions(RunContextWrapper(context), agent).startswith(
+        'ROOT INSTRUCTIONS\n\n## Available handoffs\n'
+    )
     analyst = next(child for child in agent.handoffs if child.name == 'data_analyst')
     assert analyst.instructions(RunContextWrapper(context), analyst) == 'ANALYST INSTRUCTIONS'
 
@@ -222,11 +224,11 @@ def test_data_analyst_owns_focused_ranking_cohort_and_context_tools() -> None:
     context_names = [tool.name for tool in CONTEXT_TOOL_GROUP.tools]
 
     assert "data_analyst" in list(current_registry().assistant_names)
-    assert spec.tool_group_keys == ("ranking", "query_cohorts", "deltas", "context")
+    assert spec.tool_group_keys == ("ranking", "query_cohorts", "deltas", "context", "evidence")
     assert list(registry.tool_names[spec.name]) == (
-        ranking_names + cohort_names + delta_names + context_names
+        ranking_names + cohort_names + delta_names + context_names + ["present_evidence"]
     )
-    assert list(registry.handoff_names[spec.name]) == ["final_responder"]
+    assert list(registry.handoff_names[spec.name]) == []
     assert spec.task_prompt == ""
     assert wrap_task_input("Which carry is better?", spec.task_prompt) == (
         "Which carry is better?"
@@ -278,18 +280,33 @@ def test_cohort_prompts_distinguish_presence_from_holder_binding(name: str) -> N
     assert "It does not bind an item to a unit" not in prompt
 
 
-def test_prompt_evidence_guidance_matches_assistant_ownership() -> None:
-    """Reserve display policy for the responder and histogram retrieval for the analyst."""
-    chat = current_registry().get_spec("chat").system_prompt
-    analyst = current_registry().get_spec("data_analyst").system_prompt
-    responder = current_registry().get_spec("final_responder").system_prompt
-    assert "## Evidence displays" not in chat
-    assert "no direct match-data tools" not in chat
-    assert "A direct lookup or ranking is sufficient when its result answers the actual question" in chat
-    assert "Preserve these" not in analyst
+def test_final_response_playbook_replaces_terminal_handoffs() -> None:
+    """Live answerers can read the synthesis guide without a responder handoff."""
+    from domain.resources.library import get_library
+    from domain.tools.context import read_resource_content
+
+    registry = current_registry()
+    library = get_library()
+    for name in registry.assistant_names:
+        spec = registry.get_spec(name)
+        assert "final_responder" not in spec.handoff_names
+        if name != "final_responder":
+            assert "final_responder" not in spec.system_prompt
+            assert "final responder" not in spec.system_prompt.lower()
+
+    # Exercise permission-checked reads of the shipped guide for both answerers.
+    for name in ("chat", "data_analyst"):
+        spec = registry.get_spec(name)
+        assert "playbook:final-response" in spec.system_prompt
+        assert "present_evidence" in registry.tool_names[name]
+        guide = read_resource_content(library, 'playbook:final-response', spec=spec)
+        assert guide['found'] and guide['kind'] == 'playbook'
+        assert '## Present evidence when useful' in guide['content']
+        assert 'Missing or suppressed data does not mean zero or absence' in guide['content']
+
+    analyst = registry.get_spec("data_analyst").system_prompt
     assert "`compare_cohorts`; a mean does not establish a distribution" in analyst
-    assert "hand off to `final_responder`" in analyst
-    assert "Use `present_evidence` once" in responder
+    assert "answer the user directly" in analyst
 
 
 def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
@@ -302,19 +319,20 @@ def test_chat_has_direct_context_ranking_and_probability_tools() -> None:
     probability_names = [tool.name for tool in PROBABILITY_TOOL_GROUP.tools]
     cohort_names = [tool.name for tool in COHORT_TOOL_GROUP.tools]
     delta_names = [tool.name for tool in DELTA_TOOL_GROUP.tools]
-    assert spec.tool_group_keys == ("context", "ranking", "probability")
-    assert spec.skill_names == () and spec.playbook_names == ()
-    assert tool_names == context_names + ranking_names + probability_names
+    assert spec.tool_group_keys == ("context", "ranking", "probability", "evidence")
+    assert spec.skill_names == () and spec.playbook_names == ("final-response",)
+    assert tool_names == context_names + ranking_names + probability_names + ["present_evidence"]
     assert list(registry.reachable_tool_names[spec.name]) == (
         context_names
         + ranking_names
         + probability_names
+        + ["present_evidence"]
         + cohort_names
         + delta_names
-    ) + ["present_evidence"]
+    )
 
 
-def test_final_responder_owns_evidence_presentation() -> None:
+def test_final_responder_spec_remains_available_for_direct_use() -> None:
     """Keep numerical presentation grounded in evidence references."""
     registry = current_registry()
     spec = registry.get_spec("final_responder")
@@ -329,10 +347,10 @@ def test_final_responder_owns_evidence_presentation() -> None:
 
 
 def test_chat_hands_off_to_data_analyst() -> None:
-    assert list(current_registry().handoff_names["chat"]) == ["data_analyst", "final_responder"]
+    assert list(current_registry().handoff_names["chat"]) == ["data_analyst"]
 
     agents = Assistant.from_name("chat").handoffs
-    assert [agent.name for agent in agents] == ["data_analyst", "final_responder"]
+    assert [agent.name for agent in agents] == ["data_analyst"]
 
 
 def test_chat_handoff_preserves_request_model_provider() -> None:
@@ -341,8 +359,7 @@ def test_chat_handoff_preserves_request_model_provider() -> None:
     analyst = Assistant.from_name("chat", model=request_model).handoffs[0]
 
     assert analyst.model is request_model
-    assert [handoff.name for handoff in analyst.handoffs] == ["final_responder"]
-    assert analyst.handoffs[0].model is request_model
+    assert analyst.handoffs == []
     assert [tool.name for tool in analyst.tools] == list(current_registry().tool_names["data_analyst"])
     assert Assistant.from_name("data_analyst").model == load_config().models.openai_model
 
@@ -350,8 +367,8 @@ def test_chat_handoff_preserves_request_model_provider() -> None:
 def test_specialists_hand_off_to_data_analyst() -> None:
     assert list(current_registry().handoff_names["meta_expert"]) == ["data_analyst"]
     assert list(current_registry().handoff_names["theorizer"]) == ["data_analyst"]
-    # The analyst gathers evidence, then transfers to the terminal synthesizer.
-    assert list(current_registry().handoff_names["data_analyst"]) == ["final_responder"]
+    # The analyst gathers evidence and completes the user-facing answer itself.
+    assert list(current_registry().handoff_names["data_analyst"]) == []
 
 
 def test_distillation_replaces_all_legacy_transcript_assistants() -> None:

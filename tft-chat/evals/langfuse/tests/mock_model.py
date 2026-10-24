@@ -56,7 +56,7 @@ async def response(request: Request):
     text = json.dumps(schema_value(schema, failing=False)) if schema else 'Mock application reply.'
     message = {'id': 'msg_' + uuid4().hex, 'type': 'message', 'role': 'assistant', 'status': 'completed',
                'content': [{'type': 'output_text', 'text': text, 'annotations': []}]}
-    handoff = next((tool['name'] for tool in body.get('tools', []) if tool.get('name') == 'transfer_to_final_responder'), None)
+    handoff = next((tool['name'] for tool in body.get('tools', []) if tool.get('name') == 'transfer_to_data_analyst'), None)
     if timeout_case and handoff:
         message = {'id': 'fc_' + uuid4().hex, 'type': 'function_call', 'name': handoff,
                    'call_id': 'call_' + uuid4().hex, 'arguments': '{}', 'status': 'completed'}

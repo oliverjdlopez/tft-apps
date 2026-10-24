@@ -34,8 +34,8 @@ No generic leaderboard, raw-row browser, match-store mutation, or ingestion
 tool is exposed. Ingestion and query-table rebuilds remain database/CLI
 responsibilities.
 
-The final responder owns the [Evidence displays](../tool_groups/evidence.md)
-group. `present_evidence` chooses a bounded initial view by backend reference;
+Chat and the data analyst directly own the [Evidence displays](../tool_groups/evidence.md)
+group, also retained by the standalone responder spec. `present_evidence` chooses a bounded initial view by backend reference;
 it cannot query the database or accept copied numerical datasets.
 
 ## Runtime boundary

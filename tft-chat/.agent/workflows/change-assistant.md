@@ -33,7 +33,7 @@ Inspect the target `system.md`, optional `agent.json`/`task.md`, registry constr
 ## Required repository patterns
 
 - Top-level chat does not receive private analyst schema or skill bodies.
-- `data_analyst` hands off to `final_responder`. Graph changes require prompt, registry, UI discovery, validation, and eval updates together.
+- `chat` can hand off to `data_analyst`; both answer directly with evidence tools and the `final-response` playbook. The retained `final_responder` spec has no incoming shipped handoffs. Graph changes require prompt, registry, UI discovery, validation, and eval updates together.
 - Every invocation uses explicit target-specific instruction text. Keep repository/schema eligibility in `agent.json`; top-level chat still excludes private schema and skills.
 
 ## Validation

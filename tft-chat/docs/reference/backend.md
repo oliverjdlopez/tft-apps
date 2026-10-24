@@ -26,11 +26,11 @@ Tool modules are grouped by responsibility:
 `domain.assistants` builds OpenAI Agents SDK agents from spec directories under
 `domain/assistants/specs/`. Each spec pairs a `system.md` prompt with an
 optional `agent.json` declaring its description, tool groups/names, and
-handoffs. The `chat` assistant has no direct data tools and hands every
-statistical question to `data_analyst`, which owns typed rankings, cohort
-investigations, and bounded context tools. The analyst then hands verified
-evidence to the tool-free `final_responder` for the terminal user-facing
-response.
+handoffs. The `chat` assistant directly owns ranking, rolldown, context, and
+evidence tools. Conditional cohort investigations can hand off to `data_analyst`,
+which answers directly with its own evidence tools. Both read
+`playbook:final-response` for final synthesis. The retained `final_responder`
+spec is available for direct invocation and has no incoming shipped handoffs.
 
 ## Prompt context
 

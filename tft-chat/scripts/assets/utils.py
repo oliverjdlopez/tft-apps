@@ -100,7 +100,12 @@ def select_assets(data: CDragonData, selected: CDragonSet, groups: list[str], pa
         path = path.strip()
         if not path or path.casefold() == "none":
             continue
-        url = asset_url(path, patch)
+        try:
+            url = asset_url(path, patch)
+        except ValueError:
+            # CDragon also publishes non-image tokens in some image fields.
+            # Skip those references so valid images in the same set can download.
+            continue
         identifier_for_file, variant_for_file = names[url]
         filename = descriptive_filename(identifier_for_file, variant_for_file, url)
         assets.append(Asset(group, identifier, variant, url, f"files/{filename}"))

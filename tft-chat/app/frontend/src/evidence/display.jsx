@@ -46,7 +46,7 @@ function EvidenceCard({ presentation, assetContext }) {
           : ""}
       </p>
       {dataset.kind === "ranking" ? (
-        <EvidenceTable dataset={dataset} display={display} />
+        <EvidenceTable dataset={dataset} display={display} showImages={Boolean(assetContext?.set_number)} />
       ) : (
         <Distribution dataset={dataset} />
       )}
@@ -111,7 +111,7 @@ function evidenceImageRequests(dataset) {
 }
 
 /** Keep the text value readable while attaching any resolved local entity icon. */
-function EvidenceValue({ field, value }) {
+function EvidenceValue({ field, value, showImages }) {
   const kind = {
     unit_name: "unit",
     item_name: "item",
@@ -120,7 +120,7 @@ function EvidenceValue({ field, value }) {
     item_2: "item",
     item_3: "item",
   }[field.key];
-  if (kind && typeof value === "string" && value.trim()) {
+  if (showImages && kind && typeof value === "string" && value.trim()) {
     const entity = { key: value, name: value };
     return (
       <span className="evidence-entity" title={value} tabIndex={0}>
@@ -132,7 +132,7 @@ function EvidenceValue({ field, value }) {
 }
 
 /** Explore a loaded ranking slice without changing its evidence or population. */
-function EvidenceTable({ dataset, display }) {
+function EvidenceTable({ dataset, display, showImages }) {
   const initial = {
     sortBy: display.sort_by || "",
     direction: display.direction,
@@ -323,7 +323,7 @@ function EvidenceTable({ dataset, display }) {
                         key={field.key}
                         className={`${field.unit === "text" ? "" : "evidence-number"} ${field.key === display.primary_metric ? "evidence-primary" : ""}`}
                       >
-                        <EvidenceValue field={field} value={row.values[field.key]} />
+                        <EvidenceValue field={field} value={row.values[field.key]} showImages={showImages} />
                       </td>
                     ))}
                   </tr>

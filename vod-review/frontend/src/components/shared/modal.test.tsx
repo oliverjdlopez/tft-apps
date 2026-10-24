@@ -26,12 +26,12 @@ it("closes a conditional dialog with Escape and restores focus", async () => {
 
 it("forwards the original file event and disables both upload entry points while busy", () => {
   const change = vi.fn();
-  const { rerender } = render(<UploadButton onChange={change} disabled={false}>Upload video</UploadButton>);
+  const { rerender } = render(<UploadButton onChange={change} disabled={false}>Upload</UploadButton>);
   const file = new File(["fixture"], "fixture.mp4", { type: "video/mp4" });
-  fireEvent.change(screen.getByLabelText("Video file"), { target: { files: [file] } });
+  fireEvent.change(screen.getByLabelText("Audio or video file"), { target: { files: [file] } });
   expect(change).toHaveBeenCalledOnce();
   expect(change.mock.calls[0][0].target.files[0]).toBe(file);
   rerender(<UploadButton onChange={change} disabled>Uploading…</UploadButton>);
   expect(screen.getByRole("button")).toBeDisabled();
-  expect(screen.getByLabelText("Video file")).toBeDisabled();
+  expect(screen.getByLabelText("Audio or video file")).toBeDisabled();
 });
